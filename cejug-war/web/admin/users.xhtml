@@ -1,0 +1,185 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.prime.com.tr/ui">
+    <h:body>
+        <ui:composition template="../layout.xhtml">
+            <ui:define name="title">#{bundle.users}</ui:define>
+            <ui:define name="content">
+                <div class="bread_crumb_area">
+                    <h:form>
+                        <p:breadCrumb styleClass="bread_crumb">
+                            <p:menuitem value="#{bundle.home}" url="../index.xhtml"/>
+                            <p:menuitem value="#{bundle.administration}"/>
+                            <p:menuitem value="#{bundle.users}" url="users.xhtml"/>
+                        </p:breadCrumb>
+                    </h:form>
+                </div>
+                <div class="content">
+                    <h1>#{bundle.users}</h1>
+                    <h:form>
+                        <p:tabView dynamic="true" cache="true">
+                            <p:tab title="#{bundle.allUsers}">
+                                <h:panelGrid columns="26" cellspacing="0" cellpadding="0">
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'A'}" value="A" action="#{memberBean.setFirstLetterCriteria('A')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'B'}" value="B" action="#{memberBean.setFirstLetterCriteria('B')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'C'}" value="C" action="#{memberBean.setFirstLetterCriteria('C')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'D'}" value="D" action="#{memberBean.setFirstLetterCriteria('D')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'E'}" value="E" action="#{memberBean.setFirstLetterCriteria('E')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'F'}" value="F" action="#{memberBean.setFirstLetterCriteria('F')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'G'}" value="G" action="#{memberBean.setFirstLetterCriteria('G')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'H'}" value="H" action="#{memberBean.setFirstLetterCriteria('H')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'I'}" value="I" action="#{memberBean.setFirstLetterCriteria('I')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'J'}" value="J" action="#{memberBean.setFirstLetterCriteria('J')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'K'}" value="K" action="#{memberBean.setFirstLetterCriteria('K')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'L'}" value="L" action="#{memberBean.setFirstLetterCriteria('L')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'M'}" value="M" action="#{memberBean.setFirstLetterCriteria('M')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'N'}" value="N" action="#{memberBean.setFirstLetterCriteria('N')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'O'}" value="O" action="#{memberBean.setFirstLetterCriteria('O')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'P'}" value="P" action="#{memberBean.setFirstLetterCriteria('P')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'Q'}" value="Q" action="#{memberBean.setFirstLetterCriteria('Q')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'R'}" value="R" action="#{memberBean.setFirstLetterCriteria('R')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'S'}" value="S" action="#{memberBean.setFirstLetterCriteria('S')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'T'}" value="T" action="#{memberBean.setFirstLetterCriteria('T')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'U'}" value="U" action="#{memberBean.setFirstLetterCriteria('U')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'V'}" value="V" action="#{memberBean.setFirstLetterCriteria('V')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'W'}" value="W" action="#{memberBean.setFirstLetterCriteria('W')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'X'}" value="X" action="#{memberBean.setFirstLetterCriteria('X')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'Y'}" value="Y" action="#{memberBean.setFirstLetterCriteria('Y')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'Z'}" value="Z" action="#{memberBean.setFirstLetterCriteria('Z')}"/>
+                                </h:panelGrid>
+                                <p></p>
+                                <p:dataTable value="#{memberBean.userAccounts}" var="member">
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.firstName}"/></f:facet>
+                                        <h:commandLink value="#{member.firstName}" action="#{memberBean.load(member.id)}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.lastName}"/></f:facet>
+                                        <h:outputText value="#{member.lastName}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.gender}"/></f:facet>
+                                        <h:outputText value="#{member.gender}">
+                                            <f:converter converterId="GenderNumberToString"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.email}"/></f:facet>
+                                        <h:outputText value="#{member.email}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.birth}"/></f:facet>
+                                        <h:outputText value="#{member.birthDate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.age}"/></f:facet>
+                                        <h:outputText value="#{member.age}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.confirmed}"/></f:facet>
+                                        <h:graphicImage rendered="#{member.confirmed}" url="/images/success-icon.png"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.registrationDate}"/></f:facet>
+                                        <h:outputText value="#{member.registrationDate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.lastUpdate}"/></f:facet>
+                                        <h:outputText value="#{member.lastUpdate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                        </h:outputText>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:tab>
+                            <p:tab title="#{bundle.recentMembership}">
+                                <h:outputText value="#{bundle.sinse}: " styleClass="fieldLabel"/>
+                                <h:outputText value="#{memberBean.lastSevenDays}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                                <p></p>
+                                <p:dataTable value="#{memberBean.recentUserAccounts}" var="member">
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.firstName}"/></f:facet>
+                                        <h:commandLink value="#{member.firstName}" action="#{memberBean.load(member.id)}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.lastName}"/></f:facet>
+                                        <h:outputText value="#{member.lastName}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.gender}"/></f:facet>
+                                        <h:outputText value="#{member.gender}">
+                                            <f:converter converterId="GenderNumberToString"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.email}"/></f:facet>
+                                        <h:outputText value="#{member.email}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.birth}"/></f:facet>
+                                        <h:outputText value="#{member.birthDate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.age}"/></f:facet>
+                                        <h:outputText value="#{member.age}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.confirmed}"/></f:facet>
+                                        <h:graphicImage rendered="#{member.confirmed}" url="/images/success-icon.png"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.registrationDate}"/></f:facet>
+                                        <h:outputText value="#{member.registrationDate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.lastUpdate}"/></f:facet>
+                                        <h:outputText value="#{member.lastUpdate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                        </h:outputText>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:tab>
+                            <p:tab title="#{bundle.privacy}">
+                                <p:stackedColumnChart width="700" value="#{memberBean.communicationPrivacyRanges}" var="range" xfield="#{range.rangeName}">
+                                    <p:chartSeries label="#{bundle.yes}" value="#{range.value}" />
+                                    <p:chartSeries label="#{bundle.no}" value="#{range.total}" />
+                                </p:stackedColumnChart>
+                            </p:tab>
+                            <p:tab title="#{bundle.growth}">
+                                <p:lineChart width="700" value="#{memberBean.membershipGrowthRanges}" var="range" xfield="#{range.rangeName}">
+                                    <p:chartSeries label="#{bundle.growth}" value="#{range.value}"/>
+                                    <p:chartSeries label="#{bundle.acumulated}" value="#{range.acumulated}" />
+                                </p:lineChart>
+                            </p:tab>
+                            <p:tab title="#{bundle.maintenance}">
+                                <h:commandButton value="#{bundle.scheduleMaintenance}" action="#{memberBean.scheduleAccountMaintenance}"/>
+                                <p></p>
+                                <p:dataTable value="#{memberBean.scheduledAccountMaintenances}" var="schedule">
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.scheduledMaintenance}"/></f:facet>
+                                        <h:outputText value="#{schedule}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                        </h:outputText>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:tab>
+                        </p:tabView>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

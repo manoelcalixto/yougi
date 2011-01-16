@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.prime.com.tr/ui">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link href="/cejug/resources/css/default.css" rel="stylesheet" type="text/css" />
+        <link href="/cejug/resources/css/cssLayout.css" rel="stylesheet" type="text/css" />
+        <link rel="shortcut icon" href="/cejug/images/favicon.ico" />
+        <title>#{bundle.application} - <ui:insert name="title">Title</ui:insert></title>
+    </h:head>
+    
+    <h:body>
+        <div id="top">
+            <table width="100%">
+                <tr>
+                    <td align="left">
+                        <div class="title"><p:graphicImage value="/images/logo-website.png"/></div>
+                    </td>
+                    <td align="right">
+                        <div class="identification"><c:if test="#{empty request.remoteUser}">
+                            <h:form><h:commandLink action="#{securityBackingBean.login}" value="#{bundle.signIn}"/> |
+                                <h:link outcome="registration">#{bundle.register}</h:link></h:form>
+                        </c:if>
+                        <c:if test="#{! empty request.remoteUser}">
+                            <h:form><h:commandLink action="#{securityBackingBean.logout}" value="#{bundle.signOut}"/></h:form>
+                        </c:if></div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="top_menu">
+            <c:if test="#{! empty request.remoteUser}">
+                <p:menubar>
+                    <p:submenu label="#{bundle.myAccount}">
+                        <p:menuitem value="#{bundle.profile}"        url="/profile/profile.xhtml"/>
+                        <p:menuitem value="#{bundle.personalData}"   url="/profile/member.xhtml"/>
+                        <p:menuitem value="#{bundle.privacy}"        url="/profile/privacy.xhtml"/>
+                        <p:menuitem value="#{bundle.changePassword}" url="/profile/change_password.xhtml"/>
+                    </p:submenu>
+                    <p:submenu label="#{bundle.application}">
+                        <p:menuitem value="#{bundle.users}"  url="/admin/users.xhtml"/>
+                        <p:menuitem value="#{bundle.groups}" url="/admin/groups.xhtml"/>
+                        <p:submenu label="#{bundle.geographicCoverage}">
+                            <p:menuitem value="#{bundle.countries}" url="/admin/countries.xhtml"/>
+                            <p:menuitem value="#{bundle.provinces}" url="/admin/provinces.xhtml"/>
+                            <p:menuitem value="#{bundle.cities}"    url="/admin/cities.xhtml"/>
+                        </p:submenu>
+                        <p:menuitem value="#{bundle.messageTemplates}" url="/admin/message_templates.xhtml"/>
+                    </p:submenu>
+                </p:menubar>
+            </c:if>
+        </div>
+        <div id="content_area">
+            <ui:insert name="content">Content</ui:insert>
+        </div>
+        <div id="bottom">
+            <div class="footer">
+                 Created and maintained by the <a href="http://www.cejug.org" target="_blank">#{bundle.application}</a> Community! | Version 0.10
+            </div>
+        </div>
+    </h:body>
+</html>

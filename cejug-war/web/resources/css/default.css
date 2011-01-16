@@ -1,0 +1,151 @@
+body {
+    background-color: #ffffff;
+    font-size: 12px;
+    font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    color: #000000;
+    margin: 10px;
+    background-image: url(../../images/background.jpg);
+}
+
+h1 {
+    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    border-bottom: 1px solid #AFAFAF;
+    font-size:  18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding: 0px;
+    color: #036fab;
+    margin-top: 0px;
+}
+
+h2 {
+    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    border-bottom: 1px solid #AFAFAF;
+    font-size:  14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    padding: 0px;
+    color: #1b4258;
+}
+
+a:link {
+  color: #045491;
+  font-weight : normal;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #0070c6;
+  font-weight : normal;
+  text-decoration: none;
+}
+
+a:link:hover, a:visited:hover  {
+  color: #045491;
+  font-weight : normal;
+  text-decoration : underline;
+}
+
+.alertMessage {
+    color: red;
+}
+
+.content {
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+.fieldFormat {
+    font-size: 10px;
+    color: #2a2a2a;
+}
+
+.fieldLabel {
+    font-weight: bold;
+}
+
+.fieldNote {
+    font-style: italic;
+    font-size: smaller;
+}
+
+.footer {
+    font-size: 10px;
+    text-align: center;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+.outputValue {
+    font-style: italic;
+}
+
+.highlight {
+    color: #0000ff;
+}
+
+.header3 {
+    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    border-bottom: 1px solid #AFAFAF;
+    font-size:  14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    padding: 0px;
+    color: #1b4258;
+}
+
+.dataTable {
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: black;
+}
+
+.dataTableHeader {
+    border-bottom-style: solid;
+    border-bottom-color: black;
+    border-bottom-width: 1px;
+    background-color: #e4e4e4;
+    padding-right: 3px;
+    padding-left: 3px;
+    padding-bottom: 3px;
+    padding-top: 3px;
+}
+
+.dataTableColumn {
+    padding-right: 3px;
+    padding-left: 3px;
+    padding-bottom: 3px;
+    padding-top: 3px;
+    vertical-align: top;
+}
+
+.subSection {
+    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    font-size:  14px;
+    font-weight: bold;
+    padding: 0px;
+    color: #036fab;
+}
+
+.title {
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    color: white;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 28px;
+}
+
+.identification {
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    color: blue;
+    font-family: Arial,Helvetica,sans-serif;
+}

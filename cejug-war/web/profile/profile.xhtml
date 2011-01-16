@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.prime.com.tr/ui">
+    <body>
+        <ui:composition template="../layout.xhtml">
+            <ui:define name="title">#{bundle.profile}</ui:define>
+            <ui:define name="content">
+                <div class="bread_crumb_area">
+                    <h:form>
+                        <p:breadCrumb styleClass="bread_crumb">
+                            <p:menuitem value="#{bundle.home}" url="../index.xhtml"/>
+                            <p:menuitem value="#{bundle.myAccount}"/>
+                            <p:menuitem value="#{bundle.profile}"/>
+                        </p:breadCrumb>
+                    </h:form>
+                </div>
+                <div class="content">
+                    <h1>#{bundle.profile}</h1>
+                    <h:form>
+                        <h:messages styleClass="alertMessage"/>
+                        <h:panelGrid columns="2" cellpadding="3">
+                            <h:outputText value="#{bundle.firstName}" styleClass="fieldLabel"/>
+                            <h:outputText value="#{bundle.lastName}" styleClass="fieldLabel"/>
+
+                            <h:outputText id="firstName" value="#{userAccountBean.userAccount.firstName}"/>
+                            <h:outputText id="lastName" value="#{userAccountBean.userAccount.lastName}"/>
+
+                            <h:outputText value="#{bundle.gender}" styleClass="fieldLabel"/>
+                            <h:outputText value="#{bundle.birthDate}" styleClass="fieldLabel"/>
+
+                            <h:outputText value="#{userAccountBean.userAccount.gender}">
+                                <f:converter converterId="GenderNumberToString"/>
+                            </h:outputText>
+                            <h:outputText value="#{userAccountBean.userAccount.birthDate}">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </h:outputText>
+
+                            <h:outputText value="#{bundle.email}" styleClass="fieldLabel"/>
+                            <h:outputText value="#{bundle.age}" styleClass="fieldLabel"/>
+
+                            <h:outputText value="#{userAccountBean.userAccount.email}"/>
+                            <h:outputText value="#{userAccountBean.userAccount.age}"/>
+                            
+                            <h:outputText value="#{bundle.website}" styleClass="fieldLabel"/>
+                            <h:outputText value="#{bundle.twitter}" styleClass="fieldLabel"/>
+
+                            <h:outputLink value="http://#{userAccountBean.contact.website}" target="_blank">#{userAccountBean.contact.website}</h:outputLink>
+                            <h:outputLink value="http://twitter.com/#{userAccountBean.contact.twitter}" target="_blank">#{userAccountBean.contact.twitter}</h:outputLink>
+
+                            <h:outputText value="#{bundle.country}" styleClass="fieldLabel"/>
+                            <h:outputText value="#{bundle.province}" styleClass="fieldLabel"/>
+
+                            <h:outputText value="#{userAccountBean.contact.country}"/>
+                            <h:outputText value="#{userAccountBean.contact.province}"/>
+
+                            <h:outputText value="#{bundle.city}" styleClass="fieldLabel"/>
+                            <h:outputText value="#{bundle.postalCode}" styleClass="fieldLabel"/>
+
+                            <h:outputText value="#{userAccountBean.contact.city}"/>
+                            <h:outputText value="#{userAccountBean.contact.postalCode}"/>
+                        </h:panelGrid>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
