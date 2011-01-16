@@ -1,0 +1,98 @@
+\documentclass[10pt,a4paper]{report}
+\usepackage[latin1]{inputenc}
+\author{Hildeberto Mendon\c{c}a}
+\title{JUG Management Application}
+\begin{document}
+\maketitle
+\tableofcontents
+\part{User Guide}
+\chapter{The Art of Managing a Java User Group}
+
+* Can you tell us about the application, site, or service in which you have
+  adopted GlassFish?
+   [ Note: this is where you can hopefully get some publicity for your
+     own business or project.  So consider including any hyperlinks,
+     screenshots, etc. that you would like for us to use in that context. ]
+
+\section{An Application to Manage JUGs}
+
+The JUG Management application explicitly aims to increase and strengthen the Java Community by promoting control of JUG operations and managing the knowledge produced by members of the group. We believe that knowledge and opportunities are the main forces of attraction around Java User Groups and an application is needed to make these forces efficiently flow through the community. It is also important to emphasize that JUG leaders have always been great entrepreneurs, but they lack of analytical information to make mature decisions.
+
+The CEJUG Community (http://www.cejug.org) is leading the project and decided to make it widely available as an open source software. It is freely available for use and open for contributions. CEJUG is using the first release of the application (http://www.cejug.org:8080/cejug) since January 1st, 2011. It is helping the group to define what is actually being a JUG member. Nowadays, most of JUGs simply consider all those people registered in their technical mailing as members. This simplicity is good for management purposes, but we lose lots of information because of that. We don't know, for instance, which reasons led members to leave the group. Did we do something wrong? What can we do to get better and have members back into the boat? We also noticed that even non-technical people, as entrepreneurs, recruiters, and those who decided to unsubscribe because of too many messages, would like to keep in touch with the group, not necessarily going into technical discussions, but proposing other ways of collaboration. Adopting a separate application to manage subscriptions is helping CEJUG to collect more feedback and be more inclusive.
+
+\part{Developer Guide}
+\chapter{Software Architecture}
+
+\section{Application Server}
+The first deployment of the JUG Management application was made in the Glassfish V3 Application Server. 
+
+* How and when did you first find out about GlassFish?
+
+Project leaders have been in contact with Glassfish since its early versions. Other CEJUG projects, such as the PUG Arena and CEJUG Classifieds, were developed and deployed on Glassfish V2.
+
+* Did you go through an evaluation process before selecting GlassFish?
+
+The choice for Glassfish was based on previous experiences, expertise of the team and our current hosting possibilities. No comparison was made with other application servers because, at the time, it was not possible, since Glassfish was the only application server available implementing the latest JEE specification.
+
+* What specific version of GlassFish are you using?
+
+We are using Glassfish V3.0.1 Open Source Edition
+
+* On what operating system do you run GlassFish?  Do you use the same OS for
+  both development and production deployment?
+  
+We are using Ubuntu and Windows in the development environment and CentOS in the production environment. However, since it is a open source project, the application must run in all Java-enabled operating systems.
+
+* On what hardware platform do you run GlassFish?  Do you use the same platform
+  for both development and production deployment?
+  
+  The hardware on production environment is actually provided by the hosting service. As far as we know, it is a Linux virtual machine with limited memory and processing capability. For the moment, we are able to support only a few concurrent users, but it is due to resources limitation, not application constraints.
+
+* Are you a paying customer? If not, do you know what supported customers are entitled to?
+
+No. We are not. No, we don't know.
+
+* What specific features or modules of GlassFish are you using?
+
+We decided to adopt an minimalist approach where most of libs needed by the application are also distributed with Glassfish, such as Eclipse Link and Mojarra, and most of configurations are made through the administrative console, such as database connection pool, JavaMail session and Security Realm. The only external lib is the Primefaces component library. We would love to find a way to avoid that too, but not possible :) We make extensive use of annotations and avoid as much as we can xml for configuration. The transaction is fully managed by the container. This way, we keep focused on the source code of the JUG community model.
+
+* What do you like most about GlassFish?
+
+Its administrative console is awesome and its hot deployment with Netbeans is just perfect.
+
+* What would you most like to see improved in GlassFish?
+
+As we said before, all we would love to have for the moment is an official visual component library available by default. This is the only lib missing for a fully supported JEE application, such as the JUG Management one. We know this is a difficult decision, but we would support it.
+
+* Are you using any open source or commercial frameworks or tools in your application?
+  (Examples could include Seam, Spring, Hibernate, ...)
+  
+  Out of Glassfish, only Primefaces.
+
+* Does your application use a database? If so, which one? 
+
+We use MySQL.
+
+* Are there any figures about the scale of your adoption which you would like
+  to share (such as how much traffic is being handled, how many servers are
+  used, how much developer time went into building your application)?
+  
+About that, we don't have much to say, due to the size of the application and the limitation of budget.  
+
+* How has GlassFish performed since your application went live?  Have you run
+  into any production issues which you would attribute to GlassFish?
+  
+It is running like a charm ;) No problem so far. Let's see how many deployments it can resist before any possible memory leak.  
+
+* How would your describe your participation in the GlassFish project (e.g.
+  user only, submitter of bug reports and RFEs, developer who has contributed
+  code)?
+  
+  We are one users so far. We would love to contribute more.
+
+* Is there anything else you think would be of interest in a story about your
+  GlassFish adoption? 
+  
+This JEE Server has gained lots of attention for constantly run towards the state-of-the-art of the Java server side technology. It has an aggressive roadmap, being always the first product on the market to fully implement the last version of the JEE specification. This commitment with the Java technology led CEJUG to adopt it in order to maximize our productivity.
+  
+\end{document}
