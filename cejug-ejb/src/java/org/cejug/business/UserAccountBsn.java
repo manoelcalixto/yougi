@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -16,12 +18,9 @@ import javax.ejb.LocalBean;
 import javax.ejb.Timeout;
 import javax.ejb.Timer;
 import javax.ejb.TimerService;
-import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -31,7 +30,6 @@ import org.cejug.entity.City;
 import org.cejug.entity.Contact;
 import org.cejug.entity.ContactType;
 import org.cejug.entity.EmailMessage;
-import org.cejug.entity.Message;
 import org.cejug.entity.MessageTemplate;
 import org.cejug.entity.UserAccount;
 import org.cejug.entity.UserGroup;
@@ -170,28 +168,21 @@ public class UserAccountBsn {
     }
 
     private void sendEmailConfirmationRequest(UserAccount userAccount, String serverAddress) {
-        MimeMessage msg = new MimeMessage(mailSession);
-
+        MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("E3F122DCC87D42248872878412B34CEE");
+        Map values = new HashMap();
+        values.put("serverAddress", serverAddress);
+        values.put("userAccount.firstName", userAccount.getFirstName());
+        values.put("userAccount.confirmationCode", userAccount.getConfirmationCode());
+        EmailMessage emailMessage = new EmailMessage();
+        emailMessage.setSubject(messageTemplate.getTitle());
+        emailMessage.setRecipientTo(userAccount);
+        messageTemplateBsn.applyEmailMessageTemplate(emailMessage, messageTemplate, values);
+        emailMessage.setHeader(serverAddress);
         try {
-            msg.setSubject("[CEJUG] Confirmação de Email", "UTF-8");
-            msg.setRecipient(RecipientType.TO, new InternetAddress(userAccount.getEmail(), userAccount.toString()));
-            msg.setText("<p>Oi <b>"+ userAccount.getFirstName() +"</b>,</p>" +
-                        "<p>você parece ter se registrado como membro no CEJUG.</p>" +
-                        "<p>Nós gostariamos de confirmar o seu endereço de email para podermos entrar em contato sempre que necessário. " +
-                        "Você só precisa clicar no link abaixo para confirmar o seu registro no CEJUG:</p>" +
-                        "<p><a href=\"http://"+ serverAddress + "/EmailConfirmation?code="+ userAccount.getConfirmationCode() + "\">http://"+ serverAddress +"/EmailConfirmation?code="+ userAccount.getConfirmationCode() +"</a></p>" +
-                        "<p>Se o endereço acima não aparecer como link no seu cliente de email, selecione, copie e cole o endereço no seu navegador web.</p>" +
-                        "<p>Se você não se registrou no CEJUG e acredita se tratar de um engano, por favor ignore esta mensagem e aceite nossas desculpas.</p>" +
-                        "<p>Atenciosamente,</p>" +
-                        "<p><b>Coordenação do CEJUG</b></p>", "UTF-8");
-            msg.setHeader("Content-Type", "text/html;charset=UTF-8");
-            Transport.send(msg);
+            Transport.send(emailMessage.createMimeMessage(mailSession));
         }
         catch(MessagingException me) {
-            throw new PersistenceException("Error when sending the mail confirmation. The registration was not finalized.",me);
-        }
-        catch(UnsupportedEncodingException uee) {
-            throw new PersistenceException("Error when sending the mail confirmation. The registration was not finalized.", uee);
+            throw new RuntimeException("Error when sending the mail confirmation. The registration was not finalized.",me);
         }
     }
 
@@ -212,65 +203,41 @@ public class UserAccountBsn {
     }
 
     private void sendWelcomeMessage(UserAccount userAccount) {
-        MimeMessage msg = new MimeMessage(mailSession);
-
+        MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("47DEE5C2E0E14F8BA4605F3126FBFAF4");
+        Map values = new HashMap();
+        values.put("userAccount.firstName", userAccount.getFirstName());
+        
+        EmailMessage emailMessage = new EmailMessage();
+        emailMessage.setSubject(messageTemplate.getTitle());
+        emailMessage.setRecipientTo(userAccount);
+        messageTemplateBsn.applyEmailMessageTemplate(emailMessage, messageTemplate, values);
         try {
-            msg.setSubject("[CEJUG] Bem vindo ao CEJUG", "UTF-8");
-            msg.setRecipient(RecipientType.TO, new InternetAddress(userAccount.getEmail(), userAccount.toString()));
-            msg.setText("<p>Oi <b>"+ userAccount.getFirstName() +"</b>,</p>" +
-                        "<p>seu registro foi confirmado. Seja bem vindo ao <b><a href=\"http://www.cejug.org\">CEJUG</a></b>!</p>" +
-                        "<p>Atenciosamente,</p>" +
-                        "<p><b>Coordenação do CEJUG</b></p>", "UTF-8");
-            msg.setHeader("Content-Type", "text/html;charset=UTF-8");
-            Transport.send(msg);
+            Transport.send(emailMessage.createMimeMessage(mailSession));
         }
         catch(MessagingException me) {
-            throw new PersistenceException("Error when sending welcome message.",me);
-        }
-        catch(UnsupportedEncodingException uee) {
-            throw new PersistenceException("Error when sending welcome message.", uee);
+            throw new RuntimeException("Error when sending the deactivation reason to user "+ userAccount.getUsername(),me);
         }
     }
 
     private void sendNewMemberAlertMessage(UserAccount newMember) {
-        MimeMessage msg = new MimeMessage(mailSession);
-
+        MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("0D6F96382D91454F8155A720F3326F1B");
+        Map values = new HashMap();
+        values.put("newMember.fullName", newMember.getFullName());
+        values.put("newMember.registrationDate", newMember.getRegistrationDate());
+        
+        EmailMessage emailMessage = new EmailMessage();
+        emailMessage.setSubject(messageTemplate.getTitle());
+        
         AccessGroup administrativeGroup = accessGroupBsn.findAdministrativeGroup();
         List<UserAccount> leaders = userGroupBsn.findUsersGroup(administrativeGroup);
-        InternetAddress[] addresses = new InternetAddress[leaders.size()];
-        try {
-            for(int i = 0;i < addresses.length;i++){
-                addresses[i] = new InternetAddress(leaders.get(i).getEmail(), leaders.get(i).getFullName(), "UTF-8");
-            }
-        }
-        catch(UnsupportedEncodingException uee) {
-            throw new PersistenceException("Error when sending welcome message.", uee);
-        }
+        emailMessage.setRecipientsTo(leaders);
+        messageTemplateBsn.applyEmailMessageTemplate(emailMessage, messageTemplate, values);
 
         try {
-            msg.setSubject("[CEJUG Admin] Um novo membro cadastrou-se no grupo", "UTF-8");
-            msg.setRecipients(RecipientType.TO, addresses);
-            StringBuilder message = new StringBuilder();
-            message.append("<p>Caro Coordenador do CEJUG,</p>");
-            message.append("<p><b>");
-            message.append(newMember.getFullName());
-            message.append("</b> registrou-se como novo membro do CEJUG em ");
-            message.append(newMember.getRegistrationDate());
-            message.append(".</p>");
-            if(newMember.getMailingList()) {
-                message.append("<p>Verifique se o email ");
-                message.append(newMember.getEmail());
-                message.append(" está registrado na ");
-                message.append("<a href=\"http://java.net/projects/cejug/lists/discussao/subscribers\">lista de discussão</a>.</p>");
-            }
-            message.append("<p>Atenciosamente,</p>");
-            message.append("<p><b>Sistema de Administração do CEJUG</b></p>");
-            msg.setText(message.toString(), "UTF-8");
-            msg.setHeader("Content-Type", "text/html;charset=UTF-8");
-            Transport.send(msg);
+            Transport.send(emailMessage.createMimeMessage(mailSession));
         }
         catch(MessagingException me) {
-            throw new PersistenceException("Error when sending welcome message.",me);
+            throw new RuntimeException("Error when sending alert to administrators about the registration of "+ newMember.getUsername(),me);
         }
     }
 
@@ -289,25 +256,19 @@ public class UserAccountBsn {
     }
 
     private void sendDeactivationReason(UserAccount userAccount) {
-        MimeMessage msg = new MimeMessage(mailSession);
-
+        MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("03BD6F3ACE4C48BD8660411FC8673DB4");
+        Map values = new HashMap();
+        values.put("userAccount.firstName", userAccount.getFirstName());
+        values.put("userAccount.deactivationReason", userAccount.getConfirmationCode());
+        EmailMessage emailMessage = new EmailMessage();
+        emailMessage.setSubject(messageTemplate.getTitle());
+        emailMessage.setRecipientTo(userAccount);
+        messageTemplateBsn.applyEmailMessageTemplate(emailMessage, messageTemplate, values);
         try {
-            msg.setSubject("[CEJUG] Cancelamento de Registro", "UTF-8");
-            msg.setRecipient(RecipientType.TO, new InternetAddress(userAccount.getEmail(), userAccount.toString()));
-            msg.setText("<p>Caro(a) <b>"+ userAccount.getFirstName() +"</b>," +
-                        "<p>sentimos muito em informar que não poderemos manter o seu registro como membro do CEJUG.</p>" +
-                        "<p>Motivo: \"<i>"+ userAccount.getDeactivationReason() +"</i>\"</p>" +
-                        "<p>Pedimos desculpas pelo transtorno e contamos com a vossa compreensão.</p>" +
-                        "<p>Atenciosamente,</p>" +
-                        "<p><b>Coordenação do CEJUG</b></p>", "UTF-8");
-            msg.setHeader("Content-Type", "text/html;charset=UTF-8");
-            Transport.send(msg);
+            Transport.send(emailMessage.createMimeMessage(mailSession));
         }
         catch(MessagingException me) {
-            throw new PersistenceException("Error when sending the mail confirmation. The registration was not finalized.",me);
-        }
-        catch(UnsupportedEncodingException uee) {
-            throw new PersistenceException("Error when sending the mail confirmation. The registration was not finalized.", uee);
+            throw new RuntimeException("Error when sending the deactivation reason to user "+ userAccount.getUsername(),me);
         }
     }
 
@@ -347,39 +308,21 @@ public class UserAccountBsn {
 
     private void sendConfirmationCode(UserAccount userAccount, String serverAddress) {
         MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("67BE6BEBE45945D29109A8D6CD878344");
-        Object[] values = {userAccount, serverAddress};
+        Map values = new HashMap();
+        values.put("serverAddress", serverAddress);
+        values.put("userAccount.firstName", userAccount.getFirstName());
+        values.put("userAccount.confirmationCode", userAccount.getConfirmationCode());
         EmailMessage emailMessage = new EmailMessage();
-        
+        emailMessage.setSubject(messageTemplate.getTitle());
+        emailMessage.setRecipientTo(userAccount);
         messageTemplateBsn.applyEmailMessageTemplate(emailMessage, messageTemplate, values);
-
+        emailMessage.setHeader(serverAddress);
         try {
             Transport.send(emailMessage.createMimeMessage(mailSession));
         }
         catch(MessagingException me) {
             throw new RuntimeException("Error when sending the mail confirmation. The registration was not finalized.",me);
         }
-//        MimeMessage msg = new MimeMessage(mailSession);
-//
-//        try {
-//            msg.setSubject("[CEJUG] Mudança de Senha", "UTF-8");
-//            msg.setRecipient(RecipientType.TO, new InternetAddress(userAccount.getEmail(), userAccount.toString()));
-//            msg.setText("<p>Oi <b>"+ userAccount.getFirstName() +"</b>," +
-//                        "<p>você solicitou a mudança da sua senha do CEJUG.</p>" +
-//                        "<p>O código de autorização para mudar sua senha é: </p>" +
-//                        "<p>"+ userAccount.getConfirmationCode() +"</p>"+
-//                        "<p>Informe este código no formulário de mudança de senha ou siga o endereço abaixo para preencher o campo automaticamente:</p>" +
-//                        "<p><a href=\"http://"+ serverAddress + "/change_password.xhtml?cc=" + userAccount.getConfirmationCode() +"\">http://"+ serverAddress + "/change_password.xhtml?cc=" + userAccount.getConfirmationCode() +"</a></p>"+
-//                        "<p>Atenciosamente,</p>" +
-//                        "<p><b>Coordenação do CEJUG</b></p>", "UTF-8");
-//            msg.setHeader("Content-Type", "text/html;charset=UTF-8");
-//            Transport.send(msg);
-//        }
-//        catch(MessagingException me) {
-//            throw new PersistenceException("Error when sending the mail confirmation. The registration was not finalized.",me);
-//        }
-//        catch(UnsupportedEncodingException uee) {
-//            throw new PersistenceException("Error when sending the mail confirmation. The registration was not finalized.", uee);
-//        }
     }
 
     public Boolean passwordMatches(UserAccount userAccount, String passwordToCheck) {

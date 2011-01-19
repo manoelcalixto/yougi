@@ -21,48 +21,77 @@
                 <div class="content">
                     <h1>#{bundle.profile}</h1>
                     <h:form>
-                        <h:messages styleClass="alertMessage"/>
-                        <h:panelGrid columns="2" cellpadding="3">
-                            <h:outputText value="#{bundle.firstName}" styleClass="fieldLabel"/>
-                            <h:outputText value="#{bundle.lastName}" styleClass="fieldLabel"/>
+                        <p:tabView dynamic="false" cache="true">
+                            <p:tab title="#{bundle.personalData}">
+                                <h:messages styleClass="alertMessage"/>
+                                <h:panelGrid columns="2" cellpadding="3">
+                                    <h:outputText value="#{bundle.firstName}" styleClass="fieldLabel"/>
+                                    <h:outputText value="#{bundle.lastName}" styleClass="fieldLabel"/>
 
-                            <h:outputText id="firstName" value="#{userAccountBean.userAccount.firstName}"/>
-                            <h:outputText id="lastName" value="#{userAccountBean.userAccount.lastName}"/>
+                                    <h:outputText id="firstName" value="#{userAccountBean.userAccount.firstName}"/>
+                                    <h:outputText id="lastName" value="#{userAccountBean.userAccount.lastName}"/>
 
-                            <h:outputText value="#{bundle.gender}" styleClass="fieldLabel"/>
-                            <h:outputText value="#{bundle.birthDate}" styleClass="fieldLabel"/>
+                                    <h:outputText value="#{bundle.gender}" styleClass="fieldLabel"/>
+                                    <h:outputText value="#{bundle.birthDate}" styleClass="fieldLabel"/>
 
-                            <h:outputText value="#{userAccountBean.userAccount.gender}">
-                                <f:converter converterId="GenderNumberToString"/>
-                            </h:outputText>
-                            <h:outputText value="#{userAccountBean.userAccount.birthDate}">
-                                <f:convertDateTime pattern="dd/MM/yyyy"/>
-                            </h:outputText>
+                                    <h:outputText value="#{userAccountBean.userAccount.gender}">
+                                        <f:converter converterId="GenderNumberToString"/>
+                                    </h:outputText>
+                                    <h:outputText value="#{userAccountBean.userAccount.birthDate}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                    </h:outputText>
 
-                            <h:outputText value="#{bundle.email}" styleClass="fieldLabel"/>
-                            <h:outputText value="#{bundle.age}" styleClass="fieldLabel"/>
+                                    <h:outputText value="#{bundle.email}" styleClass="fieldLabel"/>
+                                    <h:outputText value="#{bundle.age}" styleClass="fieldLabel"/>
 
-                            <h:outputText value="#{userAccountBean.userAccount.email}"/>
-                            <h:outputText value="#{userAccountBean.userAccount.age}"/>
-                            
-                            <h:outputText value="#{bundle.website}" styleClass="fieldLabel"/>
-                            <h:outputText value="#{bundle.twitter}" styleClass="fieldLabel"/>
+                                    <h:outputText value="#{userAccountBean.userAccount.email}"/>
+                                    <h:outputText value="#{userAccountBean.userAccount.age}"/>
 
-                            <h:outputLink value="http://#{userAccountBean.contact.website}" target="_blank">#{userAccountBean.contact.website}</h:outputLink>
-                            <h:outputLink value="http://twitter.com/#{userAccountBean.contact.twitter}" target="_blank">#{userAccountBean.contact.twitter}</h:outputLink>
+                                    <h:outputText value="#{bundle.website}" styleClass="fieldLabel"/>
+                                    <h:outputText value="#{bundle.twitter}" styleClass="fieldLabel"/>
 
-                            <h:outputText value="#{bundle.country}" styleClass="fieldLabel"/>
-                            <h:outputText value="#{bundle.province}" styleClass="fieldLabel"/>
+                                    <h:outputLink value="http://#{userAccountBean.contact.website}" target="_blank">#{userAccountBean.contact.website}</h:outputLink>
+                                    <h:outputLink value="http://twitter.com/#{userAccountBean.contact.twitter}" target="_blank">#{userAccountBean.contact.twitter}</h:outputLink>
 
-                            <h:outputText value="#{userAccountBean.contact.country}"/>
-                            <h:outputText value="#{userAccountBean.contact.province}"/>
+                                    <h:outputText value="#{bundle.country}" styleClass="fieldLabel"/>
+                                    <h:outputText value="#{bundle.province}" styleClass="fieldLabel"/>
 
-                            <h:outputText value="#{bundle.city}" styleClass="fieldLabel"/>
-                            <h:outputText value="#{bundle.postalCode}" styleClass="fieldLabel"/>
+                                    <h:outputText value="#{userAccountBean.contact.country}"/>
+                                    <h:outputText value="#{userAccountBean.contact.province}"/>
 
-                            <h:outputText value="#{userAccountBean.contact.city}"/>
-                            <h:outputText value="#{userAccountBean.contact.postalCode}"/>
-                        </h:panelGrid>
+                                    <h:outputText value="#{bundle.city}" styleClass="fieldLabel"/>
+                                    <h:outputText value="#{bundle.postalCode}" styleClass="fieldLabel"/>
+
+                                    <h:outputText value="#{userAccountBean.contact.city}"/>
+                                    <h:outputText value="#{userAccountBean.contact.postalCode}"/>
+                                </h:panelGrid>
+                                <p></p>
+                                <h:button outcome="member.xhtml" value="#{bundle.update}"/>
+                            </p:tab>
+                            <p:tab title="#{bundle.privacy}">
+                                <h:panelGrid columns="2" width="700">
+                                    <h:graphicImage rendered="#{userAccountBean.userAccount.publicProfile}" url="/images/success-icon.png"/>
+                                    <h:outputText rendered="#{userAccountBean.userAccount.publicProfile}" value="#{bundle.publicProfileMessage}"/>
+
+                                    <h:graphicImage rendered="#{userAccountBean.userAccount.mailingList}" url="/images/success-icon.png"/>
+                                    <h:outputLabel rendered="#{userAccountBean.userAccount.mailingList}" for="mailingList" value="#{bundle.mailingListMessage}"/>
+
+                                    <h:graphicImage rendered="#{userAccountBean.userAccount.event}" url="/images/success-icon.png"/>
+                                    <h:outputLabel rendered="#{userAccountBean.userAccount.event}" for="event" value="#{bundle.eventMessage}"/>
+
+                                    <h:graphicImage rendered="#{userAccountBean.userAccount.news}" url="/images/success-icon.png"/>
+                                    <h:outputLabel rendered="#{userAccountBean.userAccount.news}" for="news" value="#{bundle.newsMessage}"/>
+
+                                    <h:graphicImage rendered="#{userAccountBean.userAccount.generalOffer}" url="/images/success-icon.png"/>
+                                    <h:outputLabel rendered="#{userAccountBean.userAccount.generalOffer}" for="generalOffer" value="#{bundle.generalOfferMessage}"/>
+
+                                    <h:graphicImage rendered="#{userAccountBean.userAccount.jobOffer}" url="/images/success-icon.png"/>
+                                    <h:outputLabel rendered="#{userAccountBean.userAccount.jobOffer}" for="jobOffer" value="#{bundle.jobOfferMessage}"/>
+                                </h:panelGrid>
+                                <p></p>
+                                <h:button outcome="privacy.xhtml" value="#{bundle.update}"/>
+                            </p:tab>
+                        </p:tabView>
                     </h:form>
                 </div>
             </ui:define>

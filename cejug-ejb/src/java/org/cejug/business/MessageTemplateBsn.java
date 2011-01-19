@@ -3,6 +3,7 @@ package org.cejug.business;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.ejb.Stateless;
@@ -50,11 +51,26 @@ public class MessageTemplateBsn {
             em.remove(messageTemplate);
     }
 
+    public void applyEmailMessageTemplate(EmailMessage emailMessage, MessageTemplate template, Map values) {
+        Pattern pattern = Pattern.compile(VAR_PATTERN);
+        List<String> variables = findVariables(pattern, template.getBody());
+        String body = template.getBody();
+        Object value;
+        for(String variable: variables) {
+            variable = variable.substring(2, variable.length() - 1);
+            value = values.get(variable);
+            if(value != null)
+                body = body.replace("#{" + variable + "}", values.get(variable).toString());
+        }
+        emailMessage.setBody(body);
+    }
+
+    /** @deprecated */
     public void applyEmailMessageTemplate(EmailMessage emailMessage, MessageTemplate template, Object[] values) {
         Pattern pattern = Pattern.compile(VAR_PATTERN);
         List<String> variables = findVariables(pattern, template.getBody());
 
-        String variable;
+        String variable = null;
         String className;
         String value = null;
         int point;
@@ -85,6 +101,7 @@ public class MessageTemplateBsn {
         emailMessage.setBody(body);
     }
 
+    /** @deprecated */
     private String getValue(Object object, String var) {
         if (var != null) {
             int point = var.indexOf(".");

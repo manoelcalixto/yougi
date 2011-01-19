@@ -116,6 +116,13 @@ create table message_template (
 
 alter table message_template add constraint pk_message_template primary key (id);
 
+insert into message_template (id, title, body) values
+('03BD6F3ACE4C48BD8660411FC8673DB4', '[CEJUG] Registration Deactivated', '<p>Dear <b>#{userAccount.firstName}</b>,</p><p>We are very sorry to inform that we cannot keep you as a CEJUG member.</p><p>Reason: <i>#{userAccount.deactivationReason}</i></p><p>We kindly appologize for the inconvenience and we count on your understanding.</p><p>Best Regards,</p><p><b>JUG Leadership Team</b></p>'),
+('0D6F96382D91454F8155A720F3326F1B', '[CEJUG Admin] A New Member Joint the Group', '<p>Dear JUG Leader,</p><p><b>#{newMember.fullName}</b> joint the JUG at #{newMember.registrationDate}.</p><p>Regards,</p><p><b>JUG Management</b></p>'),
+('47DEE5C2E0E14F8BA4605F3126FBFAF4', '[CEJUG] Welcome to CEJUG', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you are confirmed as a member of the JUG. Welcome to the <b><a href=''http://www.cejug.org''>JUG Community</a></b>!</p><p>Thank you!</p><p><b>JUG Leadership Team</b></p>'),
+('67BE6BEBE45945D29109A8D6CD878344', '[CEJUG] Request for Password Change', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you requested to change your JUG password. The authorization code to perform this operation is:</p><p>#{userAccount.confirmationCode}</p><p>Inform this code in the form that you just saw right after requesting the new password or just follow the link below to fill out the form authomatically:</p><p><a href=''http://#{serverAddress}/change_password.xhtml?cc=#{userAccount.confirmationCode}''>http://#{serverAddress}/change_password.xhtml?cc=#{userAccount.confirmationCode}</a></p><p>Thank you!<br/>\r\n\r\n<b>JUG Leadership Team</b></p>'),
+('E3F122DCC87D42248872878412B34CEE', '[CEJUG] Email Confirmation', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you seems to register yourself as a member of JUG. We would like to confirm your email address to be able to contact you when necessary. You just have to click on the link below to confirm your email:</p><p><a href=''http://#{serverAddress}/EmailConfirmation?code=#{userAccount.confirmationCode}''>http://#{serverAddress}/EmailConfirmation?code=#{userAccount.confirmationCode}</a></p><p>If the address above does not look like a link, please select, copy and paste it your web browser. If you do not registered on JUG and beleave that this message was sent by mistake, please ignore it and accept our apologes.</p><p>Best Regards,</p><p><b>JUG Membership Team</b></p>');
+
 create table event_venue (
     id          char(32)     not null,
     name        varchar(100) not null,
