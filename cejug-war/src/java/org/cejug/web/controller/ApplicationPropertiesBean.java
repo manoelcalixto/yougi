@@ -2,6 +2,7 @@ package org.cejug.web.controller;
 
 import java.io.Serializable;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -19,10 +20,6 @@ public class ApplicationPropertiesBean implements Serializable {
     private Map applicationProperties;
 
     public Map getApplicationProperties() {
-        if(applicationProperties == null) {
-             applicationProperties = applicationPropertyBsn.findApplicationProperties();
-
-        }
         return applicationProperties;
     }
 
@@ -33,6 +30,11 @@ public class ApplicationPropertiesBean implements Serializable {
     public String save() {
         applicationPropertyBsn.save(applicationProperties);
         return "properties?faces-redirect=true";
+    }
+
+    @PostConstruct
+    public void load() {
+        applicationProperties = applicationPropertyBsn.findApplicationProperties();
     }
 
     public String getUrl() {

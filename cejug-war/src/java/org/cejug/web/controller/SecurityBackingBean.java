@@ -19,9 +19,6 @@ public class SecurityBackingBean {
     @EJB
     private UserAccountBsn userAccountBsn;
 
-    @ManagedProperty(value="#{facesContext}")
-    private FacesContext facesContext;
-
     @ManagedProperty(value="#{sessionScope}")
     private Map<String, Object> sessionMap;
 
@@ -50,8 +47,8 @@ public class SecurityBackingBean {
     }
 
     public String logout() {
-        HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
-        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         try {
             request.logout();
             session.invalidate();
@@ -62,19 +59,21 @@ public class SecurityBackingBean {
         return "/login?faces-redirect=true";
     }
 
+    public Boolean getIsUserLeader() {
+        Boolean result = false;
+        FacesContext context = FacesContext.getCurrentInstance();
+        Object request = context.getExternalContext().getRequest();
+        if(request instanceof HttpServletRequest) {
+            result = ((HttpServletRequest)request).isUserInRole("leader");
+        }
+        return result;
+    }
+
     public Map<String, Object> getSessionMap() {
         return sessionMap;
     }
 
     public void setSessionMap(Map<String, Object> sessionMap) {
         this.sessionMap = sessionMap;
-    }
-
-    public FacesContext getFacesContext() {
-        return facesContext;
-    }
-
-    public void setFacesContext(FacesContext facesContext) {
-        this.facesContext = facesContext;
     }
 }

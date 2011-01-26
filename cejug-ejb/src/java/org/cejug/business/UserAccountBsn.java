@@ -29,6 +29,7 @@ import org.cejug.entity.AccessGroup;
 import org.cejug.entity.City;
 import org.cejug.entity.Contact;
 import org.cejug.entity.ContactType;
+import org.cejug.entity.DeactivationType;
 import org.cejug.entity.EmailMessage;
 import org.cejug.entity.MessageTemplate;
 import org.cejug.entity.UserAccount;
@@ -108,7 +109,8 @@ public class UserAccountBsn {
     }
 
     public List<UserAccount> findUserAccountsOrderedByRegistration() {
-        return em.createQuery("select ua from UserAccount ua order by ua.registrationDate")
+        return em.createQuery("select ua from UserAccount ua where ua.confirmationCode is null and ua.deactivated = :deactivated order by ua.registrationDate")
+                 .setParameter("deactivated", Boolean.FALSE)
                  .getResultList();
     }
 
@@ -122,6 +124,12 @@ public class UserAccountBsn {
     public List<UserAccount> findUserAccountsStartingWith(String firstLetter) {
         return em.createQuery("select ua from UserAccount ua where ua.firstName like '"+ firstLetter +"%' and ua.deactivated = :deactivated order by ua.firstName")
                  .setParameter("deactivated", Boolean.FALSE)
+                 .getResultList();
+    }
+
+    public List<UserAccount> findDeactivatedUserAccounts() {
+        return em.createQuery("select ua from UserAccount ua where ua.deactivated = :deactivated order by ua.deactivationDate desc")
+                 .setParameter("deactivated", Boolean.TRUE)
                  .getResultList();
     }
 
@@ -174,7 +182,6 @@ public class UserAccountBsn {
         values.put("userAccount.firstName", userAccount.getFirstName());
         values.put("userAccount.confirmationCode", userAccount.getConfirmationCode());
         EmailMessage emailMessage = new EmailMessage();
-        emailMessage.setSubject(messageTemplate.getTitle());
         emailMessage.setRecipientTo(userAccount);
         messageTemplateBsn.applyEmailMessageTemplate(emailMessage, messageTemplate, values);
         emailMessage.setHeader(serverAddress);
@@ -191,7 +198,7 @@ public class UserAccountBsn {
             UserAccount userAccount = (UserAccount)em.createQuery("select ua from UserAccount ua where ua.confirmationCode = :code")
                                                      .setParameter("code", confirmationCode)
                                                      .getSingleResult();
-            userAccount.setConfirmationCode("");
+            userAccount.setConfirmationCode(null);
             userAccount.setRegistrationDate(Calendar.getInstance().getTime());
             userAccount.setPassword(encryptPassword(userAccount.getPassword()));
             sendWelcomeMessage(userAccount);
@@ -208,7 +215,6 @@ public class UserAccountBsn {
         values.put("userAccount.firstName", userAccount.getFirstName());
         
         EmailMessage emailMessage = new EmailMessage();
-        emailMessage.setSubject(messageTemplate.getTitle());
         emailMessage.setRecipientTo(userAccount);
         messageTemplateBsn.applyEmailMessageTemplate(emailMessage, messageTemplate, values);
         try {
@@ -225,9 +231,7 @@ public class UserAccountBsn {
         values.put("newMember.fullName", newMember.getFullName());
         values.put("newMember.registrationDate", newMember.getRegistrationDate());
         
-        EmailMessage emailMessage = new EmailMessage();
-        emailMessage.setSubject(messageTemplate.getTitle());
-        
+        EmailMessage emailMessage = new EmailMessage();        
         AccessGroup administrativeGroup = accessGroupBsn.findAdministrativeGroup();
         List<UserAccount> leaders = userGroupBsn.findUsersGroup(administrativeGroup);
         emailMessage.setRecipientsTo(leaders);
@@ -247,28 +251,74 @@ public class UserAccountBsn {
         existingUserAccount.setDeactivated(Boolean.TRUE);
         existingUserAccount.setDeactivationDate(Calendar.getInstance().getTime());
         existingUserAccount.setDeactivationReason(userAccount.getDeactivationReason());
+        existingUserAccount.setDeactivationType(DeactivationType.ADMINISTRATIVE);
 
         save(existingUserAccount);
         userGroupBsn.removeUserFromAllGroups(userAccount);
         if(!existingUserAccount.getDeactivationReason().trim().isEmpty()) {
             sendDeactivationReason(existingUserAccount);
         }
+        sendDeactivationAlertMessage(existingUserAccount);
+    }
+
+    public void deactivateOwnMembership(UserAccount userAccount) {
+        UserAccount existingUserAccount = findUserAccount(userAccount.getId());
+
+        existingUserAccount.setDeactivated(Boolean.TRUE);
+        existingUserAccount.setDeactivationDate(Calendar.getInstance().getTime());
+        existingUserAccount.setDeactivationReason(userAccount.getDeactivationReason());
+        existingUserAccount.setDeactivationType(DeactivationType.OWNWILL);
+
+        save(existingUserAccount);
+        userGroupBsn.removeUserFromAllGroups(userAccount);
+        if(!existingUserAccount.getDeactivationReason().trim().isEmpty()) {
+            sendDeactivationReason(existingUserAccount);
+        }
+        sendDeactivationAlertMessage(existingUserAccount);
     }
 
     private void sendDeactivationReason(UserAccount userAccount) {
-        MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("03BD6F3ACE4C48BD8660411FC8673DB4");
         Map values = new HashMap();
         values.put("userAccount.firstName", userAccount.getFirstName());
-        values.put("userAccount.deactivationReason", userAccount.getConfirmationCode());
+        values.put("userAccount.deactivationReason", userAccount.getDeactivationReason());
+        
+        MessageTemplate messageTemplate;
+        if(userAccount.getDeactivationType() == DeactivationType.ADMINISTRATIVE) {
+            messageTemplate = messageTemplateBsn.findMessageTemplate("03BD6F3ACE4C48BD8660411FC8673DB4");
+        }
+        else {
+            messageTemplate = messageTemplateBsn.findMessageTemplate("IKWMAJSNDOE3F122DCC87D4224887287");
+        }
+
         EmailMessage emailMessage = new EmailMessage();
-        emailMessage.setSubject(messageTemplate.getTitle());
         emailMessage.setRecipientTo(userAccount);
         messageTemplateBsn.applyEmailMessageTemplate(emailMessage, messageTemplate, values);
+
         try {
             Transport.send(emailMessage.createMimeMessage(mailSession));
         }
         catch(MessagingException me) {
             throw new RuntimeException("Error when sending the deactivation reason to user "+ userAccount.getUsername(),me);
+        }
+    }
+
+    private void sendDeactivationAlertMessage(UserAccount userAccount) {
+        Map values = new HashMap();
+        values.put("userAccount.fullName", userAccount.getFullName());
+        values.put("userAccount.deactivationReason", userAccount.getDeactivationReason());
+
+        MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("0D6F96382IKEJSUIWOK5A720F3326F1B");
+        EmailMessage emailMessage = new EmailMessage();
+        AccessGroup administrativeGroup = accessGroupBsn.findAdministrativeGroup();
+        List<UserAccount> leaders = userGroupBsn.findUsersGroup(administrativeGroup);
+        emailMessage.setRecipientsTo(leaders);
+        messageTemplateBsn.applyEmailMessageTemplate(emailMessage, messageTemplate, values);
+
+        try {
+            Transport.send(emailMessage.createMimeMessage(mailSession));
+        }
+        catch(MessagingException me) {
+            throw new RuntimeException("Error when sending the deactivation reason from "+ userAccount.getUsername() +" to leaders.",me);
         }
     }
 
@@ -313,7 +363,6 @@ public class UserAccountBsn {
         values.put("userAccount.firstName", userAccount.getFirstName());
         values.put("userAccount.confirmationCode", userAccount.getConfirmationCode());
         EmailMessage emailMessage = new EmailMessage();
-        emailMessage.setSubject(messageTemplate.getTitle());
         emailMessage.setRecipientTo(userAccount);
         messageTemplateBsn.applyEmailMessageTemplate(emailMessage, messageTemplate, values);
         emailMessage.setHeader(serverAddress);
@@ -334,7 +383,7 @@ public class UserAccountBsn {
 
     public void changePassword(UserAccount userAccount) {
         userAccount.setPassword(encryptPassword(userAccount.getPassword()));
-        userAccount.setConfirmationCode("");
+        userAccount.setConfirmationCode(null);
         save(userAccount);
     }
 

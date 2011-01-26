@@ -8,6 +8,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -45,6 +47,7 @@ public class UserAccount implements Serializable {
     private Boolean deactivated = false;
     private Date deactivationDate;
     private String deactivationReason;
+    private DeactivationType deactivationType;
 
     // Privacy properties
     private Boolean publicProfile;
@@ -222,6 +225,16 @@ public class UserAccount implements Serializable {
         this.deactivationReason = deactivationReason;
     }
 
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name="deactivation_type")
+    public DeactivationType getDeactivationType() {
+        return deactivationType;
+    }
+
+    public void setDeactivationType(DeactivationType deactivationType) {
+        this.deactivationType = deactivationType;
+    }
+
     @Column(table="communication_privacy", name = "public_profile")
     public Boolean getPublicProfile() {
         return publicProfile;
@@ -318,9 +331,9 @@ public class UserAccount implements Serializable {
     @Transient
     public boolean getConfirmed() {
         if(confirmationCode != null)
-            return this.confirmationCode.isEmpty();
-        else
             return false;
+        else
+            return true;
     }
 
     @Transient

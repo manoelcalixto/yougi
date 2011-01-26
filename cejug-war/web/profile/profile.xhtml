@@ -66,7 +66,10 @@
                                     <h:outputText value="#{userAccountBean.contact.postalCode}"/>
                                 </h:panelGrid>
                                 <p></p>
-                                <h:button outcome="member.xhtml" value="#{bundle.update}"/>
+                                <h:panelGrid columns="2">
+                                    <h:button outcome="member.xhtml" value="#{bundle.update}"/>
+                                    <h:button outcome="member_deactivation.xhtml" value="#{bundle.deactivateMembership}"/>
+                                </h:panelGrid>
                             </p:tab>
                             <p:tab title="#{bundle.privacy}">
                                 <h:panelGrid columns="2" width="700">

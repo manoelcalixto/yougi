@@ -21,7 +21,7 @@
                 <div class="content">
                     <h1>#{bundle.users}</h1>
                     <h:form>
-                        <p:tabView dynamic="true" cache="true">
+                        <p:tabView dynamic="false" cache="true">
                             <p:tab title="#{bundle.allUsers}">
                                 <h:panelGrid columns="26" cellspacing="0" cellpadding="0">
                                     <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'A'}" value="A" action="#{memberBean.setFirstLetterCriteria('A')}"/>
@@ -72,14 +72,10 @@
                                         <h:outputText value="#{member.email}"/>
                                     </p:column>
                                     <p:column>
-                                        <f:facet name="header"><h:outputText value="#{bundle.birth}"/></f:facet>
-                                        <h:outputText value="#{member.birthDate}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
-                                        </h:outputText>
-                                    </p:column>
-                                    <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.age}"/></f:facet>
-                                        <h:outputText value="#{member.age}"/>
+                                        <h:outputText value="#{member.age}">
+                                            <f:converter converterId="AgeNumberToString"/>
+                                        </h:outputText>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.confirmed}"/></f:facet>
@@ -125,14 +121,10 @@
                                         <h:outputText value="#{member.email}"/>
                                     </p:column>
                                     <p:column>
-                                        <f:facet name="header"><h:outputText value="#{bundle.birth}"/></f:facet>
-                                        <h:outputText value="#{member.birthDate}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
-                                        </h:outputText>
-                                    </p:column>
-                                    <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.age}"/></f:facet>
-                                        <h:outputText value="#{member.age}"/>
+                                        <h:outputText value="#{member.age}">
+                                            <f:converter converterId="AgeNumberToString"/>
+                                        </h:outputText>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.confirmed}"/></f:facet>
@@ -149,6 +141,38 @@
                                         <h:outputText value="#{member.lastUpdate}">
                                             <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
                                         </h:outputText>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:tab>
+                            <p:tab title="#{bundle.deactivatedMembers}">
+                                <p:dataTable value="#{memberBean.deactivatedUserAccounts}" var="deactivated">
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.firstName}"/></f:facet>
+                                        <h:commandLink value="#{deactivated.firstName}" action="#{memberBean.load(deactivated.id)}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.lastName}"/></f:facet>
+                                        <h:outputText value="#{deactivated.lastName}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.email}"/></f:facet>
+                                        <h:outputText value="#{deactivated.email}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.type}"/></f:facet>
+                                        <h:outputText value="#{deactivated.deactivationType}">
+                                            <f:converter converterId="DeactivationTypeEnumToString"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.date}"/></f:facet>
+                                        <h:outputText value="#{deactivated.deactivationDate}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.reason}"/></f:facet>
+                                        <h:outputText value="#{deactivated.deactivationReason}"/>
                                     </p:column>
                                 </p:dataTable>
                             </p:tab>

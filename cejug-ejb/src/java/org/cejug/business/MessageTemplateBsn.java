@@ -1,6 +1,5 @@
 package org.cejug.business;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -62,67 +61,8 @@ public class MessageTemplateBsn {
             if(value != null)
                 body = body.replace("#{" + variable + "}", values.get(variable).toString());
         }
+        emailMessage.setSubject(template.getTitle());
         emailMessage.setBody(body);
-    }
-
-    /** @deprecated */
-    public void applyEmailMessageTemplate(EmailMessage emailMessage, MessageTemplate template, Object[] values) {
-        Pattern pattern = Pattern.compile(VAR_PATTERN);
-        List<String> variables = findVariables(pattern, template.getBody());
-
-        String variable = null;
-        String className;
-        String value = null;
-        int point;
-        String body = template.getBody();
-        for (int i = 0; i < variables.size(); i++) {
-            variable = variables.get(i);
-            variable = variable.substring(2, variable.length() - 1);
-            for (int j = 0; j < values.length; j++) {
-                className = values[j].getClass().getSimpleName();
-                className = className.substring(0, 1).toLowerCase() + className.substring(1);
-                point = variable.indexOf(".");
-                if (point > 0) {
-                    if (className.equals(variable.substring(0, point))) {
-                        value = getValue(values[j], variable.substring(point + 1));
-                        break;
-                    }
-                } else {
-                    if (className.equals(variable)) {
-                        value = getValue(values[j], null);
-                        break;
-                    }
-                }
-            }
-            if (value != null) {
-                body = body.replace("#{" + variable + "}", value);
-            }
-        }
-        emailMessage.setBody(body);
-    }
-
-    /** @deprecated */
-    private String getValue(Object object, String var) {
-        if (var != null) {
-            int point = var.indexOf(".");
-            try {
-                if (point > 0) {
-                    String methodName = "get" + var.substring(0, 1).toUpperCase() + var.substring(1, point);
-                    Method method = object.getClass().getMethod(methodName, (Class[]) null);
-                    Object obj = method.invoke(object, (Object[]) null);
-                    return getValue(obj, var.substring(point + 1));
-                } else {
-                    String nomeMetodo = "get" + var.substring(0, 1).toUpperCase() + var.substring(1);
-                    Method metodo = object.getClass().getMethod(nomeMetodo, (Class[]) null);
-                    Object obj = metodo.invoke(object, (Object[]) null);
-                    return getValue(obj, null);
-                }
-            } catch (Exception e) {
-                return "";
-            }
-        } else {
-            return object.toString();
-        }
     }
 
     private List<String> findVariables(Pattern pattern, CharSequence charSequence) {

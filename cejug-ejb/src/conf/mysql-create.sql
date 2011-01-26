@@ -41,7 +41,8 @@ create table user_account (
     last_update         timestamp        null,
     deactivated         tinyint(1)       null default false,
     deactivation_date   timestamp        null,
-    deactivation_reason varchar(255)     null
+    deactivation_reason varchar(255)     null,
+    deactivation_type   tinyint(1)       null  # 0 - administrative  1 - ownwill
 ) type = innodb;
 
 alter table user_account add constraint pk_user_account primary key (id);
@@ -102,26 +103,33 @@ alter table user_group add constraint fk_group_user foreign key (group_id) refer
 alter table user_group add constraint fk_user_group foreign key (user_id) references user_account(id) on delete cascade;
 
 create table application_property (
-    property_name  varchar(100) not null,
+    property_key   varchar(100) not null,
     property_value text             null
-) type = innodb;
+) type = MyISAM;
 
-alter table application_property add constraint pk_application_property primary key (property_name);
+insert into application_property (property_key, property_value) values
+    ('groupName',''),
+    ('url',''),
+    ('fileRepositoryPath','');
+
+alter table application_property add constraint pk_application_property primary key (property_key);
 
 create table message_template (
     id    char(32)     not null,
     title varchar(255) not null,
     body  text         not null
-) type = innodb;
+) type = MyISAM;
 
 alter table message_template add constraint pk_message_template primary key (id);
 
 insert into message_template (id, title, body) values
-('03BD6F3ACE4C48BD8660411FC8673DB4', '[CEJUG] Registration Deactivated', '<p>Dear <b>#{userAccount.firstName}</b>,</p><p>We are very sorry to inform that we cannot keep you as a CEJUG member.</p><p>Reason: <i>#{userAccount.deactivationReason}</i></p><p>We kindly appologize for the inconvenience and we count on your understanding.</p><p>Best Regards,</p><p><b>JUG Leadership Team</b></p>'),
-('0D6F96382D91454F8155A720F3326F1B', '[CEJUG Admin] A New Member Joint the Group', '<p>Dear JUG Leader,</p><p><b>#{newMember.fullName}</b> joint the JUG at #{newMember.registrationDate}.</p><p>Regards,</p><p><b>JUG Management</b></p>'),
-('47DEE5C2E0E14F8BA4605F3126FBFAF4', '[CEJUG] Welcome to CEJUG', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you are confirmed as a member of the JUG. Welcome to the <b><a href=''http://www.cejug.org''>JUG Community</a></b>!</p><p>Thank you!</p><p><b>JUG Leadership Team</b></p>'),
-('67BE6BEBE45945D29109A8D6CD878344', '[CEJUG] Request for Password Change', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you requested to change your JUG password. The authorization code to perform this operation is:</p><p>#{userAccount.confirmationCode}</p><p>Inform this code in the form that you just saw right after requesting the new password or just follow the link below to fill out the form authomatically:</p><p><a href=''http://#{serverAddress}/change_password.xhtml?cc=#{userAccount.confirmationCode}''>http://#{serverAddress}/change_password.xhtml?cc=#{userAccount.confirmationCode}</a></p><p>Thank you!<br/>\r\n\r\n<b>JUG Leadership Team</b></p>'),
-('E3F122DCC87D42248872878412B34CEE', '[CEJUG] Email Confirmation', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you seems to register yourself as a member of JUG. We would like to confirm your email address to be able to contact you when necessary. You just have to click on the link below to confirm your email:</p><p><a href=''http://#{serverAddress}/EmailConfirmation?code=#{userAccount.confirmationCode}''>http://#{serverAddress}/EmailConfirmation?code=#{userAccount.confirmationCode}</a></p><p>If the address above does not look like a link, please select, copy and paste it your web browser. If you do not registered on JUG and beleave that this message was sent by mistake, please ignore it and accept our apologes.</p><p>Best Regards,</p><p><b>JUG Membership Team</b></p>');
+    ('03BD6F3ACE4C48BD8660411FC8673DB4', '[JUG] Registration Deactivated', '<p>Dear <b>#{userAccount.firstName}</b>,</p><p>We are very sorry to inform that we cannot keep you as a CEJUG member.</p><p>Reason: <i>#{userAccount.deactivationReason}</i></p><p>We kindly appologize for the inconvenience and we count on your understanding.</p><p>Best Regards,</p><p><b>JUG Leadership Team</b></p>'),
+    ('0D6F96382D91454F8155A720F3326F1B', '[JUG Admin] A New Member Joint the Group', '<p>Dear JUG Leader,</p><p><b>#{userAccount.fullName}</b> joint the JUG at #{userAccount.registrationDate}.</p><p>Regards,</p><p><b>JUG Management</b></p>'),
+    ('47DEE5C2E0E14F8BA4605F3126FBFAF4', '[JUG] Welcome to CEJUG', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you are confirmed as a member of the JUG. Welcome to the <b><a href=''http://www.cejug.org''>JUG Community</a></b>!</p><p>Thank you!</p><p><b>JUG Leadership Team</b></p>'),
+    ('67BE6BEBE45945D29109A8D6CD878344', '[JUG] Request for Password Change', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you requested to change your JUG password. The authorization code to perform this operation is:</p><p>#{userAccount.confirmationCode}</p><p>Inform this code in the form that you just saw right after requesting the new password or just follow the link below to fill out the form authomatically:</p><p><a href=''http://#{serverAddress}/change_password.xhtml?cc=#{userAccount.confirmationCode}''>http://#{serverAddress}/change_password.xhtml?cc=#{userAccount.confirmationCode}</a></p><p>Thank you!<br/>\r\n\r\n<b>JUG Leadership Team</b></p>'),
+    ('E3F122DCC87D42248872878412B34CEE', '[JUG] Email Confirmation', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you seems to register yourself as a member of JUG. We would like to confirm your email address to be able to contact you when necessary. You just have to click on the link below to confirm your email:</p><p><a href=''http://#{serverAddress}/EmailConfirmation?code=#{userAccount.confirmationCode}''>http://#{serverAddress}/EmailConfirmation?code=#{userAccount.confirmationCode}</a></p><p>If the address above does not look like a link, please select, copy and paste it your web browser. If you do not registered on JUG and beleave that this message was sent by mistake, please ignore it and accept our apologes.</p><p>Best Regards,</p><p><b>JUG Leadership Team</b></p>'),
+    ('IKWMAJSNDOE3F122DCC87D4224887287', '[JUG] Membership Deactivated', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>we just knew that you wanna leave us :( Thank you for all contributions you have made to the JUG community.</p><p>All the best,</p><p><b>JUG Leadership Team</b></p>'),
+    ('0D6F96382IKEJSUIWOK5A720F3326F1B', '[JUG Admin] A Member Was Deactivated', '<p>Dear JUG Leader,</p><p><b>#{userAccount.fullName}</b> was deactivated from the JUG due to the following reason:</p><p><i>#{userAccount.deactivationReason}</i></p><p>Regards,</p><p><b>JUG Management</b></p>');
 
 create table event_venue (
     id          char(32)     not null,
@@ -143,7 +151,7 @@ alter table event_venue add constraint fk_country_venue foreign key (country) re
 
 create table event (
     id          char(32)     not null,
-    name        varchar(255) not null,
+    name        varchar(100) not null,
     start       datetime     not null,
     end         datetime     not null,
     venue       char(32)     not null,

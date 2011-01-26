@@ -11,24 +11,24 @@ import javax.persistence.Table;
 public class ApplicationProperty implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private String propertyName;
+    private String propertyKey;
     private String propertyValue;
 
     public ApplicationProperty() {}
 
-    public ApplicationProperty(String propertyName, String propertyValue) {
-        this.propertyName = propertyName;
+    public ApplicationProperty(String propertyKey, String propertyValue) {
+        this.propertyKey = propertyKey;
         this.propertyValue = propertyValue;
     }
 
     @Id
-    @Column(name="property_name", nullable=false)
-    public String getPropertyName() {
-        return propertyName;
+    @Column(name="property_key", nullable=false)
+    public String getPropertyKey() {
+        return propertyKey;
     }
 
-    public void setPropertyName(String propertyName) {
-        this.propertyName = propertyName;
+    public void setPropertyKey(String propertyKey) {
+        this.propertyKey = propertyKey;
     }
 
     @Column(name="property_value")
@@ -49,7 +49,7 @@ public class ApplicationProperty implements Serializable {
             return false;
         }
         final ApplicationProperty other = (ApplicationProperty) obj;
-        if ((this.propertyName == null) ? (other.propertyName != null) : !this.propertyName.equals(other.propertyName)) {
+        if ((this.propertyKey == null) ? (other.propertyKey != null) : !this.propertyKey.equals(other.propertyKey)) {
             return false;
         }
         return true;
@@ -58,12 +58,12 @@ public class ApplicationProperty implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 89 * hash + (this.propertyName != null ? this.propertyName.hashCode() : 0);
+        hash = 89 * hash + (this.propertyKey != null ? this.propertyKey.hashCode() : 0);
         return hash;
     }
 
     @Override
     public String toString() {
-        return propertyName +" = "+ propertyValue;
+        return propertyKey +" = "+ propertyValue;
     }
 }

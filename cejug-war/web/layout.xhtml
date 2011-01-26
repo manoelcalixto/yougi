@@ -7,9 +7,9 @@
       xmlns:p="http://primefaces.prime.com.tr/ui">
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <link href="/cejug/resources/css/default.css" rel="stylesheet" type="text/css" />
-        <link href="/cejug/resources/css/cssLayout.css" rel="stylesheet" type="text/css" />
-        <link rel="shortcut icon" href="/cejug/images/favicon.ico" />
+        <link href="/jug/resources/css/default.css" rel="stylesheet" type="text/css" />
+        <link href="/jug/resources/css/cssLayout.css" rel="stylesheet" type="text/css" />
+        <link rel="shortcut icon" href="/jug/images/favicon.ico" />
         <title>#{bundle.application} - <ui:insert name="title">Title</ui:insert></title>
     </h:head>
     
@@ -36,18 +36,19 @@
             <c:if test="#{! empty request.remoteUser}">
                 <p:menubar>
                     <p:submenu label="#{bundle.myAccount}">
-                        <p:menuitem value="#{bundle.profile}"        url="/profile/profile.xhtml"/>
+                        <p:menuitem value="#{bundle.profile}" url="/profile/profile.xhtml"/>
                         <p:menuitem value="#{bundle.changePassword}" url="/profile/change_password.xhtml"/>
                     </p:submenu>
-                    <p:submenu label="#{bundle.administration}">
-                        <p:menuitem value="#{bundle.users}"  url="/admin/users.xhtml"/>
+                    <p:submenu label="#{bundle.administration}" rendered="#{securityBackingBean.isUserLeader}">
+                        <p:menuitem value="#{bundle.users}" url="/admin/users.xhtml"/>
                         <p:menuitem value="#{bundle.groups}" url="/admin/groups.xhtml"/>
                         <p:submenu label="#{bundle.geographicCoverage}">
                             <p:menuitem value="#{bundle.countries}" url="/admin/countries.xhtml"/>
                             <p:menuitem value="#{bundle.provinces}" url="/admin/provinces.xhtml"/>
-                            <p:menuitem value="#{bundle.cities}"    url="/admin/cities.xhtml"/>
+                            <p:menuitem value="#{bundle.cities}" url="/admin/cities.xhtml"/>
                         </p:submenu>
                         <p:menuitem value="#{bundle.messageTemplates}" url="/admin/message_templates.xhtml"/>
+                        <p:menuitem value="#{bundle.properties}" url="/admin/properties.xhtml"/>
                     </p:submenu>
                 </p:menubar>
             </c:if>

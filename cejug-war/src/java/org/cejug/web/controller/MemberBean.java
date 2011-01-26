@@ -117,6 +117,11 @@ public class MemberBean implements Serializable {
         return userAccountBsn.findRegisteredUsersSince(getLastSevenDays());
     }
 
+    public List<UserAccount> getDeactivatedUserAccounts() {
+        List<UserAccount> deactivatedUsers = userAccountBsn.findDeactivatedUserAccounts();
+        return deactivatedUsers;
+    }
+
     public List<Date> getScheduledAccountMaintenances() {
         return userAccountBsn.getScheduledAccountMaintenances();
     }

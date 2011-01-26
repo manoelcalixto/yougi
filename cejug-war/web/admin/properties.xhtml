@@ -22,8 +22,14 @@
                     <h:form>
                         <h:messages styleClass="alertMessage"/>
                         <h:panelGrid>
-                            <h:outputLabel for="repositoryPath" value="#{bundle.repositoryPath}" styleClass="fieldLabel"/>
-                            <h:inputText id="repositoryPath" label="#{bundle.repositoryPath}" size="30" maxlength="100" value="#{applicationPropertiesBean.applicationProperties['repositoryPath']}"/>
+                            <h:outputLabel for="groupName" value="#{bundle.groupName}" styleClass="fieldLabel"/>
+                            <h:inputText id="groupName" label="#{bundle.groupName}" size="30" maxlength="100" value="#{applicationPropertiesBean.applicationProperties['groupName']}"/>
+
+                            <h:outputLabel for="url" value="#{bundle.url}" styleClass="fieldLabel"/>
+                            <h:inputText id="url" label="#{bundle.url}" size="30" maxlength="100" value="#{applicationPropertiesBean.applicationProperties['url']}"/>
+
+                            <h:outputLabel for="fileRepositoryPath" value="#{bundle.fileRepositoryPath}" styleClass="fieldLabel"/>
+                            <h:inputText id="fileRepositoryPath" label="#{bundle.fileRepositoryPath}" size="30" maxlength="100" value="#{applicationPropertiesBean.applicationProperties['fileRepositoryPath']}"/>
 
                             <h:outputText value="&nbsp;"/>
                             <h:panelGrid columns="2">

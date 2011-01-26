@@ -13,7 +13,9 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.cejug.business.LocationBsn;
 import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.City;
@@ -274,6 +276,19 @@ public class UserAccountBean implements Serializable {
         existingUserAccount.setEvent(userAccount.getEvent());
         userAccountBsn.save(existingUserAccount);
         return "profile?faces-redirect=true";
+    }
+
+    public String deactivateMembership() {
+        userAccountBsn.deactivateOwnMembership(userAccount);
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+        try {
+            request.logout();
+            session.invalidate();
+        }
+        catch(ServletException se) {}
+        
+        return "/index?faces-redirect=true";
     }
 
     private void removeSessionScoped() {
