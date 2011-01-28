@@ -27,8 +27,9 @@ import org.cejug.entity.UserAccount;
 @ManagedBean
 @SessionScoped
 public class UserAccountBean implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-    @EJB
+	@EJB
     private UserAccountBsn userAccountBsn;
 
     @EJB

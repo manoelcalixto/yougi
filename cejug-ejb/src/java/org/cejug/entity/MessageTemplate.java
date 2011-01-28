@@ -14,8 +14,9 @@ import javax.persistence.Transient;
 @Entity
 @Table(name="message_template")
 public class MessageTemplate implements Serializable {
-
-    private String id;
+	private static final long serialVersionUID = 1L;
+	
+	private String id;
     private String title;
     private String body;
 

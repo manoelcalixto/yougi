@@ -54,7 +54,7 @@ public class MembershipGrowthRange {
         Date registrationDate;
         Calendar date = Calendar.getInstance();
         MembershipGrowthRange membershipGrowthRange = null;
-        int year = 0, month = 0, i = 0, acumulated = 0;
+        int year = 0, month = 0, acumulated = 0;
         boolean incremented = false;
         for(UserAccount userAccount: userAccounts) {
             registrationDate = userAccount.getRegistrationDate();
@@ -81,7 +81,6 @@ public class MembershipGrowthRange {
         }
 
         Date deactivationDate;
-        boolean decremented = false;
         for(UserAccount userAccount: userAccounts) {
             if(!userAccount.getDeactivated())
                 continue;

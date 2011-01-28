@@ -29,12 +29,14 @@ public class LocationBsn {
             return null;
     }
 
-    public List<Country> findCountries() {
+    @SuppressWarnings("unchecked")
+	public List<Country> findCountries() {
         return em.createQuery("select c from Country c order by c.name asc")
                  .getResultList();
     }
 
-    public List<Country> findAssociatedCountries() {
+    @SuppressWarnings("unchecked")
+	public List<Country> findAssociatedCountries() {
         return em.createQuery("select distinct p.country from Province p order by p.country")
                  .getResultList();
     }
@@ -43,12 +45,14 @@ public class LocationBsn {
         return em.find(Province.class, id);
     }
 
-    public List<Province> findProvinces() {
+    @SuppressWarnings("unchecked")
+	public List<Province> findProvinces() {
         return em.createQuery("select p from Province p order by p.country.name, p.name asc")
                  .getResultList();
     }
 
-    public List<Province> findProvinces(Country country) {
+    @SuppressWarnings("unchecked")
+	public List<Province> findProvinces(Country country) {
         return em.createQuery("select p from Province p where p.country = :country order by p.name asc")
                  .setParameter("country", country)
                  .getResultList();
@@ -58,12 +62,14 @@ public class LocationBsn {
         return em.find(City.class, id);
     }
 
-    public List<City> findCities() {
+    @SuppressWarnings("unchecked")
+	public List<City> findCities() {
         return em.createQuery("select c from City c order by c.country.name, c.name asc")
                  .getResultList();
     }
 
-    public List<City> findCities(Country country, Boolean includingInvalids) {
+    @SuppressWarnings("unchecked")
+	public List<City> findCities(Country country, Boolean includingInvalids) {
         if(includingInvalids)
             return em.createQuery("select c from City c where c.country = :country order by c.name asc")
                  .setParameter("country", country)
@@ -75,7 +81,8 @@ public class LocationBsn {
                  .getResultList();
     }
 
-    public List<City> findCities(Province province, Boolean includingInvalids) {
+    @SuppressWarnings("unchecked")
+	public List<City> findCities(Province province, Boolean includingInvalids) {
         if(includingInvalids)
             return em.createQuery("select c from City c where c.province = :province order by c.name asc")
                  .setParameter("province", province)
@@ -87,11 +94,13 @@ public class LocationBsn {
                  .getResultList();
     }
 
-    public List<City> findCitiesStartingWith(String initials) {
+    @SuppressWarnings("unchecked")
+	public List<City> findCitiesStartingWith(String initials) {
         return em.createQuery("select c from City c where c.name like '"+ initials +"%' order by c.name").getResultList();
     }
 
-    public City findCityByName(String name) {
+    @SuppressWarnings("unchecked")
+	public City findCityByName(String name) {
         List<City> candidates = em.createQuery("select c from City c where c.name = :name")
                  .setParameter("name", name)
                  .getResultList();

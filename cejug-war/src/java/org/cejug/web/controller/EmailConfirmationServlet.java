@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.cejug.business.UserAccountBsn;
 
 public class EmailConfirmationServlet extends HttpServlet {
-    @EJB
+	private static final long serialVersionUID = 1L;
+	
+	@EJB
     private UserAccountBsn userAccountBsn;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)

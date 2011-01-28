@@ -67,7 +67,8 @@ public class AccessGroupBsn {
         return group;
     }
     
-    public List<AccessGroup> findAccessGroups() {
+    @SuppressWarnings("unchecked")
+	public List<AccessGroup> findAccessGroups() {
         return em.createQuery("select ag from AccessGroup ag order by ag.name").getResultList();
     }
 
@@ -86,7 +87,8 @@ public class AccessGroupBsn {
         if(accessGroup.getId() == null || accessGroup.getId().isEmpty()) {
             try {
                 AccessGroup group = findAccessGroupByName(accessGroup.getName());
-                throw new PersistenceException("A group named '"+ accessGroup.getName() +"' already exists.");
+                if(group != null)
+                	throw new PersistenceException("A group named '"+ accessGroup.getName() +"' already exists.");
             }
             catch(NoResultException nre) {
                 accessGroup.setId(EntitySupport.generateEntityId());

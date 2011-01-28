@@ -30,7 +30,8 @@ public class MessageTemplateBsn {
         return em.find(MessageTemplate.class, id);
     }
 
-    public List<MessageTemplate> findMessageTemplates() {
+    @SuppressWarnings("unchecked")
+	public List<MessageTemplate> findMessageTemplates() {
         return em.createQuery("select mt from MessageTemplate mt order by mt.title").getResultList();
     }
 
@@ -50,7 +51,7 @@ public class MessageTemplateBsn {
             em.remove(messageTemplate);
     }
 
-    public void applyEmailMessageTemplate(EmailMessage emailMessage, MessageTemplate template, Map values) {
+    public void applyEmailMessageTemplate(EmailMessage emailMessage, MessageTemplate template, Map<String, Object> values) {
         Pattern pattern = Pattern.compile(VAR_PATTERN);
         List<String> variables = findVariables(pattern, template.getBody());
         String body = template.getBody();

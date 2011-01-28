@@ -16,8 +16,9 @@ public class ApplicationPropertyBsn {
     @PersistenceContext
     EntityManager em;
 
-    public Map<String, String> findApplicationProperties() {
-        Map propertiesMap = new HashMap<String, String>();
+    @SuppressWarnings("unchecked")
+	public Map<String, String> findApplicationProperties() {
+        Map<String, String> propertiesMap = new HashMap<String, String>();
         List<ApplicationProperty> properties = em.createQuery("select ap from ApplicationProperty ap").getResultList();
         for(ApplicationProperty property: properties) {
             propertiesMap.put(property.getPropertyKey(), property.getPropertyValue());
@@ -25,6 +26,7 @@ public class ApplicationPropertyBsn {
         return propertiesMap;
     }
 
+    @SuppressWarnings("unchecked")
     public void save(Map<String, String> properties) {
         List<ApplicationProperty> existingProperties = em.createQuery("select ap from ApplicationProperty ap").getResultList();
         for(ApplicationProperty property: existingProperties) {

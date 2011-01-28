@@ -9,8 +9,9 @@ import javax.persistence.Embeddable;
  */
 @Embeddable
 public class UserGroupId implements Serializable {
+    private static final long serialVersionUID = 1L;
     
-    private String groupId;
+	private String groupId;
     private String userId;
 
     public UserGroupId() {
