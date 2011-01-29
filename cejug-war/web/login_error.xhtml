@@ -21,7 +21,7 @@
                     <form method="post" action="j_security_check">
                         <h:panelGrid>
                             <h:outputLabel for="j_username" value="#{bundle.email}" styleClass="fieldLabel"/>
-                            <input type="text"  name="j_username"/>
+                            <input type="text"  name="j_username" onchange="formatEmail(this)"/>
 
                             <h:outputLabel for="j_password" value="#{bundle.password}" styleClass="fieldLabel"/>
                             <input type="password" name="j_password"/>

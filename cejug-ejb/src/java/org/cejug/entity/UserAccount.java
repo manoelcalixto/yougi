@@ -18,6 +18,7 @@ import javax.persistence.SecondaryTable;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
+import org.cejug.util.TextUtils;
 
 /**
  * Represents the user account of jug members.
@@ -101,6 +102,7 @@ public class UserAccount implements Serializable {
     }
 
     public void setFirstName(String firstName) {
+        firstName = TextUtils.capitalizeFirstCharWords(firstName);
         this.firstName = firstName;
     }
 
@@ -110,6 +112,7 @@ public class UserAccount implements Serializable {
     }
 
     public void setLastName(String lastName) {
+        lastName = TextUtils.capitalizeFirstCharWords(lastName);
         this.lastName = lastName;
     }
 
@@ -171,8 +174,9 @@ public class UserAccount implements Serializable {
     }
 
     public void setEmail(String email) {
+        email = email.toLowerCase();
         this.email = email;
-        this.username = email;
+        this.setUsername(email);
     }
 
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
@@ -311,6 +315,7 @@ public class UserAccount implements Serializable {
     }
 
     public void setConfirmEmail(String confirmEmail) {
+        confirmEmail = confirmEmail.toLowerCase();
         this.confirmEmail = confirmEmail;
     }
 
