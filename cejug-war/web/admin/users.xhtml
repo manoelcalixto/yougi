@@ -23,33 +23,38 @@
                     <h:form>
                         <p:tabView dynamic="false" cache="true">
                             <p:tab title="#{bundle.allUsers}">
+                                <h:panelGrid columns="3">
+                                    <h:outputLabel for="emailCriteria" value="#{bundle.email}" styleClass="fieldLabel"/>
+                                    <h:inputText id="emailCriteria" label="#{bundle.email}" size="30" maxlength="100" value="#{memberBean.emailCriteria}" onchange="formatEmail(this)"/>
+                                    <h:commandButton action="#{memberBean.findUserAccountByEmail}" value="#{bundle.search}"/>
+                                </h:panelGrid>
                                 <h:panelGrid columns="26" cellspacing="0" cellpadding="0">
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'A'}" value="A" action="#{memberBean.setFirstLetterCriteria('A')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'B'}" value="B" action="#{memberBean.setFirstLetterCriteria('B')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'C'}" value="C" action="#{memberBean.setFirstLetterCriteria('C')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'D'}" value="D" action="#{memberBean.setFirstLetterCriteria('D')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'E'}" value="E" action="#{memberBean.setFirstLetterCriteria('E')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'F'}" value="F" action="#{memberBean.setFirstLetterCriteria('F')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'G'}" value="G" action="#{memberBean.setFirstLetterCriteria('G')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'H'}" value="H" action="#{memberBean.setFirstLetterCriteria('H')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'I'}" value="I" action="#{memberBean.setFirstLetterCriteria('I')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'J'}" value="J" action="#{memberBean.setFirstLetterCriteria('J')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'K'}" value="K" action="#{memberBean.setFirstLetterCriteria('K')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'L'}" value="L" action="#{memberBean.setFirstLetterCriteria('L')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'M'}" value="M" action="#{memberBean.setFirstLetterCriteria('M')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'N'}" value="N" action="#{memberBean.setFirstLetterCriteria('N')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'O'}" value="O" action="#{memberBean.setFirstLetterCriteria('O')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'P'}" value="P" action="#{memberBean.setFirstLetterCriteria('P')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'Q'}" value="Q" action="#{memberBean.setFirstLetterCriteria('Q')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'R'}" value="R" action="#{memberBean.setFirstLetterCriteria('R')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'S'}" value="S" action="#{memberBean.setFirstLetterCriteria('S')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'T'}" value="T" action="#{memberBean.setFirstLetterCriteria('T')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'U'}" value="U" action="#{memberBean.setFirstLetterCriteria('U')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'V'}" value="V" action="#{memberBean.setFirstLetterCriteria('V')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'W'}" value="W" action="#{memberBean.setFirstLetterCriteria('W')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'X'}" value="X" action="#{memberBean.setFirstLetterCriteria('X')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'Y'}" value="Y" action="#{memberBean.setFirstLetterCriteria('Y')}"/>
-                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'Z'}" value="Z" action="#{memberBean.setFirstLetterCriteria('Z')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'A'}" value="A" action="#{memberBean.findUserAccountByFirstLetter('A')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'B'}" value="B" action="#{memberBean.findUserAccountByFirstLetter('B')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'C'}" value="C" action="#{memberBean.findUserAccountByFirstLetter('C')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'D'}" value="D" action="#{memberBean.findUserAccountByFirstLetter('D')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'E'}" value="E" action="#{memberBean.findUserAccountByFirstLetter('E')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'F'}" value="F" action="#{memberBean.findUserAccountByFirstLetter('F')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'G'}" value="G" action="#{memberBean.findUserAccountByFirstLetter('G')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'H'}" value="H" action="#{memberBean.findUserAccountByFirstLetter('H')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'I'}" value="I" action="#{memberBean.findUserAccountByFirstLetter('I')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'J'}" value="J" action="#{memberBean.findUserAccountByFirstLetter('J')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'K'}" value="K" action="#{memberBean.findUserAccountByFirstLetter('K')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'L'}" value="L" action="#{memberBean.findUserAccountByFirstLetter('L')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'M'}" value="M" action="#{memberBean.findUserAccountByFirstLetter('M')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'N'}" value="N" action="#{memberBean.findUserAccountByFirstLetter('N')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'O'}" value="O" action="#{memberBean.findUserAccountByFirstLetter('O')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'P'}" value="P" action="#{memberBean.findUserAccountByFirstLetter('P')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'Q'}" value="Q" action="#{memberBean.findUserAccountByFirstLetter('Q')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'R'}" value="R" action="#{memberBean.findUserAccountByFirstLetter('R')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'S'}" value="S" action="#{memberBean.findUserAccountByFirstLetter('S')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'T'}" value="T" action="#{memberBean.findUserAccountByFirstLetter('T')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'U'}" value="U" action="#{memberBean.findUserAccountByFirstLetter('U')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'V'}" value="V" action="#{memberBean.findUserAccountByFirstLetter('V')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'W'}" value="W" action="#{memberBean.findUserAccountByFirstLetter('W')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'X'}" value="X" action="#{memberBean.findUserAccountByFirstLetter('X')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'Y'}" value="Y" action="#{memberBean.findUserAccountByFirstLetter('Y')}"/>
+                                    <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'Z'}" value="Z" action="#{memberBean.findUserAccountByFirstLetter('Z')}"/>
                                 </h:panelGrid>
                                 <p></p>
                                 <p:dataTable value="#{memberBean.userAccounts}" var="member">
