@@ -8,7 +8,8 @@ import org.cejug.entity.DeactivationType;
 import org.cejug.web.util.ResourceBundle;
 
 /**
- *
+ * DeactivationType is a Enum. This converter is responsible for transforming
+ * that Enum in something readable for the end-user, using ResourceBundle.
  * @author Hildeberto Mendonca
  */
 @FacesConverter(value="DeactivationTypeEnumToString")

@@ -22,11 +22,39 @@ The JUG Management application explicitly aims to increase and strengthen the Ja
 
 The CEJUG Community (http://www.cejug.org) is leading the project and decided to make it widely available as an open source software. It is freely available for use and open for contributions. CEJUG is using the first release of the application (http://www.cejug.org:8080/cejug) since January 1st, 2011. It is helping the group to define what is actually being a JUG member. Nowadays, most of JUGs simply consider all those people registered in their technical mailing as members. This simplicity is good for management purposes, but we lose lots of information because of that. We don't know, for instance, which reasons led members to leave the group. Did we do something wrong? What can we do to get better and have members back into the boat? We also noticed that even non-technical people, as entrepreneurs, recruiters, and those who decided to unsubscribe because of too many messages, would like to keep in touch with the group, not necessarily going into technical discussions, but proposing other ways of collaboration. Adopting a separate application to manage subscriptions is helping CEJUG to collect more feedback and be more inclusive.
 
-\chapter{Organizing Events}
+\chapter{Membership Management}
 
-JUGs have events in their core business. They are essential to promote educational and professional networking, which leads to more opportunities and knowledge sharing.
+\section{Registration}
 
+The decision to register in the user group always come from the interested person. That is why the only way to add a new member is filling out the initial registration form, accessible through a link in the application header when there is no member logged in. JUG leaders do not have any feature that allow them to add new members manually.
 
+When the interested person submits the registration form, we have to make sure that his/her email address is correct before considering him/her as a member. We send an email message to the email address informed in the form, asking the interested person to confirm their email address by clicking on the confirmation link. This link contains a unique code that guarantees that the link cannot be reused after its first use, confirming the email address only once. The interested person is considered as a member as soon as his/her email address is confirmed. The new member receives a welcome email message and JUG Leaders are informed by email about the successful member registration.
+
+\section{Member Profile}
+
+The member has the right to read and modify any data published on its profile. The email address is the only data subject of validation. The email validation works the same way it works during the registration, sending a message to the new email address with a link to confirm it.
+
+\section{Deactivation}
+
+The deactivation of a member means that he/she will not participate in the activities of the group  starting from the date of the deactivation. No email message, invitation, offer, or any other kind of information will be sent to the deactivated member anymore. Therefore, he/she is not considered as a regular member.
+
+At the same time, all data inputed by the ancient member in the database will not be removed. Comments, email messages, articles and other information will be kept unchanged indefinitely. Therefore, any modification on these data is not responsibility of the application.
+
+\chapter{Event Management}
+
+Events are strategic for user groups. They disseminate knowledge and promote networking, strengthening the links between members. It is important to have an efficient event management in order to keep everything under control, measure member's participation and get their feedback.
+
+To start organizing events, UG Leaders should register venues available and suitable for user group events. A venue might have one or more rooms where event sessions will take place. In case of multiple rooms available, the event can manage multiple sessions in parallel.
+
+Events are allocated in existing venues for a certain period of time. When an event is registered and allocated to a venue, the venue's contact receives an request email containing details about the event and a list of resources that are expected from them. After a negotiation process the event is confirmed or not. The confirmation occurs when the venue's contact clicks on the confirmation link, at the end of the email message. Without this confirmation the event cannot occur.
+
+When confirmed, an email message containing detailed information about the event is sent to all members that have declared in their registration form the wish to receive information about events. This message contains a direct link to the event registration form.
+
+Detailed information about the event is also formatted to be published on the UG website. Consequently, it may attract people who are interested on the event but are not member of the UG. Those people should become a member of the UG before registering to the event.
+
+Right after the event registration, the member receives a confirmation message just to let him/her know that he/she is successfully registered to attend the event. Registered members will receive a remind email message seven days before the event and a second one on the day before the event. They can cancel their registration at any time before the event.
+
+At the entrance of the event, a member of the UG staff checks the inscription of each person in an available computer. If the person is a member registered in the event, then his/her presence is confirmed. If the person is a member but he/she is not registered in the event, then his/her registration is made at the entrance. If the person is not a member, then he/she should agree to become a member of the UG, otherwise it is not possible to join the event. If he/she agrees to become a member, his/her registration in the UG and in the event is done at the entrance of the event. 
 
 \part{Developer Guide}
 \chapter{Software Architecture}

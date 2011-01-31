@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -35,9 +36,12 @@ public class MemberBean implements Serializable {
     @EJB
     private LocationBsn locationBsn;
 
+    private List<UserAccount> userAccounts;
+
     private String userId;
     private UserAccount userAccount;
     private Contact contact;
+    private String emailCriteria;
     private String firstLetterCriteria;
     
     public MemberBean() {
@@ -110,9 +114,7 @@ public class MemberBean implements Serializable {
     }
 
     public List<UserAccount> getUserAccounts() {
-        if(firstLetterCriteria != null && !firstLetterCriteria.isEmpty())
-            return userAccountBsn.findUserAccountsStartingWith(firstLetterCriteria);
-        return getRecentUserAccounts();
+        return this.userAccounts;
     }
 
     public List<UserAccount> getRecentUserAccounts() {
@@ -122,6 +124,25 @@ public class MemberBean implements Serializable {
     public List<UserAccount> getDeactivatedUserAccounts() {
         List<UserAccount> deactivatedUsers = userAccountBsn.findDeactivatedUserAccounts();
         return deactivatedUsers;
+    }
+
+    public String findUserAccountByEmail() {
+        List<UserAccount> uas = new ArrayList<UserAccount>(1);
+        UserAccount ua = userAccountBsn.findUserAccountByEmail(this.emailCriteria);
+        if(ua != null) {
+            uas.add(ua);
+        }
+        this.userAccounts = uas;
+        this.firstLetterCriteria = null;
+        return "users?faces-redirect=true";
+    }
+
+    public String findUserAccountByFirstLetter(String firstLetterCriteria) {
+        this.firstLetterCriteria = firstLetterCriteria;
+        this.userAccounts = userAccountBsn.findUserAccountsStartingWith(this.firstLetterCriteria);
+        this.emailCriteria = null;
+
+        return "users?faces-redirect=true";
     }
 
     public List<Date> getScheduledAccountMaintenances() {
@@ -194,13 +215,20 @@ public class MemberBean implements Serializable {
             this.contact.setCity(locationBsn.findCity(id));
     }
 
+    public String getEmailCriteria() {
+        return emailCriteria;
+    }
+
+    public void setEmailCriteria(String emailCriteria) {
+        this.emailCriteria = emailCriteria;
+    }
+
     public String getFirstLetterCriteria() {
         return firstLetterCriteria;
     }
 
-    public String setFirstLetterCriteria(String firstLetterCriteria) {
+    public void setFirstLetterCriteria(String firstLetterCriteria) {
         this.firstLetterCriteria = firstLetterCriteria;
-        return "users?faces-redirect=true";
     }
 
     public boolean isConfirmed() {
@@ -214,6 +242,11 @@ public class MemberBean implements Serializable {
         if(-1 == usrId.indexOf("@")) {
             throw new ValidatorException(new FacesMessage("Invalid email address."));
         }
+    }
+
+    @PostConstruct
+    public void load() {
+        this.userAccounts = getRecentUserAccounts();
     }
 
     public String load(String userId) {

@@ -91,6 +91,17 @@ public class UserAccountBsn {
         }
     }
 
+    public UserAccount findUserAccountByEmail(String email) {
+        try {
+            return (UserAccount) em.createQuery("select ua from UserAccount ua where ua.email = :email")
+                                   .setParameter("email", email)
+                                   .getSingleResult();
+        }
+        catch(NoResultException nre) {
+            return null;
+        }
+    }
+
     public UserAccount findUserAccountByConfirmationCode(String confirmationCode) {
         try {
             return (UserAccount) em.createQuery("select ua from UserAccount ua where ua.confirmationCode = :confirmationCode")
