@@ -113,38 +113,44 @@ public class UserAccountBsn {
         }
     }
 
-    public List<UserAccount> findUserAccounts() {
+    @SuppressWarnings("unchecked")
+	public List<UserAccount> findUserAccounts() {
         return em.createQuery("select ua from UserAccount ua where ua.deactivated = :deactivated order by ua.firstName")
                  .setParameter("deactivated", Boolean.FALSE)
                  .getResultList();
     }
 
-    public List<UserAccount> findUserAccountsOrderedByRegistration() {
+    @SuppressWarnings("unchecked")
+	public List<UserAccount> findUserAccountsOrderedByRegistration() {
         return em.createQuery("select ua from UserAccount ua where ua.confirmationCode is null and ua.deactivated = :deactivated order by ua.registrationDate")
                  .setParameter("deactivated", Boolean.FALSE)
                  .getResultList();
     }
 
-    public List<UserAccount> findRegisteredUsersSince(Date date) {
+    @SuppressWarnings("unchecked")
+	public List<UserAccount> findRegisteredUsersSince(Date date) {
         return em.createQuery("select ua from UserAccount ua where ua.registrationDate >= :date and ua.deactivated = :deactivated order by ua.registrationDate desc")
                  .setParameter("date", date)
                  .setParameter("deactivated", Boolean.FALSE)
                  .getResultList();
     }
 
-    public List<UserAccount> findUserAccountsStartingWith(String firstLetter) {
+    @SuppressWarnings("unchecked")
+	public List<UserAccount> findUserAccountsStartingWith(String firstLetter) {
         return em.createQuery("select ua from UserAccount ua where ua.firstName like '"+ firstLetter +"%' and ua.deactivated = :deactivated order by ua.firstName")
                  .setParameter("deactivated", Boolean.FALSE)
                  .getResultList();
     }
 
-    public List<UserAccount> findDeactivatedUserAccounts() {
+    @SuppressWarnings("unchecked")
+	public List<UserAccount> findDeactivatedUserAccounts() {
         return em.createQuery("select ua from UserAccount ua where ua.deactivated = :deactivated order by ua.deactivationDate desc")
                  .setParameter("deactivated", Boolean.TRUE)
                  .getResultList();
     }
 
-    public List<UserAccount> findInhabitantsFrom(City city) {
+    @SuppressWarnings("unchecked")
+	public List<UserAccount> findInhabitantsFrom(City city) {
         return em.createQuery("select c.user from Contact c where c.city = :city and c.user.deactivated = :deactivated order by c.user.firstName")
                 .setParameter("city", city)
                 .setParameter("deactivated", Boolean.FALSE)
@@ -188,7 +194,7 @@ public class UserAccountBsn {
 
     private void sendEmailConfirmationRequest(UserAccount userAccount, String serverAddress) {
         MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("E3F122DCC87D42248872878412B34CEE");
-        Map values = new HashMap();
+        Map<String, Object> values = new HashMap<String, Object>();
         values.put("serverAddress", serverAddress);
         values.put("userAccount.firstName", userAccount.getFirstName());
         values.put("userAccount.confirmationCode", userAccount.getConfirmationCode());
@@ -222,7 +228,7 @@ public class UserAccountBsn {
 
     private void sendWelcomeMessage(UserAccount userAccount) {
         MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("47DEE5C2E0E14F8BA4605F3126FBFAF4");
-        Map values = new HashMap();
+        Map<String, Object> values = new HashMap<String, Object>();
         values.put("userAccount.firstName", userAccount.getFirstName());
         
         EmailMessage emailMessage = new EmailMessage();
@@ -238,7 +244,7 @@ public class UserAccountBsn {
 
     private void sendNewMemberAlertMessage(UserAccount newMember) {
         MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("0D6F96382D91454F8155A720F3326F1B");
-        Map values = new HashMap();
+        Map<String, Object> values = new HashMap<String, Object>();
         values.put("newMember.fullName", newMember.getFullName());
         values.put("newMember.registrationDate", newMember.getRegistrationDate());
         
@@ -289,7 +295,7 @@ public class UserAccountBsn {
     }
 
     private void sendDeactivationReason(UserAccount userAccount) {
-        Map values = new HashMap();
+        Map<String, Object> values = new HashMap<String, Object>();
         values.put("userAccount.firstName", userAccount.getFirstName());
         values.put("userAccount.deactivationReason", userAccount.getDeactivationReason());
         
@@ -314,7 +320,7 @@ public class UserAccountBsn {
     }
 
     private void sendDeactivationAlertMessage(UserAccount userAccount) {
-        Map values = new HashMap();
+        Map<String, Object> values = new HashMap<String, Object>();
         values.put("userAccount.fullName", userAccount.getFullName());
         values.put("userAccount.deactivationReason", userAccount.getDeactivationReason());
 
@@ -369,7 +375,7 @@ public class UserAccountBsn {
 
     private void sendConfirmationCode(UserAccount userAccount, String serverAddress) {
         MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("67BE6BEBE45945D29109A8D6CD878344");
-        Map values = new HashMap();
+        Map<String, Object> values = new HashMap<String, Object>();
         values.put("serverAddress", serverAddress);
         values.put("userAccount.firstName", userAccount.getFirstName());
         values.put("userAccount.confirmationCode", userAccount.getConfirmationCode());

@@ -81,7 +81,8 @@ public class AccessGroupBean {
         this.members = new DualListModel<UserAccount>(allUsers, target);
     }
 
-    public String save() {
+    @SuppressWarnings("rawtypes")
+	public String save() {
         List<UserAccount> selectedMembers = new ArrayList<UserAccount>();
         List membersIds = this.members.getTarget();
         for(int i = 0;i < membersIds.size();i++) {

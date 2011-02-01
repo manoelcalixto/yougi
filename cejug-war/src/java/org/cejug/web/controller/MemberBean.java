@@ -28,7 +28,9 @@ import org.cejug.web.report.MembershipGrowthRange;
 @SessionScoped
 public class MemberBean implements Serializable {
 
-    @EJB
+	private static final long serialVersionUID = 1L;
+
+	@EJB
     private UserAccountBsn userAccountBsn;
 
     @EJB

@@ -27,7 +27,6 @@ public class Contact implements Serializable {
     private ContactType location;
     private String website;
     private String postalCode;
-    private String email;
     private Province province;
     private City city;
     private Country country;
