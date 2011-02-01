@@ -1,0 +1,13 @@
+delete from event_attendee;
+delete from event;
+delete from event_venue;
+delete from message_template;
+delete from application_property;
+delete from user_group;
+delete from access_group;
+delete from contact;
+delete from communication_privacy;
+delete from user_account;
+delete from city;
+delete from province;
+delete from country;
