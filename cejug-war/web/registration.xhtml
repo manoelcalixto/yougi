@@ -68,10 +68,10 @@
                                 <h:inputText id="twitter" label="#{bundle.twitter}" size="15" maxlength="30" value="#{userAccountBean.contact.twitter}"/>
                             </h:panelGrid>
 
-                            <h:outputLabel for="country" value="#{bundle.country}" styleClass="fieldLabel"/>
+                            <h:outputLabel for="country" value="#{bundle.country} *" styleClass="fieldLabel"/>
                             <h:outputLabel for="province" value="#{bundle.province}" styleClass="fieldLabel"/>
 
-                            <h:selectOneMenu id="country" label="#{bundle.country}" value="#{userAccountBean.selectedCountry}">
+                            <h:selectOneMenu id="country" label="#{bundle.country}" required="true" value="#{userAccountBean.selectedCountry}">
                                 <f:selectItems value="#{userAccountBean.countries}"/>
                                 <f:ajax render="province city"/>
                             </h:selectOneMenu>
@@ -80,11 +80,11 @@
                                 <f:ajax render="city"/>
                             </h:selectOneMenu>
 
-                            <h:outputLabel for="city" value="#{bundle.city}" styleClass="fieldLabel"/>
+                            <h:outputLabel for="city" value="#{bundle.city} *" styleClass="fieldLabel"/>
                             <h:outputLabel for="postalCode" value="#{bundle.postalCode}" styleClass="fieldLabel"/>
 
                             <h:panelGrid columns="3">
-                                <h:selectOneMenu id="city" label="#{bundle.city}" value="#{userAccountBean.selectedCity}">
+                                <h:selectOneMenu id="city" label="#{bundle.city}" required="true" value="#{userAccountBean.selectedCity}">
                                     <f:selectItems value="#{userAccountBean.cities}"/>
                                 </h:selectOneMenu>
                                 <h:outputText value="#{bundle.oor}"/>
@@ -93,8 +93,9 @@
                             <h:inputText id="postalCode" label="#{bundle.postalCode}" size="10" maxlength="10" value="#{userAccountBean.contact.postalCode}"/>
                         </h:panelGrid>
                         <p></p>
-                        <h:outputText value="#{bundle.privacy}" styleClass="fieldLabel"/>
-                        <h:panelGrid columns="2" width="700">
+                        <h:outputText value="#{bundle.privacy} *" styleClass="fieldLabel"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        (<h:outputText value="#{bundle.selectAtLeastOne}" styleClass="fieldNote"/>)
+                        <h:panelGrid columns="2" width="700" columnClasses="panelGridColumn">
                             <h:selectBooleanCheckbox id="publicProfile" label="#{bundle.publicProfile}" value="#{userAccountBean.userAccount.publicProfile}"/>
                             <h:outputText value="#{bundle.publicProfileMessage}"/>
 

@@ -232,6 +232,11 @@ public class UserAccountBean implements Serializable {
             return "registration";
         }
 
+        if(!(userAccount.getPublicProfile() || userAccount.getMailingList() || userAccount.getEvent() || userAccount.getNews() || userAccount.getGeneralOffer() || userAccount.getJobOffer())) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Selecione pelo menos uma das opções de privacidade."));
+            return "registration";
+        }
+
         String serverAddress = applicationPropertiesBean.getUrl();
 
         City newCity = null;
@@ -257,25 +262,29 @@ public class UserAccountBean implements Serializable {
     }
 
     public String savePersonalData() {
-        UserAccount existingUserAccount = userAccountBsn.findUserAccount(userAccount.getId());
-        existingUserAccount.setMainContact(contact);
-        existingUserAccount.setFirstName(userAccount.getFirstName());
-        existingUserAccount.setLastName(userAccount.getLastName());
-        existingUserAccount.setGender(userAccount.getGender());
-        existingUserAccount.setBirthDate(userAccount.getBirthDate());
-        userAccountBsn.save(existingUserAccount);
+        if(userAccount != null) {
+            UserAccount existingUserAccount = userAccountBsn.findUserAccount(userAccount.getId());
+            existingUserAccount.setMainContact(contact);
+            existingUserAccount.setFirstName(userAccount.getFirstName());
+            existingUserAccount.setLastName(userAccount.getLastName());
+            existingUserAccount.setGender(userAccount.getGender());
+            existingUserAccount.setBirthDate(userAccount.getBirthDate());
+            userAccountBsn.save(existingUserAccount);
+        }
         return "profile?faces-redirect=true";
     }
 
     public String savePrivacy() {
-        UserAccount existingUserAccount = userAccountBsn.findUserAccount(userAccount.getId());
-        existingUserAccount.setPublicProfile(userAccount.getPublicProfile());
-        existingUserAccount.setMailingList(userAccount.getMailingList());
-        existingUserAccount.setNews(userAccount.getNews());
-        existingUserAccount.setGeneralOffer(userAccount.getGeneralOffer());
-        existingUserAccount.setJobOffer(userAccount.getJobOffer());
-        existingUserAccount.setEvent(userAccount.getEvent());
-        userAccountBsn.save(existingUserAccount);
+        if(userAccount != null) {
+            UserAccount existingUserAccount = userAccountBsn.findUserAccount(userAccount.getId());
+            existingUserAccount.setPublicProfile(userAccount.getPublicProfile());
+            existingUserAccount.setMailingList(userAccount.getMailingList());
+            existingUserAccount.setNews(userAccount.getNews());
+            existingUserAccount.setGeneralOffer(userAccount.getGeneralOffer());
+            existingUserAccount.setJobOffer(userAccount.getJobOffer());
+            existingUserAccount.setEvent(userAccount.getEvent());
+            userAccountBsn.save(existingUserAccount);
+        }
         return "profile?faces-redirect=true";
     }
 
