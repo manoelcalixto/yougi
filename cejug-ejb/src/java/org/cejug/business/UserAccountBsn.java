@@ -3,6 +3,8 @@ package org.cejug.business;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -11,11 +13,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
-import javax.ejb.Timeout;
+import javax.ejb.Schedule;
+import javax.ejb.Schedules;
 import javax.ejb.Timer;
 import javax.ejb.TimerService;
 import javax.mail.MessagingException;
@@ -61,6 +66,8 @@ public class UserAccountBsn {
     
     @PersistenceContext
     private EntityManager em;
+
+    static final Logger logger = Logger.getLogger("org.cejug.business.UserAccountBsn");
 
     public boolean existingAccount(UserAccount userAccount) {
         UserAccount existing = findUserAccountByUsername(userAccount.getUsername());
@@ -114,21 +121,21 @@ public class UserAccountBsn {
     }
 
     @SuppressWarnings("unchecked")
-	public List<UserAccount> findUserAccounts() {
+    public List<UserAccount> findUserAccounts() {
         return em.createQuery("select ua from UserAccount ua where ua.deactivated = :deactivated order by ua.firstName")
                  .setParameter("deactivated", Boolean.FALSE)
                  .getResultList();
     }
 
     @SuppressWarnings("unchecked")
-	public List<UserAccount> findUserAccountsOrderedByRegistration() {
+    public List<UserAccount> findUserAccountsOrderedByRegistration() {
         return em.createQuery("select ua from UserAccount ua where ua.confirmationCode is null and ua.deactivated = :deactivated order by ua.registrationDate")
                  .setParameter("deactivated", Boolean.FALSE)
                  .getResultList();
     }
 
     @SuppressWarnings("unchecked")
-	public List<UserAccount> findRegisteredUsersSince(Date date) {
+    public List<UserAccount> findRegisteredUsersSince(Date date) {
         return em.createQuery("select ua from UserAccount ua where ua.registrationDate >= :date and ua.deactivated = :deactivated order by ua.registrationDate desc")
                  .setParameter("date", date)
                  .setParameter("deactivated", Boolean.FALSE)
@@ -136,21 +143,21 @@ public class UserAccountBsn {
     }
 
     @SuppressWarnings("unchecked")
-	public List<UserAccount> findUserAccountsStartingWith(String firstLetter) {
+    public List<UserAccount> findUserAccountsStartingWith(String firstLetter) {
         return em.createQuery("select ua from UserAccount ua where ua.firstName like '"+ firstLetter +"%' and ua.deactivated = :deactivated order by ua.firstName")
                  .setParameter("deactivated", Boolean.FALSE)
                  .getResultList();
     }
 
     @SuppressWarnings("unchecked")
-	public List<UserAccount> findDeactivatedUserAccounts() {
+    public List<UserAccount> findDeactivatedUserAccounts() {
         return em.createQuery("select ua from UserAccount ua where ua.deactivated = :deactivated order by ua.deactivationDate desc")
                  .setParameter("deactivated", Boolean.TRUE)
                  .getResultList();
     }
 
     @SuppressWarnings("unchecked")
-	public List<UserAccount> findInhabitantsFrom(City city) {
+    public List<UserAccount> findInhabitantsFrom(City city) {
         return em.createQuery("select c.user from Contact c where c.city = :city and c.user.deactivated = :deactivated order by c.user.firstName")
                 .setParameter("city", city)
                 .setParameter("deactivated", Boolean.FALSE)
@@ -190,6 +197,11 @@ public class UserAccountBsn {
     public void save(UserAccount userAccount) {
         userAccount.setLastUpdate(Calendar.getInstance().getTime());
         em.merge(userAccount);
+    }
+
+    public void updateProfilePicture(UserAccount userAccount, String profilePicturePath) {
+        userAccount = em.find(UserAccount.class, userAccount.getId());
+        userAccount.setPhoto(profilePicturePath);
     }
 
     private void sendEmailConfirmationRequest(UserAccount userAccount, String serverAddress) {
@@ -405,15 +417,9 @@ public class UserAccountBsn {
     }
 
     public void scheduleAccountMaintenance() {
-        Calendar today = Calendar.getInstance();
-        today.add(Calendar.DAY_OF_YEAR, 1);
-        today.set(Calendar.HOUR_OF_DAY, 6);
-        today.set(Calendar.MINUTE, 0);
-        long oneDay = 1000 * 60 * 60 * 24 * 1;
+        long duration = 1000 * 60 * 60 * 24 * 1;
 
-        Collection<Timer> timers = timer.getTimers();
-        if(timers.isEmpty())
-            timer.createTimer(today.getTime(), oneDay, "");
+        timer.createTimer(duration, "");
     }
 
     public List<Date> getScheduledAccountMaintenances() {
@@ -425,14 +431,23 @@ public class UserAccountBsn {
         return schedules;
     }
 
-    @Timeout
+    @Schedules({ @Schedule(hour="*/12") })
     public void removeNonConfirmedAccounts(Timer timer) {
+        logger.info("Timer to remove non confirmed accounts started.");
+
         Calendar twoDaysAgo = Calendar.getInstance();
         twoDaysAgo.add(Calendar.DAY_OF_YEAR, -2);
 
-        em.createQuery("delete from UserAccount ua where ua.registrationDate <= :twoDaysAgo and ua.confirmationCode != ''")
-                 .setParameter("twoDaysAgo", twoDaysAgo)
-                 .executeUpdate();
+        Format formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        logger.log(Level.INFO, "Non confirmed accounts older than {0} will be removed.", formatter.format(twoDaysAgo.getTime()));
+
+        int i = em.createQuery("delete from UserAccount ua where ua.registrationDate <= :twoDaysAgo and ua.confirmationCode is not null")
+                  .setParameter("twoDaysAgo", twoDaysAgo.getTime())
+                  .executeUpdate();
+
+        logger.log(Level.INFO, "Number of removed non confirmed accounts: {0}", i);
+        
+        scheduleAccountMaintenance();
     }
 
     public void remove(String userId) {

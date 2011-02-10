@@ -131,44 +131,69 @@ insert into message_template (id, title, body) values
     ('IKWMAJSNDOE3F122DCC87D4224887287', '[JUG] Membership Deactivated', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>we just knew that you wanna leave us :( Thank you for all contributions you have made to the JUG community.</p><p>All the best,</p><p><b>JUG Leadership Team</b></p>'),
     ('0D6F96382IKEJSUIWOK5A720F3326F1B', '[JUG Admin] A Member Was Deactivated', '<p>Dear JUG Leader,</p><p><b>#{userAccount.fullName}</b> was deactivated from the JUG due to the following reason:</p><p><i>#{userAccount.deactivationReason}</i></p><p>Regards,</p><p><b>JUG Management</b></p>');
 
-create table event_venue (
+create table mailing_list (
+    id            char(32)     not null,
+    name          varchar(50)  not null,
+    description   varchar(255)     null,
+    email         varchar(100)     null,
+    subscription  varchar(100)     null,
+    unsubcription varchar(100)     null
+) engine = innodb;
+
+alter table mailing_list add constraint pk_mailing_list primary key (id);
+
+create table mailing_list_subscription (
+    id                  char(32) not null,
+    user_account        char(32) not null,
+    mailing_list        char(32) not null,
+    subscription_date   date         null,
+    unsubscription_date date         null
+) engine = innodb;
+
+alter table mailing_list_subscription add constraint pk_mailing_list_subscription primary key (id);
+alter table mailing_list_subscription add constraint fk_subsciption_user foreign key (user_account) references user_account(id) on delete cascade;
+alter table mailing_list_subscription add constraint fk_subscription_mailing_list foreign key (mailing_list) references mailing_list(id) on delete cascade;
+
+create table mailing_list_message (
+    id            char(32)     not null,
+    mailing_list  char(32)     not null,
+    subject       varchar(255) not null,
+    body          text         not null,
+    sender        char(32)     not null,
+    when_received datetime     not null,
+    reply_to      char(32)         null,
+    message_type  char(2)          null, # q - question, a - answer, i - info, ri - request_more_info, ir - info_requested, s - solution
+    answer_score  int(5)           null,
+    published     tinyint(1)       null
+) engine = innodb;
+
+alter table mailing_list_message add constraint pk_mailing_list_message primary key (id);
+alter table mailing_list_message add constraint fk_mailing_list_message foreign key (mailing_list) references mailing_list(id) on delete cascade;
+alter table mailing_list_message add constraint fk_message_sender foreign key (sender) references user_account(id) on delete cascade;
+alter table mailing_list_message add constraint fk_message_reply_to foreign key (reply_to) references mailing_list_message(id) on delete set null;
+
+create table topic (
     id          char(32)     not null,
-    name        varchar(100) not null,
-    address     varchar(255)     null,
-    city        char(32)         null,
-    province    char(32)         null,
-    country     char(3)          null,
-    postal_code char(10)         null,
-    phone       varchar(20)      null,
-    email       varchar(100)     null,
-    website     varchar(100)     null
-) type = innodb;
+    name        varchar(50)  not null,
+    description varchar(255)     null
+) engine = innodb;
 
-alter table event_venue add constraint pk_event_venue primary key (id);
-alter table event_venue add constraint fk_city_venue foreign key (city) references city(id) on delete set null;
-alter table event_venue add constraint fk_province_venue foreign key (province) references province(id) on delete set null;
-alter table event_venue add constraint fk_country_venue foreign key (country) references country(acronym) on delete set null;
+alter table topic add constraint pk_topic primary key (id);
 
-create table event (
-    id          char(32)     not null,
-    name        varchar(100) not null,
-    start       datetime     not null,
-    end         datetime     not null,
-    venue       char(32)     not null,
-    description text             null,
-    hot_site    varchar(100)     null
-) type = innodb;
+create table topic_mailinglist_message (
+    id                  char(32) not null,
+    topic               char(32) not null,
+    mailinglist_message char(32) not null
+) engine = innodb;
 
-alter table event add constraint pk_event primary key (id);
-alter table event add constraint fk_event_venue foreign key (venue) references event_venue(id) on delete cascade;
+alter table topic_mailinglist_message add constraint pk_topic_mailinglist_message primary key (id);
+alter table topic_mailinglist_message add constraint fk_topic_mailinglist_message foreign key (mailinglist_message) references mailing_list_message(id) on delete cascade;
+alter table topic_mailinglist_message add constraint fk_mailinglist_message_topic foreign key (topic) references topic(id) on delete cascade;
 
-create table event_attendee (
-    id             char(32)     not null,
-    event          char(32)     not null,
-    attendee       char(32)     not null,
-    attended       tinyint(1)       null
-) type = innodb;
+create table tag (
+    tag        char(40)   not null,
+    kind       tinyint(2) not null,
+    entity     char(32)   not null,
+) engine = MyISAM;
 
-alter table event_attendee add constraint pk_event_attendee primary key (id);
-alter table event_attendee add constraint fk_event_attendee foreign key (event) references event(id) on delete cascade;
-alter table event_attendee add constraint fk_attendee_event foreign key (attendee) references user_account(id) on delete cascade;
+alter table topic add constraint pk_topic primary key (topic, kind, entity);

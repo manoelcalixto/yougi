@@ -64,6 +64,12 @@ public class UserAccount implements Serializable {
         this.id = id;
     }
 
+    public UserAccount(String firstName, String lastName, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+
     @Id
     public String getId() {
         return this.id;

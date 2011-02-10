@@ -1,7 +1,9 @@
 package org.cejug.entity;
 
 public enum Properties {
-    REPOSITORY_PATH("repositoryPath");
+    FILE_REPOSITORY_PATH("fileRepositoryPath"),
+    URL("url"),
+    GROUP_NAME("groupName");
 
     private String name;
 

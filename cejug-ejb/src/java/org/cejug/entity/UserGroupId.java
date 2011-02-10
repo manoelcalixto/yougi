@@ -5,13 +5,13 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 /**
- * @author Hildeberto Mendonca (me@hildeberto.com)
+ * @author Hildeberto Mendonca
  */
 @Embeddable
 public class UserGroupId implements Serializable {
     private static final long serialVersionUID = 1L;
     
-	private String groupId;
+    private String groupId;
     private String userId;
 
     public UserGroupId() {

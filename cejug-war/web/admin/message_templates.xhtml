@@ -20,18 +20,20 @@
                 </div>
                 <div class="content">
                     <h1>#{bundle.messageTemplates}</h1>
-                    <p:dataTable value="#{messageTemplateBean.messageTemplates}" var="messageTemplate">
-                        <p:column>
-                            <f:facet name="header"><h:outputText value="#{bundle.title}"/></f:facet>
-                            <h:link outcome="message_template" value="#{messageTemplate.title}">
-                                <f:param name="id" value="#{messageTemplate.id}"/>
-                            </h:link>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header"><h:outputText value="#{bundle.body}"/></f:facet>
-                            <h:outputText value="#{messageTemplate.truncatedBody}"/>
-                        </p:column>
-                    </p:dataTable>
+                    <h:form>
+                        <p:dataTable value="#{messageTemplateBean.messageTemplates}" var="messageTemplate">
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="#{bundle.title}"/></f:facet>
+                                <h:link outcome="message_template" value="#{messageTemplate.title}">
+                                    <f:param name="id" value="#{messageTemplate.id}"/>
+                                </h:link>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="#{bundle.body}"/></f:facet>
+                                <h:outputText value="#{messageTemplate.truncatedBody}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
                 </div>
             </ui:define>
         </ui:composition>

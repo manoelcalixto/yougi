@@ -24,10 +24,10 @@
                         <h:messages styleClass="alertMessage"/>
                         <h:panelGrid columns="1">
                             <h:outputLabel for="title" value="#{bundle.title} *" styleClass="fieldLabel"/>
-                            <h:inputText id="title" label="#{bundle.title}" required="true" size="50" maxlength="225" value="#{messageTemplateBean.messageTemplate.title}"/>
+                            <h:inputText id="title" label="#{bundle.title}" required="true" size="70" maxlength="225" value="#{messageTemplateBean.messageTemplate.title}"/>
 
                             <h:outputLabel for="body" value="#{bundle.body}" styleClass="fieldLabel"/>
-                            <h:inputTextarea id="body" label="#{bundle.body}" required="true" cols="50" rows="10" value="#{messageTemplateBean.messageTemplate.body}"/>
+                            <h:inputTextarea id="body" label="#{bundle.body}" required="true" cols="70" rows="10" value="#{messageTemplateBean.messageTemplate.body}"/>
 
                             <h:outputText rendered="#{messageTemplateBean.messageTemplate.id != null}" value="#{bundle.id}" styleClass="fieldLabel"/>
                             <h:outputText rendered="#{messageTemplateBean.messageTemplate.id != null}" value="#{messageTemplateBean.messageTemplate.id}"/>

@@ -35,23 +35,28 @@
         </div>
         <div id="top_menu">
             <c:if test="#{! empty request.remoteUser}">
-                <p:menubar>
-                    <p:submenu label="#{bundle.myAccount}">
-                        <p:menuitem value="#{bundle.profile}" url="/profile/profile.xhtml"/>
-                        <p:menuitem value="#{bundle.changePassword}" url="/profile/change_password.xhtml"/>
-                    </p:submenu>
-                    <p:submenu label="#{bundle.administration}" rendered="#{securityBackingBean.isUserLeader}">
-                        <p:menuitem value="#{bundle.users}" url="/admin/users.xhtml"/>
-                        <p:menuitem value="#{bundle.groups}" url="/admin/groups.xhtml"/>
-                        <p:submenu label="#{bundle.geographicCoverage}">
-                            <p:menuitem value="#{bundle.countries}" url="/admin/countries.xhtml"/>
-                            <p:menuitem value="#{bundle.provinces}" url="/admin/provinces.xhtml"/>
-                            <p:menuitem value="#{bundle.cities}" url="/admin/cities.xhtml"/>
+                <h:form>
+                    <p:menubar>
+                        <p:submenu label="#{bundle.knowledge}">
+                            <p:menuitem value="#{bundle.mailingList}"/>
                         </p:submenu>
-                        <p:menuitem value="#{bundle.messageTemplates}" url="/admin/message_templates.xhtml"/>
-                        <p:menuitem value="#{bundle.properties}" url="/admin/properties.xhtml"/>
-                    </p:submenu>
-                </p:menubar>
+                        <p:submenu label="#{bundle.myAccount}">
+                            <p:menuitem value="#{bundle.profile}" url="/profile/profile.xhtml"/>
+                            <p:menuitem value="#{bundle.changePassword}" url="/profile/change_password.xhtml"/>
+                        </p:submenu>
+                        <p:submenu label="#{bundle.administration}" rendered="#{securityBackingBean.isUserLeader}">
+                            <p:menuitem value="#{bundle.users}" url="/admin/users.xhtml"/>
+                            <p:menuitem value="#{bundle.groups}" url="/admin/groups.xhtml"/>
+                            <p:submenu label="#{bundle.location}">
+                                <p:menuitem value="#{bundle.countries}" url="/admin/countries.xhtml"/>
+                                <p:menuitem value="#{bundle.provinces}" url="/admin/provinces.xhtml"/>
+                                <p:menuitem value="#{bundle.cities}" url="/admin/cities.xhtml"/>
+                            </p:submenu>
+                            <p:menuitem value="#{bundle.messageTemplates}" url="/admin/message_templates.xhtml"/>
+                            <p:menuitem value="#{bundle.properties}" url="/admin/properties.xhtml"/>
+                        </p:submenu>
+                    </p:menubar>
+                </h:form>
             </c:if>
         </div>
         <div id="content_area">
@@ -59,7 +64,7 @@
         </div>
         <div id="bottom">
             <div class="footer">
-                 Created and maintained by the <a href="http://www.cejug.org" target="_blank">#{bundle.application}</a> Community! | Version 0.12
+                 Created and maintained by the <a href="http://www.cejug.org" target="_blank">#{bundle.application}</a> Community! | Version 0.13
             </div>
         </div>
     </h:body>

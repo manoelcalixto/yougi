@@ -31,7 +31,7 @@ public class MessageTemplateBsn {
     }
 
     @SuppressWarnings("unchecked")
-	public List<MessageTemplate> findMessageTemplates() {
+    public List<MessageTemplate> findMessageTemplates() {
         return em.createQuery("select mt from MessageTemplate mt order by mt.title").getResultList();
     }
 

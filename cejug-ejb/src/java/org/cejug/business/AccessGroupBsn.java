@@ -68,7 +68,7 @@ public class AccessGroupBsn {
     }
     
     @SuppressWarnings("unchecked")
-	public List<AccessGroup> findAccessGroups() {
+    public List<AccessGroup> findAccessGroups() {
         return em.createQuery("select ag from AccessGroup ag order by ag.name").getResultList();
     }
 
