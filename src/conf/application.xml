@@ -3,11 +3,11 @@
   <display-name>jug</display-name>
   <module>
     <web>
-      <web-uri>cejug-war.war</web-uri>
+      <web-uri>jug-web.war</web-uri>
       <context-root>/jug</context-root>
     </web>
   </module>
   <module>
-    <ejb>cejug-ejb.jar</ejb>
+    <ejb>jug-ejb.jar</ejb>
   </module>
 </application>

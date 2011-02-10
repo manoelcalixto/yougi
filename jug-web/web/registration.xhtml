@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.prime.com.tr/ui">
+    <body>
+        <ui:composition template="./layout.xhtml">
+            <ui:define name="title">#{bundle.registration}</ui:define>
+            <ui:define name="content">
+                <div class="bread_crumb_area">
+                    <p:breadCrumb styleClass="bread_crumb">
+                        <p:menuitem value="#{bundle.home}" url="index.xhtml"/>
+                        <p:menuitem value="#{bundle.registration}" url="registration.xhtml"/>
+                    </p:breadCrumb>
+                </div>
+                <div class="content">
+                    <h1>#{bundle.registration}</h1>
+                    <h:form>
+                        <h:messages styleClass="alertMessage" infoClass="infoMessage"/>
+                        <h:panelGrid columns="2">
+                            <h:outputLabel for="firstName" value="#{bundle.firstName} *" styleClass="fieldLabel"/>
+                            <h:outputLabel for="lastName" value="#{bundle.lastName} *" styleClass="fieldLabel"/>
+
+                            <h:inputText id="firstName" label="#{bundle.firstName}" required="true" size="40" maxlength="50" value="#{userAccountBean.userAccount.firstName}"/>
+                            <h:inputText id="lastName" label="#{bundle.lastName}" required="true" size="40" maxlength="50" value="#{userAccountBean.userAccount.lastName}"/>
+
+                            <h:outputLabel for="email" value="#{bundle.email} *" styleClass="fieldLabel"/>
+                            <h:outputLabel for="confirmEmail" value="#{bundle.confirmEmail} *" styleClass="fieldLabel"/>
+
+                            <h:inputText id="email" label="#{bundle.email}" required="true" size="40" maxlength="100" value="#{userAccountBean.userAccount.email}" onchange="formatEmail(this)">
+                                <f:validateRegex pattern="^[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$"/>
+                            </h:inputText>
+                            <h:inputText id="confirmEmail" label="#{bundle.confirmEmail}" required="true" size="40" maxlength="100" value="#{userAccountBean.userAccount.confirmEmail}" onchange="formatEmail(this)">
+                                <f:validateRegex pattern="^[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$"/>
+                            </h:inputText>
+
+                            <h:outputLabel for="password" value="#{bundle.password} *" styleClass="fieldLabel"/>
+                            <h:outputLabel for="confirmPassword" value="#{bundle.confirmPassword} *" styleClass="fieldLabel"/>
+
+                            <h:inputSecret id="password" autocomplete="off" label="#{bundle.password}" required="true" size="15" maxlength="30" value="#{userAccountBean.userAccount.password}"/>
+                            <h:inputSecret id="confirmPassword" autocomplete="off" label="#{bundle.confirmPassword}" required="true" size="15" maxlength="30" value="#{userAccountBean.userAccount.confirmPassword}"/>
+
+                            <h:outputLabel for="gender" value="#{bundle.gender} *" styleClass="fieldLabel"/>
+                            <h:outputLabel for="birthDate" value="#{bundle.birthDate}" styleClass="fieldLabel"/>
+
+                            <h:selectOneRadio id="gender" label="#{bundle.gender}" required="true" value="#{userAccountBean.userAccount.gender}">
+                                <f:selectItem itemLabel="#{bundle.male}" itemValue="1"/>
+                                <f:selectItem itemLabel="#{bundle.female}" itemValue="0"/>
+                            </h:selectOneRadio>
+                            <h:panelGrid columns="2">
+                                <p:inputMask value="#{userAccountBean.userAccount.birthDate}" id="birthDate" mask="99/99/9999">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </p:inputMask>
+                                <h:outputText value="#{bundle.dateFormat}" styleClass="fieldFormat"/>
+                            </h:panelGrid>
+
+                            <h:outputLabel for="website" value="#{bundle.website}" styleClass="fieldLabel"/>
+                            <h:outputLabel for="twitter" value="#{bundle.twitter}" styleClass="fieldLabel"/>
+
+                            <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                                <h:outputText value="http://"/>
+                                <h:inputText id="website" label="#{bundle.website}" size="35" maxlength="100" value="#{userAccountBean.contact.website}"/>
+                            </h:panelGrid>
+                            <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                                <h:outputText value="@"/>
+                                <h:inputText id="twitter" label="#{bundle.twitter}" size="15" maxlength="30" value="#{userAccountBean.contact.twitter}"/>
+                            </h:panelGrid>
+
+                            <h:outputLabel for="country" value="#{bundle.country} *" styleClass="fieldLabel"/>
+                            <h:outputLabel for="province" value="#{bundle.province}" styleClass="fieldLabel"/>
+
+                            <h:selectOneMenu id="country" label="#{bundle.country}" required="true" value="#{userAccountBean.selectedCountry}">
+                                <f:selectItems value="#{userAccountBean.countries}"/>
+                                <f:ajax render="province city"/>
+                            </h:selectOneMenu>
+                            <h:selectOneMenu id="province" label="#{bundle.province}" value="#{userAccountBean.selectedProvince}">
+                                <f:selectItems value="#{userAccountBean.provinces}"/>
+                                <f:ajax render="city"/>
+                            </h:selectOneMenu>
+
+                            <h:outputLabel for="city" value="#{bundle.city} *" styleClass="fieldLabel"/>
+                            <h:outputLabel for="postalCode" value="#{bundle.postalCode}" styleClass="fieldLabel"/>
+
+                            <h:panelGrid columns="3">
+                                <h:selectOneMenu id="city" label="#{bundle.city}" required="true" value="#{userAccountBean.selectedCity}">
+                                    <f:selectItems value="#{userAccountBean.cities}"/>
+                                </h:selectOneMenu>
+                                <h:outputText value="#{bundle.oor}"/>
+                                <p:autoComplete id="cityNotListed" value="#{userAccountBean.cityNotListed}" completeMethod="#{userAccountBean.getCitiesStartingWith}"/>
+                            </h:panelGrid>
+                            <h:inputText id="postalCode" label="#{bundle.postalCode}" size="10" maxlength="10" value="#{userAccountBean.contact.postalCode}"/>
+                        </h:panelGrid>
+                        <p></p>
+                        <h:outputText value="#{bundle.privacy} *" styleClass="fieldLabel"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        (<h:outputText value="#{bundle.selectAtLeastOne}" styleClass="fieldNote"/>)
+                        <h:panelGrid columns="2" width="700" columnClasses="panelGridColumn">
+                            <h:selectBooleanCheckbox id="publicProfile" label="#{bundle.publicProfile}" value="#{userAccountBean.userAccount.publicProfile}"/>
+                            <h:outputText value="#{bundle.publicProfileMessage}"/>
+
+                            <h:selectBooleanCheckbox id="mailingList" label="#{bundle.mailingList}" value="#{userAccountBean.userAccount.mailingList}"/>
+                            <h:outputLabel for="mailingList" value="#{bundle.mailingListMessage}"/>
+
+                            <h:selectBooleanCheckbox id="event" label="#{bundle.event}" value="#{userAccountBean.userAccount.event}"/>
+                            <h:outputLabel for="event" value="#{bundle.eventMessage}"/>
+
+                            <h:selectBooleanCheckbox id="news" label="#{bundle.news}" value="#{userAccountBean.userAccount.news}"/>
+                            <h:outputLabel for="news" value="#{bundle.newsMessage}"/>
+
+                            <h:selectBooleanCheckbox id="generalOffer" label="#{bundle.generalOffer}" value="#{userAccountBean.userAccount.generalOffer}"/>
+                            <h:outputLabel for="generalOffer" value="#{bundle.generalOfferMessage}"/>
+
+                            <h:selectBooleanCheckbox id="jobOffer" label="#{bundle.jobOffer}" value="#{userAccountBean.userAccount.jobOffer}"/>
+                            <h:outputLabel for="jobOffer" value="#{bundle.jobOfferMessage}"/>
+                        </h:panelGrid>
+
+                        <h:inputHidden id="id" value="#{userAccountBean.userAccount.id}"/>
+                        <p></p>
+                        <h:panelGrid columns="2">
+                            <h:commandButton value="#{bundle.register}" action="#{userAccountBean.register}"/>
+                            <h:button outcome="index" value="#{bundle.cancel}"/>
+                        </h:panelGrid>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
