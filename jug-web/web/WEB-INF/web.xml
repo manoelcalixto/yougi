@@ -48,7 +48,7 @@
     <security-constraint>
         <display-name>Leaders Constraints</display-name>
         <web-resource-collection>
-            <web-resource-name>Leaders</web-resource-name>
+            <web-resource-name>leaders</web-resource-name>
             <description/>
             <url-pattern>/admin/*</url-pattern>
             <http-method>GET</http-method>
@@ -61,7 +61,7 @@
     <security-constraint>
         <display-name>Helpers Constraints</display-name>
         <web-resource-collection>
-            <web-resource-name>Helpers</web-resource-name>
+            <web-resource-name>helpers</web-resource-name>
             <description/>
             <url-pattern>/program/*</url-pattern>
             <http-method>GET</http-method>
@@ -74,7 +74,7 @@
     <security-constraint>
         <display-name>Members Constraints</display-name>
         <web-resource-collection>
-            <web-resource-name>Members</web-resource-name>
+            <web-resource-name>members</web-resource-name>
             <description/>
             <url-pattern>/profile/*</url-pattern>
             <http-method>GET</http-method>

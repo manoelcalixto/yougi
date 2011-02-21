@@ -5,9 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -26,10 +24,12 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import org.cejug.entity.AccessGroup;
+import org.cejug.entity.ApplicationProperty;
 import org.cejug.entity.City;
 import org.cejug.entity.Contact;
 import org.cejug.entity.ContactType;
 import org.cejug.entity.DeactivationType;
+import org.cejug.entity.Properties;
 import org.cejug.entity.UserAccount;
 import org.cejug.entity.UserGroup;
 import org.cejug.util.Base64Encoder;
@@ -53,6 +53,9 @@ public class UserAccountBsn {
 
     @EJB
     private MessengerBsn messengerBsn;
+
+    @EJB
+    private ApplicationPropertyBsn applicationPropertyBsn;
     
     @PersistenceContext
     private EntityManager em;
@@ -154,6 +157,16 @@ public class UserAccountBsn {
                 .getResultList();
     }
 
+    /** <p>Register new user accounts. For the moment, this is the only way an
+     * user account can be created. In the moment of the registration, data,
+     * such as country, city, website, etc., are saved as a contact record. This
+     * contact record is related to the new user and it is set as his/her main
+     * contact. In case the user inform a city that does not exist, then his/her
+     * suggestion is registered, but checked as not valid. The server address is
+     * informed just because it can only be detected automatically on the web
+     * container.</p>
+     * <p>When there is no user, the first registration creates a super user
+     * with administrative rights.</p> */
     public void register(UserAccount userAccount, Contact mainContact, City newCity, String serverAddress) {
         boolean noAccount = noAccount();
 
@@ -162,26 +175,57 @@ public class UserAccountBsn {
         
         if(newCity != null) {
             newCity.setId(EntitySupport.generateEntityId());
+            newCity.setValid(false);
             locationBsn.saveCity(newCity);
             mainContact.setCity(newCity);
         }
+
         userAccount.setMainContact(mainContact);
         userAccount.setConfirmationCode(generateConfirmationCode());
+        userAccount.setPassword(encryptPassword(userAccount.getPassword()));
         userAccount.setId(EntitySupport.generateEntityId());
         em.persist(userAccount);
 
         if(noAccount) {
+            userAccount.setConfirmationCode(null);
+            userAccount.setRegistrationDate(Calendar.getInstance().getTime());
             AccessGroup adminGroup = accessGroupBsn.findAdministrativeGroup();
             UserGroup userGroup = new UserGroup(adminGroup, userAccount);
             userGroupBsn.add(userGroup);
         }
         else {
+            ApplicationProperty appProp = applicationPropertyBsn.findApplicationProperty(Properties.SEND_EMAILS);
+            if(appProp.sendEmailsEnabled())
+                messengerBsn.sendEmailConfirmationRequest(userAccount, serverAddress);
+        }
+    }
+
+    public void confirmUser(String confirmationCode) {
+        try {
+            UserAccount userAccount = (UserAccount)em.createQuery("select ua from UserAccount ua where ua.confirmationCode = :code")
+                                                     .setParameter("code", confirmationCode)
+                                                     .getSingleResult();
+            userAccount.setConfirmationCode(null);
+            userAccount.setRegistrationDate(Calendar.getInstance().getTime());
+
+            // This step effectivelly allows the user to access the application.
             AccessGroup defaultGroup = accessGroupBsn.findUserDefaultGroup();
             UserGroup userGroup = new UserGroup(defaultGroup, userAccount);
             userGroupBsn.add(userGroup);
+
+            ApplicationProperty appProp = applicationPropertyBsn.findApplicationProperty(Properties.SEND_EMAILS);
+            if(appProp.sendEmailsEnabled())
+                messengerBsn.sendWelcomeMessage(userAccount);
+
+            if(appProp.sendEmailsEnabled()) {
+                AccessGroup administrativeGroup = accessGroupBsn.findAdministrativeGroup();
+                List<UserAccount> leaders = userGroupBsn.findUsersGroup(administrativeGroup);
+                messengerBsn.sendNewMemberAlertMessage(userAccount, leaders);
+            }
         }
-        
-        messengerBsn.sendEmailConfirmationRequest(userAccount, serverAddress);
+        catch(NoResultException nre) {
+            throw new IllegalArgumentException("Confirmation code "+ confirmationCode +" does not match any existing pendent account.", nre.getCause());
+        }
     }
 
     public void save(UserAccount userAccount) {
@@ -194,25 +238,6 @@ public class UserAccountBsn {
         userAccount.setPhoto(profilePicturePath);
     }
 
-    public void confirmUser(String confirmationCode) {
-        try {
-            UserAccount userAccount = (UserAccount)em.createQuery("select ua from UserAccount ua where ua.confirmationCode = :code")
-                                                     .setParameter("code", confirmationCode)
-                                                     .getSingleResult();
-            userAccount.setConfirmationCode(null);
-            userAccount.setRegistrationDate(Calendar.getInstance().getTime());
-            userAccount.setPassword(encryptPassword(userAccount.getPassword()));
-            messengerBsn.sendWelcomeMessage(userAccount);
-
-            AccessGroup administrativeGroup = accessGroupBsn.findAdministrativeGroup();
-            List<UserAccount> leaders = userGroupBsn.findUsersGroup(administrativeGroup);
-            messengerBsn.sendNewMemberAlertMessage(userAccount, leaders);
-        }
-        catch(NoResultException nre) {
-            throw new IllegalArgumentException("Confirmation code "+ confirmationCode +" does not match any existing pendent account.", nre.getCause());
-        }
-    }
-
     public void deactivateMembership(UserAccount userAccount) {
         UserAccount existingUserAccount = findUserAccount(userAccount.getId());
 
@@ -223,12 +248,17 @@ public class UserAccountBsn {
 
         save(existingUserAccount);
         userGroupBsn.removeUserFromAllGroups(userAccount);
-        if(!existingUserAccount.getDeactivationReason().trim().isEmpty()) {
+
+        ApplicationProperty appProp = applicationPropertyBsn.findApplicationProperty(Properties.SEND_EMAILS);
+
+        if(!existingUserAccount.getDeactivationReason().trim().isEmpty() && appProp.sendEmailsEnabled()) {
             messengerBsn.sendDeactivationReason(existingUserAccount);
         }
         AccessGroup administrativeGroup = accessGroupBsn.findAdministrativeGroup();
         List<UserAccount> leaders = userGroupBsn.findUsersGroup(administrativeGroup);
-        messengerBsn.sendDeactivationAlertMessage(existingUserAccount, leaders);
+
+        if(appProp.sendEmailsEnabled())
+            messengerBsn.sendDeactivationAlertMessage(existingUserAccount, leaders);
     }
 
     public void deactivateOwnMembership(UserAccount userAccount) {
@@ -239,14 +269,18 @@ public class UserAccountBsn {
         existingUserAccount.setDeactivationReason(userAccount.getDeactivationReason());
         existingUserAccount.setDeactivationType(DeactivationType.OWNWILL);
 
+        ApplicationProperty appProp = applicationPropertyBsn.findApplicationProperty(Properties.SEND_EMAILS);
+
         save(existingUserAccount);
         userGroupBsn.removeUserFromAllGroups(userAccount);
-        if(!existingUserAccount.getDeactivationReason().trim().isEmpty()) {
+        if(!existingUserAccount.getDeactivationReason().trim().isEmpty() && appProp.sendEmailsEnabled()) {
             messengerBsn.sendDeactivationReason(existingUserAccount);
         }
         AccessGroup administrativeGroup = accessGroupBsn.findAdministrativeGroup();
         List<UserAccount> leaders = userGroupBsn.findUsersGroup(administrativeGroup);
-        messengerBsn.sendDeactivationAlertMessage(existingUserAccount, leaders);
+
+        if(appProp.sendEmailsEnabled())
+            messengerBsn.sendDeactivationAlertMessage(existingUserAccount, leaders);
     }
 
     private String encryptPassword(String string) {
@@ -275,9 +309,13 @@ public class UserAccountBsn {
 
     public void requestConfirmationPasswordChange(String username, String serverAddress) {
         UserAccount userAccount = findUserAccountByUsername(username);
+
+        ApplicationProperty appProp = applicationPropertyBsn.findApplicationProperty(Properties.SEND_EMAILS);
+
         if(userAccount != null) {
             userAccount.setConfirmationCode(generateConfirmationCode());
-            messengerBsn.sendConfirmationCode(userAccount, serverAddress);
+            if(appProp.sendEmailsEnabled())
+                messengerBsn.sendConfirmationCode(userAccount, serverAddress);
         }
         else
             throw new PersistenceException("Usuário inexistente.");
@@ -296,24 +334,9 @@ public class UserAccountBsn {
         save(userAccount);
     }
 
-    public void scheduleAccountMaintenance() {
-        long duration = 1000 * 60 * 60 * 24 * 1;
-
-        timer.createTimer(duration, "");
-    }
-
-    public List<Date> getScheduledAccountMaintenances() {
-        Collection<Timer> timers = timer.getTimers();
-        List<Date> schedules = new ArrayList<Date>();
-        for(Timer tmr: timers) {
-            schedules.add(tmr.getNextTimeout());
-        }
-        return schedules;
-    }
-
     @Schedules({ @Schedule(hour="*/12") })
     public void removeNonConfirmedAccounts(Timer timer) {
-        logger.info("Timer to remove non confirmed accounts started.");
+        logger.log(Level.INFO, "Timer to remove non confirmed accounts started.");
 
         Calendar twoDaysAgo = Calendar.getInstance();
         twoDaysAgo.add(Calendar.DAY_OF_YEAR, -2);
@@ -326,8 +349,6 @@ public class UserAccountBsn {
                   .executeUpdate();
 
         logger.log(Level.INFO, "Number of removed non confirmed accounts: {0}", i);
-        
-        scheduleAccountMaintenance();
     }
 
     public void remove(String userId) {

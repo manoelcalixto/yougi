@@ -145,10 +145,6 @@ public class MemberBean implements Serializable {
         return "users?faces-redirect=true";
     }
 
-    public List<Date> getScheduledAccountMaintenances() {
-        return userAccountBsn.getScheduledAccountMaintenances();
-    }
-
     public List<CommunicationPrivacyRange> getCommunicationPrivacyRanges() {
         return CommunicationPrivacyRange.generateSeries(userAccountBsn.findUserAccounts());
     }
@@ -292,11 +288,6 @@ public class MemberBean implements Serializable {
             return "user";
         }
         removeSessionScoped();
-        return "users?faces-redirect=true";
-    }
-
-    public String scheduleAccountMaintenance() {
-        userAccountBsn.scheduleAccountMaintenance();
         return "users?faces-redirect=true";
     }
 

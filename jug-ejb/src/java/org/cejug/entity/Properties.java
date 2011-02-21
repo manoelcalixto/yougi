@@ -6,16 +6,16 @@ public enum Properties {
     GROUP_NAME("groupName", ""),
     SEND_EMAILS("sendEmails", "false");
 
-    private String name;
+    private String key;
     private String defaultValue;
 
-    Properties(String name, String defaultValue) {
-        this.name = name;
+    Properties(String key, String defaultValue) {
+        this.key = key;
         this.defaultValue = defaultValue;
     }
 
-    public String getName() {
-        return name;
+    public String getKey() {
+        return key;
     }
 
     public String getDefaultValue() {

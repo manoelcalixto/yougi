@@ -23,6 +23,7 @@ import org.cejug.entity.Contact;
 import org.cejug.entity.Country;
 import org.cejug.entity.Province;
 import org.cejug.entity.UserAccount;
+import org.cejug.web.util.ResourceBundle;
 
 @ManagedBean
 @SessionScoped
@@ -177,6 +178,10 @@ public class UserAccountBean implements Serializable {
         return cityNotListed;
     }
 
+    public Boolean getNoAccount() {
+        return userAccountBsn.noAccount();
+    }
+
     public void setCityNotListed(String cityNotListed) {
         this.cityNotListed = cityNotListed;
     }
@@ -237,6 +242,8 @@ public class UserAccountBean implements Serializable {
             return "registration";
         }
 
+        boolean isFirstUser = userAccountBsn.noAccount();
+
         String serverAddress = applicationPropertiesBean.getUrl();
 
         City newCity = null;
@@ -257,7 +264,12 @@ public class UserAccountBean implements Serializable {
         }
 
         removeSessionScoped();
-        FacesContext.getCurrentInstance().addMessage(userId, new FacesMessage("Uma confirmação de email foi enviada para "+ this.userAccount.getEmail() +". Visite sua caixa postal e confirme seu endereço de email antes do login inicial."));
+        ResourceBundle bundle = new ResourceBundle();
+        if(isFirstUser) {
+            FacesContext.getCurrentInstance().addMessage(userId, new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getMessage("infoSuccessfulRegistration"), ""));
+        }
+        else
+            FacesContext.getCurrentInstance().addMessage(userId, new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getMessage("infoRegistrationConfirmationRequest"), ""));
         return "registration_confirmation";
     }
 

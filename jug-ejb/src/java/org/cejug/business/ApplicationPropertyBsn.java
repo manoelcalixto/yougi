@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import org.cejug.entity.ApplicationProperty;
 import org.cejug.entity.Properties;
@@ -30,7 +31,7 @@ public class ApplicationPropertyBsn {
         if(propertiesMap.isEmpty()) {
             Properties[] props = Properties.values();
             for(int i = 0;i < props.length;i++) {
-                propertiesMap.put(props[i].getName(), props[i].getDefaultValue());
+                propertiesMap.put(props[i].getKey(), props[i].getDefaultValue());
             }
             create(propertiesMap);
         }
@@ -38,9 +39,9 @@ public class ApplicationPropertyBsn {
         else if(Properties.values().length > propertiesMap.size()) {
             Properties[] props = Properties.values();
             for(int i = 0;i < props.length;i++) {
-                if(!propertiesMap.containsKey(props[i].getName())) {
-                    propertiesMap.put(props[i].getName(), props[i].getDefaultValue());
-                    create(props[i].getName(), props[i].getDefaultValue());
+                if(!propertiesMap.containsKey(props[i].getKey())) {
+                    propertiesMap.put(props[i].getKey(), props[i].getDefaultValue());
+                    create(props[i].getKey(), props[i].getDefaultValue());
                 }
             }
         }
@@ -53,7 +54,7 @@ public class ApplicationPropertyBsn {
             while(iProps.hasNext()) {
                 entry = (Map.Entry)iProps.next();
                 for(int i = 0; i < props.length; i++) {
-                    if(!entry.getKey().equals(props[i].getName()))
+                    if(!entry.getKey().equals(props[i].getKey()))
                         remove(entry.getKey());
                 }
             }
@@ -63,12 +64,15 @@ public class ApplicationPropertyBsn {
     }
 
     public ApplicationProperty findApplicationProperty(Properties properties) {
-        ApplicationProperty applicationProperty = (ApplicationProperty)em.createQuery("select ap from ApplicationProperty ap where ap.propertyKey = :key")
-                                                                         .setParameter("key", properties.getName())
+        ApplicationProperty applicationProperty = null;
+        try {
+            applicationProperty = (ApplicationProperty)em.createQuery("select ap from ApplicationProperty ap where ap.propertyKey = :key")
+                                                                         .setParameter("key", properties.getKey())
                                                                          .getSingleResult();
-        if(applicationProperty == null) {
+        }
+        catch(NoResultException nre) {
             Map applicationProperties = findApplicationProperties();
-            String key = properties.getName();
+            String key = properties.getKey();
             applicationProperty = new ApplicationProperty(key, (String)applicationProperties.get(key));
         }
         return applicationProperty;

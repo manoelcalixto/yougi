@@ -40,6 +40,13 @@ public class ApplicationProperty implements Serializable {
         this.propertyValue = propertyValue;
     }
 
+    public boolean sendEmailsEnabled() {
+        if(propertyKey.equals(Properties.SEND_EMAILS.getKey()))
+            return Boolean.valueOf(propertyValue);
+        else
+            return false;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

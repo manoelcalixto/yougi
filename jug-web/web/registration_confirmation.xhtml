@@ -9,7 +9,7 @@
             <ui:define name="content">
                 <h1>#{bundle.registration}</h1>
                 <h:panelGrid cellpadding="5">
-                    <h:messages styleClass="alertMessage"/>
+                    <h:messages styleClass="alertMessage" infoClass="infoMessage"/>
                     <h:panelGrid columns="2" cellpadding="5">
                         <h:link outcome="index" value="#{bundle.goBackHome}"/>
                         <h:link outcome="login" value="#{bundle.signInGotoAction}"/>

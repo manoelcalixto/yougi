@@ -193,18 +193,6 @@
                                     <p:chartSeries label="#{bundle.acumulated}" value="#{range.acumulated}" />
                                 </p:lineChart>
                             </p:tab>
-                            <p:tab title="#{bundle.maintenance}">
-                                <h:commandButton value="#{bundle.scheduleMaintenance}" action="#{memberBean.scheduleAccountMaintenance}"/>
-                                <p></p>
-                                <p:dataTable value="#{memberBean.scheduledAccountMaintenances}" var="schedule">
-                                    <p:column>
-                                        <f:facet name="header"><h:outputText value="#{bundle.scheduledMaintenance}"/></f:facet>
-                                        <h:outputText value="#{schedule}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
-                                        </h:outputText>
-                                    </p:column>
-                                </p:dataTable>
-                            </p:tab>
                         </p:tabView>
                     </h:form>
                 </div>
