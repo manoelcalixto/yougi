@@ -80,8 +80,10 @@ public class ApplicationPropertyBsn {
 
     public void save(Map<String, String> properties) {
         List<ApplicationProperty> existingProperties = em.createQuery("select ap from ApplicationProperty ap").getResultList();
+        String value;
         for(ApplicationProperty property: existingProperties) {
-            property.setPropertyValue(properties.get(property.getPropertyKey()));
+            value = properties.get(property.getPropertyKey());
+            property.setPropertyValue(value);
             em.merge(property);
         }
     }

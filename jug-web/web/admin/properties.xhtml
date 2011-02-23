@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.prime.com.tr/ui">
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
     <h:body>
         <ui:composition template="../layout.xhtml">
             <ui:define name="title">#{bundle.properties}</ui:define>
@@ -30,6 +31,11 @@
 
                             <h:outputLabel for="fileRepositoryPath" value="#{bundle.fileRepositoryPath}" styleClass="fieldLabel"/>
                             <h:inputText id="fileRepositoryPath" label="#{bundle.fileRepositoryPath}" size="30" maxlength="100" value="#{applicationPropertiesBean.applicationProperties['fileRepositoryPath']}"/>
+
+                            <h:panelGrid columns="2">
+                                <h:selectBooleanCheckbox id="sendEmails" label="#{bundle.sendEmails}" value="#{applicationPropertiesBean.sendEmails}"/>
+                                <h:outputLabel for="sendEmails" value="#{bundle.sendEmails}"/>
+                            </h:panelGrid>
 
                             <h:outputText value="&nbsp;"/>
                             <h:panelGrid columns="2">
