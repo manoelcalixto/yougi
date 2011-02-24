@@ -4,12 +4,14 @@ import java.io.Serializable;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import org.cejug.business.ApplicationPropertyBsn;
 import org.cejug.entity.Properties;
+import org.cejug.web.util.ResourceBundle;
 
 @ManagedBean
 @SessionScoped
@@ -43,7 +45,11 @@ public class ApplicationPropertiesBean implements Serializable {
     public String save() {
         this.applicationProperties.put(Properties.SEND_EMAILS.getKey(), sendEmails.toString());
         applicationPropertyBsn.save(this.applicationProperties);
-        return "properties?faces-redirect=true";
+
+        ResourceBundle bundle = new ResourceBundle();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getMessage("infoPropertiesSaved"), ""));
+
+        return "properties";
     }
 
     @PostConstruct
