@@ -100,55 +100,6 @@
                                     </p:column>
                                 </p:dataTable>
                             </p:tab>
-                            <p:tab title="#{bundle.recentMembership}">
-                                <h:outputText value="#{bundle.sinse}: " styleClass="fieldLabel"/>
-                                <h:outputText value="#{memberBean.lastSevenDays}">
-                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
-                                </h:outputText>
-                                <p></p>
-                                <p:dataTable value="#{memberBean.recentUserAccounts}" var="member">
-                                    <p:column>
-                                        <f:facet name="header"><h:outputText value="#{bundle.firstName}"/></f:facet>
-                                        <h:commandLink value="#{member.firstName}" action="#{memberBean.load(member.id)}"/>
-                                    </p:column>
-                                    <p:column>
-                                        <f:facet name="header"><h:outputText value="#{bundle.lastName}"/></f:facet>
-                                        <h:outputText value="#{member.lastName}"/>
-                                    </p:column>
-                                    <p:column>
-                                        <f:facet name="header"><h:outputText value="#{bundle.gender}"/></f:facet>
-                                        <h:outputText value="#{member.gender}">
-                                            <f:converter converterId="GenderNumberToString"/>
-                                        </h:outputText>
-                                    </p:column>
-                                    <p:column>
-                                        <f:facet name="header"><h:outputText value="#{bundle.email}"/></f:facet>
-                                        <h:outputText value="#{member.email}"/>
-                                    </p:column>
-                                    <p:column>
-                                        <f:facet name="header"><h:outputText value="#{bundle.age}"/></f:facet>
-                                        <h:outputText value="#{member.age}">
-                                            <f:converter converterId="AgeNumberToString"/>
-                                        </h:outputText>
-                                    </p:column>
-                                    <p:column>
-                                        <f:facet name="header"><h:outputText value="#{bundle.confirmed}"/></f:facet>
-                                        <h:graphicImage rendered="#{member.confirmed}" url="/images/success-icon.png"/>
-                                    </p:column>
-                                    <p:column>
-                                        <f:facet name="header"><h:outputText value="#{bundle.registrationDate}"/></f:facet>
-                                        <h:outputText value="#{member.registrationDate}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
-                                        </h:outputText>
-                                    </p:column>
-                                    <p:column>
-                                        <f:facet name="header"><h:outputText value="#{bundle.lastUpdate}"/></f:facet>
-                                        <h:outputText value="#{member.lastUpdate}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
-                                        </h:outputText>
-                                    </p:column>
-                                </p:dataTable>
-                            </p:tab>
                             <p:tab title="#{bundle.deactivatedMembers}">
                                 <p:dataTable value="#{memberBean.deactivatedUserAccounts}" var="deactivated">
                                     <p:column>
