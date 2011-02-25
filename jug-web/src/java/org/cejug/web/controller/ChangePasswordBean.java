@@ -9,7 +9,10 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
+import org.cejug.business.ApplicationPropertyBsn;
 import org.cejug.business.UserAccountBsn;
+import org.cejug.entity.ApplicationProperty;
+import org.cejug.entity.Properties;
 import org.cejug.entity.UserAccount;
 
 @ManagedBean
@@ -22,8 +25,8 @@ public class ChangePasswordBean {
     @ManagedProperty(value="#{param.cc}")
     private String confirmationCode;
 
-    @ManagedProperty(value="#{applicationPropertiesBean}")
-    private ApplicationPropertiesBean applicationPropertiesBean;
+    @EJB
+    private ApplicationPropertyBsn applicationPropertyBsn;
 
     private String currentPassword;
     private String username;
@@ -73,14 +76,6 @@ public class ChangePasswordBean {
         this.currentPassword = currentPassword;
     }
 
-    public ApplicationPropertiesBean getApplicationPropertiesBean() {
-        return applicationPropertiesBean;
-    }
-
-    public void setApplicationPropertiesBean(ApplicationPropertiesBean applicationPropertiesBean) {
-        this.applicationPropertiesBean = applicationPropertiesBean;
-    }
-
     public Boolean getInvalid() {
         return invalid;
     }
@@ -102,7 +97,8 @@ public class ChangePasswordBean {
 
     public String requestPasswordChange() {
         try {
-            String serverAddress = applicationPropertiesBean.getUrl();
+            ApplicationProperty url = applicationPropertyBsn.findApplicationProperty(Properties.URL);
+            String serverAddress = url.getPropertyValue();
             userAccountBsn.requestConfirmationPasswordChange(username, serverAddress);
         }
         catch(EJBException ee) {

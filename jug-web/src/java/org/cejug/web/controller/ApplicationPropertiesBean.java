@@ -6,7 +6,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import org.cejug.business.ApplicationPropertyBsn;
@@ -14,7 +14,7 @@ import org.cejug.entity.Properties;
 import org.cejug.web.util.ResourceBundle;
 
 @ManagedBean
-@SessionScoped
+@RequestScoped
 public class ApplicationPropertiesBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -59,9 +59,13 @@ public class ApplicationPropertiesBean implements Serializable {
         if(applicationProperties.get(Properties.URL.getKey()).toString().equals("")) {
             applicationProperties.put(Properties.URL.getKey(), getUrl());
         }
+
+        if(applicationProperties.get(Properties.SEND_EMAILS.getKey()).equals("true")) {
+            sendEmails = true;
+        }
     }
 
-    public String getUrl() {
+    private String getUrl() {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String serverName = request.getServerName();
         int serverPort = request.getServerPort();

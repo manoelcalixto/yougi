@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -16,11 +15,14 @@ import javax.faces.validator.ValidatorException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.cejug.business.ApplicationPropertyBsn;
 import org.cejug.business.LocationBsn;
 import org.cejug.business.UserAccountBsn;
+import org.cejug.entity.ApplicationProperty;
 import org.cejug.entity.City;
 import org.cejug.entity.Contact;
 import org.cejug.entity.Country;
+import org.cejug.entity.Properties;
 import org.cejug.entity.Province;
 import org.cejug.entity.UserAccount;
 import org.cejug.web.util.ResourceBundle;
@@ -28,16 +30,17 @@ import org.cejug.web.util.ResourceBundle;
 @ManagedBean
 @SessionScoped
 public class UserAccountBean implements Serializable {
-	private static final long serialVersionUID = 1L;
 
-	@EJB
+    private static final long serialVersionUID = 1L;
+
+    @EJB
     private UserAccountBsn userAccountBsn;
 
     @EJB
     private LocationBsn locationBsn;
 
-    @ManagedProperty(value="#{applicationPropertiesBean}")
-    private ApplicationPropertiesBean applicationPropertiesBean;
+    @EJB
+    private ApplicationPropertyBsn applicationPropertyBsn;
 
     private String userId;
     private String cityNotListed;
@@ -186,14 +189,6 @@ public class UserAccountBean implements Serializable {
         this.cityNotListed = cityNotListed;
     }
 
-    public ApplicationPropertiesBean getApplicationPropertiesBean() {
-        return applicationPropertiesBean;
-    }
-
-    public void setApplicationPropertiesBean(ApplicationPropertiesBean applicationPropertiesBean) {
-        this.applicationPropertiesBean = applicationPropertiesBean;
-    }
-
     public boolean isConfirmed() {
         if(userAccount.getConfirmationCode() == null || userAccount.getConfirmationCode().isEmpty())
             return true;
@@ -244,7 +239,8 @@ public class UserAccountBean implements Serializable {
 
         boolean isFirstUser = userAccountBsn.noAccount();
 
-        String serverAddress = applicationPropertiesBean.getUrl();
+        ApplicationProperty url = applicationPropertyBsn.findApplicationProperty(Properties.URL);
+        String serverAddress = url.getPropertyValue();
 
         City newCity = null;
         if(this.cityNotListed != null && !this.cityNotListed.isEmpty() && contact.getCountry() != null) {
