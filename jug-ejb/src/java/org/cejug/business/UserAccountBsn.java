@@ -115,7 +115,7 @@ public class UserAccountBsn {
 
     @SuppressWarnings("unchecked")
     public List<UserAccount> findUserAccounts() {
-        return em.createQuery("select ua from UserAccount ua where ua.deactivated = :deactivated order by ua.firstName")
+        return em.createQuery("select ua from UserAccount ua where ua.deactivated = :deactivated and ua.confirmationCode is null order by ua.firstName")
                  .setParameter("deactivated", Boolean.FALSE)
                  .getResultList();
     }
@@ -182,13 +182,13 @@ public class UserAccountBsn {
 
         userAccount.setMainContact(mainContact);
         userAccount.setConfirmationCode(generateConfirmationCode());
+        userAccount.setRegistrationDate(Calendar.getInstance().getTime());
         userAccount.setPassword(encryptPassword(userAccount.getPassword()));
         userAccount.setId(EntitySupport.generateEntityId());
         em.persist(userAccount);
 
         if(noAccount) {
-            userAccount.setConfirmationCode(null);
-            userAccount.setRegistrationDate(Calendar.getInstance().getTime());
+            userAccount.setConfirmationCode(null);            
             AccessGroup adminGroup = accessGroupBsn.findAdministrativeGroup();
             UserGroup userGroup = new UserGroup(adminGroup, userAccount);
             userGroupBsn.add(userGroup);
