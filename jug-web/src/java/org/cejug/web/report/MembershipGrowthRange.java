@@ -13,7 +13,7 @@ import org.cejug.entity.UserAccount;
 import org.cejug.web.util.ResourceBundle;
 
 /**
- *
+ * This class feeds the line chart that shows the growth of the user group.
  * @author Hildeberto Mendonca
  */
 public class MembershipGrowthRange {
