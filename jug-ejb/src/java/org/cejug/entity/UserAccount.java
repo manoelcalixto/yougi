@@ -57,6 +57,7 @@ public class UserAccount implements Serializable {
     private Boolean generalOffer;
     private Boolean jobOffer;
     private Boolean event;
+    private Boolean sponsor;
 
     public UserAccount() {}
 
@@ -297,6 +298,15 @@ public class UserAccount implements Serializable {
 
     public void setEvent(Boolean event) {
         this.event = event;
+    }
+
+    @Column(table="communication_privacy")
+    public Boolean getSponsor() {
+        return sponsor;
+    }
+
+    public void setSponsor(Boolean sponsor) {
+        this.sponsor = sponsor;
     }
 
     @OneToMany(mappedBy="user", fetch=FetchType.LAZY, cascade={CascadeType.ALL})

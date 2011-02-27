@@ -77,19 +77,22 @@
                                     <h:outputText rendered="#{userAccountBean.userAccount.publicProfile}" value="#{bundle.publicProfileMessage}"/>
 
                                     <h:graphicImage rendered="#{userAccountBean.userAccount.mailingList}" url="/images/success-icon.png"/>
-                                    <h:outputLabel rendered="#{userAccountBean.userAccount.mailingList}" for="mailingList" value="#{bundle.mailingListMessage}"/>
+                                    <h:outputText rendered="#{userAccountBean.userAccount.mailingList}" value="#{bundle.mailingListMessage}"/>
 
                                     <h:graphicImage rendered="#{userAccountBean.userAccount.event}" url="/images/success-icon.png"/>
-                                    <h:outputLabel rendered="#{userAccountBean.userAccount.event}" for="event" value="#{bundle.eventMessage}"/>
+                                    <h:outputText rendered="#{userAccountBean.userAccount.event}" value="#{bundle.eventMessage}"/>
 
                                     <h:graphicImage rendered="#{userAccountBean.userAccount.news}" url="/images/success-icon.png"/>
-                                    <h:outputLabel rendered="#{userAccountBean.userAccount.news}" for="news" value="#{bundle.newsMessage}"/>
+                                    <h:outputText rendered="#{userAccountBean.userAccount.news}" value="#{bundle.newsMessage}"/>
 
                                     <h:graphicImage rendered="#{userAccountBean.userAccount.generalOffer}" url="/images/success-icon.png"/>
-                                    <h:outputLabel rendered="#{userAccountBean.userAccount.generalOffer}" for="generalOffer" value="#{bundle.generalOfferMessage}"/>
+                                    <h:outputText rendered="#{userAccountBean.userAccount.generalOffer}" value="#{bundle.generalOfferMessage}"/>
 
                                     <h:graphicImage rendered="#{userAccountBean.userAccount.jobOffer}" url="/images/success-icon.png"/>
-                                    <h:outputLabel rendered="#{userAccountBean.userAccount.jobOffer}" for="jobOffer" value="#{bundle.jobOfferMessage}"/>
+                                    <h:outputText rendered="#{userAccountBean.userAccount.jobOffer}" value="#{bundle.jobOfferMessage}"/>
+
+                                    <h:graphicImage rendered="#{userAccountBean.userAccount.sponsor}" url="/images/success-icon.png"/>
+                                    <h:outputText rendered="#{userAccountBean.userAccount.sponsor}" value="#{bundle.sponsorMessage}"/>
                                 </h:panelGrid>
                                 <p></p>
                                 <h:button outcome="privacy.xhtml" value="#{bundle.update}"/>

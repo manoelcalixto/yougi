@@ -17,4 +17,9 @@
     <group-name>helpers</group-name>
     <group-name>leaders</group-name>
   </security-role-mapping>
+  <security-role-mapping>
+    <role-name>sponsor</role-name>
+    <group-name>sponsors</group-name>
+    <group-name>leaders</group-name>
+  </security-role-mapping>
 </sun-web-app>

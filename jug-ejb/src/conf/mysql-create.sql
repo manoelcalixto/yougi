@@ -75,7 +75,8 @@ create table communication_privacy (
     news           tinyint(1)     null,
     general_offer  tinyint(1)     null,
     job_offer      tinyint(1)     null,
-    event          tinyint(1)     null
+    event          tinyint(1)     null,
+    sponsor        tinyint(1)     null
 ) engine = innodb;
 
 alter table communication_privacy add constraint pk_communication_privacy primary key (user);
@@ -87,6 +88,10 @@ create table access_group (
     description  text             null,
     user_default tinyint(1)       null
 ) engine = innodb;
+
+insert into access_group (id, name, description, user_default) values
+    ('PQOWKSIFUSLEOSJFNMDKELSOEJDKNWJE', 'helpers', 'Helpers', 0),
+    ('ISLDJKSJDMCNSJDKWISJKJKJKJUJKJHJ', 'sponsors', 'Sponsors', 0);
 
 alter table access_group add constraint pk_access_group primary key (id);
 create unique index idx_unique_group_name on access_group (name);

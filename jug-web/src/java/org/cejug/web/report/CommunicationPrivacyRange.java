@@ -6,7 +6,8 @@ import org.cejug.entity.UserAccount;
 import org.cejug.web.util.ResourceBundle;
 
 /**
- *
+ * This class feeds a column chart that shows members' preferences in terms of
+ * privacy.
  * @author Hildeberto Mendonca
  */
 public class CommunicationPrivacyRange {
@@ -27,25 +28,61 @@ public class CommunicationPrivacyRange {
         List<CommunicationPrivacyRange> communicationPrivacyRanges = new ArrayList<CommunicationPrivacyRange>();
         
         Integer totalPublicProfile = 0, totalMailingList = 0, totalNews = 0,
-                totalGeneralOffer = 0, totalJobOffer = 0, totalEvent = 0;
+                totalGeneralOffer = 0, totalJobOffer = 0, totalEvent = 0, totalSponsor = 0;
 
         for(UserAccount userAccount: userAccounts) {
-            if(userAccount.getPublicProfile()) totalPublicProfile++;
-            if(userAccount.getMailingList()) totalMailingList++;
-            if(userAccount.getNews()) totalNews++;
-            if(userAccount.getGeneralOffer()) totalGeneralOffer++;
-            if(userAccount.getJobOffer()) totalJobOffer++;
-            if(userAccount.getEvent()) totalEvent++;
+            if(userAccount.getPublicProfile())
+                totalPublicProfile++;
+
+            if(userAccount.getMailingList())
+                totalMailingList++;
+
+            if(userAccount.getNews())
+                totalNews++;
+
+            if(userAccount.getGeneralOffer())
+                totalGeneralOffer++;
+
+            if(userAccount.getJobOffer())
+                totalJobOffer++;
+
+            if(userAccount.getEvent())
+                totalEvent++;
+
+            if(userAccount.getSponsor())
+                totalSponsor++;
         }
 
         Integer ttl = userAccounts.size();
         ResourceBundle bundle = new ResourceBundle();
-        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("publicProfile"), totalPublicProfile, ttl - totalPublicProfile));
-        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("mailingList"), totalMailingList, ttl - totalMailingList));
-        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("news"), totalNews, ttl - totalNews));
-        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("generalOffer"), totalGeneralOffer, ttl - totalGeneralOffer));
-        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("jobOffer"), totalJobOffer, ttl - totalJobOffer));
-        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("event"), totalEvent, ttl - totalEvent));
+        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("publicProfile"), 
+                                                                     totalPublicProfile,
+                                                                     ttl - totalPublicProfile));
+
+        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("mailingList"),
+                                                                     totalMailingList,
+                                                                     ttl - totalMailingList));
+
+        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("news"),
+                                                                     totalNews,
+                                                                     ttl - totalNews));
+
+        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("generalOffer"),
+                                                                     totalGeneralOffer,
+                                                                     ttl - totalGeneralOffer));
+
+        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("jobOffer"),
+                                                                     totalJobOffer,
+                                                                     ttl - totalJobOffer));
+
+        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("event"),
+                                                                     totalEvent,
+                                                                     ttl - totalEvent));
+
+        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("sponsor"),
+                                                                     totalSponsor,
+                                                                     ttl - totalSponsor));
+
         return communicationPrivacyRanges;
     }
 

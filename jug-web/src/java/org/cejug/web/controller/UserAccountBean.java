@@ -232,7 +232,7 @@ public class UserAccountBean implements Serializable {
             return "registration";
         }
 
-        if(!(userAccount.getPublicProfile() || userAccount.getMailingList() || userAccount.getEvent() || userAccount.getNews() || userAccount.getGeneralOffer() || userAccount.getJobOffer())) {
+        if(!(userAccount.getPublicProfile() || userAccount.getMailingList() || userAccount.getEvent() || userAccount.getNews() || userAccount.getGeneralOffer() || userAccount.getJobOffer() || userAccount.getSponsor())) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Selecione pelo menos uma das opções de privacidade."));
             return "registration";
         }

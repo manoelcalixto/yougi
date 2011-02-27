@@ -84,6 +84,19 @@
             <role-name>member</role-name>
         </auth-constraint>
     </security-constraint>
+    <security-constraint>
+        <display-name>Sponsors Constraints</display-name>
+        <web-resource-collection>
+            <web-resource-name>sponsors</web-resource-name>
+            <description/>
+            <url-pattern>/sponsorship/*</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>sponsor</role-name>
+        </auth-constraint>
+    </security-constraint>
     <login-config>
         <auth-method>FORM</auth-method>
         <realm-name>jug-realm</realm-name>
@@ -103,5 +116,9 @@
     <security-role>
         <description/>
         <role-name>member</role-name>
+    </security-role>
+    <security-role>
+        <description/>
+        <role-name>sponsor</role-name>
     </security-role>
 </web-app>
