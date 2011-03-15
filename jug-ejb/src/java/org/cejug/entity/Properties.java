@@ -2,9 +2,10 @@ package org.cejug.entity;
 
 public enum Properties {
     FILE_REPOSITORY_PATH("fileRepositoryPath", ""),
-    URL("url", ""),
-    GROUP_NAME("groupName", ""),
-    SEND_EMAILS("sendEmails", "false");
+    URL                 ("url",                ""),
+    GROUP_NAME          ("groupName",          ""),
+    SEND_EMAILS         ("sendEmails",         "false"),
+    EMAIL_SERVER_TYPE   ("emailServerType",    "pop3");
 
     private String key;
     private String defaultValue;

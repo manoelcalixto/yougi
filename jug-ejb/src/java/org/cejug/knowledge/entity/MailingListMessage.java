@@ -21,7 +21,7 @@ import org.cejug.entity.UserAccount;
  */
 @Entity
 @Table(name = "mailing_list_message")
-public class MailingListMessage implements Serializable {
+public class MailingListMessage implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
 
@@ -32,7 +32,7 @@ public class MailingListMessage implements Serializable {
 
     @ManyToOne
     @JoinColumn(name="sender")
-    private UserAccount sender;
+    private MailingListSubscription sender;
 
     @Column(name = "when_received", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -98,11 +98,11 @@ public class MailingListMessage implements Serializable {
         this.body = body;
     }
 
-    public UserAccount getSender() {
+    public MailingListSubscription getSender() {
         return sender;
     }
 
-    public void setSender(UserAccount sender) {
+    public void setSender(MailingListSubscription sender) {
         this.sender = sender;
     }
 
@@ -188,6 +188,24 @@ public class MailingListMessage implements Serializable {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public Object clone() {
+        MailingListMessage mailingListMessage = new MailingListMessage();
+        mailingListMessage.setId(this.id);
+        mailingListMessage.setSubject(this.subject);
+        mailingListMessage.setBody(this.body);
+        mailingListMessage.setWhenReceived(this.whenReceived);
+        mailingListMessage.setAnswerScore(this.answerScore);
+        mailingListMessage.setMailingList(this.mailingList);
+        mailingListMessage.setMessageType(this.messageType);
+        mailingListMessage.setPublished(this.published);
+        mailingListMessage.setRepliesFrom(this.repliesFrom);
+        mailingListMessage.setReplyTo(this.replyTo);
+        mailingListMessage.setSender(this.sender);
+        mailingListMessage.setTopics(this.topics);
+        return mailingListMessage;
     }
 
     @Override

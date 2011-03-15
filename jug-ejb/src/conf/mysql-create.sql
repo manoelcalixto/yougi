@@ -143,16 +143,17 @@ create table mailing_list (
 alter table mailing_list add constraint pk_mailing_list primary key (id);
 
 create table mailing_list_subscription (
-    id                  char(32) not null,
-    user_account        char(32) not null,
-    mailing_list        char(32) not null,
-    subscription_date   date         null,
-    unsubscription_date date         null
+    id                  char(32)     not null,
+    mailing_list        char(32)     not null,
+    email_address       varchar(100) not null,
+    user_account        char(32)         null,
+    subscription_date   date             null,
+    unsubscription_date date             null
 ) engine = innodb;
 
 alter table mailing_list_subscription add constraint pk_mailing_list_subscription primary key (id);
-alter table mailing_list_subscription add constraint fk_subsciption_user foreign key (user_account) references user_account(id) on delete cascade;
 alter table mailing_list_subscription add constraint fk_subscription_mailing_list foreign key (mailing_list) references mailing_list(id) on delete cascade;
+alter table mailing_list_subscription add constraint fk_subsciption_user foreign key (user_account) references user_account(id) on delete set null;
 
 create table mailing_list_message (
     id            char(32)     not null,
@@ -169,8 +170,8 @@ create table mailing_list_message (
 
 alter table mailing_list_message add constraint pk_mailing_list_message primary key (id);
 alter table mailing_list_message add constraint fk_mailing_list_message foreign key (mailing_list) references mailing_list(id) on delete cascade;
-alter table mailing_list_message add constraint fk_message_sender foreign key (sender) references user_account(id) on delete cascade;
 alter table mailing_list_message add constraint fk_message_reply_to foreign key (reply_to) references mailing_list_message(id) on delete set null;
+alter table mailing_list_message add constraint fk_sender_message foreign key (sender) references mailing_list(id) on delete cascade;
 
 create table topic (
     id          char(32)     not null,
