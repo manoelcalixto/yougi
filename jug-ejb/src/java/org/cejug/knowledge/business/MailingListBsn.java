@@ -5,6 +5,7 @@
 
 package org.cejug.knowledge.business;
 
+import com.sun.mail.imap.IMAPBodyPart;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
-import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -120,7 +121,7 @@ public class MailingListBsn {
                  * mailingListMessage object. */
                 OutputStream output = new OutputStream() {
                     private StringBuilder string = new StringBuilder();
-        
+
                     @Override
                     public void write(int b) throws IOException {
                         this.string.append((char) b );
@@ -133,6 +134,20 @@ public class MailingListBsn {
                 };
                 message[i].writeTo(output);
                 mailingListMessage.setBody(output.toString());
+//                if(message[i].getContent() instanceof MimeMultipart) {
+//                    MimeMultipart mm = (MimeMultipart)message[i].getContent();
+//                    logger.log(Level.INFO, "Parts: {0}", mm.getCount());
+//                    StringBuilder body = new StringBuilder();
+//                    for(int j = 0;j < mm.getCount();j++) {
+//                        if(mm.getBodyPart(j) instanceof IMAPBodyPart) {
+//                            IMAPBodyPart ibp = (IMAPBodyPart)mm.getBodyPart(j);
+//                            body.append(ibp.getDescription());
+//                        }
+//                    }
+//                    mailingListMessage.setBody(body.toString());
+//                }
+//                else
+//                    mailingListMessage.setBody(message[i].getContent().toString());
 
                 mailingListMessage.setWhenReceived(message[i].getReceivedDate());
 
@@ -144,6 +159,7 @@ public class MailingListBsn {
                 else {
                     mailingListMessage.setMailingList(mailingLists.get(0));
                     em.persist(mailingListMessage);
+                    message[i].setFlag(Flags.Flag.DELETED, true);
                 }
 
                 for(int j = 1;j < mailingLists.size();j++) {
@@ -151,9 +167,8 @@ public class MailingListBsn {
                     mailingListMessage.setMailingList(mailingLists.get(j));
                     em.persist(mailingListMessage);
                 }
-                message[i].setFlag(Flags.Flag.DELETED, true);
             }
-            folder.close(false);
+            folder.close(true);
             store.close();
             logger.log(Level.INFO, "Email retrieval ended.");
         } catch (IOException ex) {
