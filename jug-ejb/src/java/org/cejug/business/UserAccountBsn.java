@@ -318,7 +318,7 @@ public class UserAccountBsn {
                 messengerBsn.sendConfirmationCode(userAccount, serverAddress);
         }
         else
-            throw new PersistenceException("Usuário inexistente.");
+            throw new PersistenceException("Usuário inexistente:"+ username);
     }
 
     public Boolean passwordMatches(UserAccount userAccount, String passwordToCheck) {

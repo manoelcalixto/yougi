@@ -16,7 +16,7 @@ import org.cejug.entity.MessageTemplate;
 import org.cejug.entity.UserAccount;
 
 /**
- *
+ * Send email messages according to business needs.
  * @author Hildeberto Mendonca
  */
 @Stateless

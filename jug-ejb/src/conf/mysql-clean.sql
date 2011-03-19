@@ -1,8 +1,7 @@
-delete from event_attendee;
-delete from event;
-delete from event_venue;
 delete from message_template;
 delete from application_property;
+delete from mailing_list_message;
+delete from mailing_list;
 delete from user_group;
 delete from access_group;
 delete from contact;

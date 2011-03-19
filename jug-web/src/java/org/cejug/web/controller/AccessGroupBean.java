@@ -82,10 +82,12 @@ public class AccessGroupBean {
     }
 
     @SuppressWarnings("rawtypes")
-	public String save() {
+    public String save() {
         List<UserAccount> selectedMembers = new ArrayList<UserAccount>();
         List membersIds = this.members.getTarget();
+        UserAccount userAccount;
         for(int i = 0;i < membersIds.size();i++) {
+            //userAccount = (UserAccount)membersIds.get(i);
             selectedMembers.add(new UserAccount(membersIds.get(i).toString()));
         }
 
