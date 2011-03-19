@@ -5,7 +5,6 @@
 
 package org.cejug.knowledge.business;
 
-import com.sun.mail.imap.IMAPBodyPart;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
-import javax.mail.internet.MimeMultipart;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -37,7 +35,7 @@ import org.cejug.knowledge.entity.MailingListSubscription;
 import org.cejug.util.EntitySupport;
 
 /**
- *
+ * Implements the business logic related to the management of mailing lists.
  * @author Hildeberto Mendonca
  */
 @Stateless
@@ -77,7 +75,8 @@ public class MailingListBsn {
         }
     }
 
-    @Schedule(minute="*/2", hour="*")
+    @Schedule(hour="*/1",persistent=false) // Production
+    //@Schedule(hour="*",minute="*/2",persistent=false) // Development
     public void retrieveMailingListMessages() {
         
         try {
@@ -88,31 +87,27 @@ public class MailingListBsn {
             Folder folder = store.getFolder("INBOX");
             folder.open(Folder.READ_WRITE);
             Message[] message = folder.getMessages();
-            List<MailingListMessage> mailingListMessages = new ArrayList<MailingListMessage>();
             MailingListMessage mailingListMessage;
-            MailingListSubscription mailingListSubscription;
             String address;
             List<MailingList> mailingLists;
 
             for (int i = 0, n = message.length; i < n; i++) {
+                /* Stores in the database only those messages that were sent to
+                 * a registered mailing list. */
+                mailingLists = figureOutMailingLists(message[i].getAllRecipients());
+                if(mailingLists == null || mailingLists.isEmpty())
+                    continue;
+
                 mailingListMessage = new MailingListMessage();
                 mailingListMessage.setId(EntitySupport.generateEntityId());
                 mailingListMessage.setSubject(message[i].getSubject());
 
-                /* Get the email address of the 'from' field, search the address
-                 * in the subscription table and set the sender of the message.
-                 * Only those who are registered in the subscription table have
-                 * their message considered. */
+                /* Get the email address of the 'from' field and set the sender. */
                 address = message[i].getFrom()[0].toString();
                 if(address.indexOf("<") >= 0)
                     address = address.substring(address.indexOf("<") + 1, address.indexOf(">"));
                 address = address.toLowerCase();
-                mailingListSubscription = findMailingListSubscription(address);
-                logger.log(Level.INFO, "Sender: {0}", new Object[]{address.toString()});
-                if(mailingListSubscription == null)
-                    continue;
-                else
-                    mailingListMessage.setSender(mailingListSubscription);
+                mailingListMessage.setSender(address);
 
                 /* This part tries to get the full content of the message to
                  * store in the database. For that, a simple OutputStream
@@ -134,33 +129,14 @@ public class MailingListBsn {
                 };
                 message[i].writeTo(output);
                 mailingListMessage.setBody(output.toString());
-//                if(message[i].getContent() instanceof MimeMultipart) {
-//                    MimeMultipart mm = (MimeMultipart)message[i].getContent();
-//                    logger.log(Level.INFO, "Parts: {0}", mm.getCount());
-//                    StringBuilder body = new StringBuilder();
-//                    for(int j = 0;j < mm.getCount();j++) {
-//                        if(mm.getBodyPart(j) instanceof IMAPBodyPart) {
-//                            IMAPBodyPart ibp = (IMAPBodyPart)mm.getBodyPart(j);
-//                            body.append(ibp.getDescription());
-//                        }
-//                    }
-//                    mailingListMessage.setBody(body.toString());
-//                }
-//                else
-//                    mailingListMessage.setBody(message[i].getContent().toString());
 
                 mailingListMessage.setWhenReceived(message[i].getReceivedDate());
-
-                /* Stores in the database only those messages that were sent to 
-                 * a registered mailing list. */
-                mailingLists = figureOutMailingLists(message[i].getAllRecipients());
-                if(mailingLists == null || mailingLists.isEmpty())
-                    continue;
-                else {
-                    mailingListMessage.setMailingList(mailingLists.get(0));
-                    em.persist(mailingListMessage);
-                    message[i].setFlag(Flags.Flag.DELETED, true);
-                }
+                
+                mailingListMessage.setMailingList(mailingLists.get(0));
+                em.persist(mailingListMessage);
+                // Once persisted, the message is flagged to be deleted.
+                message[i].setFlag(Flags.Flag.DELETED, true);
+                logger.log(Level.INFO, "Message -{0}- sent by -{1}- saved.", new Object[]{mailingListMessage.getSubject(),mailingListMessage.getSender()});
 
                 for(int j = 1;j < mailingLists.size();j++) {
                     mailingListMessage = (MailingListMessage)mailingListMessage.clone();
@@ -168,6 +144,7 @@ public class MailingListBsn {
                     em.persist(mailingListMessage);
                 }
             }
+            // if true, all messages flagged to be deleted will actually be deleted.
             folder.close(true);
             store.close();
             logger.log(Level.INFO, "Email retrieval ended.");
@@ -175,6 +152,8 @@ public class MailingListBsn {
             logger.log(Level.SEVERE, ex.getMessage(), ex);
         } catch (MessagingException ex) {
             logger.log(Level.SEVERE, ex.getMessage(), ex);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -184,12 +163,10 @@ public class MailingListBsn {
         List<MailingList> mailingLists = new ArrayList<MailingList>();
         MailingList mailingList;
         for(int i = 0;i < extendedListAddresses.length;i++) {
-            // Extracts emails from the
             listAddress = extendedListAddresses[i].toString();
             if(listAddress.indexOf("<") >= 0)
                 listAddress = listAddress.substring(listAddress.indexOf("<") + 1, listAddress.indexOf(">"));
             listAddress = listAddress.toLowerCase();
-            logger.log(Level.INFO, "List address: {0}", new Object[]{listAddress});
             mailingList = findMailingListByEmail(listAddress);
             if(mailingList != null)
                 mailingLists.add(mailingList);

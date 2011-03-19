@@ -160,7 +160,7 @@ create table mailing_list_message (
     mailing_list  char(32)     not null,
     subject       varchar(255) not null,
     body          text         not null,
-    sender        char(32)     not null,
+    sender        varchar(100) not null,
     when_received datetime     not null,
     reply_to      char(32)         null,
     message_type  char(2)          null, # q - question, a - answer, i - info, ri - request_more_info, ir - info_requested, s - solution
@@ -171,7 +171,6 @@ create table mailing_list_message (
 alter table mailing_list_message add constraint pk_mailing_list_message primary key (id);
 alter table mailing_list_message add constraint fk_mailing_list_message foreign key (mailing_list) references mailing_list(id) on delete cascade;
 alter table mailing_list_message add constraint fk_message_reply_to foreign key (reply_to) references mailing_list_message(id) on delete set null;
-alter table mailing_list_message add constraint fk_sender_message foreign key (sender) references mailing_list(id) on delete cascade;
 
 create table topic (
     id          char(32)     not null,

@@ -13,7 +13,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import org.cejug.entity.UserAccount;
 
 /**
  *
@@ -30,9 +29,8 @@ public class MailingListMessage implements Serializable, Cloneable {
     private String subject;
     private String body;
 
-    @ManyToOne
-    @JoinColumn(name="sender")
-    private MailingListSubscription sender;
+    @Column(name="sender")
+    private String sender;
 
     @Column(name = "when_received", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -98,11 +96,11 @@ public class MailingListMessage implements Serializable, Cloneable {
         this.body = body;
     }
 
-    public MailingListSubscription getSender() {
+    public String getSender() {
         return sender;
     }
 
-    public void setSender(MailingListSubscription sender) {
+    public void setSender(String sender) {
         this.sender = sender;
     }
 
