@@ -38,7 +38,7 @@
                                     <h:outputLabel for="default" value="#{bundle.default}"/>
                                 </h:panelGrid>
                             </h:panelGrid>
-                            <p:pickList value="#{accessGroupBean.members}" var="member" itemLabel="#{member.fullName}" itemValue="#{member.id}" />
+                            <p:pickList value="#{accessGroupBean.members}" var="member" itemLabel="#{member.fullName}" itemValue="#{member.id}" converter="GroupPickListConverter"/>
                         </h:panelGrid>
                         
                         <h:inputHidden id="id" value="#{accessGroupBean.group.id}"/>

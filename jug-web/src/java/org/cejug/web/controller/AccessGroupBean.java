@@ -32,6 +32,7 @@ public class AccessGroupBean {
 
     private AccessGroup group;
 
+    // List of members for the picklist.
     private DualListModel<UserAccount> members;
     
     public AccessGroupBean() {}
@@ -87,8 +88,8 @@ public class AccessGroupBean {
         List membersIds = this.members.getTarget();
         UserAccount userAccount;
         for(int i = 0;i < membersIds.size();i++) {
-            //userAccount = (UserAccount)membersIds.get(i);
-            selectedMembers.add(new UserAccount(membersIds.get(i).toString()));
+            userAccount = new UserAccount(((UserAccount)membersIds.get(i)).getId());
+            selectedMembers.add(userAccount);
         }
 
         accessGroupBsn.save(this.group, selectedMembers);
