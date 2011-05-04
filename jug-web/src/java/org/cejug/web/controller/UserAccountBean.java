@@ -232,11 +232,11 @@ public class UserAccountBean implements Serializable {
             return "registration";
         }
 
-        if(!(userAccount.getPublicProfile() || userAccount.getMailingList() || userAccount.getEvent() || userAccount.getNews() || userAccount.getGeneralOffer() || userAccount.getJobOffer() || userAccount.getSponsor())) {
+        if(!isPrivacyValid(userAccount)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Selecione pelo menos uma das opções de privacidade."));
             return "registration";
         }
-
+        
         boolean isFirstUser = userAccountBsn.noAccount();
 
         ApplicationProperty url = applicationPropertyBsn.findApplicationProperty(Properties.URL);
@@ -291,6 +291,13 @@ public class UserAccountBean implements Serializable {
             existingUserAccount.setGeneralOffer(userAccount.getGeneralOffer());
             existingUserAccount.setJobOffer(userAccount.getJobOffer());
             existingUserAccount.setEvent(userAccount.getEvent());
+            existingUserAccount.setSponsor(userAccount.getSponsor());
+
+            if(!isPrivacyValid(existingUserAccount)) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Selecione pelo menos uma das opções de privacidade."));
+                return "privacy";
+            }
+
             userAccountBsn.save(existingUserAccount);
         }
         return "profile?faces-redirect=true";
@@ -312,5 +319,20 @@ public class UserAccountBean implements Serializable {
     private void removeSessionScoped() {
         FacesContext context = FacesContext.getCurrentInstance();
         context.getExternalContext().getSessionMap().remove("userAccountBean");
+    }
+
+    /** Check whether at least one of the privacy options was checked. */
+    private boolean isPrivacyValid(UserAccount userAccount) {
+        if(userAccount.getPublicProfile() || 
+             userAccount.getMailingList() ||
+             userAccount.getEvent() ||
+             userAccount.getNews() ||
+             userAccount.getGeneralOffer() ||
+             userAccount.getJobOffer() ||
+             userAccount.getSponsor()) {
+            
+            return true;
+        }
+        return false;
     }
 }
