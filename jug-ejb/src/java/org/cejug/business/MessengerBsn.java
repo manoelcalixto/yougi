@@ -10,6 +10,7 @@ import javax.ejb.LocalBean;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
+import org.cejug.entity.AccessGroup;
 import org.cejug.entity.DeactivationType;
 import org.cejug.entity.EmailMessage;
 import org.cejug.entity.MessageTemplate;
@@ -139,6 +140,24 @@ public class MessengerBsn {
         }
         catch(MessagingException me) {
             throw new RuntimeException("Error when sending the mail confirmation. The registration was not finalized.",me);
+        }
+    }
+
+    public void sendGroupAssignmentAlert(UserAccount userAccount, AccessGroup accessGroup) {
+        MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("09JDIIE82O39IDIDOSJCHXUDJJXHCKP0");
+        Map<String, Object> values = new HashMap<String, Object>();
+
+        values.put("userAccount.firstName", userAccount.getFirstName());
+        values.put("accessGroup.name", accessGroup.getName());
+        EmailMessage emailMessage = new EmailMessage();
+        emailMessage.setRecipientTo(userAccount);
+        messageTemplateBsn.applyEmailMessageTemplate(emailMessage, messageTemplate, values);
+
+        try {
+            Transport.send(emailMessage.createMimeMessage(mailSession));
+        }
+        catch(MessagingException me) {
+            throw new RuntimeException("Error when sending the group assignment alert to "+ userAccount.getFullName(), me);
         }
     }
 }

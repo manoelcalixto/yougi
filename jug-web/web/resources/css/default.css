@@ -54,6 +54,10 @@ a:link:hover, a:visited:hover  {
     color: blue;
 }
 
+.errorMessage {
+    color: red;
+}
+
 .content {
     padding-right: 5px;
     padding-left: 5px;

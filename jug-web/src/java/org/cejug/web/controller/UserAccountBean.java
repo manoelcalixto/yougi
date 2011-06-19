@@ -170,8 +170,10 @@ public class UserAccountBean implements Serializable {
     }
 
     public void setSelectedCity(String id) {
-        if(id == null || id.isEmpty())
+        if(id == null || id.isEmpty()) {
+            this.contact.setCity(null);
             return;
+        }
 
         if(this.contact.getCity() == null || !this.contact.getCity().getId().equals(id))
             this.contact.setCity(locationBsn.findCity(id));
@@ -217,25 +219,36 @@ public class UserAccountBean implements Serializable {
     }
 
     public String register() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = new ResourceBundle();
+        
         if(!userAccount.isEmailConfirmed()) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("A confirmação de email não está coincidindo com o email informado."));
-            return "registration";
-        }
-
-        if(!userAccount.isPasswordConfirmed()) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("A confirmação de senha não está coincidindo com a senha informada."));
-            return "registration";
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorMessageEmailConfirmation"),""));
+            context.validationFailed();
         }
 
         if(userAccountBsn.existingAccount(userAccount)) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Um membro com o endereço de email \""+ userAccount.getEmail() +"\" já está registrado."));
-            return "registration";
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorMessageExistingAccount"),""));
+            context.validationFailed();
+        }
+
+        if(!userAccount.isPasswordConfirmed()) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorMessagePasswordNotConfirmed"),""));
+            context.validationFailed();
+        }
+        
+        if(this.contact.getCity() == null && (this.cityNotListed == null || this.cityNotListed.isEmpty())) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getMessage("errorMessageCityNotInformed"),""));
+            context.validationFailed();
         }
 
         if(!isPrivacyValid(userAccount)) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Selecione pelo menos uma das opções de privacidade."));
-            return "registration";
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getMessage("errorMessagePrivacyInvalid"),""));
+            context.validationFailed();
         }
+        
+        if(context.isValidationFailed())
+            return "registration";
         
         boolean isFirstUser = userAccountBsn.noAccount();
 
@@ -255,17 +268,17 @@ public class UserAccountBean implements Serializable {
             userAccountBsn.register(userAccount, contact, newCity, serverAddress);
         }
         catch(Exception e) {
-            FacesContext.getCurrentInstance().addMessage(userId, new FacesMessage(e.getCause().getMessage()));
+            context.addMessage(userId, new FacesMessage(e.getCause().getMessage()));
             return "registration";
         }
 
         removeSessionScoped();
-        ResourceBundle bundle = new ResourceBundle();
+        
         if(isFirstUser) {
-            FacesContext.getCurrentInstance().addMessage(userId, new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getMessage("infoSuccessfulRegistration"), ""));
+            context.addMessage(userId, new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getMessage("infoSuccessfulRegistration"), ""));
         }
         else
-            FacesContext.getCurrentInstance().addMessage(userId, new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getMessage("infoRegistrationConfirmationRequest"), ""));
+            context.addMessage(userId, new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getMessage("infoRegistrationConfirmationRequest"), ""));
         return "registration_confirmation";
     }
 

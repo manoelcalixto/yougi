@@ -19,7 +19,7 @@
                 <div class="content">
                     <h1>#{bundle.registration}</h1>
                     <h:form>
-                        <h:messages styleClass="alertMessage" infoClass="infoMessage"/>
+                        <h:messages styleClass="alertMessage" infoClass="infoMessage" errorClass="errorMessage"/>
                         <h:panelGrid columns="2">
                             <h:outputLabel for="firstName" value="#{bundle.firstName} *" styleClass="fieldLabel"/>
                             <h:outputLabel for="lastName" value="#{bundle.lastName} *" styleClass="fieldLabel"/>
@@ -85,7 +85,7 @@
                                 <h:outputLabel for="postalCode" value="#{bundle.postalCode}" styleClass="fieldLabel"/>
 
                                 <h:panelGrid columns="3">
-                                    <h:selectOneMenu id="city" label="#{bundle.city}" required="true" value="#{userAccountBean.selectedCity}">
+                                    <h:selectOneMenu id="city" label="#{bundle.city}" value="#{userAccountBean.selectedCity}">
                                         <f:selectItems value="#{userAccountBean.cities}"/>
                                     </h:selectOneMenu>
                                     <h:outputText value="#{bundle.oor}"/>

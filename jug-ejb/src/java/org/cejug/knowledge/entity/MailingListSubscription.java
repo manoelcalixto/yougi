@@ -10,9 +10,12 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import org.cejug.entity.UserAccount;
 
 /**
  *
@@ -25,7 +28,15 @@ public class MailingListSubscription implements Serializable {
 
     @Id
     private String id;
-    
+
+    @ManyToOne
+    @JoinColumn(name="mailing_list", nullable=false)
+    private MailingList mailingList;
+
+    @ManyToOne
+    @JoinColumn(name="user_account")
+    private UserAccount userAccount;
+
     @Column(name = "email_address", nullable=false)
     private String emailAddress;
 
@@ -57,6 +68,22 @@ public class MailingListSubscription implements Serializable {
         this.id = id;
     }
 
+    public MailingList getMailingList() {
+        return mailingList;
+    }
+
+    public void setMailingList(MailingList mailingList) {
+        this.mailingList = mailingList;
+    }
+
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
+    }
+
     public String getEmailAddress() {
         return emailAddress;
     }
@@ -80,7 +107,7 @@ public class MailingListSubscription implements Serializable {
     public void setUnsubscriptionDate(Date unsubscriptionDate) {
         this.unsubscriptionDate = unsubscriptionDate;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;

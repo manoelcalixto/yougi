@@ -161,6 +161,9 @@ public class Contact implements Serializable {
 
     @Override
     public String toString() {
-        return location.toString();
+        if(location != null)
+            return location.toString();
+        else
+            return null;
     }
 }

@@ -11,14 +11,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 import javax.ejb.Schedule;
 import javax.ejb.Schedules;
 import javax.ejb.Timer;
-import javax.ejb.TimerService;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -38,9 +36,6 @@ import org.cejug.util.EntitySupport;
 @Stateless
 @LocalBean
 public class UserAccountBsn {
-
-    @Resource
-    private TimerService timer;
 
     @EJB
     private AccessGroupBsn accessGroupBsn;

@@ -58,6 +58,9 @@ public class MembershipGrowthRange {
         boolean incremented = false;
         for(UserAccount userAccount: userAccounts) {
             registrationDate = userAccount.getRegistrationDate();
+            if(registrationDate == null)
+                continue;
+            
             date.setTime(registrationDate);
 
             if(year != date.get(Calendar.YEAR)) {

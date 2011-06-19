@@ -103,6 +103,7 @@ public class AccessGroupBsn {
             List<UserGroup> usersGroup = new ArrayList<UserGroup>();
             for(UserAccount member: members) {
                 usr = userAccountBsn.findUserAccount(member.getId());
+
                 usersGroup.add(new UserGroup(accessGroup, usr));
             }
             userGroupBsn.update(accessGroup, usersGroup);

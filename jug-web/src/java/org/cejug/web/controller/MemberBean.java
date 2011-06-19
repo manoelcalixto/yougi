@@ -2,6 +2,7 @@ package org.cejug.web.controller;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +22,9 @@ import org.cejug.entity.Contact;
 import org.cejug.entity.Country;
 import org.cejug.entity.Province;
 import org.cejug.entity.UserAccount;
+import org.cejug.knowledge.business.MailingListBsn;
+import org.cejug.knowledge.entity.MailingList;
+import org.cejug.knowledge.entity.MailingListSubscription;
 import org.cejug.web.report.CommunicationPrivacyRange;
 import org.cejug.web.report.MembershipGrowthRange;
 
@@ -28,21 +32,27 @@ import org.cejug.web.report.MembershipGrowthRange;
 @SessionScoped
 public class MemberBean implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@EJB
+    @EJB
     private UserAccountBsn userAccountBsn;
 
     @EJB
     private LocationBsn locationBsn;
 
+    @EJB
+    private MailingListBsn mailingListBsn;
+
     private List<UserAccount> userAccounts;
+    private List<MailingList> mailingLists;
 
     private String userId;
     private UserAccount userAccount;
     private Contact contact;
     private String emailCriteria;
     private String firstLetterCriteria;
+
+    private MailingList[] selectedMailingLists;
     
     public MemberBean() {
     }
@@ -115,6 +125,14 @@ public class MemberBean implements Serializable {
 
     public List<UserAccount> getUserAccounts() {
         return this.userAccounts;
+    }
+
+    public List<MailingList> getMailingLists() {
+        return mailingLists;
+    }
+
+    public void setMailingLists(List<MailingList> mailingLists) {
+        this.mailingLists = mailingLists;
     }
 
     public List<UserAccount> getRecentUserAccounts() {
@@ -211,6 +229,14 @@ public class MemberBean implements Serializable {
             this.contact.setCity(locationBsn.findCity(id));
     }
 
+    public MailingList[] getSelectedMailingLists() {
+        return selectedMailingLists;
+    }
+
+    public void setSelectedMailingLists(MailingList[] selectedMailingLists) {
+        this.selectedMailingLists = selectedMailingLists;
+    }
+
     public String getEmailCriteria() {
         return emailCriteria;
     }
@@ -243,6 +269,7 @@ public class MemberBean implements Serializable {
     @PostConstruct
     public void load() {
         this.userAccounts = getRecentUserAccounts();
+        this.mailingLists = mailingListBsn.findMailingLists();
     }
 
     public String load(String userId) {
@@ -252,6 +279,16 @@ public class MemberBean implements Serializable {
         if(this.contact == null) {
             this.contact = new Contact(this.userAccount);
         }
+
+        List<MailingListSubscription> mailingListSubscriptions = mailingListBsn.findMailingListSubscriptions(this.userAccount);
+        if(mailingListSubscriptions != null) {
+            this.selectedMailingLists = new MailingList[mailingListSubscriptions.size()];
+            int i = 0;
+            for(MailingListSubscription mailingListSubscription: mailingListSubscriptions) {
+                this.selectedMailingLists[i++] = mailingListSubscription.getMailingList();
+            }
+        }
+
         return "user?faces-redirect=true";
     }
 
@@ -271,6 +308,10 @@ public class MemberBean implements Serializable {
         existingUserAccount.setJobOffer(userAccount.getJobOffer());
         existingUserAccount.setEvent(userAccount.getEvent());
 
+        List<MailingList> mailingListsToSubscribe = new ArrayList<MailingList>();
+        mailingListsToSubscribe.addAll(Arrays.asList(this.selectedMailingLists));
+        mailingListBsn.subscribe(mailingListsToSubscribe, existingUserAccount);
+        
         userAccountBsn.save(existingUserAccount);
         return "users?faces-redirect=true";
     }

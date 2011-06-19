@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- *
+ * An entity class that represents a mailing list of the user group.
  * @author Hildeberto Mendonca
  */
 @Entity
