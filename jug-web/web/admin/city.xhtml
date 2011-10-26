@@ -46,6 +46,14 @@
                                         <h:selectBooleanCheckbox id="valid" label="#{bundle.valid}" value="#{cityBean.city.valid}"/>
                                         <h:outputLabel for="valid" value="#{bundle.valid}"/>
                                     </h:panelGrid>
+                                    
+                                    <h:panelGrid columns="2">
+                                        <h:outputLabel for="latitude" value="#{bundle.latitude}"/>
+                                        <h:outputLabel for="longitude" value="#{bundle.longitude}"/>
+                                    
+                                        <h:inputText id="latitude" label="#{bundle.latitude}" size="15" maxlength="15" value="#{cityBean.city.latitude}"/>
+                                        <h:inputText id="longitude" label="#{bundle.longitude}" size="15" maxlength="15" value="#{cityBean.city.longitude}"/>
+                                    </h:panelGrid>
 
                                     <h:panelGrid columns="3">
                                         <h:commandButton value="#{bundle.save}" action="#{cityBean.save}"/>

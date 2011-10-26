@@ -1,3 +1,7 @@
+###############################################################################
+# Core                                                                        #
+###############################################################################
+
 create table country (
     acronym char(3)      not null,
     name    varchar(100) not null
@@ -15,11 +19,13 @@ alter table province add constraint pk_province primary key (id);
 alter table province add constraint fk_country_province foreign key (country) references country(acronym) on delete cascade;
 
 create table city (
-    id       char(32)     not null,
-    name     varchar(100) not null,
-    country  char(3)      not null,
-    province char(32)         null,
-    valid    tinyint(1)       null
+    id        char(32)     not null,
+    name      varchar(100) not null,
+    country   char(3)      not null,
+    province  char(32)         null,
+    valid     tinyint(1)       null,
+    latitude  varchar(15)      null,
+    longitude varchar(15)      null
 ) engine = innodb;
 
 alter table city add constraint pk_city primary key (id);
@@ -91,7 +97,7 @@ create table access_group (
 
 insert into access_group (id, name, description, user_default) values
     ('PQOWKSIFUSLEOSJFNMDKELSOEJDKNWJE', 'helpers', 'Helpers', 0),
-    ('ISLDJKSJDMCNSJDKWISJKJKJKJUJKJHJ', 'sponsors', 'Sponsors', 0);
+    ('IKSJDKMSNDJUEIKWQJSHDNCMXKLOPIKJ', 'partners', 'Partners', 0);
 
 alter table access_group add constraint pk_access_group primary key (id);
 create unique index idx_unique_group_name on access_group (name);
@@ -132,6 +138,10 @@ insert into message_template (id, title, body) values
     ('0D6F96382IKEJSUIWOK5A720F3326F1B', '[JUG Admin] A Member Was Deactivated', '<p>Dear JUG Leader,</p><p><b>#{userAccount.fullName}</b> was deactivated from the JUG due to the following reason:</p><p><i>#{userAccount.deactivationReason}</i></p><p>Regards,</p><p><b>JUG Management</b></p>'),
     ('09JDIIE82O39IDIDOSJCHXUDJJXHCKP0', '[JUG Admin] Group Assigment', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>You were assigned to the <b>#{accessGroup.name}</b> group. Changes on your rights may apply.</p><p>Regards,</p><p><b>JUG Management</b></p> ');
 
+###############################################################################
+# Knowledge                                                                   #
+###############################################################################
+    
 create table mailing_list (
     id            char(32)     not null,
     name          varchar(50)  not null,
@@ -198,3 +208,56 @@ create table tag (
 ) engine = MyISAM;
 
 alter table tag add constraint pk_tag primary key (tag, kind, entity);
+
+###############################################################################
+# Partnership                                                                 #
+###############################################################################
+
+create table partner (
+    id          char(32)     not null,
+    name        varchar(32)  not null,
+    description text             null,
+    logo        varchar(100)     null
+) engine = innodb;
+
+alter table partner add constraint pk_partner primary key (id);
+
+create table representative (
+    id           char(32)    not null,
+    person       char(32)    not null,
+    partner      char(32)    not null,
+    phone        varchar(15)     null,
+    position     varchar(20)     null
+) engine = innodb;
+
+alter table representative add constraint pk_representative primary key (id);
+alter table representative add constraint fk_representative_person foreign key (person) references user_account(id) on delete cascade;
+alter table representative add constraint fk_representative_partner foreign key (partner) references partner(id) on delete cascade;
+
+###############################################################################
+# Event                                                                       #
+###############################################################################
+
+create table event (
+    id          char(32)     not null,
+    name        varchar(100) not null,
+    venue       char(32)     not null,
+    start_date  datetime     not null,
+    end_date    datetime     not null,
+    description text             null
+) engine = innodb;
+
+alter table event add constraint pk_event primary key (id);
+alter table event add constraint fk_event_venue foreign key (venue) references partner(id) on delete cascade;
+
+create table attendee (
+    id                char(32)   not null,
+    event             char(32)   not null,
+    attendee          char(32)   not null,
+    date_registration datetime   not null,
+    attendeed         tinyint(1)     null
+) engine = innodb;
+
+alter table attendee add constraint pk_attendee primary key (id);
+alter table attendee add constraint fk_attendee_event foreign key (event) references event(id) on delete cascade;
+alter table attendee add constraint fk_attendee_user foreign key (attendee) references user_account(id) on delete cascade;

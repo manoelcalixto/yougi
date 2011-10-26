@@ -21,11 +21,21 @@ import javax.persistence.Table;
 public class City implements Serializable {
     private static final long serialVersionUID = 1L;
     
+    @Id
     private String id;
     private String name;
     private Boolean valid;
+    
+    @JoinColumn(name = "country")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Country country;
+    
+    @JoinColumn(name = "province")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Province province;
+    
+    private String latitude;
+    private String longitude;
 
     public City() {
     }
@@ -39,7 +49,6 @@ public class City implements Serializable {
         this.name = name;
     }
 
-    @Id
     public String getId() {
         return id;
     }
@@ -64,8 +73,6 @@ public class City implements Serializable {
         this.valid = valid;
     }
 
-    @JoinColumn(name = "country")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     public Country getCountry() {
         return country;
     }
@@ -74,8 +81,6 @@ public class City implements Serializable {
         this.country = country;
     }
 
-    @JoinColumn(name = "province")
-    @ManyToOne(fetch = FetchType.LAZY)
     public Province getProvince() {
         return province;
     }
@@ -84,7 +89,23 @@ public class City implements Serializable {
         this.province = province;
     }
 
-    @Override
+    public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+	@Override
     public int hashCode() {
         int hash = 0;
         hash += (id != null ? id.hashCode() : 0);
@@ -93,7 +114,6 @@ public class City implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof City)) {
             return false;
         }
