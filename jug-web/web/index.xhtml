@@ -15,7 +15,12 @@
                 </div>
                 <div class="content">
                     <h:panelGrid width="700">
-                        <script type="text/javascript" src="http://www.ohloh.net/p/487784/widgets/project_users.js?style=blue"></script>
+                        <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+                        
+                        <p:gmap center="-15.707663, -51.240234" 
+                            zoom="4" type="hybrid" 
+                            style="width:980px;height:450px" 
+                            model="#{membersMapDistribution.simpleModel}"/>
                     </h:panelGrid>
                 </div>
             </ui:define>

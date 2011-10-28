@@ -67,6 +67,13 @@ public class LocationBsn {
         return em.createQuery("select c from City c order by c.country.name, c.name asc")
                  .getResultList();
     }
+    
+    @SuppressWarnings("unchecked")
+    public List<City> findValidatedCities() {
+        return em.createQuery("select c from City c where c.valid = :valid")
+        		 .setParameter("valid", true)
+                 .getResultList();
+    }
 
     @SuppressWarnings("unchecked")
     public List<City> findCities(Country country, Boolean includingInvalids) {
