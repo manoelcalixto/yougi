@@ -217,7 +217,8 @@ create table partner (
     id          char(32)     not null,
     name        varchar(32)  not null,
     description text             null,
-    logo        varchar(100)     null
+    logo        varchar(100)     null,
+    url         varchar(255)     null
 ) engine = innodb;
 
 alter table partner add constraint pk_partner primary key (id);

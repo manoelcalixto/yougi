@@ -98,11 +98,11 @@
                         <h:outputText value="#{bundle.privacy} *" styleClass="fieldLabel"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         (<h:outputText value="#{bundle.selectAtLeastOne}" styleClass="fieldNote"/>)
                         <h:panelGrid columns="2" width="700" columnClasses="panelGridColumn">
-                            <h:selectBooleanCheckbox id="publicProfile" label="#{bundle.publicProfile}" value="#{userAccountBean.userAccount.publicProfile}"/>
-                            <h:outputText value="#{bundle.publicProfileMessage}"/>
-
                             <h:selectBooleanCheckbox id="mailingList" label="#{bundle.mailingList}" value="#{userAccountBean.userAccount.mailingList}"/>
                             <h:outputLabel for="mailingList" value="#{bundle.mailingListMessage}"/>
+
+                            <h:selectBooleanCheckbox id="publicProfile" label="#{bundle.publicProfile}" value="#{userAccountBean.userAccount.publicProfile}"/>
+                            <h:outputText value="#{bundle.publicProfileMessage}"/>
 
                             <h:selectBooleanCheckbox id="event" label="#{bundle.event}" value="#{userAccountBean.userAccount.event}"/>
                             <h:outputLabel for="event" value="#{bundle.eventMessage}"/>

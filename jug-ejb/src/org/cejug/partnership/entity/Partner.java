@@ -24,6 +24,9 @@ public class Partner implements Serializable {
 	@Column(nullable = false)
 	private String logo;
 	
+	@Column(nullable = false)
+	private String url;
+	
 	public String getId() {
 		return id;
 	}
@@ -54,6 +57,14 @@ public class Partner implements Serializable {
 	
 	public void setLogo(String logo) {
 		this.logo = logo;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	@Override

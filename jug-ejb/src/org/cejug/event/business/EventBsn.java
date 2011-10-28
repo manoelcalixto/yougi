@@ -9,7 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.cejug.event.entity.Event;
-import org.cejug.partnership.entity.Partner;
 
 /**
  * Manages partners of the user group.

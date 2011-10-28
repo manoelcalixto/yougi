@@ -1,6 +1,5 @@
 package org.cejug.event.business;
 
-import java.util.Calendar;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -10,7 +9,6 @@ import javax.persistence.PersistenceContext;
 
 import org.cejug.event.entity.Attendee;
 import org.cejug.event.entity.Event;
-import org.cejug.partnership.entity.Partner;
 
 /**
  * Manages partners of the user group.

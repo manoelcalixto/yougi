@@ -70,6 +70,16 @@ public class SecurityBackingBean {
         }
         return result;
     }
+    
+    public Boolean getIsUserPartner() {
+        Boolean result = false;
+        FacesContext context = FacesContext.getCurrentInstance();
+        Object request = context.getExternalContext().getRequest();
+        if(request instanceof HttpServletRequest) {
+            result = ((HttpServletRequest)request).isUserInRole("partner");
+        }
+        return result;
+    }
 
     public Map<String, Object> getSessionMap() {
         return sessionMap;
