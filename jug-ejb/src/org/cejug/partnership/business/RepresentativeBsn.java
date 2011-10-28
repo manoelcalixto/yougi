@@ -1,14 +1,12 @@
 package org.cejug.partnership.business;
 
-import java.util.List;
-
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.cejug.entity.Country;
-import org.cejug.partnership.entity.Partner;
+import org.cejug.entity.UserAccount;
 import org.cejug.partnership.entity.Representative;
 
 /**
@@ -27,6 +25,17 @@ public class RepresentativeBsn {
             return em.find(Representative.class, id);
         else
             return null;
+    }
+    
+    public Representative findRepresentative(UserAccount person) {
+    	try {
+    		return (Representative) em.createQuery("select r from Representative r where r.person = :person")
+    								  .setParameter("person", person)
+                                      .getSingleResult();
+    	}
+    	catch(NoResultException nre) {
+    		return null;
+    	}
     }
     
     public void save(Representative representative) {

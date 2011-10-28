@@ -28,8 +28,8 @@
                                     <h:outputText value="#{bundle.firstName}" styleClass="fieldLabel"/>
                                     <h:outputText value="#{bundle.lastName}" styleClass="fieldLabel"/>
 
-                                    <h:outputText id="firstName" value="#{userAccountBean.userAccount.firstName}"/>
-                                    <h:outputText id="lastName" value="#{userAccountBean.userAccount.lastName}"/>
+                                    <h:outputText value="#{userAccountBean.userAccount.firstName}"/>
+                                    <h:outputText value="#{userAccountBean.userAccount.lastName}"/>
 
                                     <h:outputText value="#{bundle.gender}" styleClass="fieldLabel"/>
                                     <h:outputText value="#{bundle.birthDate}" styleClass="fieldLabel"/>
@@ -96,6 +96,25 @@
                                 </h:panelGrid>
                                 <p></p>
                                 <h:button outcome="privacy.xhtml" value="#{bundle.update}"/>
+                            </p:tab>
+                            <p:tab title="#{bundle.partnership}" rendered="#{securityBackingBean.isUserPartner}">
+                                <h:panelGrid columns="1" cellpadding="3">
+                                    <h:graphicImage url="#{representativeBean.representative.partner.logo}"/>
+                                    
+                                    <h:outputText value="#{representativeBean.representative.partner.name}"/>
+                                    
+                                    <h:outputText value="#{representativeBean.representative.partner.description}"/>
+
+                                    <h:outputLink value="#{representativeBean.representative.partner.url}" target="_blank">#{representativeBean.representative.partner.url}</h:outputLink>
+                                    
+                                    <h:panelGrid column="2">
+                                        <h:outputText value="#{bundle.phone}" styleClass="fieldLabel"/>
+                                        <h:outputText value="#{bundle.position}" styleClass="fieldLabel"/>
+                                        
+                                        <h:outputText value="#{representativeBean.representative.phone}"/>
+                                        <h:outputText value="#{representativeBean.representative.position}"/>
+                                    </h:panelGrid>
+                                </h:panelGrid>
                             </p:tab>
                         </p:tabView>
                     </h:form>

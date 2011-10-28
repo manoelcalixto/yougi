@@ -86,16 +86,16 @@
         </auth-constraint>
     </security-constraint>
     <security-constraint>
-        <display-name>Sponsors Constraints</display-name>
+        <display-name>Partnership Constraints</display-name>
         <web-resource-collection>
-            <web-resource-name>sponsors</web-resource-name>
+            <web-resource-name>partners</web-resource-name>
             <description/>
-            <url-pattern>/sponsorship/*</url-pattern>
+            <url-pattern>/partnership/*</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>
         <auth-constraint>
-            <role-name>sponsor</role-name>
+            <role-name>partner</role-name>
         </auth-constraint>
     </security-constraint>
     <login-config>
@@ -120,6 +120,6 @@
     </security-role>
     <security-role>
         <description/>
-        <role-name>sponsor</role-name>
+        <role-name>partner</role-name>
     </security-role>
 </web-app>

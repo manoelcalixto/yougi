@@ -237,20 +237,20 @@ public class UserAccountBean implements Serializable {
             context.validationFailed();
         }
         
-        if(this.contact.getCity() == null && (this.cityNotListed == null || this.cityNotListed.isEmpty())) {
+        boolean isFirstUser = userAccountBsn.noAccount(); 
+        
+        if(!isFirstUser && this.contact.getCity() == null && (this.cityNotListed == null || this.cityNotListed.isEmpty())) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getMessage("errorMessageCityNotInformed"),""));
             context.validationFailed();
         }
 
-        if(!isPrivacyValid(userAccount)) {
+        if(!isFirstUser && !isPrivacyValid(userAccount)) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getMessage("errorMessagePrivacyInvalid"),""));
             context.validationFailed();
         }
         
         if(context.isValidationFailed())
             return "registration";
-        
-        boolean isFirstUser = userAccountBsn.noAccount();
 
         ApplicationProperty url = applicationPropertyBsn.findApplicationProperty(Properties.URL);
         String serverAddress = url.getPropertyValue();
@@ -274,11 +274,11 @@ public class UserAccountBean implements Serializable {
 
         removeSessionScoped();
         
-        if(isFirstUser) {
+        if(isFirstUser)
             context.addMessage(userId, new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getMessage("infoSuccessfulRegistration"), ""));
-        }
         else
             context.addMessage(userId, new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getMessage("infoRegistrationConfirmationRequest"), ""));
+        
         return "registration_confirmation";
     }
 
@@ -342,10 +342,7 @@ public class UserAccountBean implements Serializable {
              userAccount.getNews() ||
              userAccount.getGeneralOffer() ||
              userAccount.getJobOffer() ||
-             userAccount.getSponsor()) {
-            
-            return true;
-        }
+             userAccount.getSponsor()) { return true; }
         return false;
     }
 }
