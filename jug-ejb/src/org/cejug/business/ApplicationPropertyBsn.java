@@ -20,7 +20,8 @@ public class ApplicationPropertyBsn {
     @PersistenceContext
     EntityManager em;
 
-    public Map<String, String> findApplicationProperties() {
+    @SuppressWarnings("unchecked")
+	public Map<String, String> findApplicationProperties() {
         Map<String, String> propertiesMap = new HashMap<String, String>();
         List<ApplicationProperty> properties = em.createQuery("select ap from ApplicationProperty ap").getResultList();
         for(ApplicationProperty property: properties) {
@@ -48,11 +49,11 @@ public class ApplicationPropertyBsn {
         // If there is more persisted properties than in the enumeration, then exceding properties are removed.
         else if(Properties.values().length < propertiesMap.size()) {
             Set<Map.Entry<String, String>> propEntries = propertiesMap.entrySet(); // from database
-            Iterator iProps = propEntries.iterator();
+            Iterator<Map.Entry<String, String>> iProps = propEntries.iterator();
             Map.Entry<String, String> entry;
             Properties[] props = Properties.values();
             while(iProps.hasNext()) {
-                entry = (Map.Entry)iProps.next();
+                entry = iProps.next();
                 for(int i = 0; i < props.length; i++) {
                     if(!entry.getKey().equals(props[i].getKey()))
                         remove(entry.getKey());
@@ -73,14 +74,15 @@ public class ApplicationPropertyBsn {
                                                                          .getSingleResult();
         }
         catch(NoResultException nre) {
-            Map applicationProperties = findApplicationProperties();
+            Map<String, String> applicationProperties = findApplicationProperties();
             String key = properties.getKey();
             applicationProperty = new ApplicationProperty(key, (String)applicationProperties.get(key));
         }
         return applicationProperty;
     }
 
-    public void save(Map<String, String> properties) {
+    @SuppressWarnings("unchecked")
+	public void save(Map<String, String> properties) {
         List<ApplicationProperty> existingProperties = em.createQuery("select ap from ApplicationProperty ap").getResultList();
         String value;
         for(ApplicationProperty property: existingProperties) {
@@ -92,11 +94,11 @@ public class ApplicationPropertyBsn {
 
     private void create(Map<String, String> properties) {
         Set<Map.Entry<String, String>> props = properties.entrySet();
-        Iterator iProps = props.iterator();
+        Iterator<Map.Entry<String, String>> iProps = props.iterator();
         ApplicationProperty appProp;
         Map.Entry<String, String> entry;
         while(iProps.hasNext()) {
-            entry = (Map.Entry)iProps.next();
+            entry = iProps.next();
             appProp = new ApplicationProperty(entry.getKey(), entry.getValue());
             em.persist(appProp);
         }

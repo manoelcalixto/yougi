@@ -28,7 +28,8 @@ public class EventBsn {
             return null;
     }
     
-    public List<Event> findEvents() {
+    @SuppressWarnings("unchecked")
+	public List<Event> findEvents() {
     	Calendar today = Calendar.getInstance();
         return em.createQuery("select e from Event e where e.endDate >= :today order by e.endDate desc")
         		 .setParameter("today", today.getTime())

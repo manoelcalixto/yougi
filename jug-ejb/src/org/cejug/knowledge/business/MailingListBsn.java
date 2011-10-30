@@ -54,7 +54,8 @@ public class MailingListBsn {
         return em.find(MailingList.class, id);
     }
 
-    public List<MailingList> findMailingLists() {
+    @SuppressWarnings("unchecked")
+	public List<MailingList> findMailingLists() {
         return em.createQuery("select ml from MailingList ml order by ml.name asc").getResultList();
     }
 
@@ -81,7 +82,8 @@ public class MailingListBsn {
         }
     }
 
-    public List<MailingListSubscription> findMailingListSubscriptions(UserAccount userAccount) {
+    @SuppressWarnings("unchecked")
+	public List<MailingListSubscription> findMailingListSubscriptions(UserAccount userAccount) {
         return em.createQuery("select mls from MailingListSubscription mls where mls.emailAddress = :email and mls.unsubscriptionDate is null")
                  .setParameter("email", userAccount.getEmail())
                  .getResultList();

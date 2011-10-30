@@ -28,7 +28,8 @@ public class AttendeeBsn {
             return null;
     }
     
-    public List<Attendee> findAttendees(Event event) {
+    @SuppressWarnings("unchecked")
+	public List<Attendee> findAttendees(Event event) {
     	return em.createQuery("select a from Attendee a where a.event = :event order by a.attendee.attendee.firstName asc")
         		 .setParameter("event", event)
                  .getResultList();
