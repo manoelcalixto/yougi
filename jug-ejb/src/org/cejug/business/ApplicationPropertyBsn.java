@@ -63,6 +63,8 @@ public class ApplicationPropertyBsn {
         return propertiesMap;
     }
 
+    /** Given a certain enumeration org.cejug.entity.Properties, this method return the
+     *  corresponding property and its value stored in the database. */
     public ApplicationProperty findApplicationProperty(Properties properties) {
         ApplicationProperty applicationProperty = null;
         try {

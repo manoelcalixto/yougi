@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.cejug.partnership.entity.Partner;
+import org.cejug.util.EntitySupport;
 
 /**
  * Manages partners of the user group.
@@ -27,17 +28,20 @@ public class PartnerBsn {
             return null;
     }
     
-    public List<Partner> findPartners() {
+    @SuppressWarnings("unchecked")
+	public List<Partner> findPartners() {
         return em.createQuery("select p from Partner p order by p.name asc")
                  .getResultList();
     }
 
     public void save(Partner partner) {
-        Partner existing = em.find(Partner.class, partner.getId());
-        if(existing == null)
+    	if(partner.getId() == null || partner.getId().isEmpty()) {
+            partner.setId(EntitySupport.generateEntityId());
             em.persist(partner);
-        else
+        }
+        else {
             em.merge(partner);
+        }
     }
 
     public void remove(String id) {

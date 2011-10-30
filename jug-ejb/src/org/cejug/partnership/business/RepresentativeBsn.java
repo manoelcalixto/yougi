@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 
 import org.cejug.entity.UserAccount;
 import org.cejug.partnership.entity.Representative;
+import org.cejug.util.EntitySupport;
 
 /**
  * Manages partners of the user group.
@@ -39,11 +40,13 @@ public class RepresentativeBsn {
     }
     
     public void save(Representative representative) {
-        Representative existing = em.find(Representative.class, representative.getId());
-        if(existing == null)
+    	if(representative.getId() == null || representative.getId().isEmpty()) {
+    		representative.setId(EntitySupport.generateEntityId());
             em.persist(representative);
-        else
+        }
+        else {
             em.merge(representative);
+        }
     }
 
     public void remove(String id) {

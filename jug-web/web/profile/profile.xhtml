@@ -98,23 +98,26 @@
                                 <h:button outcome="privacy.xhtml" value="#{bundle.update}"/>
                             </p:tab>
                             <p:tab title="#{bundle.partnership}" rendered="#{securityBackingBean.isUserPartner}">
-                                <h:panelGrid columns="1" cellpadding="3">
-                                    <h:graphicImage url="#{representativeBean.representative.partner.logo}"/>
+                                <h:panelGrid columns="1" cellpadding="3" rendered="#{! empty partnershipBean.representative}">
+                                    <h:graphicImage url="#{partnershipBean.representative.partner.logo}"/>
                                     
-                                    <h:outputText value="#{representativeBean.representative.partner.name}"/>
+                                    <h:outputText value="#{partnershipBean.representative.partner.name}" styleClass="header3"/>
                                     
-                                    <h:outputText value="#{representativeBean.representative.partner.description}"/>
+                                    <h:outputText value="#{partnershipBean.formattedPartnerDescription}" escape="false"/>
 
-                                    <h:outputLink value="#{representativeBean.representative.partner.url}" target="_blank">#{representativeBean.representative.partner.url}</h:outputLink>
+                                    <h:outputLink value="#{partnershipBean.representative.partner.url}" target="_blank">#{partnershipBean.representative.partner.url}</h:outputLink>
                                     
                                     <h:panelGrid column="2">
                                         <h:outputText value="#{bundle.phone}" styleClass="fieldLabel"/>
                                         <h:outputText value="#{bundle.position}" styleClass="fieldLabel"/>
                                         
-                                        <h:outputText value="#{representativeBean.representative.phone}"/>
-                                        <h:outputText value="#{representativeBean.representative.position}"/>
+                                        <h:outputText value="#{partnershipBean.representative.phone}"/>
+                                        <h:outputText value="#{partnershipBean.representative.position}"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
+                                <p></p>
+                                <h:button outcome="partnership.xhtml" value="#{bundle.update}"/>
+                                <h:button outcome="partnership_logo.xhtml" value="#{bundle.changeLogo}"/>
                             </p:tab>
                         </p:tabView>
                     </h:form>

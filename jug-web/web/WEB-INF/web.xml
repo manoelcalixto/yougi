@@ -31,6 +31,14 @@
         <servlet-name>EmailConfirmation Servlet</servlet-name>
         <url-pattern>/EmailConfirmation</url-pattern>
     </servlet-mapping>
+    <filter>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <servlet-name>Faces Servlet</servlet-name>
+    </filter-mapping>
     <session-config>
         <session-timeout>60</session-timeout>
     </session-config>
