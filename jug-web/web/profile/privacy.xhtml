@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.prime.com.tr/ui">
     <body>
         <ui:composition template="../layout.xhtml">
@@ -46,7 +47,12 @@
                         <h:inputHidden id="id" value="#{userAccountBean.userAccount.id}"/>
                         <p></p>
                         <h:panelGrid columns="2">
-                            <h:commandButton value="#{bundle.save}" action="#{userAccountBean.savePrivacy}"/>
+                            <h:commandButton value="#{bundle.save}" action="#{userAccountBean.savePrivacy}">
+                                <f:param name="tab" value="1"/>
+                            </h:commandButton>
+                            <h:button value="#{bundle.cancel}" outcome="profile">
+                                <f:param name="tab" value="1"/>
+                            </h:button>
                         </h:panelGrid>
                     </h:form>
                 </div>

@@ -48,6 +48,9 @@
                         <p></p>
                         <h:panelGrid columns="2">
                             <h:commandButton value="#{bundle.save}" action="#{partnershipBean.save}"/>
+                            <h:button value="#{bundle.cancel}" outcome="profile">
+                                <f:param name="tab" value="2"/>
+                            </h:button>
                         </h:panelGrid>
                     </h:form>
                 </div>

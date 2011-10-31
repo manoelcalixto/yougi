@@ -21,7 +21,7 @@
                 <div class="content">
                     <h1>#{bundle.profile}</h1>
                     <h:form>
-                        <p:tabView dynamic="false" cache="true">
+                        <p:tabView dynamic="false" cache="true" activeIndex="#{param.tab}">
                             <p:tab title="#{bundle.personalData}">
                                 <h:messages styleClass="alertMessage"/>
                                 <h:panelGrid columns="2" cellpadding="3">
@@ -98,8 +98,8 @@
                                 <h:button outcome="privacy.xhtml" value="#{bundle.update}"/>
                             </p:tab>
                             <p:tab title="#{bundle.partnership}" rendered="#{securityBackingBean.isUserPartner}">
-                                <h:panelGrid columns="1" cellpadding="3" rendered="#{! empty partnershipBean.representative}">
-                                    <h:graphicImage url="#{partnershipBean.representative.partner.logo}"/>
+                                <h:panelGrid columns="1" cellpadding="3" rendered="#{partnershipBean.representativeExists}">
+                                    <p:graphicImage value="#{partnershipBean.logoImage}" rendered="#{! empty partnershipBean.logoImage}" />
                                     
                                     <h:outputText value="#{partnershipBean.representative.partner.name}" styleClass="header3"/>
                                     
@@ -107,17 +107,21 @@
 
                                     <h:outputLink value="#{partnershipBean.representative.partner.url}" target="_blank">#{partnershipBean.representative.partner.url}</h:outputLink>
                                     
-                                    <h:panelGrid column="2">
-                                        <h:outputText value="#{bundle.phone}" styleClass="fieldLabel"/>
+                                    <h:panelGrid columns="3" cellpadding="5">
+                                        <h:outputText value="#{bundle.representative}" styleClass="fieldLabel"/>
                                         <h:outputText value="#{bundle.position}" styleClass="fieldLabel"/>
+                                        <h:outputText value="#{bundle.phone}" styleClass="fieldLabel"/>
                                         
-                                        <h:outputText value="#{partnershipBean.representative.phone}"/>
+                                        <h:outputText value="#{partnershipBean.representative.person}"/>
                                         <h:outputText value="#{partnershipBean.representative.position}"/>
+                                        <h:outputText value="#{partnershipBean.representative.phone}"/>
+                                    </h:panelGrid>                                   
+                                    <h:panelGrid columns="2">
+                                        <h:button outcome="partnership.xhtml" value="#{bundle.update}"/>    
+                                        <h:button outcome="partnership_logo.xhtml" value="#{bundle.changeLogo}"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
-                                <p></p>
-                                <h:button outcome="partnership.xhtml" value="#{bundle.update}"/>
-                                <h:button outcome="partnership_logo.xhtml" value="#{bundle.changeLogo}"/>
+                                <h:button outcome="partnership.xhtml" value="#{bundle.becomePartner}" rendered="#{!partnershipBean.representativeExists}"/>
                             </p:tab>
                         </p:tabView>
                     </h:form>

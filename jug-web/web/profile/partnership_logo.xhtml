@@ -23,14 +23,19 @@
                     <h1>#{bundle.partnership}</h1>
                     <h:form>
                         <h:messages styleClass="alertMessage"/>
-                        <h:panelGrid columns="1">                            
-                            <p><h:outputText styleClass="fieldLabel" value="#{bundle.uploadLogo}"/></p>
-                            <p:growl id="messages" showDetail="true"/>
-                            <p:fileUpload id="logoFileUpload" update="messages" fileUploadListener="#{partnershipBean.handleFileUpload}"
-                                          allowTypes="*.png;*.gif;*.jpg;" auto="true" description="#{bundle.partnerLogo}" sizeLimit="1024000"/>
+                        <h:panelGrid columns="2">
+                            <p:graphicImage value="#{partnershipBean.logoImage}" id="logoImage" rendered="#{! empty partnershipBean.logoImage}"/>
+                            <h:panelGrid>
+                                <p><h:outputText styleClass="fieldLabel" value="#{bundle.uploadLogo}"/></p>
+                                <p:growl id="messages" showDetail="true"/>
+	                            <p:fileUpload id="logoFileUpload" update="messages logoImage" fileUploadListener="#{partnershipBean.handleFileUpload}"
+	                                          allowTypes="*.png;*.gif;*.jpg;" auto="true" description="#{bundle.partnerLogo}" sizeLimit="1024000"/>
+                            </h:panelGrid>
                         </h:panelGrid>
                         <p></p>
-                        <h:button value="#{bundle.back}" outcome="profile"/>                        
+                        <h:button value="#{bundle.back}" outcome="profile">
+                            <f:param name="tab" value="2"/>
+                        </h:button>
                     </h:form>
                 </div>
             </ui:define>

@@ -48,7 +48,7 @@ public class Representative implements Serializable {
 	}
 
 	public Partner getPartner() {
-		return partner;
+		return this.partner;
 	}
 
 	public void setPartner(Partner partner) {

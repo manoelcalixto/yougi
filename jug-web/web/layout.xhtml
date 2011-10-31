@@ -39,10 +39,6 @@
                         <p:submenu label="#{bundle.knowledge}">
                             <p:menuitem value="#{bundle.mailingList}" url="/knowledge/mailing_lists.xhtml"/>
                         </p:submenu>
-                        <p:submenu label="#{bundle.partnership}" rendered="#{securityBackingBean.isUserPartner}">
-                            <p:menuitem value="#{bundle.partner}" url="/partnership/partner.xhtml"/>
-                            <p:menuitem value="#{bundle.events}" url="/partnership/partner_events.xhtml"/>
-                        </p:submenu>
                         <p:submenu label="#{bundle.myAccount}">
                             <p:menuitem value="#{bundle.profile}" url="/profile/profile.xhtml"/>
                             <p:menuitem value="#{bundle.changePassword}" url="/profile/change_password.xhtml"/>
@@ -67,7 +63,7 @@
         </div>
         <div id="bottom">
             <div class="footer">
-                 Created and maintained by the <a href="http://www.cejug.org" target="_blank">#{bundle.application}</a> Community! | Version 0.22
+                 Created and maintained by the <a href="http://www.cejug.org" target="_blank">#{bundle.application}</a> Community! | Version 0.23
             </div>
         </div>
     </h:body>

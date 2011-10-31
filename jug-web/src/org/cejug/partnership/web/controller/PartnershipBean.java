@@ -1,6 +1,7 @@
 package org.cejug.partnership.web.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +29,8 @@ import org.cejug.partnership.business.RepresentativeBsn;
 import org.cejug.partnership.entity.Partner;
 import org.cejug.partnership.entity.Representative;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 @ManagedBean
@@ -52,6 +55,8 @@ public class PartnershipBean {
     private String id;
 
     private Representative representative;
+    
+    private StreamedContent logoImage;
 
     public PartnershipBean() {}
 
@@ -71,7 +76,15 @@ public class PartnershipBean {
         this.representative = representative;
     }
     
-    /** This method replaces every line break in the text by a html paragraph.
+    public StreamedContent getLogoImage() {
+		return logoImage;
+	}
+
+	public void setLogoImage(StreamedContent logoImage) {
+		this.logoImage = logoImage;
+	}
+
+	/** This method replaces every line break in the text by a html paragraph.
      *  Empty lines are ignored. It returns a text that appears formatted in a html page. */
     public String getFormattedPartnerDescription() {
     	if(representative != null) {
@@ -94,6 +107,13 @@ public class PartnershipBean {
     	return null;
     }
     
+    public boolean getRepresentativeExists() {
+    	if(this.representative.getId() != null) {
+    		return true;
+    	}
+    	return false;
+    }
+        
     @PostConstruct
     public void load() {
     	HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -107,13 +127,15 @@ public class PartnershipBean {
         	Partner newPartner = new Partner();
         	this.representative.setPartner(newPartner);
         }
+        
+        loadLogoImage();
     }
 
     public String save() {
     	partnerBsn.save(this.representative.getPartner());
         representativeBsn.save(this.representative);
         
-        return "profile?faces-redirect=true";
+        return "profile?faces-redirect=true&tab=2";
     }
 
     public String remove() {
@@ -121,16 +143,32 @@ public class PartnershipBean {
         return "profile?faces-redirect=true";
     }
     
+
+    public void loadLogoImage() {
+    	try {
+			String logoPath = this.representative.getPartner().getLogo();
+			
+			if(logoPath != null) {
+				InputStream in = new FileInputStream(new File(logoPath));
+				logger.log(Level.INFO, "JUG-0002: Loading logo file {0}", new String[]{logoPath});
+				logoImage = new DefaultStreamedContent(in, "image/jpeg");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    
     public void handleFileUpload(FileUploadEvent event) {
 		UploadedFile uploadedFile = event.getFile();
-		logger.log(Level.INFO, "File {0} of type {1} available at {2}", new String[]{uploadedFile.getFileName(), uploadedFile.getContentType(),System.getProperty("java.io.tmpdir")});
+		logger.log(Level.INFO, "JUG-0001: File {0} of type {1} temporarely uploaded to {2}", new String[]{uploadedFile.getFileName(), uploadedFile.getContentType(),System.getProperty("java.io.tmpdir")});
 		try {
+			/* Loads the representative related to the logged user. */
 			HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 	        String username = request.getRemoteUser();
 	        UserAccount person = userAccountBsn.findUserAccountByUsername(username);
 	        this.representative = representativeBsn.findRepresentative(person);
 			
-			// write the inputStream to a FileOutputStream
+			/* Write the inputStream to a FileOutputStream */
 			InputStream in = uploadedFile.getInputstream();
 			ApplicationProperty applicationProperty = applicationPropertyBsn.findApplicationProperty(Properties.FILE_REPOSITORY_PATH);
 			String fileExtension = uploadedFile.getFileName();
@@ -147,13 +185,16 @@ public class PartnershipBean {
 			while ((read = in.read(bytes)) != -1) {
 				out.write(bytes, 0, read);
 			}
-					 
 			in.close();
 			out.flush();
 			out.close();
 			
+			/* If nothing goes wrong while saving the file,
+			 * then updates the database with the file location. */
 			this.representative.getPartner().setLogo(filePath.toString());
 			partnerBsn.save(this.representative.getPartner());
+			
+			loadLogoImage();
 		}
 		catch(IOException ioe) {
 			logger.log(Level.INFO, ioe.getMessage(), ioe);
