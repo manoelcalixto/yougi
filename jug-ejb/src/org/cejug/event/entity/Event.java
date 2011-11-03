@@ -25,7 +25,7 @@ public class Event implements Serializable {
 	private String name;
 	
 	@ManyToOne
-	@JoinColumn(name="partner")
+	@JoinColumn(name="venue")
 	private Partner venue;
 	
 	@Column(name="start_date")

@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.prime.com.tr/ui">
+    <h:body>
+        <ui:composition template="../layout.xhtml">
+            <ui:define name="title">#{bundle.events}</ui:define>
+            <ui:define name="content">
+                <div class="bread_crumb_area">
+                    <h:form>
+                        <p:breadCrumb styleClass="bread_crumb">
+                            <p:menuitem value="#{bundle.home}" url="../index.xhtml"/>
+                            <p:menuitem value="#{bundle.events}"/>
+                        </p:breadCrumb>
+                    </h:form>
+                </div>
+                <div class="content">
+                    <h1>#{bundle.events}</h1>
+                    <p><h:link outcome="event" value="#{bundle.newEvent}"/></p>
+
+                    <h:form>
+                        <p:dataTable id="cities" value="#{eventBean.events}" var="event">
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>
+                                <h:link outcome="event" value="#{event.name}"/>
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="#{bundle.venue}"/></f:facet>
+                                <h:outputText value="#{event.venue}"/>
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="#{bundle.from}"/></f:facet>
+                                <h:outputText value="#{city.country.name}"/>
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="#{bundle.valid}"/></f:facet>
+                                <h:graphicImage rendered="#{city.valid}" url="/images/success-icon.png"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
