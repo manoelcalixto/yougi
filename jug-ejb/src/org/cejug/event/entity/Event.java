@@ -29,12 +29,20 @@ public class Event implements Serializable {
 	private Partner venue;
 	
 	@Column(name="start_date")
-	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
+	@Temporal(javax.persistence.TemporalType.DATE)
     private Date startDate;
 	
+	@Column(name="start_time")
+	@Temporal(javax.persistence.TemporalType.TIME)
+	private Date startTime;
+	
 	@Column(name="end_date")
-	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
+	@Temporal(javax.persistence.TemporalType.DATE)
     private Date endDate;
+	
+	@Column(name="end_time")
+	@Temporal(javax.persistence.TemporalType.TIME)
+	private Date endTime;
 	
     private String description;
     
@@ -78,6 +86,22 @@ public class Event implements Serializable {
 		this.endDate = endDate;
 	}
 	
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
 	public String getDescription() {
 		return description;
 	}

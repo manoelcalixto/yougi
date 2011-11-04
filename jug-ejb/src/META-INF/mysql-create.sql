@@ -243,8 +243,10 @@ create table event (
     id          char(32)     not null,
     name        varchar(100) not null,
     venue       char(32)     not null,
-    start_date  datetime     not null,
+    start_date  date         not null,
+    start_time  time         not null,
     end_date    datetime     not null,
+    end_time    time             null,
     description text             null
 ) engine = innodb;
 

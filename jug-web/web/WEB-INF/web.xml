@@ -86,6 +86,7 @@
             <description/>
             <url-pattern>/profile/*</url-pattern>
             <url-pattern>/knowledge/*</url-pattern>
+            <url-pattern>/event/*</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>

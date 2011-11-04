@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.cejug.event.entity.Event;
+import org.cejug.util.EntitySupport;
 
 /**
  * Manages partners of the user group.
@@ -37,11 +38,13 @@ public class EventBsn {
     }
 
     public void save(Event event) {
-        Event existing = em.find(Event.class, event.getId());
-        if(existing == null)
+    	if(event.getId() == null || event.getId().isEmpty()) {
+            event.setId(EntitySupport.generateEntityId());
             em.persist(event);
-        else
+        }
+        else {
             em.merge(event);
+        }
     }
 
     public void remove(String id) {
