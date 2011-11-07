@@ -46,6 +46,9 @@ public class Event implements Serializable {
 	
     private String description;
     
+    @Column(name="short_description")
+    private String shortDescription;
+    
 	public String getId() {
 		return id;
 	}
@@ -110,6 +113,14 @@ public class Event implements Serializable {
 		this.description = description;
 	}
 	
+	public String getShortDescription() {
+		return shortDescription;
+	}
+
+	public void setShortDescription(String shortDescription) {
+		this.shortDescription = shortDescription;
+	}
+
 	public String toString() {
 		return this.name;
 	}

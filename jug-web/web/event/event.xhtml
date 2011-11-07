@@ -13,14 +13,14 @@
                     <h:form>
                         <p:breadCrumb styleClass="bread_crumb">
                             <p:menuitem value="#{bundle.home}" url="../index.xhtml"/>
-                            <p:menuitem value="#{bundle.events}"/>
+                            <p:menuitem value="#{bundle.events}" url="events.xhtml"/>
                             <p:menuitem value="#{bundle.event}"/>
                         </p:breadCrumb>
                     </h:form>
                 </div>
                 <div class="content">
                     <h1>#{bundle.event}</h1>
-                    <h:form>
+                    <h:form rendered="#{securityBackingBean.isUserLeader}">
                         <h:messages styleClass="alertMessage"/>
                         <h:panelGrid columns="1">
                             <h:outputLabel for="name" value="#{bundle.name} *" styleClass="fieldLabel"/>
@@ -36,9 +36,9 @@
                                 <h:outputLabel for="startDate" value="#{bundle.start} *" styleClass="fieldLabel"/>
                                 <h:outputText/>
                                 
-                                <p:calendar value="#{eventBean.event.startDate}" id="startDate" pattern="dd/MM/yyyy" size="10"/>
+                                <p:calendar value="#{eventBean.event.startDate}" id="startDate" pattern="#{bundle.formatDate}" size="10" timeZone="GMT-3"/>
                                 <p:inputMask value="#{eventBean.event.startTime}" mask="99:99" size="5">
-                                    <f:convertDateTime pattern="HH:mm"/>
+                                    <f:convertDateTime pattern="#{bundle.formatTime}" timeZone="GMT-3"/>
                                 </p:inputMask>
                                 
                                 <h:outputText value="dd/mm/yyyy" styleClass="fieldFormat"/>
@@ -49,14 +49,17 @@
 	                            <h:outputLabel for="endDate" value="#{bundle.end} *" styleClass="fieldLabel"/>
 	                            <h:outputText/>
 	                            
-	                            <p:calendar value="#{eventBean.event.endDate}" id="endDate" pattern="dd/MM/yyyy" size="10"/>
+	                            <p:calendar value="#{eventBean.event.endDate}" id="endDate" pattern="#{bundle.formatDate}" size="10" timeZone="GMT-3"/>
 	                            <p:inputMask value="#{eventBean.event.endTime}" mask="99:99" size="5">
-	                               <f:convertDateTime pattern="HH:mm"/>
+	                               <f:convertDateTime pattern="#{bundle.formatTime}" timeZone="GMT-3"/>
 	                            </p:inputMask>
 	                            
 	                            <h:outputText value="dd/mm/yyyy" styleClass="fieldFormat"/>
 	                            <h:outputText value="hh:mm" styleClass="fieldFormat"/>
 	                        </h:panelGrid>
+                            
+                            <h:outputLabel for="shortDescription" value="#{bundle.shortDescription}" styleClass="fieldLabel"/>
+                            <h:inputTextarea id="shortDescription" label="#{bundle.shortDescription}" required="false" cols="70" rows="4" value="#{eventBean.event.shortDescription}"/>
                             
                             <h:outputLabel for="description" value="#{bundle.description}" styleClass="fieldLabel"/>
                             <h:inputTextarea id="description" label="#{bundle.description}" required="false" cols="70" rows="10" value="#{eventBean.event.description}"/>
@@ -64,7 +67,7 @@
                             <h:panelGrid columns="3">
                                 <h:commandButton value="#{bundle.save}" action="#{eventBean.save}"/>
                                 <h:commandButton value="#{bundle.remove}" action="#{eventBean.remove}" rendered="#{! empty eventBean.event.id}"/>
-                                <h:button outcome="events_next" value="#{bundle.cancel}"/>
+                                <h:button outcome="events" value="#{bundle.cancel}"/>
                             </h:panelGrid>
                         </h:panelGrid>
                         <h:inputHidden id="id" value="#{eventBean.event.id}"/>
