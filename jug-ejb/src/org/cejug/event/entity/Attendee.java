@@ -31,7 +31,7 @@ public class Attendee implements Serializable {
     private UserAccount attendee;
 	
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
-	@Column(name="date_registration")
+	@Column(name="registration_date")
     private Date dateRegistration;
 	
 	private Boolean attended;

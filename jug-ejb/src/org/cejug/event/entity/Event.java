@@ -25,18 +25,29 @@ public class Event implements Serializable {
 	private String name;
 	
 	@ManyToOne
-	@JoinColumn(name="partner")
+	@JoinColumn(name="venue")
 	private Partner venue;
 	
 	@Column(name="start_date")
-	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
+	@Temporal(javax.persistence.TemporalType.DATE)
     private Date startDate;
 	
+	@Column(name="start_time")
+	@Temporal(javax.persistence.TemporalType.TIME)
+	private Date startTime;
+	
 	@Column(name="end_date")
-	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
+	@Temporal(javax.persistence.TemporalType.DATE)
     private Date endDate;
 	
+	@Column(name="end_time")
+	@Temporal(javax.persistence.TemporalType.TIME)
+	private Date endTime;
+	
     private String description;
+    
+    @Column(name="short_description")
+    private String shortDescription;
     
 	public String getId() {
 		return id;
@@ -78,6 +89,22 @@ public class Event implements Serializable {
 		this.endDate = endDate;
 	}
 	
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
 	public String getDescription() {
 		return description;
 	}
@@ -86,6 +113,14 @@ public class Event implements Serializable {
 		this.description = description;
 	}
 	
+	public String getShortDescription() {
+		return shortDescription;
+	}
+
+	public void setShortDescription(String shortDescription) {
+		this.shortDescription = shortDescription;
+	}
+
 	public String toString() {
 		return this.name;
 	}

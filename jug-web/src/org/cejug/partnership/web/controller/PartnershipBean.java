@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +27,7 @@ import org.cejug.partnership.business.PartnerBsn;
 import org.cejug.partnership.business.RepresentativeBsn;
 import org.cejug.partnership.entity.Partner;
 import org.cejug.partnership.entity.Representative;
+import org.cejug.web.util.WebTextUtils;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -84,25 +84,10 @@ public class PartnershipBean {
 		this.logoImage = logoImage;
 	}
 
-	/** This method replaces every line break in the text by a html paragraph.
-     *  Empty lines are ignored. It returns a text that appears formatted in a html page. */
-    public String getFormattedPartnerDescription() {
+	public String getFormattedPartnerDescription() {
     	if(representative != null) {
-    		StringBuilder formattedDescription = new StringBuilder();
     		String description = this.representative.getPartner().getDescription();
-    		if(description != null) {
-	    		StringTokenizer st = new StringTokenizer(description, "\n");
-	    		String token;
-	    		while(st.hasMoreTokens()) {
-	    			token = st.nextToken().trim();
-	    			if(!token.isEmpty()) {
-	    				formattedDescription.append("<p>");
-	    				formattedDescription.append(token);
-	    				formattedDescription.append("</p>");
-	    			}
-	    		}
-    		}
-    		return formattedDescription.toString();
+    		return WebTextUtils.convertLineBreakToHTMLParagraph(description);
     	}
     	return null;
     }

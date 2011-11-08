@@ -240,12 +240,15 @@ alter table representative add constraint fk_representative_partner foreign key 
 ###############################################################################
 
 create table event (
-    id          char(32)     not null,
-    name        varchar(100) not null,
-    venue       char(32)     not null,
-    start_date  datetime     not null,
-    end_date    datetime     not null,
-    description text             null
+    id                char(32)     not null,
+    name              varchar(100) not null,
+    venue             char(32)     not null,
+    start_date        date         not null,
+    start_time        time         not null,
+    end_date          date         not null,
+    end_time          time             null,
+    description       text             null,
+    short_description varchar(255)     null
 ) engine = innodb;
 
 alter table event add constraint pk_event primary key (id);
@@ -255,8 +258,8 @@ create table attendee (
     id                char(32)   not null,
     event             char(32)   not null,
     attendee          char(32)   not null,
-    date_registration datetime   not null,
-    attendeed         tinyint(1)     null
+    registration_date datetime   not null,
+    attended          tinyint(1)     null
 ) engine = innodb;
 
 alter table attendee add constraint pk_attendee primary key (id);
