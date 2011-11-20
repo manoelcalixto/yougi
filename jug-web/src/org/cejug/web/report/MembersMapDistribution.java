@@ -34,13 +34,19 @@ public class MembersMapDistribution implements Serializable {
     public void load() {
     	List<City> cities = locationBsn.findValidatedCities();
         LatLng coord;
-        Double latitude;
-        Double longitude;
+        Double latitude = null;
+        Double longitude = null;
         for(City city:cities) {
-    		latitude = Double.valueOf(city.getLatitude());
-    		longitude = Double.valueOf(city.getLongitude());
-    		coord = new LatLng(latitude, longitude);
-    		simpleModel.addOverlay(new Marker(coord, city.getName()));
+        	if(city.getLatitude() != null && !city.getLatitude().isEmpty())
+        		latitude = Double.valueOf(city.getLatitude());
+        	
+        	if(city.getLongitude() != null && !city.getLongitude().isEmpty())
+        		longitude = Double.valueOf(city.getLongitude());
+        	
+        	if(latitude != null && longitude != null) {
+        		coord = new LatLng(latitude, longitude);
+        		simpleModel.addOverlay(new Marker(coord, city.getName()));
+        	}
         }
     }
   

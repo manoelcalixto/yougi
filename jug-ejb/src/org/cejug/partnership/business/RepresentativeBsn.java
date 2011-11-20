@@ -1,5 +1,7 @@
 package org.cejug.partnership.business;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 import javax.persistence.EntityManager;
@@ -7,6 +9,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 import org.cejug.entity.UserAccount;
+import org.cejug.partnership.entity.Partner;
 import org.cejug.partnership.entity.Representative;
 import org.cejug.util.EntitySupport;
 
@@ -37,6 +40,13 @@ public class RepresentativeBsn {
     	catch(NoResultException nre) {
     		return null;
     	}
+    }
+    
+    @SuppressWarnings("unchecked")
+	public List<Representative> findRepresentatives(Partner partner) {
+    	return em.createQuery("select r from Representative r where r.partner = :partner order by r.person.firstName asc")
+    	         .setParameter("partner", partner)
+    	         .getResultList();
     }
     
     public void save(Representative representative) {

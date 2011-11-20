@@ -128,7 +128,6 @@ public class PartnershipBean {
         return "profile?faces-redirect=true";
     }
     
-
     public void loadLogoImage() {
     	try {
 			String logoPath = this.representative.getPartner().getLogo();

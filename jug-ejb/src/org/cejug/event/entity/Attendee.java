@@ -32,7 +32,7 @@ public class Attendee implements Serializable {
 	
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@Column(name="registration_date")
-    private Date dateRegistration;
+    private Date registrationDate;
 	
 	private Boolean attended;
 
@@ -60,12 +60,12 @@ public class Attendee implements Serializable {
 		this.attendee = attendee;
 	}
 
-	public Date getDateRegistration() {
-		return dateRegistration;
+	public Date getRegistrationDate() {
+		return registrationDate;
 	}
 
-	public void setDateRegistration(Date dateRegistration) {
-		this.dateRegistration = dateRegistration;
+	public void setRegistrationDate(Date registrationDate) {
+		this.registrationDate = registrationDate;
 	}
 
 	public Boolean getAttended() {
@@ -74,5 +74,30 @@ public class Attendee implements Serializable {
 
 	public void setAttended(Boolean attended) {
 		this.attended = attended;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Attendee))
+			return false;
+		Attendee other = (Attendee) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 }

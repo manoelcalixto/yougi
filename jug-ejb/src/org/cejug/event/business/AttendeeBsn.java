@@ -59,11 +59,19 @@ public class AttendeeBsn {
     		return false;
     	}
     }
-    
+	    
     @SuppressWarnings("unchecked")
 	public List<Attendee> findAttendees(Event event) {
-    	return em.createQuery("select a from Attendee a where a.event = :event order by a.attendee.attendee.firstName asc")
+    	return em.createQuery("select a from Attendee a where a.event = :event order by a.attendee.firstName asc")
         		 .setParameter("event", event)
+                 .getResultList();
+    }
+    
+    @SuppressWarnings("unchecked")
+	public List<Attendee> findConfirmedAttendees(Event event) {
+    	return em.createQuery("select a from Attendee a where a.event = :event and a.attended = :attended order by a.attendee.firstName asc")
+        		 .setParameter("event", event)
+        		 .setParameter("attended", true)
                  .getResultList();
     }
 
@@ -82,4 +90,25 @@ public class AttendeeBsn {
         if(attendee != null)
             em.remove(attendee);
     }
+    
+	public void confirmMembersAttended(Attendee[] confirmedAttendees) {
+		List<Attendee> attendees = findAttendees(confirmedAttendees[0].getEvent());
+		boolean confirmed = false;
+		for(Attendee attendee: attendees) {
+			for(Attendee confirmedAttendee: confirmedAttendees) {
+				if(attendee.equals(confirmedAttendee)) {
+					attendee.setAttended(true);
+					em.merge(attendee);
+					confirmed = true;
+					break;
+				}
+			}
+			
+			if(!confirmed) {
+				attendee.setAttended(false);
+				em.merge(attendee);
+				confirmed = false;
+			}
+		}
+	}
 }

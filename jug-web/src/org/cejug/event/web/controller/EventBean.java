@@ -44,6 +44,7 @@ public class EventBean {
     private Event event;
     private Attendee attendee;
     private List<Event> events;
+    private List<Event> commingEvents;
     private List<Partner> venues;
     
     private String selectedVenue;
@@ -93,6 +94,12 @@ public class EventBean {
     		events = eventBsn.findEvents();
         return events;
     }
+	
+	public List<Event> getCommingEvents() {
+    	if(commingEvents == null)
+    		commingEvents = eventBsn.findCommingEvents();
+        return commingEvents;
+    }
     
     public List<Partner> getVenues() {
     	if(venues == null)
@@ -100,7 +107,7 @@ public class EventBean {
         return venues;
     }
     
-    public String getFormattedEventDescription() {
+	public String getFormattedEventDescription() {
     	return WebTextUtils.convertLineBreakToHTMLParagraph(event.getDescription());
     }
     
@@ -139,7 +146,7 @@ public class EventBean {
     public String getFormattedRegistrationDate() {
     	if(this.attendee == null)
     		return "";
-    	return WebTextUtils.getFormattedDate(this.attendee.getDateRegistration());
+    	return WebTextUtils.getFormattedDate(this.attendee.getRegistrationDate());
     }
     
     @PostConstruct
@@ -157,7 +164,7 @@ public class EventBean {
             this.event = new Event();
         }
     }
-        
+
     public String confirmAttendance() {
     	HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String username = request.getRemoteUser();
@@ -168,7 +175,7 @@ public class EventBean {
         Attendee attendee = new Attendee();
         attendee.setEvent(this.event);
         attendee.setAttendee(person);
-        attendee.setDateRegistration(Calendar.getInstance().getTime());
+        attendee.setRegistrationDate(Calendar.getInstance().getTime());
         attendeeBsn.save(attendee);
         
     	return "events?faces-redirect=true";
@@ -186,11 +193,11 @@ public class EventBean {
         
     	return "events?faces-redirect=true";
     }
-
+        
     public String save() {
     	Partner venue = partnerBsn.findPartner(selectedVenue);
     	this.event.setVenue(venue);
-        eventBsn.save(this.event);
+    	eventBsn.save(this.event);
         return "events?faces-redirect=true";
     }
 

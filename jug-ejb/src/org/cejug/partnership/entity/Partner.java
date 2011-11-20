@@ -5,7 +5,13 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.cejug.entity.City;
+import org.cejug.entity.Country;
+import org.cejug.entity.Province;
 
 @Entity
 @Table(name = "partner")
@@ -26,6 +32,23 @@ public class Partner implements Serializable {
 	
 	@Column(nullable = false)
 	private String url;
+	    
+	private String address;
+	
+	@ManyToOne
+	@JoinColumn(name="city")
+    private City city;
+    
+	@ManyToOne
+	@JoinColumn(name="province")
+    private Province province;
+    
+	@ManyToOne
+	@JoinColumn(name="country")
+    private Country country;
+    
+	@Column(name="postal_code")
+	private String postalCode;
 	
 	public String getId() {
 		return id;
@@ -65,6 +88,46 @@ public class Partner implements Serializable {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public City getCity() {
+		return city;
+	}
+
+	public void setCity(City city) {
+		this.city = city;
+	}
+
+	public Province getProvince() {
+		return province;
+	}
+
+	public void setProvince(Province province) {
+		this.province = province;
+	}
+
+	public Country getCountry() {
+		return country;
+	}
+
+	public void setCountry(Country country) {
+		this.country = country;
+	}
+
+	public String getPostalCode() {
+		return postalCode;
+	}
+
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
 	}
 
 	@Override

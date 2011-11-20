@@ -31,10 +31,18 @@ public class EventBsn {
     
     @SuppressWarnings("unchecked")
 	public List<Event> findEvents() {
+    	List<Event> events = em.createQuery("select e from Event e order by e.endDate desc")
+        		               .getResultList();
+        return events;
+    }
+    
+    @SuppressWarnings("unchecked")
+	public List<Event> findCommingEvents() {
     	Calendar today = Calendar.getInstance();
-        return em.createQuery("select e from Event e where e.endDate >= :today order by e.endDate desc")
-        		 .setParameter("today", today.getTime())
-                 .getResultList();
+        List<Event> events = em.createQuery("select e from Event e where e.endDate >= :today order by e.endDate desc")
+        		               .setParameter("today", today.getTime())
+                               .getResultList();
+        return events;
     }
 
     public void save(Event event) {

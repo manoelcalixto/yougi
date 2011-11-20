@@ -95,12 +95,12 @@ create table access_group (
     user_default tinyint(1)       null
 ) engine = innodb;
 
+alter table access_group add constraint pk_access_group primary key (id);
+create unique index idx_unique_group_name on access_group (name);
+
 insert into access_group (id, name, description, user_default) values
     ('PQOWKSIFUSLEOSJFNMDKELSOEJDKNWJE', 'helpers', 'Helpers', 0),
     ('IKSJDKMSNDJUEIKWQJSHDNCMXKLOPIKJ', 'partners', 'Partners', 0);
-
-alter table access_group add constraint pk_access_group primary key (id);
-create unique index idx_unique_group_name on access_group (name);
 
 create table user_group (
     group_id   char(32)     not null,
@@ -218,10 +218,18 @@ create table partner (
     name        varchar(32)  not null,
     description text             null,
     logo        varchar(100)     null,
-    url         varchar(255)     null
+    url         varchar(255)     null,
+    address     varchar(255)     null,
+    city        char(32)         null,
+    province    char(32)         null,
+    country     char(3)          null,
+    postal_code char(10)         null
 ) engine = innodb;
 
 alter table partner add constraint pk_partner primary key (id);
+alter table partner add constraint fk_city_partner foreign key (city) references city(id) on delete set null;
+alter table partner add constraint fk_province_partner foreign key (province) references province(id) on delete set null;
+alter table partner add constraint fk_country_partner foreign key (country) references country(acronym) on delete set null;
 
 create table representative (
     id           char(32)    not null,
@@ -248,11 +256,21 @@ create table event (
     end_date          date         not null,
     end_time          time             null,
     description       text             null,
-    short_description varchar(255)     null
+    short_description varchar(255)     null,
+    room              varchar(50)      null,
+    address           varchar(255)     null,
+    city              char(32)         null,
+    province          char(32)         null,
+    country           char(3)          null,
+    latitude          varchar(15)      null,
+    longitude         varchar(15)      null
 ) engine = innodb;
 
 alter table event add constraint pk_event primary key (id);
 alter table event add constraint fk_event_venue foreign key (venue) references partner(id) on delete cascade;
+alter table event add constraint fk_city_event foreign key (city) references city(id) on delete set null;
+alter table event add constraint fk_province_event foreign key (province) references province(id) on delete set null;
+alter table event add constraint fk_country_event foreign key (country) references country(acronym) on delete set null;
 
 create table attendee (
     id                char(32)   not null,
