@@ -59,6 +59,7 @@
             <web-resource-name>leaders</web-resource-name>
             <description/>
             <url-pattern>/admin/*</url-pattern>
+            <url-pattern>/event/event.xhtml</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>
@@ -86,7 +87,10 @@
             <description/>
             <url-pattern>/profile/*</url-pattern>
             <url-pattern>/knowledge/*</url-pattern>
-            <url-pattern>/event/*</url-pattern>
+            <url-pattern>/event/attendee.xhtml</url-pattern>
+            <url-pattern>/event/attendee_cancel.xhtml</url-pattern>
+            <url-pattern>/event/event_view.xhtml</url-pattern>
+            <url-pattern>/event/events.xhtml</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>

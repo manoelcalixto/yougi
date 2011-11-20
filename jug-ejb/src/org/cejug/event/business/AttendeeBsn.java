@@ -2,19 +2,21 @@ package org.cejug.event.business;
 
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
+import org.cejug.business.MessengerBsn;
 import org.cejug.entity.UserAccount;
 import org.cejug.event.entity.Attendee;
 import org.cejug.event.entity.Event;
 import org.cejug.util.EntitySupport;
 
 /**
- * Manages partners of the user group.
+ * Manages attendees of events organized by the user group.
  * @author Hildeberto Mendonca
  */
 @Stateless
@@ -23,6 +25,9 @@ public class AttendeeBsn {
 	
     @PersistenceContext
     private EntityManager em;
+    
+    @EJB
+    private MessengerBsn messengerBsn;
 
     public Attendee findAttendee(String id) {
         if(id != null)
@@ -43,23 +48,12 @@ public class AttendeeBsn {
     	}
     }
 	
-	public Boolean isAttending(Event event, UserAccount person) {
-    	try {
-	    	Attendee attendee = (Attendee)em.createQuery("select a from Attendee a where a.attendee = :person and a.event = :event")
-	    			 .setParameter("person", person)
-	    			 .setParameter("event", event)
-	                 .getSingleResult();
-	    	
-	    	if(attendee != null)
-	    		return true;
-	    	else
-	    		return false;
-    	}
-    	catch(NoResultException nre) {
-    		return false;
-    	}
-    }
-    
+	public Integer findNumberPeopleAttending(Event event) {
+		return (Integer)em.createQuery("select count(a) from Attendee a where a.event = :event")
+       		 .setParameter("event", event)
+             .getSingleResult();
+	}
+	    
     @SuppressWarnings("unchecked")
 	public List<Attendee> findAttendees(Event event) {
     	return em.createQuery("select a from Attendee a where a.event = :event order by a.attendee.attendee.firstName asc")
@@ -68,13 +62,9 @@ public class AttendeeBsn {
     }
 
     public void save(Attendee attendee) {
-    	if(attendee.getId() == null || attendee.getId().isEmpty()) {
-    		attendee.setId(EntitySupport.generateEntityId());
-            em.persist(attendee);
-        }
-        else {
-            em.merge(attendee);
-        }
+    	attendee.setId(EntitySupport.generateEntityId());
+        em.persist(attendee);
+        messengerBsn.sendConfirmationEventAttendance(attendee.getAttendee(), attendee.getEvent());
     }
 
     public void remove(String id) {

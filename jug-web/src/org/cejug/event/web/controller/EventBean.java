@@ -45,7 +45,7 @@ public class EventBean {
     private Attendee attendee;
     private List<Event> events;
     private List<Partner> venues;
-    
+    private Integer numberPeopleAttending;
     private String selectedVenue;
 
     public EventBean() {}
@@ -100,7 +100,15 @@ public class EventBean {
         return venues;
     }
     
-    public String getFormattedEventDescription() {
+    public Integer getNumberPeopleAttending() {
+		return numberPeopleAttending;
+	}
+
+	public void setNumberPeopleAttending(Integer numberPeopleAttending) {
+		this.numberPeopleAttending = numberPeopleAttending;
+	}
+
+	public String getFormattedEventDescription() {
     	return WebTextUtils.convertLineBreakToHTMLParagraph(event.getDescription());
     }
     
@@ -152,6 +160,7 @@ public class EventBean {
     		String username = request.getRemoteUser();
     		UserAccount person = userAccountBsn.findUserAccountByUsername(username);
     		this.attendee = attendeeBsn.findAttendee(this.event, person);
+    		this.numberPeopleAttending = attendeeBsn.findNumberPeopleAttending(this.event);
         }
         else {
             this.event = new Event();

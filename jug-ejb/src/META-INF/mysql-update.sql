@@ -65,3 +65,10 @@ alter table attendee add constraint pk_attendee primary key (id);
 alter table attendee add constraint fk_attendee_event foreign key (event) references event(id) on delete cascade;
 alter table attendee add constraint fk_attendee_user foreign key (attendee) references user_account(id) on delete cascade;
 
+################################################################################
+# Adds a email message to people who confirmed their attendance to a event.
+# 08/11/2011
+# Hildeberto Mendonca
+# Version 0.25:0.4
+insert into message_template (id, title, body) values
+    ('KJDIEJKHFHSDJDUWJHAJSNFNFJHDJSLE', '[JUG] Confirmação de Comparecimento ao Evento', '<p>Oi <b>#{userAccount.firstName}</b>,</p><p>esta mensagem é só para informá-lo(a) que você acabou de confirmar seu comparecimento ao evento <b>#{event.name}</b>, que vai acontecer no(a) <b>#{event.venue}</b>, no dia <b>#{event.startDate}</b>, das <b>#{event.startTime}</b> até as <b>#{event.endTime}</b>.</p><p>Esperamos você lá!</p><p>Atenciosamente,</p><p><b>Coordenação do CEJUG</b></p>');

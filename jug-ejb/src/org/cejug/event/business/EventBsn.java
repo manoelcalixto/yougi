@@ -12,7 +12,7 @@ import org.cejug.event.entity.Event;
 import org.cejug.util.EntitySupport;
 
 /**
- * Manages partners of the user group.
+ * Manages events organized by the user group.
  * @author Hildeberto Mendonca
  */
 @Stateless
