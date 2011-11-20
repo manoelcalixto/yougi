@@ -65,10 +65,37 @@ alter table attendee add constraint pk_attendee primary key (id);
 alter table attendee add constraint fk_attendee_event foreign key (event) references event(id) on delete cascade;
 alter table attendee add constraint fk_attendee_user foreign key (attendee) references user_account(id) on delete cascade;
 
-################################################################################
-# Adds a email message to people who confirmed their attendance to a event.
-# 08/11/2011
+########################################################################
+# Adds additional columns in partner.
+# 20/11/2011
 # Hildeberto Mendonca
 # Version 0.25:0.4
+alter table partner add address varchar(255) null;
+alter table partner add city char(32) null;
+alter table partner add province char(32) null;
+alter table partner add country char(3) null;
+alter table partner add postal_code char(10) null;
+
+alter table partner add constraint fk_city_partner foreign key (city) references city(id) on delete set null;
+alter table partner add constraint fk_province_partner foreign key (province) references province(id) on delete set null;
+alter table partner add constraint fk_country_partner foreign key (country) references country(acronym) on delete set null;
+
+########################################################################
+# Adds additional columns in event to store the address and the geographical location.
+# 09/11/2011
+# Hildeberto Mendonca
+# Version 0.26:0.5
+alter table event add room varchar(50) null;
+alter table event add address varchar(255) null;
+alter table event add city char(32) null;
+alter table event add province char(32) null;
+alter table event add country char(3) null;
+alter table event add latitude varchar(15) null;
+alter table event add longitude varchar(15) null;
+
+alter table event add constraint fk_city_event foreign key (city) references city(id) on delete set null;
+alter table event add constraint fk_province_event foreign key (province) references province(id) on delete set null;
+alter table event add constraint fk_country_event foreign key (country) references country(acronym) on delete set null;
+
 insert into message_template (id, title, body) values
     ('KJDIEJKHFHSDJDUWJHAJSNFNFJHDJSLE', '[JUG] Confirmação de Comparecimento ao Evento', '<p>Oi <b>#{userAccount.firstName}</b>,</p><p>esta mensagem é só para informá-lo(a) que você acabou de confirmar seu comparecimento ao evento <b>#{event.name}</b>, que vai acontecer no(a) <b>#{event.venue}</b>, no dia <b>#{event.startDate}</b>, das <b>#{event.startTime}</b> até as <b>#{event.endTime}</b>.</p><p>Esperamos você lá!</p><p>Atenciosamente,</p><p><b>Coordenação do CEJUG</b></p>');

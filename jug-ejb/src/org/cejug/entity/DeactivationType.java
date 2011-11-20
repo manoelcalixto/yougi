@@ -9,7 +9,7 @@ package org.cejug.entity;
 public enum DeactivationType {
 
     ADMINISTRATIVE("administrative"), OWNWILL("ownwill");
-
+ 
     private String name;
 
     DeactivationType(String name) {

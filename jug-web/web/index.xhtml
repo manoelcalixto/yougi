@@ -24,8 +24,8 @@
 	                            style="width:700px;height:450px" 
 	                            model="#{membersMapDistribution.simpleModel}"/>
                         </p:panel>
-                        <p:panel header="#{bundle.events}" rendered="#{! empty eventBean.events}">
-                            <c:forEach items="#{eventBean.events}" var="event">
+                        <p:panel header="#{bundle.events}" rendered="#{! empty eventBean.commingEvents}">
+                            <c:forEach items="#{eventBean.commingEvents}" var="event">
                                 <h:panelGrid>
                                     <h:link value="#{event.name}" outcome="event" style="font-size: 18px; font-weight: bold;">
                                         <f:param name="id" value="#{event.id}"/>
