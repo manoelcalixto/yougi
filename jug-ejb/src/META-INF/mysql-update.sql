@@ -85,7 +85,6 @@ alter table partner add constraint fk_country_partner foreign key (country) refe
 # 09/11/2011
 # Hildeberto Mendonca
 # Version 0.26:0.5
-alter table event add room varchar(50) null;
 alter table event add address varchar(255) null;
 alter table event add city char(32) null;
 alter table event add province char(32) null;
