@@ -136,7 +136,8 @@ insert into message_template (id, title, body) values
     ('E3F122DCC87D42248872878412B34CEE', '[JUG] Email Confirmation', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you seems to register yourself as a member of JUG. We would like to confirm your email address to be able to contact you when necessary. You just have to click on the link below to confirm your email:</p><p><a href=''http://#{serverAddress}/EmailConfirmation?code=#{userAccount.confirmationCode}''>http://#{serverAddress}/EmailConfirmation?code=#{userAccount.confirmationCode}</a></p><p>If the address above does not look like a link, please select, copy and paste it your web browser. If you do not registered on JUG and beleave that this message was sent by mistake, please ignore it and accept our apologes.</p><p>Best Regards,</p><p><b>JUG Leadership Team</b></p>'),
     ('IKWMAJSNDOE3F122DCC87D4224887287', '[JUG] Membership Deactivated', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>we just knew that you wanna leave us :( Thank you for all contributions you have made to the JUG community.</p><p>All the best,</p><p><b>JUG Leadership Team</b></p>'),
     ('0D6F96382IKEJSUIWOK5A720F3326F1B', '[JUG Admin] A Member Was Deactivated', '<p>Dear JUG Leader,</p><p><b>#{userAccount.fullName}</b> was deactivated from the JUG due to the following reason:</p><p><i>#{userAccount.deactivationReason}</i></p><p>Regards,</p><p><b>JUG Management</b></p>'),
-    ('09JDIIE82O39IDIDOSJCHXUDJJXHCKP0', '[JUG Admin] Group Assigment', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>You were assigned to the <b>#{accessGroup.name}</b> group. Changes on your rights may apply.</p><p>Regards,</p><p><b>JUG Management</b></p> ');
+    ('09JDIIE82O39IDIDOSJCHXUDJJXHCKP0', '[JUG Admin] Group Assigment', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>You were assigned to the <b>#{accessGroup.name}</b> group. Changes on your rights may apply.</p><p>Regards,</p><p><b>JUG Management</b></p> '),
+    ('KJDIEJKHFHSDJDUWJHAJSNFNFJHDJSLE', '[JUG] Event Attendance', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you have confirmed your attendance in the event <b>#{event.name}</b> that will take place at <b>#{event.venue}</b>, on <b>#{event.startDate}</b>, from <b>#{event.startTime}</b> to <b>#{event.endTime}</b>.</p><p>We are looking forward to see you there!</p><p>Best Regards,</p><p><b>JUG Leadership Team</b></p>');
 
 ###############################################################################
 # Knowledge                                                                   #
@@ -252,12 +253,11 @@ create table event (
     name              varchar(100) not null,
     venue             char(32)     not null,
     start_date        date         not null,
-    start_time        time         not null,
     end_date          date         not null,
+    start_time        time             null,
     end_time          time             null,
     description       text             null,
     short_description varchar(255)     null,
-    room              varchar(50)      null,
     address           varchar(255)     null,
     city              char(32)         null,
     province          char(32)         null,

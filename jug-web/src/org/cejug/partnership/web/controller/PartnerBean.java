@@ -6,45 +6,45 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.RequestScoped;
 
-import org.cejug.business.LocationBsn;
 import org.cejug.entity.City;
 import org.cejug.entity.Country;
 import org.cejug.entity.Province;
 import org.cejug.partnership.business.PartnerBsn;
-import org.cejug.partnership.business.RepresentativeBsn;
 import org.cejug.partnership.entity.Partner;
 import org.cejug.partnership.entity.Representative;
+import org.cejug.web.controller.LocationBean;
 
 @ManagedBean
-@SessionScoped
+@RequestScoped
 public class PartnerBean implements Serializable {
     
 	private static final long serialVersionUID = 1L;
 
 	@EJB
     private PartnerBsn partnerBsn;
+        
+    @ManagedProperty(value="#{param.id}")
+    private String id;
     
-    @EJB
-    private RepresentativeBsn representativeBsn;
-    
-    @EJB
-    private LocationBsn locationBsn;
+    @ManagedProperty(value="#{locationBean}")
+    private LocationBean locationBean;
     
     private Partner partner;
     private List<Partner> partners;
     private List<Representative> representatives;
-    private List<Country> countries;
-    private List<Province> provinces;
-    private List<City> cities;
-    
-    private String selectedCountry;
-    private String selectedProvince;
-    private String selectedCity;
     
     public PartnerBean() {}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public Partner getPartner() {
 		return partner;
@@ -55,6 +55,8 @@ public class PartnerBean implements Serializable {
 	}
 
 	public List<Partner> getPartners() {
+		if(partners == null)
+			this.partners = partnerBsn.findPartners();
     	return partners;
     }
     
@@ -62,106 +64,56 @@ public class PartnerBean implements Serializable {
     	return representatives;
     }
     
-    public List<Country> getCountries() {
-    	if(this.countries == null)
-    		this.countries = locationBsn.findCountries();
-        return this.countries;
-    }
-
-    public List<Province> getProvinces() {
-    	if(this.selectedCountry != null && !this.selectedCountry.isEmpty()) {
-    		Country country = new Country(selectedCountry);
-            this.provinces = locationBsn.findProvinces(country);
-    	}
-    	return this.provinces;
-    }
-
-    public List<City> getCities() {
-    	if(selectedProvince != null) {
-    		Province province = new Province(selectedProvince);
-        	this.cities = locationBsn.findCities(province, false);
-    	}
-        else if(selectedCountry != null) {
-        	Country country = new Country(selectedCountry); 
-        	this.cities = locationBsn.findCities(country, false);
-        }
-        return this.cities;
-    }
-        
-    public String getSelectedCountry() {
-		return selectedCountry;
+	public LocationBean getLocationBean() {
+		return locationBean;
 	}
 
-	public void setSelectedCountry(String selectedCountry) {
-		this.selectedCountry = selectedCountry;
-	}
-
-	public String getSelectedProvince() {
-		return selectedProvince;
-	}
-
-	public void setSelectedProvince(String selectedProvince) {
-		this.selectedProvince = selectedProvince;
-	}
-
-	public String getSelectedCity() {
-		return selectedCity;
-	}
-
-	public void setSelectedCity(String selectedCity) {
-		this.selectedCity = selectedCity;
+	public void setLocationBean(LocationBean locationBean) {
+		this.locationBean = locationBean;
 	}
 
 	@PostConstruct
 	public void load() {
-		this.partners = partnerBsn.findPartners();
-	}
-	
-    public String load(String id) {
-        this.partner = partnerBsn.findPartner(id);
-        
-        if(this.partner.getCountry() != null)
-        	this.selectedCountry = this.partner.getCountry().getAcronym();
-        
-        if(this.partner.getProvince() != null)
-        	this.selectedProvince = this.partner.getProvince().getId();
-        
-        if(this.partner.getCity() != null)
-        	this.selectedCity = this.partner.getCity().getId();
-        
-        this.representatives = representativeBsn.findRepresentatives(this.partner);
-        return "partner?faces-redirect=true";
+		if(this.id != null && !this.id.isEmpty()) {
+			this.partner = partnerBsn.findPartner(id);
+	        
+			locationBean.initialize();
+			
+	        if(this.partner.getCountry() != null)
+	        	locationBean.setSelectedCountry(this.partner.getCountry().getAcronym());
+	        
+	        if(this.partner.getProvince() != null)
+	        	locationBean.setSelectedProvince(this.partner.getProvince().getId());
+	        
+	        if(this.partner.getCity() != null)
+	        	locationBean.setSelectedCity(this.partner.getCity().getId());
+		}
+		else
+			this.partner = new Partner();
     }
     
     public String save() {
-    	if(selectedCountry != null && !selectedCountry.isEmpty()) {
-    		Country country = new Country(selectedCountry);
+    	Country country = this.locationBean.getCountry();
+    	if(country != null) {
     		this.partner.setCountry(country);
     	}
     	
-    	if(selectedProvince != null && !selectedProvince.isEmpty()) {
-    		Province province = new Province(selectedProvince);
+    	Province province = this.locationBean.getProvince();
+    	if(province != null) {
     		this.partner.setProvince(province);
     	}
     	
-    	if(selectedCity != null && !selectedCity.isEmpty()) {
-    		City city = new City(selectedCity);
-        	this.partner.setCity(city);
+    	City city = this.locationBean.getCity();
+    	if(city != null) {
+    		this.partner.setCity(city);
     	}
     	    	
         partnerBsn.save(this.partner);
-        removeSessionScoped();
         return "partners?faces-redirect=true";
     }
 
     public String remove() {
         partnerBsn.remove(this.partner.getId());
-        removeSessionScoped();
         return "partners?faces-redirect=true";
-    }
-    
-    private void removeSessionScoped() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        context.getExternalContext().getSessionMap().remove("partnerBean");
     }
 }

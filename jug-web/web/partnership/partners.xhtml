@@ -25,7 +25,9 @@
                         <p:dataTable id="partners" value="#{partnerBean.partners}" var="partner">
                             <p:column>
                                 <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>
-                                <h:commandLink value="#{partner.name}" action="#{partnerBean.load(partner.id)}"/>
+                                <h:link value="#{partner.name}" outcome="partner">
+                                    <f:param name="id" value="#{partner.id}"/>
+                                </h:link>
                             </p:column>
                             <p:column>
                                 <f:facet name="header"><h:outputText value="#{bundle.url}"/></f:facet>

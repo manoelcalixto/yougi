@@ -22,6 +22,9 @@
                     <h:form>
                         <h:panelGrid cellpadding="3">
 	                        <h:outputText value="#{eventBean.event.name}" style="font-size: 24px; font-weight: bold;"/>
+	                        <h:outputFormat value="#{bundle.numberPeopleAttendingEvent}" style="font-weight: bold; color: blue;" rendered="#{securityBackingBean.isUserLeader}">
+                                <f:param value="#{eventBean.numberPeopleAttending}"/>
+                            </h:outputFormat>
 	                        <h:outputText value="#{eventBean.formattedEventDescription}" escape="false" style="font-size: 14px;"/>
 	                        <h:outputFormat value="#{bundle.eventAppointment}" escape="false">
 	                            <f:param value="#{eventBean.event.venue}"/>

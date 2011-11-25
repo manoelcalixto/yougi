@@ -15,6 +15,7 @@ import org.cejug.entity.DeactivationType;
 import org.cejug.entity.EmailMessage;
 import org.cejug.entity.MessageTemplate;
 import org.cejug.entity.UserAccount;
+import org.cejug.event.entity.Event;
 
 /**
  * Send email messages according to business needs.
@@ -158,6 +159,30 @@ public class MessengerBsn {
         }
         catch(MessagingException me) {
             throw new RuntimeException("Error when sending the group assignment alert to "+ userAccount.getFullName(), me);
+        }
+    }
+    
+    public void sendConfirmationEventAttendance(UserAccount userAccount, Event event) {
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put("userAccount.firstName", userAccount.getFirstName());
+        values.put("event.name", event.getName());
+        values.put("event.venue", event.getVenue().getName());
+        values.put("event.startDate", event.getStartDate());
+        values.put("event.startTime", event.getStartTime());
+        values.put("event.endTime", event.getEndTime());
+
+        MessageTemplate messageTemplate;
+        messageTemplate = messageTemplateBsn.findMessageTemplate("KJDIEJKHFHSDJDUWJHAJSNFNFJHDJSLE");
+        
+        EmailMessage emailMessage = new EmailMessage();
+        emailMessage.setRecipientTo(userAccount);
+        messageTemplateBsn.applyEmailMessageTemplate(emailMessage, messageTemplate, values);
+
+        try {
+            Transport.send(emailMessage.createMimeMessage(mailSession));
+        }
+        catch(MessagingException me) {
+            throw new RuntimeException("Error when sending the confirmation of event attendance to user "+ userAccount.getUsername(),me);
         }
     }
 }

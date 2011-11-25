@@ -72,24 +72,27 @@
                                 <h:outputLabel for="country" value="#{bundle.country} *" styleClass="fieldLabel"/>
                                 <h:outputLabel for="province" value="#{bundle.province}" styleClass="fieldLabel"/>
 
-                                <h:selectOneMenu id="country" label="#{bundle.country}" required="true" value="#{userAccountBean.selectedCountry}">
-                                    <f:selectItems value="#{userAccountBean.countries}"/>
-                                    <f:ajax render="province city"/>
-                                </h:selectOneMenu>
-                                <h:selectOneMenu id="province" label="#{bundle.province}" value="#{userAccountBean.selectedProvince}">
-                                    <f:selectItems value="#{userAccountBean.provinces}"/>
-                                    <f:ajax render="city"/>
-                                </h:selectOneMenu>
+                                <h:selectOneMenu id="country" label="#{bundle.country}" value="#{locationBean.selectedCountry}" required="true">
+	                                <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
+	                                <f:selectItems value="#{locationBean.countries}" var="country" itemLabel="#{country.name}" itemValue="#{country.acronym}"/>
+	                                <f:ajax render="province city"/>
+	                            </h:selectOneMenu>
+                                <h:selectOneMenu id="province" label="#{bundle.province}" value="#{locationBean.selectedProvince}">
+	                                <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
+	                                <f:selectItems value="#{locationBean.provinces}" var="province" itemLabel="#{province.name}" itemValue="#{province.id}"/>
+	                                <f:ajax render="city"/>
+	                            </h:selectOneMenu>
 
                                 <h:outputLabel for="city" value="#{bundle.city} *" styleClass="fieldLabel"/>
                                 <h:outputLabel for="postalCode" value="#{bundle.postalCode}" styleClass="fieldLabel"/>
 
                                 <h:panelGrid columns="3">
-                                    <h:selectOneMenu id="city" label="#{bundle.city}" value="#{userAccountBean.selectedCity}">
-                                        <f:selectItems value="#{userAccountBean.cities}"/>
-                                    </h:selectOneMenu>
+                                    <h:selectOneMenu id="city" label="#{bundle.city}" value="#{locationBean.selectedCity}">
+		                                <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
+		                                <f:selectItems value="#{locationBean.cities}" var="city" itemLabel="#{city.name}" itemValue="#{city.id}"/>
+		                            </h:selectOneMenu>
                                     <h:outputText value="#{bundle.oor}"/>
-                                    <p:autoComplete id="cityNotListed" value="#{userAccountBean.cityNotListed}" completeMethod="#{userAccountBean.getCitiesStartingWith}"/>
+                                    <p:autoComplete id="cityNotListed" value="#{locationBean.cityNotListed}" completeMethod="#{locationBean.getCitiesStartingWith}"/>
                                 </h:panelGrid>
                                 <h:inputText id="postalCode" label="#{bundle.postalCode}" size="10" maxlength="10" value="#{userAccountBean.contact.postalCode}"/>
                             </c:if>

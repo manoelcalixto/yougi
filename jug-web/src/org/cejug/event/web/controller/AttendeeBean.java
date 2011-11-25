@@ -68,7 +68,7 @@ public class AttendeeBean implements Serializable {
     }
     
     public String confirmMembersAttended() {
-    	attendeeBsn.confirmMembersAttended(this.selectedAttendees);
+    	attendeeBsn.confirmMembersAttendance(this.selectedAttendees);
     	removeSessionScoped();
     	return "events?faces-redirect=true";
     }

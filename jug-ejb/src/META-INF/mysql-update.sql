@@ -85,6 +85,8 @@ alter table partner add constraint fk_country_partner foreign key (country) refe
 # 09/11/2011
 # Hildeberto Mendonca
 # Version 0.26:0.5
+alter table event modify start_time time null;
+
 alter table event add address varchar(255) null;
 alter table event add city char(32) null;
 alter table event add province char(32) null;
@@ -95,3 +97,6 @@ alter table event add longitude varchar(15) null;
 alter table event add constraint fk_city_event foreign key (city) references city(id) on delete set null;
 alter table event add constraint fk_province_event foreign key (province) references province(id) on delete set null;
 alter table event add constraint fk_country_event foreign key (country) references country(acronym) on delete set null;
+
+insert into message_template (id, title, body) values
+    ('KJDIEJKHFHSDJDUWJHAJSNFNFJHDJSLE', '[JUG] Confirmação de Comparecimento ao Evento', '<p>Oi <b>#{userAccount.firstName}</b>,</p><p>esta mensagem é só para informá-lo(a) que você acabou de confirmar seu comparecimento ao evento <b>#{event.name}</b>, que vai acontecer no(a) <b>#{event.venue}</b>, no dia <b>#{event.startDate}</b>, das <b>#{event.startTime}</b> até as <b>#{event.endTime}</b>.</p><p>Esperamos você lá!</p><p>Atenciosamente,</p><p><b>Coordenação do CEJUG</b></p>');

@@ -23,24 +23,56 @@
                     <h1>#{bundle.partnership}</h1>
                     <h:form>
                         <h:messages styleClass="alertMessage"/>
-                        <h:panelGrid columns="1">
+                        <h:panelGrid columns="2">
                             <h:outputLabel for="name" value="#{bundle.partnerName} *" styleClass="fieldLabel"/>
-                            <h:inputText id="name" label="#{bundle.partnerName}" required="true" size="30" maxlength="50" value="#{partnershipBean.representative.partner.name}"/>
-                            
                             <h:outputLabel for="url" value="#{bundle.website}" styleClass="fieldLabel"/>
+                            
+                            <h:inputText id="name" label="#{bundle.partnerName}" required="true" size="30" maxlength="50" value="#{partnershipBean.representative.partner.name}"/>
                             <h:inputText id="url" label="#{bundle.website}" required="false" size="30" maxlength="50" value="#{partnershipBean.representative.partner.url}"/>
 
+                            <h:outputLabel for="address" value="#{bundle.address}" styleClass="fieldLabel"/>
+                            <h:outputLabel for="postalCode" value="#{bundle.postalCode}" styleClass="fieldLabel"/>
+                            
+                            <h:inputText id="address" label="#{bundle.address}" required="false" size="30" maxlength="255" value="#{partnershipBean.representative.partner.address}"/>
+                            <h:inputText id="postalCode" label="#{bundle.postalCode}" size="10" maxlength="10" value="#{partnershipBean.representative.partner.postalCode}"/>
+                                                        
+                            <h:outputLabel for="country" value="#{bundle.country}" styleClass="fieldLabel"/>
+                            <h:outputLabel for="province" value="#{bundle.province}" styleClass="fieldLabel"/>
+                            
+                            <h:selectOneMenu id="country" label="#{bundle.country}" value="#{locationBean.selectedCountry}">
+                                <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
+                                <f:selectItems value="#{locationBean.countries}" var="country" itemLabel="#{country.name}" itemValue="#{country.acronym}"/>
+                                <f:ajax render="province city"/>
+                            </h:selectOneMenu>                            
+                            <h:selectOneMenu id="province" label="#{bundle.province}" value="#{locationBean.selectedProvince}">
+                                <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
+                                <f:selectItems value="#{locationBean.provinces}" var="province" itemLabel="#{province.name}" itemValue="#{province.id}"/>
+                                <f:ajax render="city"/>
+                            </h:selectOneMenu>
+                            
+                            <h:outputLabel for="city" value="#{bundle.city}" styleClass="fieldLabel"/>
+                            <h:outputText/>
+                            
+                            <h:selectOneMenu id="city" label="#{bundle.city}" value="#{locationBean.selectedCity}">
+                                <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
+                                <f:selectItems value="#{locationBean.cities}" var="city" itemLabel="#{city.name}" itemValue="#{city.id}"/>
+                            </h:selectOneMenu>
+                            <h:outputText/>
+                        </h:panelGrid>
+                        
+                        <h:panelGrid columns="3">
+                            <h:outputText value="#{bundle.representative}" styleClass="fieldLabel"/>
+                            <h:outputLabel for="position" value="#{bundle.position}" styleClass="fieldLabel"/>
+                            <h:outputLabel for="phone" value="#{bundle.phone}" styleClass="fieldLabel"/>
+                            
+                            <h:outputText value="#{partnershipBean.representative.person}"/>
+                            <h:inputText id="position" label="#{bundle.position}" required="false" size="20" maxlength="20" value="#{partnershipBean.representative.position}"/>
+                            <h:inputText id="phone" label="#{bundle.phone}" required="false" size="15" maxlength="15" value="#{partnershipBean.representative.phone}"/>
+                        </h:panelGrid>
+                        
+                        <h:panelGrid>
                             <h:outputLabel for="description" value="#{bundle.description}" styleClass="fieldLabel"/>
                             <h:inputTextarea id="description" label="#{bundle.description}" cols="65" rows="5" value="#{partnershipBean.representative.partner.description}"/>
-                            
-                            <h:outputText value="#{bundle.representative}" styleClass="fieldLabel"/>
-                            <h:outputText value="#{partnershipBean.representative.person}"/>
-                            
-                            <h:outputLabel for="position" value="#{bundle.position}" styleClass="fieldLabel"/>
-                            <h:inputText id="position" label="#{bundle.position}" required="false" size="20" maxlength="20" value="#{partnershipBean.representative.position}"/>
-                            
-                            <h:outputLabel for="phone" value="#{bundle.phone}" styleClass="fieldLabel"/>
-                            <h:inputText id="phone" label="#{bundle.phone}" required="false" size="15" maxlength="15" value="#{partnershipBean.representative.phone}"/>
                         </h:panelGrid>
                         
                         <h:inputHidden id="id" value="#{partnershipBean.representative.id}"/>

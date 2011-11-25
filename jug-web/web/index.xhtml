@@ -16,33 +16,76 @@
                     </p:breadCrumb>
                 </div>
                 <div class="content">
+                    <script src="http://widgets.twimg.com/j/2/widget.js"></script>
                     <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
-                    <h:panelGrid columns="2" columnClasses="panelGridColumn,panelGridColumn">
-                        <p:panel header="#{bundle.whereAreMember}">
-	                        <p:gmap center="-15.707663, -51.240234" 
-	                            zoom="4" type="hybrid" 
-	                            style="width:700px;height:450px" 
-	                            model="#{membersMapDistribution.simpleModel}"/>
-                        </p:panel>
-                        <p:panel header="#{bundle.events}" rendered="#{! empty eventBean.commingEvents}">
-                            <c:forEach items="#{eventBean.commingEvents}" var="event">
-                                <h:panelGrid>
-                                    <h:link value="#{event.name}" outcome="event" style="font-size: 18px; font-weight: bold;">
-                                        <f:param name="id" value="#{event.id}"/>
-	                                </h:link>
-	                                <h:outputText value="#{event.shortDescription}"/>
-	                                <h:panelGrid columns="2">
-	                                   <h:outputText value="#{bundle.venue}: "/>
-	                                   <h:outputText value="#{event.venue}"/>
-	                                </h:panelGrid>
-	                                <h:outputFormat value="#{bundle.eventAppointmentShort}">
-                                        <f:param value="#{eventBean.getFormattedStartDate(event.startDate)}"/>
-			                            <f:param value="#{eventBean.getFormattedStartTime(event.startTime)}"/>
-			                            <f:param value="#{eventBean.getFormattedEndTime(event.endTime)}"/>
-	                                </h:outputFormat>
-                                </h:panelGrid>
-                            </c:forEach>
-                        </p:panel>
+                    <div id="fb-root"></div>
+                    <script>(function(d, s, id) {
+                        var js, fjs = d.getElementsByTagName(s)[0];
+                        if (d.getElementById(id)) {return;}
+                        js = d.createElement(s); js.id = id;
+                        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+                        fjs.parentNode.insertBefore(js, fjs);
+                        }(document, 'script', 'facebook-jssdk'));</script>
+                    <h:panelGrid columns="2" columnClasses="panelGridColumn,panelGridColumn" cellpadding="0" cellspacing="0">
+                        <h:panelGrid>
+                            <p:panel rendered="#{! empty eventBean.commingEvents}">
+		                        <c:forEach items="#{eventBean.commingEvents}" var="event">
+		                            <h:panelGrid>
+		                                <h:link value="#{event.name}" outcome="event" style="font-size: 18px; font-weight: bold;">
+		                                    <f:param name="id" value="#{event.id}"/>
+		                                </h:link>
+		                                <h:outputText value="#{event.shortDescription}"/>
+		                                <h:panelGrid columns="2">
+		                                   <h:outputText value="#{bundle.venue}: "/>
+		                                   <h:outputText value="#{event.venue}"/>
+		                                </h:panelGrid>
+		                                <h:outputFormat value="#{bundle.eventAppointmentShort}">
+		                                    <f:param value="#{eventBean.getFormattedStartDate(event.startDate)}"/>
+		                                    <f:param value="#{eventBean.getFormattedStartTime(event.startTime)}"/>
+		                                    <f:param value="#{eventBean.getFormattedEndTime(event.endTime)}"/>
+		                                </h:outputFormat>
+		                            </h:panelGrid>
+		                        </c:forEach>
+		                    </p:panel>
+		                    <p:panel>
+	                            <p:gmap center="-15.707663, -51.240234" 
+	                                zoom="4" type="hybrid" 
+	                                style="width:695px;height:500px" 
+	                                model="#{membersMapDistribution.simpleModel}"/>
+	                        </p:panel>
+                        </h:panelGrid>
+                        
+                        <h:panelGrid>
+                            <div class="fb-like-box" data-href="https://www.facebook.com/pages/Cejug/312719028740499" data-width="250" data-show-faces="true" data-stream="true" data-header="true"></div>
+                            <p/>
+                            <script>
+							new TWTR.Widget({
+							  version: 2,
+							  type: 'profile',
+							  rpp: 4,
+							  interval: 30000,
+							  width: 250,
+							  height: 300,
+							  theme: {
+							    shell: {
+							      background: '#c2c2c2',
+							      color: '#000000'
+							    },
+							    tweets: {
+							      background: '#ffffff',
+							      color: '#000000',
+							      links: '#3bb507'
+							    }
+							  },
+							  features: {
+							    scrollbar: false,
+							    loop: false,
+							    live: true,
+							    behavior: 'all'
+							  }
+							}).render().setUser('cejug').start();
+							</script>
+                        </h:panelGrid>
                     </h:panelGrid>
                 </div>
             </ui:define>

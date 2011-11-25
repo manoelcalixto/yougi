@@ -21,12 +21,16 @@ import javax.servlet.http.HttpServletRequest;
 import org.cejug.business.ApplicationPropertyBsn;
 import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.ApplicationProperty;
+import org.cejug.entity.City;
+import org.cejug.entity.Country;
 import org.cejug.entity.Properties;
+import org.cejug.entity.Province;
 import org.cejug.entity.UserAccount;
 import org.cejug.partnership.business.PartnerBsn;
 import org.cejug.partnership.business.RepresentativeBsn;
 import org.cejug.partnership.entity.Partner;
 import org.cejug.partnership.entity.Representative;
+import org.cejug.web.controller.LocationBean;
 import org.cejug.web.util.WebTextUtils;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -50,23 +54,15 @@ public class PartnershipBean {
     
     @EJB
     private ApplicationPropertyBsn applicationPropertyBsn;
-    
-    @ManagedProperty(value="#{param.id}")
-    private String id;
+        
+    @ManagedProperty(value="#{locationBean}")
+    private LocationBean locationBean;
 
     private Representative representative;
     
     private StreamedContent logoImage;
 
     public PartnershipBean() {}
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public Representative getRepresentative() {
         return representative;
@@ -98,6 +94,14 @@ public class PartnershipBean {
     	}
     	return false;
     }
+    
+    public LocationBean getLocationBean() {
+		return locationBean;
+	}
+
+	public void setLocationBean(LocationBean locationBean) {
+		this.locationBean = locationBean;
+	}
         
     @PostConstruct
     public void load() {
@@ -112,13 +116,43 @@ public class PartnershipBean {
         	Partner newPartner = new Partner();
         	this.representative.setPartner(newPartner);
         }
+        else if(!locationBean.isInitialized()) {
+        	locationBean.initialize();
+        	
+	        if(this.representative.getPartner().getCountry() != null)
+	        	locationBean.setSelectedCountry(this.representative.getPartner().getCountry().getAcronym());
+	        
+	        if(this.representative.getPartner().getProvince() != null)
+	        	locationBean.setSelectedProvince(this.representative.getPartner().getProvince().getId());
+	        
+	        if(this.representative.getPartner().getCity() != null)
+	        	locationBean.setSelectedCity(this.representative.getPartner().getCity().getId());
+        }
         
         loadLogoImage();
     }
 
     public String save() {
+    	Country country = this.locationBean.getCountry();
+    	if(country != null) {
+    		this.representative.getPartner().setCountry(country);
+    	}
+    	
+    	Province province = this.locationBean.getProvince();
+    	if(province != null) {
+    		this.representative.getPartner().setProvince(province);
+    	}
+    	
+    	City city = this.locationBean.getCity();
+    	if(city != null) {
+    		this.representative.getPartner().setCity(city);
+    	}
+    	
     	partnerBsn.save(this.representative.getPartner());
         representativeBsn.save(this.representative);
+        
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.getExternalContext().getSessionMap().remove("locationBean");
         
         return "profile?faces-redirect=true&tab=2";
     }

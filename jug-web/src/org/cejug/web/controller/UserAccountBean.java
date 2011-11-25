@@ -1,34 +1,29 @@
 package org.cejug.web.controller;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.RequestScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.cejug.business.ApplicationPropertyBsn;
-import org.cejug.business.LocationBsn;
 import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.ApplicationProperty;
 import org.cejug.entity.City;
 import org.cejug.entity.Contact;
-import org.cejug.entity.Country;
 import org.cejug.entity.Properties;
-import org.cejug.entity.Province;
 import org.cejug.entity.UserAccount;
 import org.cejug.web.util.ResourceBundle;
 
 @ManagedBean
-@SessionScoped
+@RequestScoped
 public class UserAccountBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -37,13 +32,12 @@ public class UserAccountBean implements Serializable {
     private UserAccountBsn userAccountBsn;
 
     @EJB
-    private LocationBsn locationBsn;
-
-    @EJB
     private ApplicationPropertyBsn applicationPropertyBsn;
+    
+    @ManagedProperty(value="#{locationBean}")
+    private LocationBean locationBean;
 
     private String userId;
-    private String cityNotListed;
     private UserAccount userAccount;
     private Contact contact;
     
@@ -73,122 +67,17 @@ public class UserAccountBean implements Serializable {
     public void setContact(Contact contact) {
         this.contact = contact;
     }
+    
+    public LocationBean getLocationBean() {
+		return locationBean;
+	}
 
-    public List<SelectItem> getCountries() {
-        List<Country> countries = locationBsn.findCountries();
-        List<SelectItem> selectItems = new ArrayList<SelectItem>();
-        SelectItem selectItem = new SelectItem("", "Select...");
-        selectItems.add(selectItem);
-        for(Country country: countries) {
-            selectItem = new SelectItem(country.getAcronym(), country.getName());
-            selectItems.add(selectItem);
-        }
-        return selectItems;
-    }
-
-    public SelectItem[] getProvinces() {
-        List<Province> provinces = locationBsn.findProvinces(contact.getCountry());
-        SelectItem[] selectItems = new SelectItem[provinces.size() + 1];
-        SelectItem selectItem = new SelectItem("", "Select...");
-        int i = 0;
-        selectItems[i++] = selectItem;
-        for(Province province: provinces) {
-            selectItem = new SelectItem(province.getId(), province.getName());
-            selectItems[i++] = selectItem;
-        }
-        return selectItems;
-    }
-
-    public SelectItem[] getCities() {
-        List<City> cities;
-        if(contact.getProvince() != null)
-            cities = locationBsn.findCities(contact.getProvince(), false);
-        else
-            cities = locationBsn.findCities(contact.getCountry(), false);
-        SelectItem[] selectItems = new SelectItem[cities.size() + 1];
-        SelectItem selectItem = new SelectItem("", "Select...");
-        int i = 0;
-        selectItems[i++] = selectItem;
-        for(City city: cities) {
-            selectItem = new SelectItem(city.getId(), city.getName());
-            selectItems[i++] = selectItem;
-        }
-        return selectItems;
-    }
-
-    public List<String> getCitiesStartingWith(String initials) {
-        List<City> cities = locationBsn.findCitiesStartingWith(initials);
-        List<String> citiesStartingWith = new ArrayList<String>();
-        for(City city:cities) {
-            citiesStartingWith.add(city.getName());
-        }
-        return citiesStartingWith;
-    }
-
-    public String getSelectedCountry() {
-        if(contact.getCountry() == null)
-            return null;
-
-        return contact.getCountry().getAcronym();
-    }
-
-    public void setSelectedCountry(String acronym) {
-        if(acronym == null || acronym.isEmpty())
-            return;
-
-        if(this.contact.getCountry() == null || !this.contact.getCountry().getAcronym().equals(acronym)) {
-            this.contact.setCountry(locationBsn.findCountry(acronym));
-            this.contact.setProvince(null);
-            this.contact.setCity(null);
-        }
-    }
-
-    public String getSelectedProvince() {
-        if(this.contact.getProvince() == null)
-            return null;
-
-        return contact.getProvince().getId();
-    }
-
-    public void setSelectedProvince(String id) {
-        if(id == null || id.isEmpty()) {
-            this.contact.setProvince(null);
-            return;
-        }
-
-        if(this.contact.getProvince() == null || !this.contact.getProvince().getId().equals(id)) {
-            this.contact.setProvince(locationBsn.findProvince(id));
-            this.contact.setCity(null);
-        }
-    }
-
-    public String getSelectedCity() {
-        if(this.contact.getCity() == null)
-            return null;
-
-        return contact.getCity().getId();
-    }
-
-    public void setSelectedCity(String id) {
-        if(id == null || id.isEmpty()) {
-            this.contact.setCity(null);
-            return;
-        }
-
-        if(this.contact.getCity() == null || !this.contact.getCity().getId().equals(id))
-            this.contact.setCity(locationBsn.findCity(id));
-    }
-
-    public String getCityNotListed() {
-        return cityNotListed;
-    }
+	public void setLocationBean(LocationBean locationBean) {
+		this.locationBean = locationBean;
+	}
 
     public Boolean getNoAccount() {
         return userAccountBsn.noAccount();
-    }
-
-    public void setCityNotListed(String cityNotListed) {
-        this.cityNotListed = cityNotListed;
     }
 
     public boolean isConfirmed() {
@@ -211,6 +100,21 @@ public class UserAccountBean implements Serializable {
         if(username != null) {
             this.userAccount = userAccountBsn.findUserAccountByUsername(username);
             this.contact = this.userAccount.getMainContact();
+            	
+	        if(this.contact.getCountry() != null)
+	        	locationBean.setSelectedCountry(this.contact.getCountry().getAcronym());
+	        else
+	        	locationBean.setSelectedCountry(null);
+	        
+	        if(this.contact.getProvince() != null)
+	        	locationBean.setSelectedProvince(this.contact.getProvince().getId());
+	        else
+	        	locationBean.setSelectedProvince(null);
+	        
+	        if(this.contact.getCity() != null)
+	        	locationBean.setSelectedCity(this.contact.getCity().getId());
+	        else
+	        	locationBean.setSelectedCity(null);
         }
         else {
             this.userAccount = new UserAccount();
@@ -239,7 +143,7 @@ public class UserAccountBean implements Serializable {
         
         boolean isFirstUser = userAccountBsn.noAccount(); 
         
-        if(!isFirstUser && this.contact.getCity() == null && (this.cityNotListed == null || this.cityNotListed.isEmpty())) {
+        if(!isFirstUser && this.locationBean.getCity() == null && (this.locationBean.getCityNotListed() == null || this.locationBean.getCityNotListed().isEmpty())) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getMessage("errorMessageCityNotInformed"),""));
             context.validationFailed();
         }
@@ -255,13 +159,11 @@ public class UserAccountBean implements Serializable {
         ApplicationProperty url = applicationPropertyBsn.findApplicationProperty(Properties.URL);
         String serverAddress = url.getPropertyValue();
 
-        City newCity = null;
-        if(this.cityNotListed != null && !this.cityNotListed.isEmpty() && contact.getCountry() != null) {
-            newCity = new City(null, this.cityNotListed);
-            newCity.setCountry(contact.getCountry());
-            newCity.setProvince(contact.getProvince());
-            newCity.setValid(false);
-        }
+        this.contact.setCountry(this.locationBean.getCountry());
+    	this.contact.setProvince(this.locationBean.getProvince());
+    	this.contact.setCity(this.locationBean.getCity());
+        
+        City newCity = locationBean.getNotListedCity();
 
         try {
             userAccount.setUsername(userAccount.getEmail());
@@ -271,8 +173,6 @@ public class UserAccountBean implements Serializable {
             context.addMessage(userId, new FacesMessage(e.getCause().getMessage()));
             return "registration";
         }
-
-        removeSessionScoped();
         
         if(isFirstUser)
             context.addMessage(userId, new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getMessage("infoSuccessfulRegistration"), ""));
@@ -285,12 +185,20 @@ public class UserAccountBean implements Serializable {
     public String savePersonalData() {
         if(userAccount != null) {
             UserAccount existingUserAccount = userAccountBsn.findUserAccount(userAccount.getId());
+            
+            this.contact.setCountry(this.locationBean.getCountry());
+        	this.contact.setProvince(this.locationBean.getProvince());
+        	this.contact.setCity(this.locationBean.getCity());
+            
             existingUserAccount.setMainContact(contact);
             existingUserAccount.setFirstName(userAccount.getFirstName());
             existingUserAccount.setLastName(userAccount.getLastName());
             existingUserAccount.setGender(userAccount.getGender());
             existingUserAccount.setBirthDate(userAccount.getBirthDate());
             userAccountBsn.save(existingUserAccount);
+        
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.getExternalContext().getSessionMap().remove("locationBean");
         }
         return "profile?faces-redirect=true";
     }
@@ -327,11 +235,6 @@ public class UserAccountBean implements Serializable {
         catch(ServletException se) {}
         
         return "/index?faces-redirect=true";
-    }
-
-    private void removeSessionScoped() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        context.getExternalContext().getSessionMap().remove("userAccountBean");
     }
 
     /** Check whether at least one of the privacy options was checked. */
