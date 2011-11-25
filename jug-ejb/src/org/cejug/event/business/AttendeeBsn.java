@@ -48,8 +48,8 @@ public class AttendeeBsn {
     	}
     }
 	
-	public Integer findNumberPeopleAttending(Event event) {
-		return (Integer)em.createQuery("select count(a) from Attendee a where a.event = :event")
+	public Long findNumberPeopleAttending(Event event) {
+		return (Long)em.createQuery("select count(a) from Attendee a where a.event = :event")
        		 .setParameter("event", event)
              .getSingleResult();
 	}

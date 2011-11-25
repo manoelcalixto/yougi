@@ -46,7 +46,7 @@ public class EventBean {
     private List<Event> events;
     private List<Event> commingEvents;
     private List<Partner> venues;
-    private Integer numberPeopleAttending;
+    private Long numberPeopleAttending;
     private String selectedVenue;
 
     public EventBean() {}
@@ -107,11 +107,11 @@ public class EventBean {
         return venues;
     }
     
-    public Integer getNumberPeopleAttending() {
+    public Long getNumberPeopleAttending() {
 		return numberPeopleAttending;
 	}
 
-	public void setNumberPeopleAttending(Integer numberPeopleAttending) {
+	public void setNumberPeopleAttending(Long numberPeopleAttending) {
 		this.numberPeopleAttending = numberPeopleAttending;
 	}
 
