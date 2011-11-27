@@ -82,21 +82,51 @@ alter table partner add constraint fk_country_partner foreign key (country) refe
 
 ########################################################################
 # Adds additional columns in event to store the address and the geographical location.
-# 09/11/2011
+# A field added to the event table to differentiate between an internal and an external event.
+# Adding the message used to send emails to people who registered in an event.
+# 27/11/2011
 # Hildeberto Mendonca
 # Version 0.26:0.5
 alter table event modify start_time time null;
 
 alter table event add address varchar(255) null;
-alter table event add city char(32) null;
-alter table event add province char(32) null;
 alter table event add country char(3) null;
+alter table event add province char(32) null;
+alter table event add city char(32) null;
 alter table event add latitude varchar(15) null;
 alter table event add longitude varchar(15) null;
 
-alter table event add constraint fk_city_event foreign key (city) references city(id) on delete set null;
-alter table event add constraint fk_province_event foreign key (province) references province(id) on delete set null;
 alter table event add constraint fk_country_event foreign key (country) references country(acronym) on delete set null;
+alter table event add constraint fk_province_event foreign key (province) references province(id) on delete set null;
+alter table event add constraint fk_city_event foreign key (city) references city(id) on delete set null;
+
+alter table event add external tinyint(1) null default false;
 
 insert into message_template (id, title, body) values
     ('KJDIEJKHFHSDJDUWJHAJSNFNFJHDJSLE', '[JUG] Confirmação de Comparecimento ao Evento', '<p>Oi <b>#{userAccount.firstName}</b>,</p><p>esta mensagem é só para informá-lo(a) que você acabou de confirmar seu comparecimento ao evento <b>#{event.name}</b>, que vai acontecer no(a) <b>#{event.venue}</b>, no dia <b>#{event.startDate}</b>, das <b>#{event.startTime}</b> até as <b>#{event.endTime}</b>.</p><p>Esperamos você lá!</p><p>Atenciosamente,</p><p><b>Coordenação do CEJUG</b></p>');
+
+########################################################################
+# Migrating data from the table contact to the table user_account and droping table contact.
+# Adding a field to the table user_account to indicate whether the user was verified.
+# 27/11/2011
+# Hildeberto Mendonca
+# Version 0.27:0.6
+alter table user_account add website varchar(100) null;
+alter table user_account add city char(32) null;
+alter table user_account add province char(32) null;
+alter table user_account add country char(3) null;
+alter table user_account add postal_code char(10) null;
+alter table user_account add twitter varchar(30) null;
+
+update user_account, contact 
+   set user_account.website = contact.website,
+   set user_account.twitter = contact.twitter,
+   set user_account.country = contact.country,
+   set user_account.province = contact.province,
+   set user_account.city = contact.city,
+   set user_account.postal_code = contact.postal_code,
+WHERE user_account.id=contact.user;
+
+drop table contact;
+
+alter table user_account add verified tinyint(1) null default false;

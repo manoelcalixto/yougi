@@ -2,14 +2,12 @@ package org.cejug.event.business;
 
 import java.util.List;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.cejug.business.MessengerBsn;
 import org.cejug.entity.UserAccount;
 import org.cejug.event.entity.Attendee;
 import org.cejug.event.entity.Event;
@@ -26,9 +24,6 @@ public class AttendeeBsn {
     @PersistenceContext
     private EntityManager em;
     
-    @EJB
-    private MessengerBsn messengerBsn;
-
     public Attendee findAttendee(String id) {
         if(id != null)
             return em.find(Attendee.class, id);
@@ -51,6 +46,13 @@ public class AttendeeBsn {
 	public Long findNumberPeopleAttending(Event event) {
 		return (Long)em.createQuery("select count(a) from Attendee a where a.event = :event")
        		 .setParameter("event", event)
+             .getSingleResult();
+	}
+	
+	public Long findNumberPeopleAttended(Event event) {
+		return (Long)em.createQuery("select count(a) from Attendee a where a.event = :event and a.attended = :attended")
+       		 .setParameter("event", event)
+       		 .setParameter("attended", true)
              .getSingleResult();
 	}
 
@@ -89,7 +91,6 @@ public class AttendeeBsn {
     public void save(Attendee attendee) {
     	attendee.setId(EntitySupport.generateEntityId());
         em.persist(attendee);
-        messengerBsn.sendConfirmationEventAttendance(attendee.getAttendee(), attendee.getEvent());
     }
 
     public void remove(String id) {

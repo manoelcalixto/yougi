@@ -1,5 +1,9 @@
 package org.cejug.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * This class groups a set of methods to deal with special text requirements
  * that are not already covered by the Java API.
@@ -19,5 +23,33 @@ public class TextUtils {
                   .append(words[i].substring(1).toLowerCase());
         }
         return result.toString();
+    }
+    
+    public static String getFormattedDate(Date date, String formatDate) {
+    	if(date == null)
+    		return "";
+    	
+    	SimpleDateFormat sdf = new SimpleDateFormat(formatDate);
+    	return sdf.format(date);
+    }
+    
+    public static String getFormattedTime(Date time, String formatTime, String timezone) {
+    	if(time == null)
+    		return "";
+    	
+    	SimpleDateFormat sdf = new SimpleDateFormat(formatTime);
+    	TimeZone tz = TimeZone.getTimeZone(timezone);
+    	sdf.setTimeZone(tz);
+    	return sdf.format(time);
+    }
+    
+    public static String getFormattedDateTime(Date dateTime, String formatDateTime, String timezone) {
+    	if(dateTime == null)
+    		return "";
+    	
+    	SimpleDateFormat sdf = new SimpleDateFormat(formatDateTime);
+    	TimeZone tz = TimeZone.getTimeZone(timezone);
+    	sdf.setTimeZone(tz);
+    	return sdf.format(dateTime);
     }
 }

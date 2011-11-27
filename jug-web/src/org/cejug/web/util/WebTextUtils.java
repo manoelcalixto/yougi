@@ -1,9 +1,7 @@
 package org.cejug.web.util;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
-import java.util.TimeZone;
 
 import org.cejug.util.TextUtils;
 
@@ -36,9 +34,7 @@ public final class WebTextUtils extends TextUtils {
     		return "";
     	
     	ResourceBundle rb = new ResourceBundle();
-    	String formatDate = rb.getMessage("formatDate");
-    	SimpleDateFormat sdf = new SimpleDateFormat(formatDate);
-    	return sdf.format(date);
+    	return getFormattedDate(date, rb.getMessage("formatDate"));
     }
     
     public static String getFormattedTime(Date time) {
@@ -46,11 +42,7 @@ public final class WebTextUtils extends TextUtils {
     		return "";
     	
     	ResourceBundle rb = new ResourceBundle();
-    	String formatTime = rb.getMessage("formatTime");
-    	SimpleDateFormat sdf = new SimpleDateFormat(formatTime);
-    	TimeZone tz = TimeZone.getTimeZone("GMT-3");
-    	sdf.setTimeZone(tz);
-    	return sdf.format(time);
+    	return getFormattedTime(time, rb.getMessage("formatTime"), "GMT-3");
     }
     
     public static String getFormattedDateTime(Date dateTime) {
@@ -58,10 +50,6 @@ public final class WebTextUtils extends TextUtils {
     		return "";
     	
     	ResourceBundle rb = new ResourceBundle();
-    	String formatDateTime = rb.getMessage("formatDateTime");
-    	SimpleDateFormat sdf = new SimpleDateFormat(formatDateTime);
-    	TimeZone tz = TimeZone.getTimeZone("GMT-3");
-    	sdf.setTimeZone(tz);
-    	return sdf.format(dateTime);
+    	return getFormattedDateTime(dateTime, rb.getMessage("formatDateTime"), "GMT-3");
     }
 }

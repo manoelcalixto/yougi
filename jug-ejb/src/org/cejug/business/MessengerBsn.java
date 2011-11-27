@@ -16,6 +16,7 @@ import org.cejug.entity.EmailMessage;
 import org.cejug.entity.MessageTemplate;
 import org.cejug.entity.UserAccount;
 import org.cejug.event.entity.Event;
+import org.cejug.util.TextUtils;
 
 /**
  * Send email messages according to business needs.
@@ -162,14 +163,14 @@ public class MessengerBsn {
         }
     }
     
-    public void sendConfirmationEventAttendance(UserAccount userAccount, Event event) {
+    public void sendConfirmationEventAttendance(UserAccount userAccount, Event event, String dateFormat, String timeFormat, String timezone) {
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("userAccount.firstName", userAccount.getFirstName());
         values.put("event.name", event.getName());
         values.put("event.venue", event.getVenue().getName());
-        values.put("event.startDate", event.getStartDate());
-        values.put("event.startTime", event.getStartTime());
-        values.put("event.endTime", event.getEndTime());
+        values.put("event.startDate", TextUtils.getFormattedDate(event.getStartDate(), dateFormat));
+        values.put("event.startTime", TextUtils.getFormattedTime(event.getStartTime(), timeFormat, timezone));
+        values.put("event.endTime", TextUtils.getFormattedTime(event.getEndTime(), timeFormat, timezone));
 
         MessageTemplate messageTemplate;
         messageTemplate = messageTemplateBsn.findMessageTemplate("KJDIEJKHFHSDJDUWJHAJSNFNFJHDJSLE");

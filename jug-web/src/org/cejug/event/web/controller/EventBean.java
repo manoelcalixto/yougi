@@ -3,6 +3,7 @@ package org.cejug.event.web.controller;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -12,6 +13,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.cejug.business.MessengerBsn;
 import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.UserAccount;
 import org.cejug.event.business.AttendeeBsn;
@@ -20,11 +22,15 @@ import org.cejug.event.entity.Attendee;
 import org.cejug.event.entity.Event;
 import org.cejug.partnership.business.PartnerBsn;
 import org.cejug.partnership.entity.Partner;
+import org.cejug.web.controller.LocationBean;
+import org.cejug.web.util.ResourceBundle;
 import org.cejug.web.util.WebTextUtils;
 
 @ManagedBean
 @RequestScoped
 public class EventBean {
+	
+	static final Logger logger = Logger.getLogger("org.cejug.event.web.controller.EventBean");
 
     @EJB
     private EventBsn eventBsn;
@@ -37,9 +43,15 @@ public class EventBean {
     
     @EJB
     private UserAccountBsn userAccountBsn;
+    
+    @EJB
+    private MessengerBsn messengerBsn;
 
     @ManagedProperty(value="#{param.id}")
     private String id;
+    
+    @ManagedProperty(value="#{locationBean}")
+    private LocationBean locationBean;
 
     private Event event;
     private Attendee attendee;
@@ -47,6 +59,7 @@ public class EventBean {
     private List<Event> commingEvents;
     private List<Partner> venues;
     private Long numberPeopleAttending;
+    private Long numberPeopleAttended;
     private String selectedVenue;
 
     public EventBean() {}
@@ -58,6 +71,14 @@ public class EventBean {
     public void setId(String id) {
         this.id = id;
     }
+    
+    public LocationBean getLocationBean() {
+		return locationBean;
+	}
+
+	public void setLocationBean(LocationBean locationBean) {
+		this.locationBean = locationBean;
+	}
 
     public Event getEvent() {
         return event;
@@ -81,6 +102,16 @@ public class EventBean {
 
 	public void setSelectedVenue(String selectedVenue) {
 		this.selectedVenue = selectedVenue;
+		logger.info("selectedVenue: "+ selectedVenue);
+		Partner venue = partnerBsn.findPartner(selectedVenue);
+		if(this.event.getAddress() == null)
+			this.event.setAddress(venue.getAddress());
+		if(this.event.getCountry() == null)
+			this.locationBean.setSelectedCountry(venue.getCountry().getAcronym());
+		if(this.event.getProvince() == null)
+			this.locationBean.setSelectedProvince(venue.getProvince().getId());
+		if(this.event.getCity() == null)
+			this.locationBean.setSelectedCity(venue.getCity().getId());
 	}
 
 	public Boolean getIsAttending() {
@@ -113,6 +144,14 @@ public class EventBean {
 
 	public void setNumberPeopleAttending(Long numberPeopleAttending) {
 		this.numberPeopleAttending = numberPeopleAttending;
+	}
+
+	public void setNumberPeopleAttended(Long numberPeopleAttended) {
+		this.numberPeopleAttended = numberPeopleAttended;
+	}
+
+	public Long getNumberPeopleAttended() {
+		return numberPeopleAttended;
 	}
 
 	public String getFormattedEventDescription() {
@@ -168,10 +207,27 @@ public class EventBean {
     		UserAccount person = userAccountBsn.findUserAccountByUsername(username);
     		this.attendee = attendeeBsn.findAttendee(this.event, person);
     		this.numberPeopleAttending = attendeeBsn.findNumberPeopleAttending(this.event);
+    		this.numberPeopleAttended = attendeeBsn.findNumberPeopleAttended(this.event);
+    		
+    		locationBean.initialize();
+			
+	        if(this.event.getCountry() != null)
+	        	locationBean.setSelectedCountry(this.event.getCountry().getAcronym());
+	        else
+	        	locationBean.setSelectedCountry(null);
+	        
+	        if(this.event.getProvince() != null)
+	        	locationBean.setSelectedProvince(this.event.getProvince().getId());
+	        else
+	        	locationBean.setSelectedProvince(null);
+	        
+	        if(this.event.getCity() != null)
+	        	locationBean.setSelectedCity(this.event.getCity().getId());
+	        else
+	        	locationBean.setSelectedCity(null);
         }
-        else {
+        else
             this.event = new Event();
-        }
     }
 
     public String confirmAttendance() {
@@ -186,7 +242,12 @@ public class EventBean {
         attendee.setAttendee(person);
         attendee.setRegistrationDate(Calendar.getInstance().getTime());
         attendeeBsn.save(attendee);
-        
+        ResourceBundle rb = new ResourceBundle();
+        messengerBsn.sendConfirmationEventAttendance(attendee.getAttendee(), 
+        		                                     attendee.getEvent(),
+        		                                     rb.getMessage("formatDate"),
+        		                                     rb.getMessage("formatTime"),
+        		                                     "GMT-3");
     	return "events?faces-redirect=true";
     }
     
@@ -206,6 +267,11 @@ public class EventBean {
     public String save() {
     	Partner venue = partnerBsn.findPartner(selectedVenue);
     	this.event.setVenue(venue);
+    	
+    	this.event.setCountry(this.locationBean.getCountry());
+    	this.event.setProvince(this.locationBean.getProvince());
+    	this.event.setCity(this.locationBean.getCity());
+    	
     	eventBsn.save(this.event);
         return "events?faces-redirect=true";
     }

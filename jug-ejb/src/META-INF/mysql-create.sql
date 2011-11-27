@@ -48,31 +48,19 @@ create table user_account (
     deactivated         tinyint(1)       null default false,
     deactivation_date   timestamp        null,
     deactivation_reason varchar(255)     null,
-    deactivation_type   tinyint(1)       null  # 0 - administrative  1 - ownwill
+    deactivation_type   tinyint(1)       null,  # 0 - administrative  1 - ownwill
+    website             varchar(100)     null,
+    city                char(32)         null,
+    province            char(32)         null,
+    country             char(3)          null,
+    postal_code         char(10)         null,
+    twitter             varchar(30)      null,
+    verified            tinyint(1)       null default false
 ) engine = innodb;
 
 alter table user_account add constraint pk_user_account primary key (id);
 create unique index idx_unique_user_email on user_account (email);
 create unique index idx_unique_username on user_account (username);
-
-create table contact (
-    id                char(32)     not null,
-    user              char(32)     not null,
-    location          varchar(100)     null, # home, company, university, organization
-    website           varchar(100)     null,
-    city              char(32)         null,
-    province          char(32)         null,
-    country           char(3)          null,
-    postal_code       char(10)         null,
-    twitter           varchar(30)      null,
-    main              tinyint(1)       null
-) engine = innodb;
-
-alter table contact add constraint pk_contact primary key (id);
-alter table contact add constraint fk_user_contact foreign key (user) references user_account(id) on delete cascade;
-alter table contact add constraint fk_city_contact foreign key (city) references city(id) on delete set null;
-alter table contact add constraint fk_province_contact foreign key (province) references province(id) on delete set null;
-alter table contact add constraint fk_country_contact foreign key (country) references country(acronym) on delete set null;
 
 create table communication_privacy (
     user           char(32)   not null,
@@ -259,18 +247,19 @@ create table event (
     description       text             null,
     short_description varchar(255)     null,
     address           varchar(255)     null,
-    city              char(32)         null,
-    province          char(32)         null,
     country           char(3)          null,
+    province          char(32)         null,
+    city              char(32)         null,
     latitude          varchar(15)      null,
-    longitude         varchar(15)      null
+    longitude         varchar(15)      null,
+    external          tinyint(1)       null default false
 ) engine = innodb;
 
 alter table event add constraint pk_event primary key (id);
 alter table event add constraint fk_event_venue foreign key (venue) references partner(id) on delete cascade;
-alter table event add constraint fk_city_event foreign key (city) references city(id) on delete set null;
-alter table event add constraint fk_province_event foreign key (province) references province(id) on delete set null;
 alter table event add constraint fk_country_event foreign key (country) references country(acronym) on delete set null;
+alter table event add constraint fk_province_event foreign key (province) references province(id) on delete set null;
+alter table event add constraint fk_city_event foreign key (city) references city(id) on delete set null;
 
 create table attendee (
     id                char(32)   not null,

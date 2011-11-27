@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
+import org.cejug.entity.City;
+import org.cejug.entity.Country;
+import org.cejug.entity.Province;
 import org.cejug.partnership.entity.Partner;
 
 @Entity
@@ -48,6 +51,26 @@ public class Event implements Serializable {
     
     @Column(name="short_description")
     private String shortDescription;
+    
+    private String address;
+
+    @ManyToOne
+    @JoinColumn(name="country")
+    private Country country;
+    
+    @ManyToOne
+    @JoinColumn(name="province")
+    private Province province;
+    
+    @ManyToOne
+    @JoinColumn(name="city")
+    private City city;
+    
+    private String latitude;
+    
+    private String longitude;  
+    
+    private Boolean external;
     
 	public String getId() {
 		return id;
@@ -119,6 +142,62 @@ public class Event implements Serializable {
 
 	public void setShortDescription(String shortDescription) {
 		this.shortDescription = shortDescription;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setCountry(Country country) {
+		this.country = country;
+	}
+
+	public Country getCountry() {
+		return country;
+	}
+
+	public void setProvince(Province province) {
+		this.province = province;
+	}
+
+	public Province getProvince() {
+		return province;
+	}
+
+	public void setCity(City city) {
+		this.city = city;
+	}
+
+	public City getCity() {
+		return city;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setExternal(Boolean external) {
+		this.external = external;
+	}
+
+	public Boolean getExternal() {
+		return external;
 	}
 
 	public String toString() {

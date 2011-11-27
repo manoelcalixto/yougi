@@ -11,7 +11,6 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
-import javax.ejb.Schedule;
 import javax.mail.Address;
 import javax.mail.Flags;
 import javax.mail.Folder;
@@ -175,7 +174,7 @@ public class MailingListBsn {
             em.remove(mailingList);
     }
 
-    @Schedule(hour="*/1",persistent=false) // Production
+    //@Schedule(hour="*/1",persistent=false) // Production
     //@Schedule(hour="*",minute="*/2",persistent=false) // Development
     public void retrieveMailingListMessages() {
 

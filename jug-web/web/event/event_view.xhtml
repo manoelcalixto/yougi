@@ -24,6 +24,7 @@
 	                        <h:outputText value="#{eventBean.event.name}" style="font-size: 24px; font-weight: bold;"/>
 	                        <h:outputFormat value="#{bundle.numberPeopleAttendingEvent}" style="font-weight: bold; color: blue;" rendered="#{securityBackingBean.isUserLeader}">
                                 <f:param value="#{eventBean.numberPeopleAttending}"/>
+                                <f:param value="#{eventBean.numberPeopleAttended}"/>
                             </h:outputFormat>
 	                        <h:outputText value="#{eventBean.formattedEventDescription}" escape="false" style="font-size: 14px;"/>
 	                        <h:outputFormat value="#{bundle.eventAppointment}" escape="false">
