@@ -44,8 +44,8 @@
                             <h:outputLabel for="website" value="#{bundle.website}" styleClass="fieldLabel"/>
                             <h:outputLabel for="twitter" value="#{bundle.twitter}" styleClass="fieldLabel"/>
 
-                            <h:inputText id="website" label="#{bundle.website}" size="30" maxlength="100" value="#{userAccountBean.contact.website}"/>
-                            <h:inputText id="twitter" label="#{bundle.twitter}" size="15" maxlength="30" value="#{userAccountBean.contact.twitter}"/>
+                            <h:inputText id="website" label="#{bundle.website}" size="30" maxlength="100" value="#{userAccountBean.userAccount.website}"/>
+                            <h:inputText id="twitter" label="#{bundle.twitter}" size="15" maxlength="30" value="#{userAccountBean.userAccount.twitter}"/>
 
                             <h:outputLabel for="country" value="#{bundle.country}" styleClass="fieldLabel"/>
                             <h:outputLabel for="province" value="#{bundle.province}" styleClass="fieldLabel"/>
@@ -68,11 +68,10 @@
                                 <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
                                 <f:selectItems value="#{locationBean.cities}" var="city" itemLabel="#{city.name}" itemValue="#{city.id}"/>
                             </h:selectOneMenu>
-                            <h:inputText id="postalCode" label="#{bundle.postalCode}" size="10" maxlength="10" value="#{userAccountBean.contact.postalCode}"/>
+                            <h:inputText id="postalCode" label="#{bundle.postalCode}" size="10" maxlength="10" value="#{userAccountBean.userAccount.postalCode}"/>
                         </h:panelGrid>
                         
                         <h:inputHidden id="id" value="#{userAccountBean.userAccount.id}"/>
-                        <h:inputHidden id="idContact" value="#{userAccountBean.contact.id}"/>
                         <p></p>
                         <h:panelGrid columns="2">
                             <h:commandButton value="#{bundle.save}" action="#{userAccountBean.savePersonalData}"/>

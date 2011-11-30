@@ -62,11 +62,11 @@
 
                             <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
                                 <h:outputText value="http://"/>
-                                <h:inputText id="website" label="#{bundle.website}" size="35" maxlength="100" value="#{userAccountBean.contact.website}"/>
+                                <h:inputText id="website" label="#{bundle.website}" size="35" maxlength="100" value="#{userAccountBean.userAccount.website}"/>
                             </h:panelGrid>
                             <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
                                 <h:outputText value="@"/>
-                                <h:inputText id="twitter" label="#{bundle.twitter}" size="15" maxlength="30" value="#{userAccountBean.contact.twitter}"/>
+                                <h:inputText id="twitter" label="#{bundle.twitter}" size="15" maxlength="30" value="#{userAccountBean.userAccount.twitter}"/>
                             </h:panelGrid>
                             <c:if test="#{!userAccountBean.noAccount}">
                                 <h:outputLabel for="country" value="#{bundle.country} *" styleClass="fieldLabel"/>
@@ -94,7 +94,7 @@
                                     <h:outputText value="#{bundle.oor}"/>
                                     <p:autoComplete id="cityNotListed" value="#{locationBean.cityNotListed}" completeMethod="#{locationBean.getCitiesStartingWith}"/>
                                 </h:panelGrid>
-                                <h:inputText id="postalCode" label="#{bundle.postalCode}" size="10" maxlength="10" value="#{userAccountBean.contact.postalCode}"/>
+                                <h:inputText id="postalCode" label="#{bundle.postalCode}" size="10" maxlength="10" value="#{userAccountBean.userAccount.postalCode}"/>
                             </c:if>
                         </h:panelGrid>
                         <p></p>

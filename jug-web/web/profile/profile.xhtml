@@ -50,20 +50,20 @@
                                     <h:outputText value="#{bundle.website}" styleClass="fieldLabel"/>
                                     <h:outputText value="#{bundle.twitter}" styleClass="fieldLabel"/>
 
-                                    <h:outputLink value="http://#{userAccountBean.contact.website}" target="_blank">#{userAccountBean.contact.website}</h:outputLink>
-                                    <h:outputLink value="http://twitter.com/#{userAccountBean.contact.twitter}" target="_blank">#{userAccountBean.contact.twitter}</h:outputLink>
+                                    <h:outputLink value="http://#{userAccountBean.userAccount.website}" target="_blank">#{userAccountBean.userAccount.website}</h:outputLink>
+                                    <h:outputLink value="http://twitter.com/#{userAccountBean.userAccount.twitter}" target="_blank">#{userAccountBean.userAccount.twitter}</h:outputLink>
 
                                     <h:outputText value="#{bundle.country}" styleClass="fieldLabel"/>
                                     <h:outputText value="#{bundle.province}" styleClass="fieldLabel"/>
 
-                                    <h:outputText value="#{userAccountBean.contact.country}"/>
-                                    <h:outputText value="#{userAccountBean.contact.province}"/>
+                                    <h:outputText value="#{userAccountBean.userAccount.country}"/>
+                                    <h:outputText value="#{userAccountBean.userAccount.province}"/>
 
                                     <h:outputText value="#{bundle.city}" styleClass="fieldLabel"/>
                                     <h:outputText value="#{bundle.postalCode}" styleClass="fieldLabel"/>
 
-                                    <h:outputText value="#{userAccountBean.contact.city}"/>
-                                    <h:outputText value="#{userAccountBean.contact.postalCode}"/>
+                                    <h:outputText value="#{userAccountBean.userAccount.city}"/>
+                                    <h:outputText value="#{userAccountBean.userAccount.postalCode}"/>
                                 </h:panelGrid>
                                 <p></p>
                                 <h:panelGrid columns="2">
@@ -106,6 +106,8 @@
                                     <h:outputText value="#{partnershipBean.formattedPartnerDescription}" escape="false"/>
 
                                     <h:outputLink value="#{partnershipBean.representative.partner.url}" target="_blank">#{partnershipBean.representative.partner.url}</h:outputLink>
+                                    
+                                    <h:outputText value="#{partnershipBean.formattedPartnerAddress}"/>
                                     
                                     <h:panelGrid columns="3" cellpadding="5">
                                         <h:outputText value="#{bundle.representative}" styleClass="fieldLabel"/>

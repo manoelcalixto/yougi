@@ -3,6 +3,9 @@ package org.cejug.web.util;
 import java.util.Date;
 import java.util.StringTokenizer;
 
+import org.cejug.entity.City;
+import org.cejug.entity.Country;
+import org.cejug.entity.Province;
 import org.cejug.util.TextUtils;
 
 public final class WebTextUtils extends TextUtils {
@@ -51,5 +54,45 @@ public final class WebTextUtils extends TextUtils {
     	
     	ResourceBundle rb = new ResourceBundle();
     	return getFormattedDateTime(dateTime, rb.getMessage("formatDateTime"), "GMT-3");
+    }
+    
+    public static String printAddress(String address, Country country, Province province, City city, String postalCode) {
+        StringBuilder fullAddress = new StringBuilder();
+        String commaSeparator = ", ";
+        if(address != null || !address.isEmpty())
+            fullAddress.append(address);
+        
+        if(city != null) {
+            if(!fullAddress.toString().isEmpty())
+                fullAddress.append(commaSeparator);
+            
+            fullAddress.append(city.getName());
+        }
+        
+        if(province != null) {
+            if(!fullAddress.toString().isEmpty())
+                fullAddress.append(commaSeparator);
+            
+            fullAddress.append(province.getName());
+        }
+        
+        if(country != null) {
+            if(!fullAddress.toString().isEmpty())
+                fullAddress.append(" - ");
+            
+            fullAddress.append(country.getName());
+        }
+        
+        if(postalCode != null) {
+            if(!fullAddress.toString().isEmpty())
+                fullAddress.append(".");
+            ResourceBundle rb = new ResourceBundle();
+            fullAddress.append(" ");
+            fullAddress.append(rb.getMessage("postalCode"));
+            fullAddress.append(": ");
+            fullAddress.append(country.getName());
+        }
+        
+        return fullAddress.toString();
     }
 }

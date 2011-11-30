@@ -41,8 +41,8 @@ import org.primefaces.model.UploadedFile;
 @RequestScoped
 public class PartnershipBean {
 
-	static final Logger logger = Logger.getLogger("org.cejug.partnership.web.controller.PartnershipBean");
-	
+    static final Logger logger = Logger.getLogger("org.cejug.partnership.web.controller.PartnershipBean");
+    
     @EJB
     private RepresentativeBsn representativeBsn;
     
@@ -54,15 +54,16 @@ public class PartnershipBean {
     
     @EJB
     private ApplicationPropertyBsn applicationPropertyBsn;
-        
-    @ManagedProperty(value="#{locationBean}")
+    
+    @ManagedProperty(value = "#{locationBean}")
     private LocationBean locationBean;
-
+    
     private Representative representative;
     
     private StreamedContent logoImage;
 
-    public PartnershipBean() {}
+    public PartnershipBean() {
+    }
 
     public Representative getRepresentative() {
         return representative;
@@ -71,89 +72,96 @@ public class PartnershipBean {
     public void setRepresentative(Representative representative) {
         this.representative = representative;
     }
-    
+
     public StreamedContent getLogoImage() {
-		return logoImage;
-	}
+        return logoImage;
+    }
 
-	public void setLogoImage(StreamedContent logoImage) {
-		this.logoImage = logoImage;
-	}
+    public void setLogoImage(StreamedContent logoImage) {
+        this.logoImage = logoImage;
+    }
 
-	public String getFormattedPartnerDescription() {
-    	if(representative != null) {
-    		String description = this.representative.getPartner().getDescription();
-    		return WebTextUtils.convertLineBreakToHTMLParagraph(description);
-    	}
-    	return null;
+    public String getFormattedPartnerDescription() {
+        if (representative != null) {
+            String description = this.representative.getPartner().getDescription();
+            return WebTextUtils.convertLineBreakToHTMLParagraph(description);
+        }
+        return null;
     }
     
+    public String getFormattedPartnerAddress() {
+        Partner partner = this.representative.getPartner();
+        return WebTextUtils.printAddress(partner.getAddress(), partner.getCountry(), partner.getProvince(), partner.getCity(), partner.getPostalCode());
+    }
+
     public boolean getRepresentativeExists() {
-    	if(this.representative.getId() != null) {
-    		return true;
-    	}
-    	return false;
+        if (this.representative.getId() != null) {
+            return true;
+        }
+        return false;
     }
-    
-    public LocationBean getLocationBean() {
-		return locationBean;
-	}
 
-	public void setLocationBean(LocationBean locationBean) {
-		this.locationBean = locationBean;
-	}
-        
+    public LocationBean getLocationBean() {
+        return locationBean;
+    }
+
+    public void setLocationBean(LocationBean locationBean) {
+        this.locationBean = locationBean;
+    }
+
     @PostConstruct
     public void load() {
-    	HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String username = request.getRemoteUser();
         UserAccount person = userAccountBsn.findUserAccountByUsername(username);
         this.representative = representativeBsn.findRepresentative(person);
-        
-        if(this.representative == null) {
-        	this.representative = new Representative();
-        	this.representative.setPerson(person);
-        	Partner newPartner = new Partner();
-        	this.representative.setPartner(newPartner);
+
+        if (this.representative == null) {
+            this.representative = new Representative();
+            this.representative.setPerson(person);
+            Partner newPartner = new Partner();
+            this.representative.setPartner(newPartner);
+        } else if (!locationBean.isInitialized()) {
+            locationBean.initialize();
+
+            if (this.representative.getPartner().getCountry() != null) {
+                locationBean.setSelectedCountry(this.representative.getPartner().getCountry().getAcronym());
+            }
+
+            if (this.representative.getPartner().getProvince() != null) {
+                locationBean.setSelectedProvince(this.representative.getPartner().getProvince().getId());
+            }
+
+            if (this.representative.getPartner().getCity() != null) {
+                locationBean.setSelectedCity(this.representative.getPartner().getCity().getId());
+            }
         }
-        else if(!locationBean.isInitialized()) {
-        	locationBean.initialize();
-        	
-	        if(this.representative.getPartner().getCountry() != null)
-	        	locationBean.setSelectedCountry(this.representative.getPartner().getCountry().getAcronym());
-	        
-	        if(this.representative.getPartner().getProvince() != null)
-	        	locationBean.setSelectedProvince(this.representative.getPartner().getProvince().getId());
-	        
-	        if(this.representative.getPartner().getCity() != null)
-	        	locationBean.setSelectedCity(this.representative.getPartner().getCity().getId());
-        }
-        
+
         loadLogoImage();
     }
 
     public String save() {
-    	Country country = this.locationBean.getCountry();
-    	if(country != null) {
-    		this.representative.getPartner().setCountry(country);
-    	}
-    	
-    	Province province = this.locationBean.getProvince();
-    	if(province != null) {
-    		this.representative.getPartner().setProvince(province);
-    	}
-    	
-    	City city = this.locationBean.getCity();
-    	if(city != null) {
-    		this.representative.getPartner().setCity(city);
-    	}
-    	
-    	partnerBsn.save(this.representative.getPartner());
+        Country country = this.locationBean.getCountry();
+        if (country != null) {
+            this.representative.getPartner().setCountry(country);
+        }
+
+        Province province = this.locationBean.getProvince();
+        if (province != null) {
+            this.representative.getPartner().setProvince(province);
+        }
+
+        City city = this.locationBean.getCity();
+        if (city != null) {
+            this.representative.getPartner().setCity(city);
+        }
+
+        partnerBsn.save(this.representative.getPartner());
         representativeBsn.save(this.representative);
-        
+
         FacesContext context = FacesContext.getCurrentInstance();
         context.getExternalContext().getSessionMap().remove("locationBean");
-        
+
         return "profile?faces-redirect=true&tab=2";
     }
 
@@ -161,66 +169,64 @@ public class PartnershipBean {
         representativeBsn.remove(representative.getId());
         return "profile?faces-redirect=true";
     }
-    
+
     public void loadLogoImage() {
-    	try {
-			String logoPath = this.representative.getPartner().getLogo();
-			
-			if(logoPath != null) {
-				InputStream in = new FileInputStream(new File(logoPath));
-				logger.log(Level.INFO, "JUG-0002: Loading logo file {0}", new String[]{logoPath});
-				logoImage = new DefaultStreamedContent(in, "image/jpeg");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        try {
+            String logoPath = this.representative.getPartner().getLogo();
+
+            if (logoPath != null) {
+                InputStream in = new FileInputStream(new File(logoPath));
+                logger.log(Level.INFO, "JUG-0002: Loading logo file {0}", new String[]{logoPath});
+                logoImage = new DefaultStreamedContent(in, "image/jpeg");
+            }
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
     }
-    
+
     public void handleFileUpload(FileUploadEvent event) {
-		UploadedFile uploadedFile = event.getFile();
-		logger.log(Level.INFO, "JUG-0001: File {0} of type {1} temporarely uploaded to {2}", new String[]{uploadedFile.getFileName(), uploadedFile.getContentType(),System.getProperty("java.io.tmpdir")});
-		try {
-			/* Loads the representative related to the logged user. */
-			HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-	        String username = request.getRemoteUser();
-	        UserAccount person = userAccountBsn.findUserAccountByUsername(username);
-	        this.representative = representativeBsn.findRepresentative(person);
-			
-			/* Write the inputStream to a FileOutputStream */
-			InputStream in = uploadedFile.getInputstream();
-			ApplicationProperty applicationProperty = applicationPropertyBsn.findApplicationProperty(Properties.FILE_REPOSITORY_PATH);
-			String fileExtension = uploadedFile.getFileName();
-			fileExtension = fileExtension.substring(fileExtension.indexOf("."));
-			StringBuilder filePath = new StringBuilder();
-			filePath.append(applicationProperty.getPropertyValue());
-			filePath.append("/");
-			filePath.append(this.representative.getPartner().getId());
-			filePath.append(fileExtension);
-			OutputStream out = new FileOutputStream(new File(filePath.toString()));
-			int read = 0;
-			byte[] bytes = new byte[1024];
-					 
-			while ((read = in.read(bytes)) != -1) {
-				out.write(bytes, 0, read);
-			}
-			in.close();
-			out.flush();
-			out.close();
-			
-			/* If nothing goes wrong while saving the file,
-			 * then updates the database with the file location. */
-			this.representative.getPartner().setLogo(filePath.toString());
-			partnerBsn.save(this.representative.getPartner());
-			
-			loadLogoImage();
-		}
-		catch(IOException ioe) {
-			logger.log(Level.INFO, ioe.getMessage(), ioe);
-		}
-		catch(Exception e) {
-			logger.log(Level.INFO, e.getMessage(), e);
-		}
-        FacesMessage msg = new FacesMessage("Succesful", uploadedFile.getSize() +" bytes of the file "+ uploadedFile.getFileName() + " are uploaded.");
+        UploadedFile uploadedFile = event.getFile();
+        logger.log(Level.INFO, "JUG-0001: File {0} of type {1} temporarely uploaded to {2}", new String[]{uploadedFile.getFileName(), uploadedFile.getContentType(), System.getProperty("java.io.tmpdir")});
+        try {
+            /* Loads the representative related to the logged user. */
+            HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+            String username = request.getRemoteUser();
+            UserAccount person = userAccountBsn.findUserAccountByUsername(username);
+            this.representative = representativeBsn.findRepresentative(person);
+
+            /* Write the inputStream to a FileOutputStream */
+            InputStream in = uploadedFile.getInputstream();
+            ApplicationProperty applicationProperty = applicationPropertyBsn.findApplicationProperty(Properties.FILE_REPOSITORY_PATH);
+            String fileExtension = uploadedFile.getFileName();
+            fileExtension = fileExtension.substring(fileExtension.indexOf("."));
+            StringBuilder filePath = new StringBuilder();
+            filePath.append(applicationProperty.getPropertyValue());
+            filePath.append("/");
+            filePath.append(this.representative.getPartner().getId());
+            filePath.append(fileExtension);
+            OutputStream out = new FileOutputStream(new File(filePath.toString()));
+            int read = 0;
+            byte[] bytes = new byte[1024];
+
+            while ((read = in.read(bytes)) != -1) {
+                out.write(bytes, 0, read);
+            }
+            in.close();
+            out.flush();
+            out.close();
+
+            /* If nothing goes wrong while saving the file,
+             * then updates the database with the file location. */
+            this.representative.getPartner().setLogo(filePath.toString());
+            partnerBsn.save(this.representative.getPartner());
+
+            loadLogoImage();
+        } catch (IOException ioe) {
+            logger.log(Level.INFO, ioe.getMessage(), ioe);
+        } catch (Exception e) {
+            logger.log(Level.INFO, e.getMessage(), e);
+        }
+        FacesMessage msg = new FacesMessage("Succesful", uploadedFile.getSize() + " bytes of the file " + uploadedFile.getFileName() + " are uploaded.");
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 }

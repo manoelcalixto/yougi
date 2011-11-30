@@ -41,7 +41,6 @@ create table user_account (
     last_name           varchar(50)  not null,
     gender              tinyint(1)   not null,
     birth_date          date             null,
-    photo               varchar(100)     null,
     confirmation_code   varchar(32)      null,
     registration_date   timestamp        null,
     last_update         timestamp        null,
@@ -50,31 +49,28 @@ create table user_account (
     deactivation_reason varchar(255)     null,
     deactivation_type   tinyint(1)       null,  # 0 - administrative  1 - ownwill
     website             varchar(100)     null,
-    city                char(32)         null,
-    province            char(32)         null,
-    country             char(3)          null,
-    postal_code         char(10)         null,
     twitter             varchar(30)      null,
+    country             char(3)          null,
+    province            char(32)         null,
+    city                char(32)         null,
+    postal_code         char(10)         null,
+    public_profile      tinyint(1)       null default false,
+    mailing_list        tinyint(1)       null default false,
+    news                tinyint(1)       null default false,
+    general_offer       tinyint(1)       null default false,
+    job_offer           tinyint(1)       null default false,
+    event               tinyint(1)       null default false,
+    sponsor             tinyint(1)       null default false,
+    speaker             tinyint(1)       null default false,
     verified            tinyint(1)       null default false
 ) engine = innodb;
 
 alter table user_account add constraint pk_user_account primary key (id);
 create unique index idx_unique_user_email on user_account (email);
 create unique index idx_unique_username on user_account (username);
-
-create table communication_privacy (
-    user           char(32)   not null,
-    public_profile tinyint(1)     null,
-    mailing_list   tinyint(1)     null,
-    news           tinyint(1)     null,
-    general_offer  tinyint(1)     null,
-    job_offer      tinyint(1)     null,
-    event          tinyint(1)     null,
-    sponsor        tinyint(1)     null
-) engine = innodb;
-
-alter table communication_privacy add constraint pk_communication_privacy primary key (user);
-alter table communication_privacy add constraint fk_user_privacy foreign key (user) references user_account(id) on delete cascade;
+alter table user_account add constraint fk_country_user foreign key (country) references country(acronym) on delete set null;
+alter table user_account add constraint fk_province_user foreign key (province) references province(id) on delete set null;
+alter table user_account add constraint fk_city_user foreign key (city) references city(id) on delete set null;
 
 create table access_group (
     id           char(32)     not null,
@@ -260,6 +256,31 @@ alter table event add constraint fk_event_venue foreign key (venue) references p
 alter table event add constraint fk_country_event foreign key (country) references country(acronym) on delete set null;
 alter table event add constraint fk_province_event foreign key (province) references province(id) on delete set null;
 alter table event add constraint fk_city_event foreign key (city) references city(id) on delete set null;
+
+create table event_session (
+    id           char(32)     not null,
+    event        char(32)     not null,
+    title        varchar(255) not null,
+    abstract     text             null,
+    session_date date             null,
+    start_time   time             null,
+    end_time     time             null,
+    room         varchar(30)      null
+) engine = innodb;
+
+alter table event_session add constraint pk_event_session primary key (id);
+alter table event_session add constraint fk_event_session foreign key (event) references event(id) on delete cascade;
+
+create table speaker (
+    id       char(32)   not null,
+    session  char(32)   not null,
+    speaker  char(32)   not null,
+    short_cv text           null
+) engine = innodb;
+
+alter table speaker add constraint pk_speaker primary key (id);
+alter table speaker add constraint fk_session_speaker foreign key (session) references event_session(id) on delete cascade;
+alter table speaker add constraint fk_user_speaker foreign key (speaker) references user_account(id) on delete cascade;
 
 create table attendee (
     id                char(32)   not null,

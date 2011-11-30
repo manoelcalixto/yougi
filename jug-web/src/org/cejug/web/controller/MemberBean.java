@@ -16,7 +16,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import org.cejug.business.UserAccountBsn;
-import org.cejug.entity.Contact;
 import org.cejug.entity.UserAccount;
 import org.cejug.knowledge.business.MailingListBsn;
 import org.cejug.knowledge.entity.MailingList;
@@ -44,7 +43,6 @@ public class MemberBean implements Serializable {
 
     private String userId;
     private UserAccount userAccount;
-    private Contact contact;
     private String emailCriteria;
     private String firstLetterCriteria;
 
@@ -68,15 +66,7 @@ public class MemberBean implements Serializable {
     public void setUserAccount(UserAccount userAccount) {
         this.userAccount = userAccount;
     }
-
-    public Contact getContact() {
-        return contact;
-    }
-
-    public void setContact(Contact contact) {
-        this.contact = contact;
-    }
-    
+ 
     public LocationBean getLocationBean() {
 		return locationBean;
 	}
@@ -185,21 +175,17 @@ public class MemberBean implements Serializable {
     public String load(String userId) {
         this.userId = userId;
         this.userAccount = userAccountBsn.findUserAccount(this.userId);
-        this.contact = this.userAccount.getMainContact();
-        if(this.contact == null) {
-            this.contact = new Contact(this.userAccount);
-        }
-        
+                
         locationBean.initialize();
     	
-        if(this.contact.getCountry() != null)
-        	locationBean.setSelectedCountry(this.contact.getCountry().getAcronym());
+        if(this.userAccount.getCountry() != null)
+        	locationBean.setSelectedCountry(this.userAccount.getCountry().getAcronym());
         
-        if(this.contact.getProvince() != null)
-        	locationBean.setSelectedProvince(this.contact.getProvince().getId());
+        if(this.userAccount.getProvince() != null)
+        	locationBean.setSelectedProvince(this.userAccount.getProvince().getId());
         
-        if(this.contact.getCity() != null)
-        	locationBean.setSelectedCity(this.contact.getCity().getId());
+        if(this.userAccount.getCity() != null)
+        	locationBean.setSelectedCity(this.userAccount.getCity().getId());
 
         List<MailingListSubscription> mailingListSubscriptions = mailingListBsn.findMailingListSubscriptions(this.userAccount);
         if(mailingListSubscriptions != null) {
@@ -216,11 +202,10 @@ public class MemberBean implements Serializable {
     public String save() {
         UserAccount existingUserAccount = userAccountBsn.findUserAccount(userAccount.getId());
 
-    	this.contact.setCountry(this.locationBean.getCountry());
-    	this.contact.setProvince(this.locationBean.getProvince());
-    	this.contact.setCity(this.locationBean.getCity());
+    	existingUserAccount.setCountry(this.locationBean.getCountry());
+    	existingUserAccount.setProvince(this.locationBean.getProvince());
+    	existingUserAccount.setCity(this.locationBean.getCity());
     	        
-        existingUserAccount.setMainContact(this.contact);
         existingUserAccount.setFirstName(userAccount.getFirstName());
         existingUserAccount.setLastName(userAccount.getLastName());
         existingUserAccount.setGender(userAccount.getGender());
@@ -238,9 +223,6 @@ public class MemberBean implements Serializable {
         mailingListBsn.subscribe(mailingListsToSubscribe, existingUserAccount);
         
         userAccountBsn.save(existingUserAccount);
-        
-        //FacesContext context = FacesContext.getCurrentInstance();
-        //context.getExternalContext().getSessionMap().remove("locationBean");
         
         return "users?faces-redirect=true";
     }

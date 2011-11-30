@@ -24,8 +24,6 @@ import javax.persistence.PersistenceException;
 import org.cejug.entity.AccessGroup;
 import org.cejug.entity.ApplicationProperty;
 import org.cejug.entity.City;
-import org.cejug.entity.Contact;
-import org.cejug.entity.ContactType;
 import org.cejug.entity.DeactivationType;
 import org.cejug.entity.Properties;
 import org.cejug.entity.UserAccount;
@@ -146,7 +144,7 @@ public class UserAccountBsn {
 
     @SuppressWarnings("unchecked")
     public List<UserAccount> findInhabitantsFrom(City city) {
-        return em.createQuery("select c.user from Contact c where c.city = :city and c.user.deactivated = :deactivated order by c.user.firstName")
+        return em.createQuery("select u from UserAccount u where u.city = :city and u.deactivated = :deactivated order by u.firstName")
                 .setParameter("city", city)
                 .setParameter("deactivated", Boolean.FALSE)
                 .getResultList();
@@ -162,20 +160,16 @@ public class UserAccountBsn {
      * container.</p>
      * <p>When there is no user, the first registration creates a super user
      * with administrative rights.</p> */
-    public void register(UserAccount userAccount, Contact mainContact, City newCity, String serverAddress) {
+    public void register(UserAccount userAccount, City newCity, String serverAddress) {
         boolean noAccount = noAccount();
 
-        mainContact.setLocation(ContactType.MAIN);
-        mainContact.setId(EntitySupport.generateEntityId());
-        
         if(newCity != null) {
             newCity.setId(EntitySupport.generateEntityId());
             newCity.setValid(false);
             locationBsn.saveCity(newCity);
-            mainContact.setCity(newCity);
+            userAccount.setCity(newCity);
         }
 
-        userAccount.setMainContact(mainContact);
         userAccount.setConfirmationCode(generateConfirmationCode());
         userAccount.setRegistrationDate(Calendar.getInstance().getTime());
         userAccount.setPassword(encryptPassword(userAccount.getPassword()));
@@ -226,11 +220,6 @@ public class UserAccountBsn {
     public void save(UserAccount userAccount) {
         userAccount.setLastUpdate(Calendar.getInstance().getTime());
         em.merge(userAccount);
-    }
-
-    public void updateProfilePicture(UserAccount userAccount, String profilePicturePath) {
-        userAccount = em.find(UserAccount.class, userAccount.getId());
-        userAccount.setPhoto(profilePicturePath);
     }
 
     public void deactivateMembership(UserAccount userAccount) {

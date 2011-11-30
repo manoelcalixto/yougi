@@ -23,7 +23,6 @@
                     <h:form>
                         <h:messages styleClass="alertMessage"/>
                         <h:panelGrid columns="2" columnClasses="panelGridColumn">
-                            <h:graphicImage url="#{profileBean.photoURL}"/>
                             <h:panelGrid columns="2" cellpadding="3" >
                                 <h:outputText value="#{bundle.firstName}" styleClass="fieldLabel"/>
                                 <h:outputText value="#{bundle.lastName}" styleClass="fieldLabel"/>
@@ -50,20 +49,20 @@
                                 <h:outputText value="#{bundle.website}" styleClass="fieldLabel"/>
                                 <h:outputText value="#{bundle.twitter}" styleClass="fieldLabel"/>
 
-                                <h:outputLink value="http://#{profileBean.userAccount.mainContact.website}" target="_blank">#{profileBean.userAccount.mainContact.website}</h:outputLink>
-                                <h:outputLink value="http://twitter.com/#{profileBean.userAccount.mainContact.twitter}" target="_blank">#{profileBean.userAccount.mainContact.twitter}</h:outputLink>
+                                <h:outputLink value="http://#{profileBean.userAccount.website}" target="_blank">#{profileBean.userAccount.website}</h:outputLink>
+                                <h:outputLink value="http://twitter.com/#{profileBean.userAccount.twitter}" target="_blank">#{profileBean.userAccount.twitter}</h:outputLink>
 
                                 <h:outputText value="#{bundle.country}" styleClass="fieldLabel"/>
                                 <h:outputText value="#{bundle.province}" styleClass="fieldLabel"/>
 
-                                <h:outputText value="#{profileBean.userAccount.mainContact.country}"/>
-                                <h:outputText value="#{profileBean.userAccount.mainContact.province}"/>
+                                <h:outputText value="#{profileBean.userAccount.country}"/>
+                                <h:outputText value="#{profileBean.userAccount.province}"/>
 
                                 <h:outputText value="#{bundle.city}" styleClass="fieldLabel"/>
                                 <h:outputText value="#{bundle.postalCode}" styleClass="fieldLabel"/>
 
-                                <h:outputText value="#{profileBean.userAccount.mainContact.city}"/>
-                                <h:outputText value="#{profileBean.userAccount.mainContact.postalCode}"/>
+                                <h:outputText value="#{profileBean.userAccount.city}"/>
+                                <h:outputText value="#{profileBean.userAccount.postalCode}"/>
                             </h:panelGrid>
                         </h:panelGrid>
                         <h:panelGrid columns="2" width="700">

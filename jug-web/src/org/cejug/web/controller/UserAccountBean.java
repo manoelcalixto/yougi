@@ -17,7 +17,6 @@ import org.cejug.business.ApplicationPropertyBsn;
 import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.ApplicationProperty;
 import org.cejug.entity.City;
-import org.cejug.entity.Contact;
 import org.cejug.entity.Properties;
 import org.cejug.entity.UserAccount;
 import org.cejug.web.util.ResourceBundle;
@@ -39,7 +38,6 @@ public class UserAccountBean implements Serializable {
 
     private String userId;
     private UserAccount userAccount;
-    private Contact contact;
     
     public UserAccountBean() {
     }
@@ -58,14 +56,6 @@ public class UserAccountBean implements Serializable {
 
     public void setUserAccount(UserAccount userAccount) {
         this.userAccount = userAccount;
-    }
-
-    public Contact getContact() {
-        return contact;
-    }
-
-    public void setContact(Contact contact) {
-        this.contact = contact;
     }
     
     public LocationBean getLocationBean() {
@@ -99,26 +89,24 @@ public class UserAccountBean implements Serializable {
         String username = request.getRemoteUser();
         if(username != null) {
             this.userAccount = userAccountBsn.findUserAccountByUsername(username);
-            this.contact = this.userAccount.getMainContact();
-            	
-	        if(this.contact.getCountry() != null)
-	        	locationBean.setSelectedCountry(this.contact.getCountry().getAcronym());
-	        else
-	        	locationBean.setSelectedCountry(null);
-	        
-	        if(this.contact.getProvince() != null)
-	        	locationBean.setSelectedProvince(this.contact.getProvince().getId());
-	        else
-	        	locationBean.setSelectedProvince(null);
-	        
-	        if(this.contact.getCity() != null)
-	        	locationBean.setSelectedCity(this.contact.getCity().getId());
-	        else
-	        	locationBean.setSelectedCity(null);
+                        	
+            if(this.userAccount.getCountry() != null)
+                locationBean.setSelectedCountry(this.userAccount.getCountry().getAcronym());
+            else
+                locationBean.setSelectedCountry(null);
+
+            if(this.userAccount.getProvince() != null)
+                locationBean.setSelectedProvince(this.userAccount.getProvince().getId());
+            else
+                locationBean.setSelectedProvince(null);
+
+            if(this.userAccount.getCity() != null)
+                locationBean.setSelectedCity(this.userAccount.getCity().getId());
+            else
+                locationBean.setSelectedCity(null);
         }
         else {
             this.userAccount = new UserAccount();
-            this.contact = new Contact();
         }
     }
 
@@ -159,15 +147,15 @@ public class UserAccountBean implements Serializable {
         ApplicationProperty url = applicationPropertyBsn.findApplicationProperty(Properties.URL);
         String serverAddress = url.getPropertyValue();
 
-        this.contact.setCountry(this.locationBean.getCountry());
-    	this.contact.setProvince(this.locationBean.getProvince());
-    	this.contact.setCity(this.locationBean.getCity());
+        this.userAccount.setCountry(this.locationBean.getCountry());
+    	this.userAccount.setProvince(this.locationBean.getProvince());
+    	this.userAccount.setCity(this.locationBean.getCity());
         
         City newCity = locationBean.getNotListedCity();
 
         try {
             userAccount.setUsername(userAccount.getEmail());
-            userAccountBsn.register(userAccount, contact, newCity, serverAddress);
+            userAccountBsn.register(userAccount, newCity, serverAddress);
         }
         catch(Exception e) {
             context.addMessage(userId, new FacesMessage(e.getCause().getMessage()));
@@ -186,11 +174,10 @@ public class UserAccountBean implements Serializable {
         if(userAccount != null) {
             UserAccount existingUserAccount = userAccountBsn.findUserAccount(userAccount.getId());
             
-            this.contact.setCountry(this.locationBean.getCountry());
-        	this.contact.setProvince(this.locationBean.getProvince());
-        	this.contact.setCity(this.locationBean.getCity());
+            existingUserAccount.setCountry(this.locationBean.getCountry());
+            existingUserAccount.setProvince(this.locationBean.getProvince());
+            existingUserAccount.setCity(this.locationBean.getCity());
             
-            existingUserAccount.setMainContact(contact);
             existingUserAccount.setFirstName(userAccount.getFirstName());
             existingUserAccount.setLastName(userAccount.getLastName());
             existingUserAccount.setGender(userAccount.getGender());

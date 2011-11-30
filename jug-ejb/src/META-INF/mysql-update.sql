@@ -112,21 +112,75 @@ insert into message_template (id, title, body) values
 # Hildeberto Mendonca
 # Version 0.27:0.6
 alter table user_account add website varchar(100) null;
-alter table user_account add city char(32) null;
-alter table user_account add province char(32) null;
-alter table user_account add country char(3) null;
-alter table user_account add postal_code char(10) null;
 alter table user_account add twitter varchar(30) null;
+alter table user_account add country char(3) null;
+alter table user_account add province char(32) null;
+alter table user_account add city char(32) null;
+alter table user_account add postal_code char(10) null;
+alter table user_account add public_profile tinyint(1) null default false;
+alter table user_account add mailing_list tinyint(1) null default false;
+alter table user_account add news tinyint(1) null default false;
+alter table user_account add general_offer tinyint(1) null default false;
+alter table user_account add job_offer tinyint(1) null default false;
+alter table user_account add event tinyint(1) null default false;
+alter table user_account add sponsor tinyint(1) null default false;
+alter table user_account add speaker tinyint(1) null default false;
+alter table user_account add verified tinyint(1) null default false;
+
+alter table user_account add constraint fk_country_user foreign key (country) references country(acronym) on delete set null;
+alter table user_account add constraint fk_province_user foreign key (province) references province(id) on delete set null;
+alter table user_account add constraint fk_city_user foreign key (city) references city(id) on delete set null;
+
+alter table user_account drop column photo;
 
 update user_account, contact 
    set user_account.website = contact.website,
-   set user_account.twitter = contact.twitter,
-   set user_account.country = contact.country,
-   set user_account.province = contact.province,
-   set user_account.city = contact.city,
-   set user_account.postal_code = contact.postal_code,
-WHERE user_account.id=contact.user;
+       user_account.twitter = contact.twitter,
+       user_account.country = contact.country,
+       user_account.province = contact.province,
+       user_account.city = contact.city,
+       user_account.postal_code = contact.postal_code
+where user_account.id = contact.user;
+
+update user_account, communication_privacy 
+   set user_account.public_profile = communication_privacy.public_profile,
+       user_account.mailing_list = communication_privacy.mailing_list,
+       user_account.news = communication_privacy.news,
+       user_account.general_offer = communication_privacy.general_offer,
+       user_account.job_offer = communication_privacy.job_offer,
+       user_account.event = communication_privacy.event,
+       user_account.sponsor = communication_privacy.sponsor
+where user_account.id = communication_privacy.user;
 
 drop table contact;
+drop table communication_privacy;
 
-alter table user_account add verified tinyint(1) null default false;
+########################################################################
+# Creating table event_session and speaker.
+# 08/12/2011
+# Hildeberto Mendonca
+# Version 0.28:0.7
+create table event_session (
+    id           char(32)     not null,
+    event        char(32)     not null,
+    title        varchar(255) not null,
+    abstract     text             null,
+    session_date date             null,
+    start_time   time             null,
+    end_time     time             null,
+    room         varchar(30)      null
+) engine = innodb;
+
+alter table event_session add constraint pk_event_session primary key (id);
+alter table event_session add constraint fk_event_session foreign key (event) references event(id) on delete cascade;
+
+create table speaker (
+    id       char(32)   not null,
+    session  char(32)   not null,
+    speaker  char(32)   not null,
+    short_cv text           null
+) engine = innodb;
+
+alter table speaker add constraint pk_speaker primary key (id);
+alter table speaker add constraint fk_session_speaker foreign key (session) references event_session(id) on delete cascade;
+alter table speaker add constraint fk_user_speaker foreign key (speaker) references user_account(id) on delete cascade;

@@ -67,13 +67,13 @@
 
                             <h:panelGrid columns="3" cellpadding="1" cellspacing="0">
                                 <h:outputText value="http://"/>
-                                <h:inputText id="website" label="#{bundle.website}" size="25" maxlength="100" value="#{memberBean.contact.website}"/>
-                                <h:outputLink value="http://#{memberBean.contact.website}" target="_blank">#{bundle.visit}</h:outputLink>
+                                <h:inputText id="website" label="#{bundle.website}" size="25" maxlength="100" value="#{memberBean.userAccount.website}"/>
+                                <h:outputLink value="http://#{memberBean.userAccount.website}" target="_blank">#{bundle.visit}</h:outputLink>
                             </h:panelGrid>
                             <h:panelGrid columns="3" cellpadding="1" cellspacing="0">
                                 <h:outputText value="@"/>
-                                <h:inputText id="twitter" label="#{bundle.twitter}" size="15" maxlength="30" value="#{memberBean.contact.twitter}"/>
-                                <h:outputLink value="http://twitter.com/#{memberBean.contact.twitter}" target="_blank">#{bundle.visit}</h:outputLink>
+                                <h:inputText id="twitter" label="#{bundle.twitter}" size="15" maxlength="30" value="#{memberBean.userAccount.twitter}"/>
+                                <h:outputLink value="http://twitter.com/#{memberBean.userAccount.twitter}" target="_blank">#{bundle.visit}</h:outputLink>
                             </h:panelGrid>
                             
                             <h:outputLabel for="country" value="#{bundle.country}" styleClass="fieldLabel"/>
@@ -97,7 +97,7 @@
                                 <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
                                 <f:selectItems value="#{locationBean.cities}" var="city" itemLabel="#{city.name}" itemValue="#{city.id}"/>
                             </h:selectOneMenu>
-                            <h:inputText id="postalCode" label="#{bundle.postalCode}" size="10" maxlength="10" value="#{memberBean.contact.postalCode}"/>
+                            <h:inputText id="postalCode" label="#{bundle.postalCode}" size="10" maxlength="10" value="#{memberBean.userAccount.postalCode}"/>
                         </h:panelGrid>
                         <p><h:outputText value="#{bundle.privacy}" styleClass="fieldLabel"/></p>
                         <p:tabView dynamic="false" cache="true">
@@ -152,7 +152,7 @@
                         </p:tabView>
 
                         <h:inputHidden id="id" value="#{memberBean.userAccount.id}"/>
-                        <h:inputHidden id="idContact" value="#{memberBean.contact.id}"/>
+                        <h:inputHidden id="idContact" value="#{memberBean.userAccount.id}"/>
                         <p></p>
                         <h:panelGrid columns="4">
                             <h:commandButton value="#{bundle.save}" action="#{memberBean.save}"/>

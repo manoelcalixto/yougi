@@ -1,20 +1,15 @@
 package org.cejug.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.SecondaryTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
@@ -26,39 +21,103 @@ import org.cejug.util.TextUtils;
  */
 @Entity
 @Table(name="user_account")
-@SecondaryTable(name="communication_privacy", pkJoinColumns=@PrimaryKeyJoinColumn(name="user"))
 public class UserAccount implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @Id
     private String id;
-    private String username;
-    private String password;
-    private String confirmPassword;
-    private String firstName;
-    private String lastName;
-    private Integer gender;
-    private Date birthDate;
-    private String photo;
+    
     private String email;
-    private String confirmEmail;
+    
+    private String username;
+    
+    @Column(nullable=false)
+    private String password;
+
+    @Column(name="first_name", nullable=false)
+    private String firstName;
+
+    @Column(name="last_name", nullable=false)
+    private String lastName;
+
+    @Column(nullable=false)
+    private Integer gender;
+    
+    @Temporal(javax.persistence.TemporalType.DATE)
+    @Column(name="birth_date",nullable=false)
+    private Date birthDate;
+
+    @Column(name="confirmation_code")
     private String confirmationCode;
-    private List<Contact> contacts;
+    
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Column(name="registration_date")
     private Date registrationDate;
+    
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Column(name="last_update")
     private Date lastUpdate;
+    
     private Boolean deactivated = false;
+    
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Column(name="deactivation_date")
     private Date deactivationDate;
+    
+    @Column(name="deactivation_reason")
     private String deactivationReason;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name="deactivation_type")
     private DeactivationType deactivationType;
 
-    // Privacy properties
+    private String website;
+    
+    private String twitter;
+    
+    @ManyToOne
+    @JoinColumn(name="country")
+    private Country country;
+    
+    @ManyToOne
+    @JoinColumn(name="province")
+    private Province province;
+    
+    @ManyToOne
+    @JoinColumn(name="city")
+    private City city;
+    
+    @Column(name="postal_code")
+    private String postalCode;
+    
+    @Column(name = "public_profile")
     private Boolean publicProfile;
+    
+    @Column(name = "mailing_list")
     private Boolean mailingList;
+    
     private Boolean news;
+    
+    @Column(name="general_offer")
     private Boolean generalOffer;
-    private Boolean jobOffer;
-    private Boolean event;
-    private Boolean sponsor;
 
+    @Column(name = "job_offer")
+    private Boolean jobOffer;
+    
+    private Boolean event;
+    
+    private Boolean sponsor;
+    
+    private Boolean speaker;
+    
+    private Boolean verified;
+
+    @Transient
+    private String confirmPassword;
+    
+    @Transient
+    private String confirmEmail;
+    
     public UserAccount() {}
 
     public UserAccount(String id) {
@@ -71,7 +130,6 @@ public class UserAccount implements Serializable {
         this.email = email;
     }
 
-    @Id
     public String getId() {
         return this.id;
     }
@@ -80,7 +138,6 @@ public class UserAccount implements Serializable {
         this.id = id;
     }
 
-    @Column(nullable=false)
     public String getPassword() {
         return password;
     }
@@ -89,7 +146,6 @@ public class UserAccount implements Serializable {
         this.password = password;
     }
 
-    @Transient
     public String getConfirmPassword() {
         return confirmPassword;
     }
@@ -98,12 +154,10 @@ public class UserAccount implements Serializable {
         this.confirmPassword = confirmPassword;
     }
 
-    @Transient
     public Boolean isPasswordConfirmed() {
         return confirmPassword.equals(password);
     }
 
-    @Column(name="first_name", nullable=false)
     public String getFirstName() {
         return firstName;
     }
@@ -113,7 +167,6 @@ public class UserAccount implements Serializable {
         this.firstName = firstName;
     }
 
-    @Column(name="last_name", nullable=false)
     public String getLastName() {
         return lastName;
     }
@@ -123,7 +176,6 @@ public class UserAccount implements Serializable {
         this.lastName = lastName;
     }
 
-    @Transient
     public String getFullName() {
         StringBuilder str = new StringBuilder();
         str.append(firstName);
@@ -132,7 +184,6 @@ public class UserAccount implements Serializable {
         return str.toString();
     }
 
-    @Column(nullable=false)
     public Integer getGender() {
         return gender;
     }
@@ -141,8 +192,6 @@ public class UserAccount implements Serializable {
         this.gender = gender;
     }
 
-    @Temporal(javax.persistence.TemporalType.DATE)
-    @Column(name="birth_date",nullable=false)
     public Date getBirthDate() {
         return birthDate;
     }
@@ -151,7 +200,6 @@ public class UserAccount implements Serializable {
         this.birthDate = birthDate;
     }
 
-    @Transient
     public int getAge() {
         if(this.birthDate != null) {
             Date today = Calendar.getInstance().getTime();
@@ -168,14 +216,6 @@ public class UserAccount implements Serializable {
         this.username = username;
     }
 
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -186,8 +226,6 @@ public class UserAccount implements Serializable {
         this.setUsername(email);
     }
 
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    @Column(name="registration_date")
     public Date getRegistrationDate() {
         return registrationDate;
     }
@@ -196,8 +234,6 @@ public class UserAccount implements Serializable {
         this.registrationDate = registrationDate;
     }
 
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    @Column(name="last_update")
     public Date getLastUpdate() {
         return lastUpdate;
     }
@@ -217,8 +253,6 @@ public class UserAccount implements Serializable {
         this.deactivated = deactivated;
     }
 
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    @Column(name="deactivation_date")
     public Date getDeactivationDate() {
         return deactivationDate;
     }
@@ -227,7 +261,6 @@ public class UserAccount implements Serializable {
         this.deactivationDate = deactivationDate;
     }
 
-    @Column(name="deactivation_reason")
     public String getDeactivationReason() {
         return deactivationReason;
     }
@@ -236,8 +269,6 @@ public class UserAccount implements Serializable {
         this.deactivationReason = deactivationReason;
     }
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name="deactivation_type")
     public DeactivationType getDeactivationType() {
         return deactivationType;
     }
@@ -246,7 +277,70 @@ public class UserAccount implements Serializable {
         this.deactivationType = deactivationType;
     }
 
-    @Column(table="communication_privacy", name = "public_profile")
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public String getTwitter() {
+        return twitter;
+    }
+
+    public void setTwitter(String twitter) {
+        this.twitter = twitter;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
+    }
+
+    public Province getProvince() {
+        return province;
+    }
+
+    public void setProvince(Province province) {
+        this.province = province;
+    }
+
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public Boolean getSpeaker() {
+        return speaker;
+    }
+
+    public void setSpeaker(Boolean speaker) {
+        this.speaker = speaker;
+    }
+
+    public Boolean getVerified() {
+        return verified;
+    }
+
+    public void setVerified(Boolean verified) {
+        this.verified = verified;
+    }
+
     public Boolean getPublicProfile() {
         return publicProfile;
     }
@@ -255,7 +349,6 @@ public class UserAccount implements Serializable {
         this.publicProfile = publicProfile;
     }
 
-    @Column(table="communication_privacy", name = "mailing_list")
     public Boolean getMailingList() {
         return mailingList;
     }
@@ -264,7 +357,6 @@ public class UserAccount implements Serializable {
         this.mailingList = mailingList;
     }
 
-    @Column(table="communication_privacy")
     public Boolean getNews() {
         return news;
     }
@@ -273,7 +365,6 @@ public class UserAccount implements Serializable {
         this.news = news;
     }
 
-    @Column(table="communication_privacy", name="general_offer")
     public Boolean getGeneralOffer() {
         return generalOffer;
     }
@@ -282,7 +373,6 @@ public class UserAccount implements Serializable {
         this.generalOffer = generalOffer;
     }
 
-    @Column(table="communication_privacy", name = "job_offer")
     public Boolean getJobOffer() {
         return jobOffer;
     }
@@ -291,7 +381,6 @@ public class UserAccount implements Serializable {
         this.jobOffer = jobOffer;
     }
 
-    @Column(table="communication_privacy")
     public Boolean getEvent() {
         return event;
     }
@@ -300,7 +389,6 @@ public class UserAccount implements Serializable {
         this.event = event;
     }
 
-    @Column(table="communication_privacy")
     public Boolean getSponsor() {
         return sponsor;
     }
@@ -309,23 +397,6 @@ public class UserAccount implements Serializable {
         this.sponsor = sponsor;
     }
 
-    @OneToMany(mappedBy="user", fetch=FetchType.LAZY, cascade={CascadeType.ALL})
-    public List<Contact> getContacts() {
-        return contacts;
-    }
-
-    public void setContacts(List<Contact> contacts) {
-        this.contacts = contacts;
-    }
-
-    public void addContact(Contact contact) {
-        if(this.contacts == null)
-            this.contacts = new ArrayList<Contact>(1);
-        contact.setUser(this);
-        contacts.add(contact);
-    }
-
-    @Transient
     public String getConfirmEmail() {
         return confirmEmail;
     }
@@ -335,12 +406,10 @@ public class UserAccount implements Serializable {
         this.confirmEmail = confirmEmail;
     }
 
-    @Transient
     public Boolean isEmailConfirmed() {
         return confirmEmail.equals(email);
     }
 
-    @Column(name="confirmation_code")
     public String getConfirmationCode() {
         return confirmationCode;
     }
@@ -349,57 +418,11 @@ public class UserAccount implements Serializable {
         this.confirmationCode = confirmationCode;
     }
 
-    @Transient
     public boolean getConfirmed() {
         if(confirmationCode != null)
             return false;
         else
             return true;
-    }
-
-    @Transient
-    public Contact getMainContact() {
-        for(Contact contact: contacts) {
-            if(contact.getMain())
-                return contact;
-        }
-        return null;
-    }
-
-    public void setMainContact(Contact mainContact) {
-        mainContact.setMain(Boolean.TRUE);
-        mainContact.setUser(this);
-
-        if(contacts == null) {
-            contacts = new ArrayList<Contact>(1);
-        }
-
-        if(contacts.isEmpty()) {
-            contacts.add(mainContact);
-            return;
-        }
-
-        for(Contact contact: contacts) {
-            if(contact.getMain()) {
-                contact.setMain(Boolean.FALSE);
-                break;
-            }
-        }
-
-        Boolean found = false;
-        Contact contact;
-        for(int i = 0;i < contacts.size();i++) {
-            contact = contacts.get(i);
-            if(contact.equals(mainContact)) {
-                contacts.set(i, mainContact);
-                found = Boolean.TRUE;
-                break;
-            }
-        }
-
-        if(!found) {
-            contacts.add(mainContact);
-        }
     }
 
     @Override
