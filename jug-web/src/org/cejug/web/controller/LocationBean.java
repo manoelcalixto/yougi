@@ -75,9 +75,9 @@ public class LocationBean {
     }
     
     public List<String> getCitiesStartingWith(String initials) {
-        List<City> cities = locationBsn.findCitiesStartingWith(initials);
+        List<City> cits = locationBsn.findCitiesStartingWith(initials);
         List<String> citiesStartingWith = new ArrayList<String>();
-        for(City city:cities) {
+        for(City city:cits) {
             citiesStartingWith.add(city.getName());
         }
         return citiesStartingWith;
@@ -118,7 +118,6 @@ public class LocationBean {
 		this.selectedCountry = selectedCountry;
 		this.selectedProvince = null;
 		this.selectedCity = null;
-		logger.info("selectedCountry setted: "+ this.selectedCountry);
 	}
 	
 	public Province getProvince() {
@@ -136,7 +135,6 @@ public class LocationBean {
 	public void setSelectedProvince(String selectedProvince) {
 		this.selectedProvince = selectedProvince;
 		this.selectedCity = null;
-		logger.info("selectedProvince setted: "+ this.selectedProvince);
 	}
 
 	public City getCity() {
@@ -153,7 +151,6 @@ public class LocationBean {
 
 	public void setSelectedCity(String selectedCity) {
 		this.selectedCity = selectedCity;
-		logger.info("selectedCity setted: "+ this.selectedCity);
 	}
 	
 	public void initialize() {

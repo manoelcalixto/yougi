@@ -110,7 +110,7 @@ public class UserAccount implements Serializable {
     
     private Boolean speaker;
     
-    private Boolean verified;
+    private Boolean verified = false;
 
     @Transient
     private String confirmPassword;

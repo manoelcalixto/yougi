@@ -93,6 +93,9 @@
 
                                     <h:graphicImage rendered="#{userAccountBean.userAccount.sponsor}" url="/images/success-icon.png"/>
                                     <h:outputText rendered="#{userAccountBean.userAccount.sponsor}" value="#{bundle.sponsorMessage}"/>
+                                    
+                                    <h:graphicImage rendered="#{userAccountBean.userAccount.speaker}" url="/images/success-icon.png"/>
+                                    <h:outputText rendered="#{userAccountBean.userAccount.speaker}" value="#{bundle.speakerMessage}"/>
                                 </h:panelGrid>
                                 <p></p>
                                 <h:button outcome="privacy.xhtml" value="#{bundle.update}"/>

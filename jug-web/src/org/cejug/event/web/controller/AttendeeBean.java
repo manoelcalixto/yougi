@@ -17,19 +17,22 @@ import org.cejug.event.entity.Event;
 @SessionScoped
 public class AttendeeBean implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@EJB
+    @EJB
     private EventBsn eventBsn;
-    
+
     @EJB
     private AttendeeBsn attendeeBsn;
-    
+
     private Event event;
+
     private List<Attendee> attendees;
+
     private Attendee[] selectedAttendees;
-    
-    public AttendeeBean() {}
+
+    public AttendeeBean() {
+    }
 
     public Event getEvent() {
         return event;
@@ -40,39 +43,40 @@ public class AttendeeBean implements Serializable {
     }
 
     public List<Attendee> getAttendees() {
-    	if(this.attendees == null)
-    		this.attendees = attendeeBsn.findAttendees(this.event);
-    	return attendees;
+        if (this.attendees == null) {
+            this.attendees = attendeeBsn.findAttendees(this.event);
+        }
+        return attendees;
     }
-    
-    public Attendee[] getSelectedAttendees() {
-		return selectedAttendees;
-	}
 
-	public void setSelectedAttendees(Attendee[] selectedAttendees) {
-		this.selectedAttendees = selectedAttendees;
-	}
+    public Attendee[] getSelectedAttendees() {
+        return selectedAttendees;
+    }
+
+    public void setSelectedAttendees(Attendee[] selectedAttendees) {
+        this.selectedAttendees = selectedAttendees;
+    }
 
     public String load(String eventId) {
         event = eventBsn.findEvent(eventId);
-        
-		List<Attendee> confirmedAttendees = attendeeBsn.findConfirmedAttendees(event);
-        if(confirmedAttendees != null) {
+
+        List<Attendee> confirmedAttendees = attendeeBsn.findConfirmedAttendees(event);
+        if (confirmedAttendees != null) {
             this.selectedAttendees = new Attendee[confirmedAttendees.size()];
             int i = 0;
-            for(Attendee atd: confirmedAttendees) {
-            	this.selectedAttendees[i++] = atd;
+            for (Attendee atd : confirmedAttendees) {
+                this.selectedAttendees[i++] = atd;
             }
         }
         return "attendees?faces-redirect=true";
     }
-    
+
     public String confirmMembersAttended() {
-    	attendeeBsn.confirmMembersAttendance(this.selectedAttendees);
-    	removeSessionScoped();
-    	return "events?faces-redirect=true";
+        attendeeBsn.confirmMembersAttendance(this.event, this.selectedAttendees);
+        removeSessionScoped();
+        return "events?faces-redirect=true";
     }
-    
+
     private void removeSessionScoped() {
         FacesContext context = FacesContext.getCurrentInstance();
         context.getExternalContext().getSessionMap().remove("partnerBean");

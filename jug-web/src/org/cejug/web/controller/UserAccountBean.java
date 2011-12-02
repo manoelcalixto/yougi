@@ -200,6 +200,7 @@ public class UserAccountBean implements Serializable {
             existingUserAccount.setJobOffer(userAccount.getJobOffer());
             existingUserAccount.setEvent(userAccount.getEvent());
             existingUserAccount.setSponsor(userAccount.getSponsor());
+            existingUserAccount.setSpeaker(userAccount.getSpeaker());
 
             if(!isPrivacyValid(existingUserAccount)) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Selecione pelo menos uma das opções de privacidade."));
@@ -232,7 +233,8 @@ public class UserAccountBean implements Serializable {
              userAccount.getNews() ||
              userAccount.getGeneralOffer() ||
              userAccount.getJobOffer() ||
-             userAccount.getSponsor()) { return true; }
+             userAccount.getSponsor() ||
+             userAccount.getSpeaker()) { return true; }
         return false;
     }
 }

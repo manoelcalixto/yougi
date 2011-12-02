@@ -152,6 +152,8 @@ update user_account, communication_privacy
        user_account.sponsor = communication_privacy.sponsor
 where user_account.id = communication_privacy.user;
 
+update user_account set verified = true;
+
 drop table contact;
 drop table communication_privacy;
 

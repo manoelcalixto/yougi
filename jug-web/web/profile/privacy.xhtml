@@ -43,6 +43,9 @@
 
                             <h:selectBooleanCheckbox id="sponsor" label="#{bundle.sponsorMessage}" value="#{userAccountBean.userAccount.sponsor}"/>
                             <h:outputLabel for="sponsor" value="#{bundle.sponsorMessage}"/>
+                            
+                            <h:selectBooleanCheckbox id="speaker" label="#{bundle.speakerMessage}" value="#{userAccountBean.userAccount.speaker}"/>
+                            <h:outputLabel for="speaker" value="#{bundle.speakerMessage}"/>
                         </h:panelGrid>
                         <h:inputHidden id="id" value="#{userAccountBean.userAccount.id}"/>
                         <p></p>

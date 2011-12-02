@@ -3,8 +3,6 @@ package org.cejug.web.controller;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -87,31 +85,35 @@ public class MemberBean implements Serializable {
         this.mailingLists = mailingLists;
     }
 
-    public List<UserAccount> getRecentUserAccounts() {
-        return userAccountBsn.findRegisteredUsersSince(getLastSevenDays());
-    }
-
     public List<UserAccount> getDeactivatedUserAccounts() {
         List<UserAccount> deactivatedUsers = userAccountBsn.findDeactivatedUserAccounts();
         return deactivatedUsers;
     }
 
     public String findUserAccountByEmail() {
-        List<UserAccount> uas = new ArrayList<UserAccount>(1);
-        UserAccount ua = userAccountBsn.findUserAccountByEmail(this.emailCriteria);
-        if(ua != null) {
-            uas.add(ua);
+        if(this.emailCriteria == null || this.emailCriteria.isEmpty())
+            this.userAccounts = userAccountBsn.findNotVerifiedUsers();
+        else {
+            List<UserAccount> uas = new ArrayList<UserAccount>(1);
+            UserAccount ua = userAccountBsn.findUserAccountByEmail(this.emailCriteria);
+            if(ua != null) {
+                uas.add(ua);
+            }
+            this.userAccounts = uas;
         }
-        this.userAccounts = uas;
         this.firstLetterCriteria = null;
         return "users?faces-redirect=true";
     }
 
     public String findUserAccountByFirstLetter(String firstLetterCriteria) {
-        this.firstLetterCriteria = firstLetterCriteria;
-        this.userAccounts = userAccountBsn.findUserAccountsStartingWith(this.firstLetterCriteria);
-        this.emailCriteria = null;
-
+        if(firstLetterCriteria == null || firstLetterCriteria.isEmpty())
+            this.userAccounts = userAccountBsn.findNotVerifiedUsers();
+        else {
+            this.firstLetterCriteria = firstLetterCriteria;
+            this.userAccounts = userAccountBsn.findUserAccountsStartingWith(this.firstLetterCriteria);
+            this.emailCriteria = null;
+        }
+        
         return "users?faces-redirect=true";
     }
 
@@ -121,12 +123,6 @@ public class MemberBean implements Serializable {
 
     public List<MembershipGrowthRange> getMembershipGrowthRanges() {
         return MembershipGrowthRange.generateSeries(userAccountBsn.findUserAccountsOrderedByRegistration());
-    }
-
-    public Date getLastSevenDays() {
-        Calendar sevenDaysAgo = Calendar.getInstance();
-        sevenDaysAgo.add(Calendar.DAY_OF_YEAR, -7);
-        return sevenDaysAgo.getTime();
     }
 
     public MailingList[] getSelectedMailingLists() {
@@ -168,7 +164,7 @@ public class MemberBean implements Serializable {
 
     @PostConstruct
     public void load() {
-        this.userAccounts = getRecentUserAccounts();
+        this.userAccounts = userAccountBsn.findNotVerifiedUsers();
         this.mailingLists = mailingListBsn.findMailingLists();
     }
 
@@ -198,8 +194,13 @@ public class MemberBean implements Serializable {
 
         return "user?faces-redirect=true";
     }
-
+    
     public String save() {
+        save(Boolean.FALSE);
+        return "users?faces-redirect=true";
+    }
+
+    private void save(Boolean verified) {
         UserAccount existingUserAccount = userAccountBsn.findUserAccount(userAccount.getId());
 
     	existingUserAccount.setCountry(this.locationBean.getCountry());
@@ -217,14 +218,15 @@ public class MemberBean implements Serializable {
         existingUserAccount.setGeneralOffer(userAccount.getGeneralOffer());
         existingUserAccount.setJobOffer(userAccount.getJobOffer());
         existingUserAccount.setEvent(userAccount.getEvent());
+        existingUserAccount.setSponsor(userAccount.getSponsor());
+        existingUserAccount.setSpeaker(userAccount.getSpeaker());
+        existingUserAccount.setVerified(verified);
 
         List<MailingList> mailingListsToSubscribe = new ArrayList<MailingList>();
         mailingListsToSubscribe.addAll(Arrays.asList(this.selectedMailingLists));
         mailingListBsn.subscribe(mailingListsToSubscribe, existingUserAccount);
         
         userAccountBsn.save(existingUserAccount);
-        
-        return "users?faces-redirect=true";
     }
 
     public String deactivateMembership() {
@@ -239,6 +241,12 @@ public class MemberBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(iae.getMessage()));
             return "user";
         }
+        removeSessionScoped();
+        return "users?faces-redirect=true";
+    }
+    
+    public String checkUserAsVerified() {
+        save(Boolean.TRUE);
         removeSessionScoped();
         return "users?faces-redirect=true";
     }

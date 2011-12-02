@@ -32,6 +32,16 @@
                             </p:column>
 
                             <p:column>
+                                <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>
+                                <h:outputText value="#{attendee.attendee.email}"/>
+                            </p:column>
+                            
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="#{bundle.event}"/></f:facet>
+                                <h:graphicImage rendered="#{attendee.attendee.event}" url="/images/success-icon.png"/>
+                            </p:column>
+                                                        
+                            <p:column>
                                 <f:facet name="header"><h:outputText value="#{bundle.registrationDate}"/></f:facet>
                                 <h:outputText value="#{attendee.registrationDate}">
                                     <f:convertDateTime pattern="dd/MM/yyyy"/>

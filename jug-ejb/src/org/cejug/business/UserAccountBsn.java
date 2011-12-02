@@ -6,7 +6,6 @@ import java.security.NoSuchAlgorithmException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -121,9 +120,9 @@ public class UserAccountBsn {
     }
 
     @SuppressWarnings("unchecked")
-    public List<UserAccount> findRegisteredUsersSince(Date date) {
-        return em.createQuery("select ua from UserAccount ua where ua.registrationDate >= :date and ua.deactivated = :deactivated order by ua.registrationDate desc")
-                 .setParameter("date", date)
+    public List<UserAccount> findNotVerifiedUsers() {
+        return em.createQuery("select ua from UserAccount ua where ua.verified = :verified and ua.deactivated = :deactivated order by ua.registrationDate desc")
+                 .setParameter("verified", Boolean.FALSE)
                  .setParameter("deactivated", Boolean.FALSE)
                  .getResultList();
     }
@@ -216,7 +215,7 @@ public class UserAccountBsn {
             throw new IllegalArgumentException("Confirmation code "+ confirmationCode +" does not match any existing pendent account.", nre.getCause());
         }
     }
-
+    
     public void save(UserAccount userAccount) {
         userAccount.setLastUpdate(Calendar.getInstance().getTime());
         em.merge(userAccount);

@@ -99,24 +99,27 @@ public class AttendeeBsn {
             em.remove(attendee);
     }
     
-	public void confirmMembersAttendance(Attendee[] confirmedAttendees) {
-		List<Attendee> attendees = findAttendees(confirmedAttendees[0].getEvent());
-		boolean confirmed = false;
-		for(Attendee attendee: attendees) {
-			for(Attendee confirmedAttendee: confirmedAttendees) {
-				if(attendee.equals(confirmedAttendee)) {
-					attendee.setAttended(true);
-					em.merge(attendee);
-					confirmed = true;
-					break;
-				}
-			}
-			
-			if(!confirmed) {
-				attendee.setAttended(false);
-				em.merge(attendee);
-				confirmed = false;
-			}
-		}
-	}
+    public void confirmMembersAttendance(Event event, Attendee[] confirmedAttendees) {
+        if(confirmedAttendees == null)
+            confirmedAttendees = new Attendee[0];
+        
+        List<Attendee> attendees = findAttendees(event);
+        boolean confirmed;
+        for(Attendee attendee: attendees) {
+            confirmed = false;
+            for(Attendee confirmedAttendee: confirmedAttendees) {
+                if(attendee.equals(confirmedAttendee)) {
+                    attendee.setAttended(true);
+                    em.merge(attendee);
+                    confirmed = true;
+                    break;
+                }
+            }
+
+            if(!confirmed) {
+                attendee.setAttended(false);
+                em.merge(attendee);
+            }
+        }
+    }
 }

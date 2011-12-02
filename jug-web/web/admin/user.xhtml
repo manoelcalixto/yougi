@@ -149,14 +149,19 @@
                                 <h:selectBooleanCheckbox id="sponsor" label="#{bundle.sponsor}" value="#{memberBean.userAccount.sponsor}"/>
                                 <h:outputLabel for="sponsor" value="#{bundle.activated}"/>
                             </p:tab>
+                            <p:tab title="#{bundle.speaker}">
+                                <h:selectBooleanCheckbox id="speaker" label="#{bundle.speaker}" value="#{memberBean.userAccount.speaker}"/>
+                                <h:outputLabel for="speaker" value="#{bundle.activated}"/>
+                            </p:tab>
                         </p:tabView>
 
                         <h:inputHidden id="id" value="#{memberBean.userAccount.id}"/>
                         <h:inputHidden id="idContact" value="#{memberBean.userAccount.id}"/>
                         <p></p>
-                        <h:panelGrid columns="4">
+                        <h:panelGrid columns="5">
                             <h:commandButton value="#{bundle.save}" action="#{memberBean.save}"/>
                             <h:commandButton rendered="#{!memberBean.userAccount.confirmed}" value="#{bundle.confirm}" action="#{memberBean.confirm}"/>
+                            <h:commandButton rendered="#{!memberBean.userAccount.verified and memberBean.userAccount.confirmed}" value="#{bundle.verified}" action="#{memberBean.checkUserAsVerified}"/>
                             <h:button rendered="#{!memberBean.userAccount.deactivated}" value="#{bundle.deactivateMembership}" outcome="user_deactivation"/>
                             <h:button outcome="users" value="#{bundle.cancel}"/>
                         </h:panelGrid>
