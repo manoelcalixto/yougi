@@ -131,8 +131,6 @@ alter table user_account add constraint fk_country_user foreign key (country) re
 alter table user_account add constraint fk_province_user foreign key (province) references province(id) on delete set null;
 alter table user_account add constraint fk_city_user foreign key (city) references city(id) on delete set null;
 
-alter table user_account drop column photo;
-
 update user_account, contact 
    set user_account.website = contact.website,
        user_account.twitter = contact.twitter,
@@ -154,6 +152,7 @@ where user_account.id = communication_privacy.user;
 
 update user_account set verified = true;
 
+alter table user_account drop column photo;
 drop table contact;
 drop table communication_privacy;
 
