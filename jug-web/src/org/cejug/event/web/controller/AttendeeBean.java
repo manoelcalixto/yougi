@@ -31,6 +31,10 @@ public class AttendeeBean implements Serializable {
 
     private Attendee[] selectedAttendees;
 
+    private Long numberPeopleAttending;
+
+    private Long numberPeopleAttended;
+
     public AttendeeBean() {
     }
 
@@ -57,6 +61,22 @@ public class AttendeeBean implements Serializable {
         this.selectedAttendees = selectedAttendees;
     }
 
+    public Long getNumberPeopleAttending() {
+        return numberPeopleAttending;
+    }
+
+    public void setNumberPeopleAttending(Long numberPeopleAttending) {
+        this.numberPeopleAttending = numberPeopleAttending;
+    }
+
+    public void setNumberPeopleAttended(Long numberPeopleAttended) {
+        this.numberPeopleAttended = numberPeopleAttended;
+    }
+
+    public Long getNumberPeopleAttended() {
+        return numberPeopleAttended;
+    }
+
     public String load(String eventId) {
         event = eventBsn.findEvent(eventId);
 
@@ -68,6 +88,10 @@ public class AttendeeBean implements Serializable {
                 this.selectedAttendees[i++] = atd;
             }
         }
+        
+        this.numberPeopleAttending = attendeeBsn.findNumberPeopleAttending(this.event);
+        this.numberPeopleAttended = attendeeBsn.findNumberPeopleAttended(this.event);
+        
         return "attendees?faces-redirect=true";
     }
 

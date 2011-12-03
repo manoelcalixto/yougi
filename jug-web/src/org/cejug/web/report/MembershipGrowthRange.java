@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.cejug.web.report;
 
 import java.util.ArrayList;
@@ -13,7 +8,8 @@ import org.cejug.entity.UserAccount;
 import org.cejug.web.util.ResourceBundle;
 
 /**
- * This class feeds the line chart that shows the growth of the user group.
+ * This class feeds the bar chart that shows the growth of the user group in a
+ * monthly basis.
  * @author Hildeberto Mendonca
  */
 public class MembershipGrowthRange {

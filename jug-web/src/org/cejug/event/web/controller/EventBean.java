@@ -102,7 +102,6 @@ public class EventBean {
 
 	public void setSelectedVenue(String selectedVenue) {
 		this.selectedVenue = selectedVenue;
-		logger.info("selectedVenue: "+ selectedVenue);
 		Partner venue = partnerBsn.findPartner(selectedVenue);
 		if(this.event.getAddress() == null)
 			this.event.setAddress(venue.getAddress());

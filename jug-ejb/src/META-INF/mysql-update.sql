@@ -162,6 +162,18 @@ drop table communication_privacy;
 # 08/12/2011
 # Hildeberto Mendonca
 # Version 0.28:0.7
+create table sponsor_event (
+    id          char(32)      not null,
+    event       char(32)      not null,
+    partner     char(32)      not null,
+    ammount     decimal(12,2)     null,
+    description text              null
+) engine = innodb;
+
+alter table sponsor_event add constraint pk_sponsor_event primary key (id);
+alter table sponsor_event add constraint fk_sponsor_event foreign key (event) references event(id) on delete cascade;
+alter table sponsor_event add constraint fk_sponsor_partner foreign key (partner) references partner(id) on delete cascade;
+
 create table event_session (
     id           char(32)     not null,
     event        char(32)     not null,

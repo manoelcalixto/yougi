@@ -25,7 +25,19 @@
                         js = d.createElement(s); js.id = id;
                         js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
                         fjs.parentNode.insertBefore(js, fjs);
-                        }(document, 'script', 'facebook-jssdk'));</script>
+                        }(document, 'script', 'facebook-jssdk'));
+                    </script>
+                    <script type="text/javascript">
+                        window.___gcfg = {lang: 'pt-BR'};
+                        (function() {
+                            var po = document.createElement("script");
+                            po.type = "text/javascript";
+                            po.async = true;
+                            po.src = "https://apis.google.com/js/plusone.js";
+                            var s = document.getElementsByTagName("script")[0];
+                            s.parentNode.insertBefore(po, s);
+                        })();
+                    </script>
                     <h:panelGrid columns="2" columnClasses="panelGridColumn,panelGridColumn" cellpadding="0" cellspacing="0">
                         <h:panelGrid>
                             <p:panel rendered="#{! empty eventBean.commingEvents}">
@@ -50,41 +62,43 @@
 		                    <p:panel>
 	                            <p:gmap center="-15.707663, -51.240234" 
 	                                zoom="4" type="hybrid" 
-	                                style="width:695px;height:500px" 
+	                                style="width:640px;height:500px" 
 	                                model="#{membersMapDistribution.simpleModel}"/>
 	                        </p:panel>
                         </h:panelGrid>
                         
                         <h:panelGrid>
-                            <div class="fb-like-box" data-href="https://www.facebook.com/pages/Cejug/312719028740499" data-width="250" data-show-faces="true" data-stream="true" data-header="true"></div>
+                            <div class="g-plus" data-href="https://plus.google.com/101596388471980915399" data-size="badge"></div>
+                            <p/>
+                            <div class="fb-like-box" data-href="https://www.facebook.com/pages/Cejug/312719028740499" data-width="300" data-show-faces="true" data-stream="true" data-header="true"></div>
                             <p/>
                             <script>
-							new TWTR.Widget({
-							  version: 2,
-							  type: 'profile',
-							  rpp: 4,
-							  interval: 30000,
-							  width: 250,
-							  height: 300,
-							  theme: {
-							    shell: {
-							      background: '#c2c2c2',
-							      color: '#000000'
-							    },
-							    tweets: {
-							      background: '#ffffff',
-							      color: '#000000',
-							      links: '#3bb507'
-							    }
-							  },
-							  features: {
-							    scrollbar: false,
-							    loop: false,
-							    live: true,
-							    behavior: 'all'
-							  }
-							}).render().setUser('cejug').start();
-							</script>
+                                new TWTR.Widget({
+                                  version: 2,
+                                  type: 'profile',
+                                  rpp: 4,
+                                  interval: 30000,
+                                  width: 300,
+                                  height: 300,
+                                  theme: {
+                                    shell: {
+                                      background: '#c2c2c2',
+                                      color: '#000000'
+                                    },
+                                    tweets: {
+                                      background: '#ffffff',
+                                      color: '#000000',
+                                      links: '#3bb507'
+                                    }
+                                  },
+                                  features: {
+                                    scrollbar: false,
+                                    loop: false,
+                                    live: true,
+                                    behavior: 'all'
+                                  }
+                                }).render().setUser('cejug').start();
+                            </script>
                         </h:panelGrid>
                     </h:panelGrid>
                 </div>

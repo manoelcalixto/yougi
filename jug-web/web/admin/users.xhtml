@@ -139,8 +139,13 @@
                                 </p:stackedColumnChart>
                             </p:tab>
                             <p:tab title="#{bundle.growth}">
-                                <p:lineChart width="700" value="#{memberBean.membershipGrowthRanges}" var="range" xfield="#{range.rangeName}">
+                                <h2>#{bundle.growth}</h2>
+                                <p:columnChart width="700" value="#{memberBean.membershipGrowth}" var="range"  xfield="#{range.rangeName}">
                                     <p:chartSeries label="#{bundle.growth}" value="#{range.value}"/>
+                                </p:columnChart>
+                                
+                                <h2>#{bundle.acumulated}</h2>
+                                <p:lineChart width="700" value="#{memberBean.membershipGrowth}" var="range" xfield="#{range.rangeName}">
                                     <p:chartSeries label="#{bundle.acumulated}" value="#{range.acumulated}" />
                                 </p:lineChart>
                             </p:tab>

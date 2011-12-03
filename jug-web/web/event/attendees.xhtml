@@ -23,6 +23,10 @@
                     <h1>#{bundle.attendees}</h1>
                     
                     <h:form>
+                        <p><h:outputFormat value="#{bundle.numberPeopleAttendingEvent}" style="font-weight: bold; color: blue;">
+                            <f:param value="#{attendeeBean.numberPeopleAttending}"/>
+                            <f:param value="#{attendeeBean.numberPeopleAttended}"/>
+                        </h:outputFormat></p>
                         <p:dataTable value="#{attendeeBean.attendees}" var="attendee" selection="#{attendeeBean.selectedAttendees}">
                             <p:column>
                                 <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>

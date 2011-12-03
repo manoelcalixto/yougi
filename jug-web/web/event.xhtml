@@ -20,21 +20,22 @@
                 <div class="content">
                     <h1>#{bundle.event}</h1>
                     <h:form>
-	                    <h:panelGrid>
-	                        <h:outputText value="#{eventBean.event.name}" style="font-size: 24px; font-weight: bold;"/>
-	                        <h:outputText value="#{eventBean.formattedEventDescription}" escape="false" style="font-size: 14px;"/>
-	                        <h:outputFormat value="#{bundle.eventAppointment}" escape="false">
-	                            <f:param value="#{eventBean.event.venue}"/>
-	                            <f:param value="#{eventBean.formattedStartDate}"/>
-	                            <f:param value="#{eventBean.formattedStartTime}"/>
-	                            <f:param value="#{eventBean.formattedEndTime}"/>
-	                        </h:outputFormat>
-	                    </h:panelGrid>
-	                    <h:button value="#{bundle.attend}" outcome="event/attendee">
-	                       <f:param name="id" value="#{eventBean.event.id}"/>
-	                    </h:button>
-	                    <h:button value="#{bundle.back}" outcome="index"/>
-	                </h:form>
+                        <h:panelGrid>
+                            <h:outputText value="#{eventBean.event.name}" style="font-size: 24px; font-weight: bold;"/>
+                            <h:outputText value="#{eventBean.formattedEventDescription}" escape="false" style="font-size: 14px;"/>
+                            <h:outputFormat value="#{bundle.eventAppointment}" escape="false">
+                                <f:param value="#{eventBean.event.venue}"/>
+                                <f:param value="#{eventBean.formattedStartDate}"/>
+                                <f:param value="#{eventBean.formattedStartTime}"/>
+                                <f:param value="#{eventBean.formattedEndTime}"/>
+                            </h:outputFormat>
+                        </h:panelGrid>
+                        
+                        <h:button value="#{bundle.attend}" outcome="event/attendee" rendered="#{!eventBean.event.external}">
+                           <f:param name="id" value="#{eventBean.event.id}"/>
+                        </h:button>
+                        <h:button value="#{bundle.back}" outcome="index"/>
+                    </h:form>
                 </div>
             </ui:define>
         </ui:composition>

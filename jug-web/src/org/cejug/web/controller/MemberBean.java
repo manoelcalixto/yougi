@@ -121,10 +121,10 @@ public class MemberBean implements Serializable {
         return CommunicationPrivacyRange.generateSeries(userAccountBsn.findUserAccounts());
     }
 
-    public List<MembershipGrowthRange> getMembershipGrowthRanges() {
+    public List<MembershipGrowthRange> getMembershipGrowth() {
         return MembershipGrowthRange.generateSeries(userAccountBsn.findUserAccountsOrderedByRegistration());
     }
-
+    
     public MailingList[] getSelectedMailingLists() {
         return selectedMailingLists;
     }
@@ -196,7 +196,7 @@ public class MemberBean implements Serializable {
     }
     
     public String save() {
-        save(Boolean.FALSE);
+        save(null);
         return "users?faces-redirect=true";
     }
 
@@ -220,7 +220,9 @@ public class MemberBean implements Serializable {
         existingUserAccount.setEvent(userAccount.getEvent());
         existingUserAccount.setSponsor(userAccount.getSponsor());
         existingUserAccount.setSpeaker(userAccount.getSpeaker());
-        existingUserAccount.setVerified(verified);
+        
+        if(verified != null)
+            existingUserAccount.setVerified(verified);
 
         List<MailingList> mailingListsToSubscribe = new ArrayList<MailingList>();
         mailingListsToSubscribe.addAll(Arrays.asList(this.selectedMailingLists));
