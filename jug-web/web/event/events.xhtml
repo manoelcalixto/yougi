@@ -39,12 +39,16 @@
 	                                        <f:param value="#{eventBean.getFormattedStartTime(event.startTime)}"/>
 	                                        <f:param value="#{eventBean.getFormattedEndTime(event.endTime)}"/>
 	                                    </h:outputFormat>
-	                                    <h:panelGrid columns="3">
+	                                    <h:panelGrid columns="5">
 		                                    <h:link value="#{bundle.edit}" outcome="event" rendered="#{securityBackingBean.isUserLeader}">
 	                                            <f:param name="id" value="#{event.id}"/>
 	                                        </h:link>
-                                                <h:outputText value=" | " rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
-                                                <h:commandLink value="#{bundle.attendees}" action="#{attendeeBean.load(event.id)}" rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
+                                            <h:outputText value=" | " rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
+                                            <h:commandLink value="#{bundle.attendees}" action="#{attendeeBean.load(event.id)}" rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
+                                            <h:outputText value=" | " rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
+                                            <h:link value="#{bundle.sponsors}" outcome="sponsors" rendered="#{securityBackingBean.isUserLeader and !event.external}">
+                                                <f:param name="id" value="#{event.id}"/>
+                                            </h:link>
                                         </h:panelGrid>
 	                                </h:panelGrid>
 	                            </p:panel>

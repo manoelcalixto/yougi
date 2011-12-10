@@ -21,43 +21,39 @@
 package org.cejug.event.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.math.BigDecimal;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
 
-import org.cejug.entity.UserAccount;
+import org.cejug.partnership.entity.Partner;
 
 /**
  * @author Hildeberto Mendonca
  */
 @Entity
-@Table(name="attendee")
-public class Attendee implements Serializable {
+@Table(name="event_sponsor")
+public class EventSponsor implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	private String id;
 	
 	@ManyToOne
-	@JoinColumn(name="event")
-    private Event event;
+	@JoinColumn(name="event", nullable=false)
+	private Event event;
 	
 	@ManyToOne
-	@JoinColumn(name="attendee")
-    private UserAccount attendee;
+	@JoinColumn(name="partner", nullable=false)
+	private Partner partner;
 	
-	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
-	@Column(name="registration_date")
-    private Date registrationDate;
+	private BigDecimal ammount;
 	
-	private Boolean attended;
+	private String description;
 
 	public String getId() {
 		return id;
@@ -75,52 +71,27 @@ public class Attendee implements Serializable {
 		this.event = event;
 	}
 
-	public UserAccount getAttendee() {
-		return attendee;
+	public Partner getPartner() {
+		return partner;
 	}
 
-	public void setAttendee(UserAccount attendee) {
-		this.attendee = attendee;
+	public void setPartner(Partner partner) {
+		this.partner = partner;
 	}
 
-	public Date getRegistrationDate() {
-		return registrationDate;
+	public BigDecimal getAmmount() {
+		return ammount;
 	}
 
-	public void setRegistrationDate(Date registrationDate) {
-		this.registrationDate = registrationDate;
+	public void setAmmount(BigDecimal ammount) {
+		this.ammount = ammount;
 	}
 
-	public Boolean getAttended() {
-		return attended;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setAttended(Boolean attended) {
-		this.attended = attended;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof Attendee))
-			return false;
-		Attendee other = (Attendee) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

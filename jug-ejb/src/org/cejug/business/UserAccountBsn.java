@@ -1,3 +1,23 @@
+/* Jug Management is a web application conceived to manage user groups or 
+ * communities focused on a certain domain of knowledge, whose members are 
+ * constantly sharing information and participating in social and educational 
+ * events. Copyright (C) 2011 Ceara Java User Group - CEJUG.
+ * 
+ * This application is free software; you can redistribute it and/or modify it 
+ * under the terms of the GNU Lesser General Public License as published by the 
+ * Free Software Foundation; either version 2.1 of the License, or (at your 
+ * option) any later version.
+ * 
+ * This application is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public 
+ * License for more details.
+ * 
+ * There is a full copy of the GNU Lesser General Public License along with 
+ * this library. Look for the file license.txt at the root level. If you do not
+ * find it, write to the Free Software Foundation, Inc., 59 Temple Place, 
+ * Suite 330, Boston, MA 02111-1307 USA.
+ * */
 package org.cejug.business;
 
 import java.io.UnsupportedEncodingException;
@@ -30,6 +50,9 @@ import org.cejug.entity.UserGroup;
 import org.cejug.util.Base64Encoder;
 import org.cejug.util.EntitySupport;
 
+/**
+ * @author Hildeberto Mendonca
+ */
 @Stateless
 @LocalBean
 public class UserAccountBsn {
@@ -54,12 +77,16 @@ public class UserAccountBsn {
 
     static final Logger logger = Logger.getLogger("org.cejug.business.UserAccountBsn");
 
+    /** This method checks whether an user account exists in the database. */
     public boolean existingAccount(UserAccount userAccount) {
         UserAccount existing = findUserAccountByUsername(userAccount.getUsername());
         return existing != null;
     }
 
-    /** Returns true is there is no account registered in the database. */
+    /**
+     * This method returns true if there is no account registered in the 
+     * database.
+     * */
     public boolean noAccount() {
         Long totalUserAccounts = (Long)em.createQuery("select count(u) from UserAccount u").getSingleResult();
         if(totalUserAccounts == 0)
@@ -188,27 +215,38 @@ public class UserAccountBsn {
         }
     }
 
+    /**
+     * This method finds the user account using the confirmation code, adds 
+     * this user account in the default group and sends a welcome message to 
+     * the user and a notification message to the leaders. The user has access 
+     * to the application when he/she is added to the default group.
+     * */
     public void confirmUser(String confirmationCode) {
+    	if(confirmationCode == null || confirmationCode.isEmpty())
+    		return;
+    	
         try {
             UserAccount userAccount = (UserAccount)em.createQuery("select ua from UserAccount ua where ua.confirmationCode = :code")
                                                      .setParameter("code", confirmationCode)
                                                      .getSingleResult();
-            userAccount.setConfirmationCode(null);
-            userAccount.setRegistrationDate(Calendar.getInstance().getTime());
-
-            // This step effectivelly allows the user to access the application.
-            AccessGroup defaultGroup = accessGroupBsn.findUserDefaultGroup();
-            UserGroup userGroup = new UserGroup(defaultGroup, userAccount);
-            userGroupBsn.add(userGroup);
-
-            ApplicationProperty appProp = applicationPropertyBsn.findApplicationProperty(Properties.SEND_EMAILS);
-            if(appProp.sendEmailsEnabled())
-                messengerBsn.sendWelcomeMessage(userAccount);
-
-            if(appProp.sendEmailsEnabled()) {
-                AccessGroup administrativeGroup = accessGroupBsn.findAdministrativeGroup();
-                List<UserAccount> leaders = userGroupBsn.findUsersGroup(administrativeGroup);
-                messengerBsn.sendNewMemberAlertMessage(userAccount, leaders);
+            if(userAccount != null) {
+            	userAccount.setConfirmationCode(null);
+            	userAccount.setRegistrationDate(Calendar.getInstance().getTime());
+            
+	            // This step effectively allows the user to access the application.
+	            AccessGroup defaultGroup = accessGroupBsn.findUserDefaultGroup();
+	            
+	            UserGroup userGroup = new UserGroup(defaultGroup, userAccount);
+	            userGroupBsn.add(userGroup);
+	
+	            ApplicationProperty appProp = applicationPropertyBsn.findApplicationProperty(Properties.SEND_EMAILS);
+	            if(appProp.sendEmailsEnabled()) {
+	                messengerBsn.sendWelcomeMessage(userAccount);
+	
+	                AccessGroup administrativeGroup = accessGroupBsn.findAdministrativeGroup();
+	                List<UserAccount> leaders = userGroupBsn.findUsersGroup(administrativeGroup);
+	                messengerBsn.sendNewMemberAlertMessage(userAccount, leaders);
+	            }
             }
         }
         catch(NoResultException nre) {

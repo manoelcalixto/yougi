@@ -23,7 +23,7 @@
                     <h:form>
                         <h:panelGrid cellpadding="3">
                             <h:outputText value="#{eventBean.event.name}" style="font-size: 24px; font-weight: bold;"/>
-                            <h:outputFormat value="#{bundle.numberPeopleAttendingEvent}" style="font-weight: bold; color: blue;" rendered="#{securityBackingBean.isUserLeader}">
+                            <h:outputFormat value="#{bundle.numberPeopleAttendingEvent}" style="font-weight: bold; color: blue;">
                                 <f:param value="#{eventBean.numberPeopleAttending}"/>
                                 <f:param value="#{eventBean.numberPeopleAttended}"/>
                             </h:outputFormat>

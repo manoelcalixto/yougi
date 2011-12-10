@@ -1,3 +1,23 @@
+/* Jug Management is a web application conceived to manage user groups or 
+ * communities focused on a certain domain of knowledge, whose members are 
+ * constantly sharing information and participating in social and educational 
+ * events. Copyright (C) 2011 Ceara Java User Group - CEJUG.
+ * 
+ * This application is free software; you can redistribute it and/or modify it 
+ * under the terms of the GNU Lesser General Public License as published by the 
+ * Free Software Foundation; either version 2.1 of the License, or (at your 
+ * option) any later version.
+ * 
+ * This application is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public 
+ * License for more details.
+ * 
+ * There is a full copy of the GNU Lesser General Public License along with 
+ * this library. Look for the file license.txt at the root level. If you do not
+ * find it, write to the Free Software Foundation, Inc., 59 Temple Place, 
+ * Suite 330, Boston, MA 02111-1307 USA.
+ * */
 package org.cejug.web.controller;
 
 import java.io.IOException;
@@ -9,6 +29,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.cejug.business.UserAccountBsn;
 
+/**
+ * @author Hildeberto Mendonca
+ */
 public class EmailConfirmationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -26,17 +49,17 @@ public class EmailConfirmationServlet extends HttpServlet {
             try {
                 out.println("<html>");
                 out.println("<head>");
-                out.println("<title>Yasmim - Email Confirmation Failure</title>");
-                out.println("<link href=\"/cejug/resources/css/default.css\" rel=\"stylesheet\" type=\"text/css\"/>");
+                out.println("<title>CEJUG - Falha na Confirmação de E-mail</title>");
+                out.println("<link href=\"/jug/resources/css/default_theme.css\" rel=\"stylesheet\" type=\"text/css\"/>");
                 out.println("</head>");
                 out.println("<body>");
-                out.println("<h1>Email Confirmation Failure</h1>");
-                out.println("<p>This email confirmation is invalid. Check if the address on the browser coincides with the address sent by email.</p>");
+                out.println("<h1>Falha na Confirmação de Email</h1>");
+                out.println("<p>Esta confirmação de email é inválida. Verifique se o endereço no browser coincide com o endereço enviado por email.</p>");
                 String scheme = request.getScheme();
                 String serverName = request.getServerName();
                 int serverPort = request.getServerPort();
                 String contextPath = request.getContextPath();
-                out.println("<p><a href=\""+ scheme + "://" + serverName + (serverPort != 80?":"+ serverPort:"") + (contextPath.equals("")?"":contextPath) +"\">Go to Homepage</a>.");
+                out.println("<p><a href=\""+ scheme + "://" + serverName + (serverPort != 80?":"+ serverPort:"") + (contextPath.equals("")?"":contextPath) +"\">Ir para a página inicial</a>.");
                 out.println("</body>");
                 out.println("</html>");
             } finally {
@@ -51,19 +74,19 @@ public class EmailConfirmationServlet extends HttpServlet {
             try {
                 out.println("<html>");
                 out.println("<head>");
-                out.println("<title>Yasmim - Email Confirmation Failure</title>");
-                out.println("<link href=\"/cejug/resources/css/default.css\" rel=\"stylesheet\" type=\"text/css\"/>");
+                out.println("<title>CEJUG - Falha na Confirmação de Email</title>");
+                out.println("<link href=\"/jug/resources/css/default_theme.css\" rel=\"stylesheet\" type=\"text/css\"/>");
                 out.println("</head>");
                 out.println("<body>");
-                out.println("<h1>Email Confirmation Failure</h1>");
-                out.println("<p>This email confirmation is invalid.</p>");
-                out.println("<p class=\"alertMessage\">Cause: "+ e.getCause().getMessage() +"</p>");
-                out.println("<p>Check if the address on the browser coincides with the address sent my email.</p>");
+                out.println("<h1>Falha na Confirmação de Email</h1>");
+                out.println("<p>Esta confirmação de email é inválida.</p>");
+                out.println("<p class=\"alertMessage\">Causa: "+ e.getCause().getMessage() +"</p>");
+                out.println("<p>Verifique se o endereço no browser coincide com o endereço enviado por email.</p>");
                 String scheme = request.getScheme();
                 String serverName = request.getServerName();
                 int serverPort = request.getServerPort();
                 String contextPath = request.getContextPath();
-                out.println("<p><a href=\""+ scheme + "://" + serverName + (serverPort != 80?":"+ serverPort:"") + (contextPath.equals("")?"":contextPath) +"\">Go to website</a>");
+                out.println("<p><a href=\""+ scheme + "://" + serverName + (serverPort != 80?":"+ serverPort:"") + (contextPath.equals("")?"":contextPath) +"\">Ir para a página inicial</a>");
                 out.println("</body>");
                 out.println("</html>");
             } finally {

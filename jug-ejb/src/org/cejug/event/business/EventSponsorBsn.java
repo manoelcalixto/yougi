@@ -20,7 +20,6 @@
  * */
 package org.cejug.event.business;
 
-import java.util.Calendar;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -29,55 +28,55 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.cejug.event.entity.Event;
+import org.cejug.event.entity.EventSponsor;
+import org.cejug.partnership.entity.Partner;
 import org.cejug.util.EntitySupport;
 
 /**
- * Manages events organized by the user group.
+ * This class implements the business logic of events' sponsors.
  * @author Hildeberto Mendonca
  */
 @Stateless
 @LocalBean
-public class EventBsn {
+public class EventSponsorBsn {
 	
     @PersistenceContext
     private EntityManager em;
 
-    public Event findEvent(String id) {
+    public EventSponsor findEventSponsor(String id) {
         if(id != null)
-            return em.find(Event.class, id);
+            return em.find(EventSponsor.class, id);
         else
             return null;
     }
     
     @SuppressWarnings("unchecked")
-	public List<Event> findEvents() {
-    	List<Event> events = em.createQuery("select e from Event e order by e.endDate desc")
-        		               .getResultList();
-        return events;
+	public List<EventSponsor> findEventSponsors(Event event) {
+    	return em.createQuery("select es from EventSponsor es where es.event = :event order by es.partner.name asc")
+        		 .setParameter("event", event)
+        		 .getResultList();
     }
     
     @SuppressWarnings("unchecked")
-	public List<Event> findCommingEvents() {
-    	Calendar today = Calendar.getInstance();
-        List<Event> events = em.createQuery("select e from Event e where e.endDate >= :today order by e.endDate desc")
-        		               .setParameter("today", today.getTime())
-                               .getResultList();
-        return events;
+	public List<EventSponsor> findSponsorEvents(Partner sponsor) {
+    	return em.createQuery("select es from EventSponsor es where es.partner = :sponsor order by es.event.name asc")
+        		 .setParameter("sponsor", sponsor)
+                 .getResultList();
     }
 
-    public void save(Event event) {
-    	if(event.getId() == null || event.getId().isEmpty()) {
-            event.setId(EntitySupport.generateEntityId());
-            em.persist(event);
+    public void save(EventSponsor eventSponsor) {
+    	if(eventSponsor.getId() == null || eventSponsor.getId().isEmpty()) {
+            eventSponsor.setId(EntitySupport.generateEntityId());
+            em.persist(eventSponsor);
         }
         else {
-            em.merge(event);
+            em.merge(eventSponsor);
         }
     }
 
     public void remove(String id) {
-        Event event = em.find(Event.class, id);
-        if(event != null)
-            em.remove(event);
+        EventSponsor eventSponsor = em.find(EventSponsor.class, id);
+        if(eventSponsor != null)
+            em.remove(eventSponsor);
     }
 }

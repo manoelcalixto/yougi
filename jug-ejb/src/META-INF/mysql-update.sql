@@ -157,11 +157,11 @@ drop table contact;
 drop table communication_privacy;
 
 ########################################################################
-# Creating table event_session and speaker.
+# Indicates which partners are sponsors of an event.
 # 08/12/2011
 # Hildeberto Mendonca
 # Version 0.28:0.7
-create table sponsor_event (
+create table event_sponsor (
     id          char(32)      not null,
     event       char(32)      not null,
     partner     char(32)      not null,
@@ -169,10 +169,15 @@ create table sponsor_event (
     description text              null
 ) engine = innodb;
 
-alter table sponsor_event add constraint pk_sponsor_event primary key (id);
-alter table sponsor_event add constraint fk_sponsor_event foreign key (event) references event(id) on delete cascade;
-alter table sponsor_event add constraint fk_sponsor_partner foreign key (partner) references partner(id) on delete cascade;
+alter table event_sponsor add constraint pk_event_sponsor primary key (id);
+alter table event_sponsor add constraint fk_sponsor_event foreign key (event) references event(id) on delete cascade;
+alter table event_sponsor add constraint fk_sponsor_partner foreign key (partner) references partner(id) on delete cascade;
 
+########################################################################
+# Creating table event_session and speaker.
+# 08/12/2011
+# Hildeberto Mendonca
+# Version 0.29:0.8
 create table event_session (
     id           char(32)     not null,
     event        char(32)     not null,
