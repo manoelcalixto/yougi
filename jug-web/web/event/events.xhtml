@@ -47,7 +47,7 @@
                                             <h:commandLink value="#{bundle.attendees}" action="#{attendeeBean.load(event.id)}" rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
                                             <h:outputText value=" | " rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
                                             <h:link value="#{bundle.sponsors}" outcome="sponsors" rendered="#{securityBackingBean.isUserLeader and !event.external}">
-                                                <f:param name="id" value="#{event.id}"/>
+                                                <f:param name="eventId" value="#{event.id}"/>
                                             </h:link>
                                         </h:panelGrid>
 	                                </h:panelGrid>

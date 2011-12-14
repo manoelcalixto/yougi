@@ -1,4 +1,4 @@
-########################################################################
+###############################################################################
 # Adds two columns in the table city to represent its exact geographic coordinates.
 # 23/10/2011
 # Hildeberto Mendonca
@@ -6,7 +6,7 @@
 alter table city add latitude varchar(15) null;
 alter table city add longitude varchar(15) null;
 
-########################################################################
+###############################################################################
 # Adds two tables to represent partners and their respective representatives.
 # 30/10/2011
 # Hildeberto Mendonca
@@ -33,7 +33,7 @@ alter table representative add constraint pk_representative primary key (id);
 alter table representative add constraint fk_representative_person foreign key (person) references user_account(id) on delete cascade;
 alter table representative add constraint fk_representative_partner foreign key (partner) references partner(id) on delete cascade;
 
-########################################################################
+###############################################################################
 # Adds two tables to represent events and attendees.
 # 07/11/2011
 # Hildeberto Mendonca
@@ -65,7 +65,7 @@ alter table attendee add constraint pk_attendee primary key (id);
 alter table attendee add constraint fk_attendee_event foreign key (event) references event(id) on delete cascade;
 alter table attendee add constraint fk_attendee_user foreign key (attendee) references user_account(id) on delete cascade;
 
-########################################################################
+###############################################################################
 # Adds additional columns in partner.
 # 20/11/2011
 # Hildeberto Mendonca
@@ -80,7 +80,7 @@ alter table partner add constraint fk_city_partner foreign key (city) references
 alter table partner add constraint fk_province_partner foreign key (province) references province(id) on delete set null;
 alter table partner add constraint fk_country_partner foreign key (country) references country(acronym) on delete set null;
 
-########################################################################
+###############################################################################
 # Adds additional columns in event to store the address and the geographical location.
 # A field added to the event table to differentiate between an internal and an external event.
 # Adding the message used to send emails to people who registered in an event.
@@ -105,7 +105,7 @@ alter table event add external tinyint(1) null default false;
 insert into message_template (id, title, body) values
     ('KJDIEJKHFHSDJDUWJHAJSNFNFJHDJSLE', '[JUG] Confirmação de Comparecimento ao Evento', '<p>Oi <b>#{userAccount.firstName}</b>,</p><p>esta mensagem é só para informá-lo(a) que você acabou de confirmar seu comparecimento ao evento <b>#{event.name}</b>, que vai acontecer no(a) <b>#{event.venue}</b>, no dia <b>#{event.startDate}</b>, das <b>#{event.startTime}</b> até as <b>#{event.endTime}</b>.</p><p>Esperamos você lá!</p><p>Atenciosamente,</p><p><b>Coordenação do CEJUG</b></p>');
 
-########################################################################
+###############################################################################
 # Migrating data from the table contact to the table user_account and droping table contact.
 # Adding a field to the table user_account to indicate whether the user was verified.
 # 27/11/2011
@@ -156,7 +156,7 @@ alter table user_account drop column photo;
 drop table contact;
 drop table communication_privacy;
 
-########################################################################
+###############################################################################
 # Indicates which partners are sponsors of an event.
 # 08/12/2011
 # Hildeberto Mendonca
@@ -173,11 +173,26 @@ alter table event_sponsor add constraint pk_event_sponsor primary key (id);
 alter table event_sponsor add constraint fk_sponsor_event foreign key (event) references event(id) on delete cascade;
 alter table event_sponsor add constraint fk_sponsor_partner foreign key (partner) references partner(id) on delete cascade;
 
-########################################################################
-# Creating table event_session and speaker.
-# 08/12/2011
-# Hildeberto Mendonca
-# Version 0.29:0.8
+create table version_database (
+    version      varchar(10) not null,
+    app_version  varchar(10) not null,
+    date_release timestamp   not null default CURRENT_TIMESTAMP,
+    description  text            null    
+) engine = innodb;
+
+alter table version_database add constraint pk_version_database primary key (version);
+
+insert into version_database (version, app_version, description) values (
+   '0.7', 
+   '0.28', 
+   'Indicates which partners are sponsors of an event and keeps the history of database updates.');
+
+###############################################################################
+insert into version_database values 
+   ('0.8',
+    '0.29',
+    'Create sessions for the event and speakers for the sessions.');
+
 create table event_session (
     id           char(32)     not null,
     event        char(32)     not null,

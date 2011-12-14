@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.prime.com.tr/ui">
+    <h:body>
+        <ui:composition template="../layout.xhtml">
+            <ui:define name="title">#{bundle.sponsors}</ui:define>
+            <ui:define name="content">
+                <div class="bread_crumb_area">
+                    <h:form>
+                        <p:breadCrumb styleClass="bread_crumb">
+                            <p:menuitem value="#{bundle.home}" url="../index.xhtml"/>
+                            <p:menuitem value="#{bundle.events}" url="events.xhtml"/>
+                            <p:menuitem value="#{bundle.event}"/>
+                            <p:menuitem value="#{bundle.sponsors}"/>
+                        </p:breadCrumb>
+                    </h:form>
+                </div>
+                <div class="content">
+                    <h1>#{bundle.sponsors}</h1>
+                    <h:outputText value="#{eventSponsorBean.event.name}" style="font-size: 18px; font-weight: bold;"/>
+                    <p><h:link outcome="sponsor" value="#{bundle.newSponsor}" rendered="#{securityBackingBean.isUserLeader}">
+                           <f:param name="eventId" value="#{eventSponsorBean.event.id}"/>
+                       </h:link></p>
+                    <h:form>
+                        <p:dataTable value="#{eventSponsorBean.eventSponsors}" var="sponsor">
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>
+                                <h:link outcome="sponsor" value="#{sponsor}">
+                                    <f:param name="id" value="#{sponsor.id}"/>
+                                    <f:param name="eventId" value="#{sponsor.event.id}"/>
+                                </h:link>
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="#{bundle.ammount}"/></f:facet>
+                                <h:outputText value="#{sponsor.ammount}">
+                                    <f:convertNumber maxFractionDigits="2" minFractionDigits="2"/>
+                                </h:outputText>
+                            </p:column>
+                            
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="#{bundle.description}"/></f:facet>
+                                <h:outputText value="#{sponsor.description}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

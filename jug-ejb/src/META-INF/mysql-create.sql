@@ -2,6 +2,15 @@
 # Core                                                                        #
 ###############################################################################
 
+create table version_database (
+    version      varchar(10) not null,
+    app_version  varchar(10) not null,
+    date_release timestamp   not null default CURRENT_TIMESTAMP,
+    description  text            null    
+) engine = innodb;
+
+alter table version_database add constraint pk_version_database primary key (version);
+
 create table country (
     acronym char(3)      not null,
     name    varchar(100) not null
@@ -257,7 +266,7 @@ alter table event add constraint fk_country_event foreign key (country) referenc
 alter table event add constraint fk_province_event foreign key (province) references province(id) on delete set null;
 alter table event add constraint fk_city_event foreign key (city) references city(id) on delete set null;
 
-create table sponsor_event (
+create table event_sponsor (
     id          char(32)      not null,
     event       char(32)      not null,
     partner     char(32)      not null,
@@ -265,9 +274,9 @@ create table sponsor_event (
     description text              null
 ) engine = innodb;
 
-alter table sponsor_event add constraint pk_sponsor_event primary key (id);
-alter table sponsor_event add constraint fk_sponsor_event foreign key (event) references event(id) on delete cascade;
-alter table sponsor_event add constraint fk_sponsor_partner foreign key (partner) references partner(id) on delete cascade;
+alter table event_sponsor add constraint pk_event_sponsor primary key (id);
+alter table event_sponsor add constraint fk_sponsor_event foreign key (event) references event(id) on delete cascade;
+alter table event_sponsor add constraint fk_sponsor_partner foreign key (partner) references partner(id) on delete cascade;
 
 create table attendee (
     id                char(32)   not null,
@@ -280,28 +289,3 @@ create table attendee (
 alter table attendee add constraint pk_attendee primary key (id);
 alter table attendee add constraint fk_attendee_event foreign key (event) references event(id) on delete cascade;
 alter table attendee add constraint fk_attendee_user foreign key (attendee) references user_account(id) on delete cascade;
-
-create table event_session (
-    id           char(32)     not null,
-    event        char(32)     not null,
-    title        varchar(255) not null,
-    abstract     text             null,
-    session_date date             null,
-    start_time   time             null,
-    end_time     time             null,
-    room         varchar(30)      null
-) engine = innodb;
-
-alter table event_session add constraint pk_event_session primary key (id);
-alter table event_session add constraint fk_event_session foreign key (event) references event(id) on delete cascade;
-
-create table speaker (
-    id       char(32)   not null,
-    session  char(32)   not null,
-    speaker  char(32)   not null,
-    short_cv text           null
-) engine = innodb;
-
-alter table speaker add constraint pk_speaker primary key (id);
-alter table speaker add constraint fk_session_speaker foreign key (session) references event_session(id) on delete cascade;
-alter table speaker add constraint fk_user_speaker foreign key (speaker) references user_account(id) on delete cascade;

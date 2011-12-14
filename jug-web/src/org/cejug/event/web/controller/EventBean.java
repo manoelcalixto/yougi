@@ -147,7 +147,7 @@ public class EventBean {
     		events = eventBsn.findEvents();
         return events;
     }
-	
+
 	public List<Event> getCommingEvents() {
     	if(commingEvents == null)
     		commingEvents = eventBsn.findCommingEvents();
@@ -289,11 +289,10 @@ public class EventBean {
     public String save() {
     	Partner venue = partnerBsn.findPartner(selectedVenue);
     	this.event.setVenue(venue);
-    	
     	this.event.setCountry(this.locationBean.getCountry());
     	this.event.setProvince(this.locationBean.getProvince());
     	this.event.setCity(this.locationBean.getCity());
-    	
+    	    	
     	eventBsn.save(this.event);
         return "events?faces-redirect=true";
     }
