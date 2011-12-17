@@ -394,33 +394,58 @@ Git is the version control system (VCS) used to control JUG Management source co
 To install and use JUG Management is not necessary to start from the source code. The binary package is available at http://cejug.java.net. Just follow the instructions described in chapter 7. On the other hand, if the intention is to contribute to the project, the use of Git to retrieve the source code is necessary. The potential contributor should:
 
 \begin{enumerate}
-\item install Git in the development machine: the installation is dependent of platform, thus the instructions for the target platform are only available on the Git website: http://git-scm.com.
+\item install Git in the development machine: the installation is dependent of platform, thus the instructions for the target platform are only available on the Git website: \textit{http://git-scm.com}.
 \item configure Git to access the master repository: JUG Management's Git accepts only secure SSH (Security Shell protocol) connection, making the initial steps more complicated than expected. After this initial configuration, the access to the master becomes transparent and secure.
 \item register at java.net:
 \item copy and paste the public key in the java.net personal profile:
 \item create a local repository for the project: 
-\item download the source code from the repository:
+\item register yourself in CEJUG's project at java.net. You will have access to the repository only if you are a member of the project. Registering in the project doesn't mean you will become a CEJUG member.
+\item When you login on Java.net and go to the source code section, you will be able to see the checkout URI of JUG Management's repository. The address contains your username. Example: \textit{ssh://[user-name]@git.java.net/cejug~jug-management}.
+\item Copy the URI above and go to the command line and type the following command to checkout the code: git clone \textit{ssh://[user-name]@git.java.net/cejug~jug-management .} . It will create a folder "cejug-jug-management" in the directory you ran the command and the full source code will be available there.
 \end{enumerate}
-1.
 
-1.register yourself in CEJUG's project at java.net. You will have access to the repository only if you are a member of the project. Registering in the project doesn't mean you will become a CEJUG member. Actually, we use JUG Management to control our members ;-)
-2.When you login on Java.net and go to the source code section, you will be able to see the checkout URI of JUG Management's repository. The address contains your username. Example: ssh://[user-name]@git.java.net/cejug~jug-management.
-3.Copy the URI above and go to the command line and type the following command to checkout the code: git clone ssh://[user-name]@git.java.net/cejug~jug-management. It will create a folder "cejug-jug-management" in the directory you ran the command and the full source code will be available there.
 To make sure that the code in the server branch is perfectly working, we have to update the local copy with the latest changes available on the server, test the system locally with those changes and if everything is working well, the local commits can finally be pushed to its respective branch. Before updating the local, make sure that there is no pending commit using:
+
+\begin{verbatim}
 # git status
+\end{verbatim}
+
 If there are changed files add them using:
+
+\begin{verbatim}
 # git add [file]
+\end{verbatim}
+
 Use the command above for each modified file or if they all make sense to be committed together use:
-# git commit -a -m “[message]”
-to add all changed files and commit right after. If files were added individually use:
-# git commit -m “[message]”
+
+\begin{verbatim}
+# git commit -a -m "[message]"
+\end{verbatim}
+
+To add all changed files and commit right after. If files were added individually use:
+
+\begin{verbatim}
+# git commit -m "[message]"
+\end{verbatim}
+
 After performing the last commits, it is time to update the local copy using:
+
+\begin{verbatim}
 # git pull
+\end{verbatim}
+
 or
+
+\begin{verbatim}
 # git fetch
-#git merge FETCH_HEAD
-Changes available on the server 
-#git push origin maste
+# git merge FETCH_HEAD
+\end{verbatim}
+
+To push local commit to the server, use:
+
+\begin{verbatim}
+#git push origin master
+\end{verbatim}
 
 \backmatter
 

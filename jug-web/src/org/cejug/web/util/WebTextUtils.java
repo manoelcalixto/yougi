@@ -82,7 +82,7 @@ public final class WebTextUtils extends TextUtils {
     public static String printAddress(String address, Country country, Province province, City city, String postalCode) {
         StringBuilder fullAddress = new StringBuilder();
         String commaSeparator = ", ";
-        if(address != null || !address.isEmpty())
+        if(address != null && !address.isEmpty())
             fullAddress.append(address);
         
         if(city != null) {
