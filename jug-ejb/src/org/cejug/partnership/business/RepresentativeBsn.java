@@ -20,8 +20,10 @@
  * */
 package org.cejug.partnership.business;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 import javax.persistence.EntityManager;
@@ -43,6 +45,9 @@ public class RepresentativeBsn {
 	
     @PersistenceContext
     private EntityManager em;
+    
+    @EJB
+    private PartnerBsn partnerBsn;
 
     public Representative findRepresentative(String id) {
         if(id != null)
@@ -63,6 +68,13 @@ public class RepresentativeBsn {
     }
     
     @SuppressWarnings("unchecked")
+	public List<UserAccount> findRepresentativePersons(Partner partner) {
+    	return em.createQuery("select r.person from Representative r where r.partner = :partner order by r.person.firstName asc")
+    	         .setParameter("partner", partner)
+    	         .getResultList();
+    }
+    
+    @SuppressWarnings("unchecked")
 	public List<Representative> findRepresentatives(Partner partner) {
     	return em.createQuery("select r from Representative r where r.partner = :partner order by r.person.firstName asc")
     	         .setParameter("partner", partner)
@@ -76,6 +88,51 @@ public class RepresentativeBsn {
         }
         else {
             em.merge(representative);
+        }
+    }
+    
+    /** 
+     * Update the list of representatives of a partner according to the number 
+     * of persons informed. 
+     * */
+    public void save(Partner partner, List<UserAccount> persons) {
+    	
+    	partnerBsn.save(partner);
+    	
+    	if(persons == null)
+    		return;
+    	
+    	// Create new representatives using the received parameters.
+        List<Representative> representatives = new ArrayList<Representative>();
+        Representative representative;
+        for(UserAccount person: persons) {
+        	representative = new Representative(partner, person);
+        	representative.setId(EntitySupport.generateEntityId());
+            representatives.add(representative);
+        }
+        
+        /* If no representative was created because no person was informed then
+         * it means that the partner does not have representatives anymore, and
+         * the existing ones are removed. */
+        if(representatives.isEmpty()) {
+            em.createQuery("delete from Representative r where r.partner = :partner")
+                    .setParameter("partner", partner)
+                    .executeUpdate();
+            return;
+        }
+        
+        List<Representative> currentRepresentatives = findRepresentatives(partner);
+
+        for(Representative rep: currentRepresentatives) {
+            if(!representatives.contains(rep)) {
+                em.remove(rep);
+            }
+        }
+
+        for(Representative rep: representatives) {
+            if(!currentRepresentatives.contains(rep)) {
+                em.persist(rep);
+            }
         }
     }
 

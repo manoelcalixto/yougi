@@ -65,10 +65,16 @@
                             <h:inputTextarea id="description" label="#{bundle.description}" cols="60" rows="5" value="#{partnerBean.partner.description}"/>
                         </h:panelGrid>
                         
+                        <p:pickList value="#{partnerBean.candidates}" var="candidate" itemLabel="#{candidate.fullName}" itemValue="#{candidate.id}" converter="RepresentativePickListConverter"/>
+                        
                         <h:inputHidden id="id" value="#{partnerBean.partner.id}"/>
+                        
                         <p></p>
-                        <h:panelGrid columns="2">
+                        <h:panelGrid columns="3">
                             <h:commandButton value="#{bundle.save}" action="#{partnerBean.save}"/>
+                            <h:commandButton value="#{bundle.remove}" action="#{partnerBean.remove}" rendered="#{! empty partnerBean.id}">
+                                <f:param name="id" value="#{partnerBean.partner.id}"/>
+                            </h:commandButton>
                             <h:button value="#{bundle.cancel}" outcome="partners"/>
                         </h:panelGrid>
                     </h:form>

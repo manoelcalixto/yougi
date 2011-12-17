@@ -20,7 +20,7 @@
                 </div>
                 <div class="content">
                     <h1>#{bundle.partners}</h1>
-                    
+                    <p><h:link outcome="partner" value="#{bundle.newPartner}" rendered="#{securityBackingBean.isUserLeader}"/></p>
                     <h:form>
                         <p:dataTable id="partners" value="#{partnerBean.partners}" var="partner">
                             <p:column>

@@ -21,6 +21,7 @@
 package org.cejug.partnership.web.controller;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -29,13 +30,19 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 
+import org.cejug.business.AccessGroupBsn;
+import org.cejug.business.UserGroupBsn;
+import org.cejug.entity.AccessGroup;
 import org.cejug.entity.City;
 import org.cejug.entity.Country;
 import org.cejug.entity.Province;
+import org.cejug.entity.UserAccount;
 import org.cejug.partnership.business.PartnerBsn;
+import org.cejug.partnership.business.RepresentativeBsn;
 import org.cejug.partnership.entity.Partner;
 import org.cejug.partnership.entity.Representative;
 import org.cejug.web.controller.LocationBean;
+import org.primefaces.model.DualListModel;
 
 /**
  * @author Hildeberto Mendonca
@@ -45,8 +52,18 @@ import org.cejug.web.controller.LocationBean;
 public class PartnerBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @EJB
     private PartnerBsn partnerBsn;
+    
+    @EJB
+    private AccessGroupBsn accessGroupBsn;
+    
+    @EJB
+    private UserGroupBsn userGroupBsn;
+    
+    @EJB
+    private RepresentativeBsn representativeBsn;
     
     @ManagedProperty(value = "#{param.id}")
     private String id;
@@ -57,6 +74,10 @@ public class PartnerBean implements Serializable {
     private Partner partner;
     private List<Partner> partners;
     private List<Representative> representatives;
+    
+    // List of users from the group of partners, which are candidates for 
+    // representative.
+    private DualListModel<UserAccount> candidates;
 
     public PartnerBean() {
     }
@@ -95,9 +116,18 @@ public class PartnerBean implements Serializable {
     public void setLocationBean(LocationBean locationBean) {
         this.locationBean = locationBean;
     }
+    
+    public DualListModel<UserAccount> getCandidates() {
+        return candidates;
+    }
+
+    public void setCandidates(DualListModel<UserAccount> candidates) {
+        this.candidates = candidates;
+    }
 
     @PostConstruct
     public void load() {
+    	
         if (this.id != null && !this.id.isEmpty()) {
             this.partner = partnerBsn.findPartner(id);
 
@@ -114,11 +144,24 @@ public class PartnerBean implements Serializable {
             if (this.partner.getCity() != null) {
                 locationBean.setSelectedCity(this.partner.getCity().getId());
             }
+            
+            AccessGroup accessGroup = accessGroupBsn.findAccessGroupByName("partners"); 
+        	List<UserAccount> usersGroup = userGroupBsn.findUsersGroup(accessGroup);
+            List<UserAccount> representatives = new ArrayList<UserAccount>();
+            representatives.addAll(representativeBsn.findRepresentativePersons(this.partner));
+            usersGroup.removeAll(representatives);
+            this.candidates = new DualListModel<UserAccount>(usersGroup, representatives);
         } else {
             this.partner = new Partner();
+            
+            AccessGroup accessGroup = accessGroupBsn.findAccessGroupByName("partners"); 
+        	List<UserAccount> usersGroup = userGroupBsn.findUsersGroup(accessGroup);
+            List<UserAccount> representatives = new ArrayList<UserAccount>();
+            this.candidates = new DualListModel<UserAccount>(usersGroup, representatives);
         }
     }
 
+    @SuppressWarnings("rawtypes")
     public String save() {
         Country country = this.locationBean.getCountry();
         if (country != null) {
@@ -134,8 +177,17 @@ public class PartnerBean implements Serializable {
         if (city != null) {
             this.partner.setCity(city);
         }
+        
+        List<UserAccount> representatives = new ArrayList<UserAccount>();
+        List selectedCandidates = this.candidates.getTarget();
+        UserAccount userAccount;
+        for(int i = 0;i < selectedCandidates.size();i++) {
+            userAccount = new UserAccount(((UserAccount)selectedCandidates.get(i)).getId());
+            representatives.add(userAccount);
+        }
 
-        partnerBsn.save(this.partner);
+        representativeBsn.save(this.partner, representatives);
+        
         return "partners?faces-redirect=true";
     }
 
