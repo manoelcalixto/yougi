@@ -11,6 +11,16 @@ create table version_database (
 
 alter table version_database add constraint pk_version_database primary key (version);
 
+create table language (
+    acronym varchar(5)  not null,
+    name    varchar(30) not null
+) engine innodb;
+
+alter table language add constraint pk_language primary key (acronym);
+
+insert into language values ('en', 'English');
+insert into language values ('pt', 'Portugues');
+
 create table country (
     acronym char(3)      not null,
     name    varchar(100) not null
@@ -71,7 +81,8 @@ create table user_account (
     event               tinyint(1)       null default false,
     sponsor             tinyint(1)       null default false,
     speaker             tinyint(1)       null default false,
-    verified            tinyint(1)       null default false
+    verified            tinyint(1)       null default false,
+    language            varchar(5)       null
 ) engine = innodb;
 
 alter table user_account add constraint pk_user_account primary key (id);
@@ -80,6 +91,7 @@ create unique index idx_unique_username on user_account (username);
 alter table user_account add constraint fk_country_user foreign key (country) references country(acronym) on delete set null;
 alter table user_account add constraint fk_province_user foreign key (province) references province(id) on delete set null;
 alter table user_account add constraint fk_city_user foreign key (city) references city(id) on delete set null;
+alter table user_account add constraint fk_language_user foreign key (language) references language(acronym) on delete set null;
 
 create table access_group (
     id           char(32)     not null,
@@ -270,7 +282,7 @@ create table event_sponsor (
     id          char(32)      not null,
     event       char(32)      not null,
     partner     char(32)      not null,
-    ammount     decimal(12,2)     null,
+    amount      decimal(12,2)     null,
     description text              null
 ) engine = innodb;
 

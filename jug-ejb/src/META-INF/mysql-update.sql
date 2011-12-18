@@ -157,7 +157,8 @@ drop table contact;
 drop table communication_privacy;
 
 ###############################################################################
-# Indicates which partners are sponsors of an event.
+# Indicates which partners are sponsors of an event, keeps the history of 
+# database updates and store the list of supported languages.
 # 08/12/2011
 # Hildeberto Mendonca
 # Version 0.28:0.7
@@ -165,7 +166,7 @@ create table event_sponsor (
     id          char(32)      not null,
     event       char(32)      not null,
     partner     char(32)      not null,
-    ammount     decimal(12,2)     null,
+    amount      decimal(12,2)     null,
     description text              null
 ) engine = innodb;
 
@@ -182,10 +183,23 @@ create table version_database (
 
 alter table version_database add constraint pk_version_database primary key (version);
 
+create table language (
+    acronym varchar(5)  not null,
+    name    varchar(30) not null
+) engine innodb;
+
+alter table language add constraint pk_language primary key (acronym);
+
+insert into language values ('en', 'English');
+insert into language values ('pt', 'Portugues');
+
+alter table user_account add language varchar(5) null;
+alter table user_account add constraint fk_language_user foreign key (language) references language(acronym) on delete set null;
+
 insert into version_database (version, app_version, description) values (
    '0.7', 
    '0.28', 
-   'Indicates which partners are sponsors of an event and keeps the history of database updates.');
+   'Indicates which partners are sponsors of an event, keeps the history of database updates and store the list of supported languages.');
 
 ###############################################################################
 insert into version_database values 

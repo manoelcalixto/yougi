@@ -38,16 +38,16 @@ public class MembershipGrowthRange {
     private Integer year;
     private Integer month;
     private Integer value;
-    private Integer acumulated;
+    private Integer accumulated;
 
     public MembershipGrowthRange() {}
 
-    private MembershipGrowthRange(String rangeName, Integer year, Integer month, Integer value, Integer acumulated) {
+    private MembershipGrowthRange(String rangeName, Integer year, Integer month, Integer value, Integer accumulated) {
         this.rangeName = rangeName;
         this.year = year;
         this.month = month;
         this.value = value;
-        this.acumulated = acumulated;
+        this.accumulated = accumulated;
     }
 
     public static List<MembershipGrowthRange> generateSeries(List<UserAccount> userAccounts) {
@@ -141,20 +141,20 @@ public class MembershipGrowthRange {
 
     public Integer incrementValue() {
         this.value++;
-        this.acumulated++;
+        this.accumulated++;
         return 1;
     }
 
     public void decrementValue() {
         this.value--;
-        this.acumulated--;
+        this.accumulated--;
     }
 
-    public Integer getAcumulated() {
-        return acumulated;
+    public Integer getAccumulated() {
+        return accumulated;
     }
 
-    public void setAcumulated(Integer acumulated) {
-        this.acumulated = acumulated;
+    public void setAcumulated(Integer accumulated) {
+        this.accumulated = accumulated;
     }
 }

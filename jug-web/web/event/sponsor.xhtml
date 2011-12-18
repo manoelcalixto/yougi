@@ -37,9 +37,9 @@
                                 <f:selectItems value="#{eventSponsorBean.partners}" var="partner" itemLabel="#{partner.name}" itemValue="#{partner.id}"/>
                             </h:selectOneMenu>
                             
-                            <h:outputLabel for="ammount" value="#{bundle.ammount}" styleClass="fieldLabel"/>
+                            <h:outputLabel for="amount" value="#{bundle.amount}" styleClass="fieldLabel"/>
                             <h:panelGrid columns="2">
-                                <h:inputText id="ammount" label="#{bundle.ammount}" size="10" maxlength="13" value="#{eventSponsorBean.eventSponsor.ammount}">
+                                <h:inputText id="amount" label="#{bundle.amount}" size="10" maxlength="13" value="#{eventSponsorBean.eventSponsor.amount}">
 	                                <f:convertNumber maxFractionDigits="2" minFractionDigits="2"/>
 	                            </h:inputText>
 	                            <h:outputText value="#{bundle.currencyFormat}" styleClass="fieldFormat"/>

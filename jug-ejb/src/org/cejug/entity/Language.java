@@ -18,84 +18,86 @@
  * find it, write to the Free Software Foundation, Inc., 59 Temple Place, 
  * Suite 330, Boston, MA 02111-1307 USA.
  * */
-package org.cejug.event.entity;
+package org.cejug.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.util.Locale;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.cejug.partnership.entity.Partner;
-
-/**
- * @author Hildeberto Mendonca
- */
 @Entity
-@Table(name="event_sponsor")
-public class EventSponsor implements Serializable {
+@Table(name = "language")
+public class Language implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	public static final String DEFAULT_LANGUAGE = "en";
+
 	@Id
-	private String id;
-	
-	@ManyToOne
-	@JoinColumn(name="event", nullable=false)
-	private Event event;
-	
-	@ManyToOne
-	@JoinColumn(name="partner", nullable=false)
-	private Partner partner;
-	
-	private BigDecimal amount;
-	
-	private String description;
+	@Column(name = "acronym", nullable = false)
+	private String acronym;
 
-	public String getId() {
-		return id;
+	@Column(name = "name", nullable = false)
+	private String name;
+
+	public Language() {
+		this.acronym = DEFAULT_LANGUAGE;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public Language(String acronym) {
+		this.acronym = acronym;
 	}
 
-	public Event getEvent() {
-		return event;
+	public String getName() {
+		return name;
 	}
 
-	public void setEvent(Event event) {
-		this.event = event;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public Partner getPartner() {
-		return partner;
+	public String getAcronym() {
+		return acronym;
 	}
 
-	public void setPartner(Partner partner) {
-		this.partner = partner;
+	public void setAcronym(String acronym) {
+		this.acronym = acronym;
 	}
 
-	public BigDecimal getAmount() {
-		return amount;
+	public Locale getLocale() {
+		Locale locale = new Locale(this.getAcronym());
+		return locale;
 	}
 
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
 	public String toString() {
-		return this.partner.getName();
+		return this.name;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((acronym == null) ? 0 : acronym.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Language))
+			return false;
+		Language other = (Language) obj;
+		if (acronym == null) {
+			if (other.acronym != null)
+				return false;
+		} else if (!acronym.equals(other.acronym))
+			return false;
+		return true;
 	}
 }
