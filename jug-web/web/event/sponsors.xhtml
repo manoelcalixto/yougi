@@ -35,11 +35,17 @@
                                 </h:link>
                             </p:column>
 
-                            <p:column>
+                            <p:column style="text-align: right">
                                 <f:facet name="header"><h:outputText value="#{bundle.amount}"/></f:facet>
                                 <h:outputText value="#{sponsor.amount}">
                                     <f:convertNumber maxFractionDigits="2" minFractionDigits="2"/>
                                 </h:outputText>
+                                <f:facet name="footer">
+                                    <h:outputText value="#{bundle.total}" styleClass="fieldLabel"/>: 
+                                    <h:outputText value="#{eventSponsorBean.sumAmounts}" styleClass="fieldLabel">
+                                        <f:convertNumber maxFractionDigits="2" minFractionDigits="2"/>
+                                    </h:outputText>
+                                </f:facet>
                             </p:column>
                             
                             <p:column>

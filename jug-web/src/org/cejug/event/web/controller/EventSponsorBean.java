@@ -21,6 +21,7 @@
 package org.cejug.event.web.controller;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -44,30 +45,34 @@ import org.cejug.partnership.entity.Partner;
 public class EventSponsorBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @EJB
     private EventSponsorBsn eventSponsorBsn;
-    
+
     @EJB
     private EventBsn eventBsn;
-    
+
     @EJB
     private PartnerBsn partnerBsn;
-    
+
     @ManagedProperty(value = "#{param.id}")
     private String id;
-    
+
     @ManagedProperty(value = "#{param.eventId}")
     private String eventId;
-    
+
     private Event event;
+
     private EventSponsor eventSponsor;
+
     private List<EventSponsor> eventSponsors;
-    
+
     private List<Event> events;
+
     private String selectedEvent;
-    
+
     private List<Partner> partners;
+
     private String selectedSponsor;
 
     public EventSponsorBean() {
@@ -82,71 +87,82 @@ public class EventSponsorBean implements Serializable {
     }
 
     public String getEventId() {
-		return eventId;
-	}
+        return eventId;
+    }
 
-	public void setEventId(String eventId) {
-		this.eventId = eventId;
-	}
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
 
-	public Event getEvent() {
-		return event;
-	}
+    public Event getEvent() {
+        return event;
+    }
 
-	public void setEvent(Event event) {
-		this.event = event;
-	}
+    public void setEvent(Event event) {
+        this.event = event;
+    }
 
-	public EventSponsor getEventSponsor() {
-		return eventSponsor;
-	}
+    public EventSponsor getEventSponsor() {
+        return eventSponsor;
+    }
 
-	public void setEventSponsor(EventSponsor eventSponsor) {
-		this.eventSponsor = eventSponsor;
-	}
+    public void setEventSponsor(EventSponsor eventSponsor) {
+        this.eventSponsor = eventSponsor;
+    }
 
-	public List<EventSponsor> getEventSponsors() {
+    public List<EventSponsor> getEventSponsors() {
         if (eventSponsors == null) {
             this.eventSponsors = eventSponsorBsn.findEventSponsors(this.event);
         }
         return this.eventSponsors;
     }
-	
-	public String getSelectedEvent() {
-		return this.selectedEvent;
-	}
+    
+    public BigDecimal getSumAmounts() {
+        BigDecimal sum = new BigDecimal(0);
+        List<EventSponsor> es = getEventSponsors();
+        for(EventSponsor sponsor: es) {
+            sum = sum.add(sponsor.getAmount());
+        }
+        return sum;
+    }
 
-	public void setSelectedEvent(String selectedEvent) {
-		this.selectedEvent = selectedEvent;
-	}
-	
-	public List<Event> getEvents() {
-    	if(this.events == null)
-    		this.events = eventBsn.findEvents();
+    public String getSelectedEvent() {
+        return this.selectedEvent;
+    }
+
+    public void setSelectedEvent(String selectedEvent) {
+        this.selectedEvent = selectedEvent;
+    }
+
+    public List<Event> getEvents() {
+        if (this.events == null) {
+            this.events = eventBsn.findEvents();
+        }
         return this.events;
     }
-	
-	public String getSelectedSponsor() {
-		return this.selectedSponsor;
-	}
 
-	public void setSelectedSponsor(String selectedSponsor) {
-		this.selectedSponsor = selectedSponsor;
-	}
-	
-	public List<Partner> getPartners() {
-    	if(this.partners == null)
-    		this.partners = partnerBsn.findPartners();
+    public String getSelectedSponsor() {
+        return this.selectedSponsor;
+    }
+
+    public void setSelectedSponsor(String selectedSponsor) {
+        this.selectedSponsor = selectedSponsor;
+    }
+
+    public List<Partner> getPartners() {
+        if (this.partners == null) {
+            this.partners = partnerBsn.findPartners();
+        }
         return this.partners;
     }
 
     @PostConstruct
     public void load() {
-    	if(this.eventId != null && !this.eventId.isEmpty()) {
-    		this.event = eventBsn.findEvent(eventId);
-    		this.selectedEvent = this.event.getId();
-    	}
-    	
+        if (this.eventId != null && !this.eventId.isEmpty()) {
+            this.event = eventBsn.findEvent(eventId);
+            this.selectedEvent = this.event.getId();
+        }
+
         if (this.id != null && !this.id.isEmpty()) {
             this.eventSponsor = eventSponsorBsn.findEventSponsor(id);
             this.selectedEvent = this.eventSponsor.getEvent().getId();
@@ -157,18 +173,18 @@ public class EventSponsorBean implements Serializable {
     }
 
     public String save() {
-    	Event evt = eventBsn.findEvent(selectedEvent);
-    	this.eventSponsor.setEvent(evt);
-    	
-    	Partner spon = partnerBsn.findPartner(selectedSponsor);
-    	this.eventSponsor.setPartner(spon);
-    	
+        Event evt = eventBsn.findEvent(selectedEvent);
+        this.eventSponsor.setEvent(evt);
+
+        Partner spon = partnerBsn.findPartner(selectedSponsor);
+        this.eventSponsor.setPartner(spon);
+
         eventSponsorBsn.save(this.eventSponsor);
-        return "sponsors?faces-redirect=true&eventId="+ evt.getId();
+        return "sponsors?faces-redirect=true&eventId=" + evt.getId();
     }
 
     public String remove() {
         eventSponsorBsn.remove(this.eventSponsor.getId());
-        return "sponsors?faces-redirect=true&eventId="+ this.event.getId();
+        return "sponsors?faces-redirect=true&eventId=" + this.event.getId();
     }
 }

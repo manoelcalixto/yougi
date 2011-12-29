@@ -65,7 +65,8 @@
                             <h:inputTextarea id="description" label="#{bundle.description}" cols="60" rows="5" value="#{partnerBean.partner.description}"/>
                         </h:panelGrid>
                         
-                        <p:pickList value="#{partnerBean.candidates}" var="candidate" itemLabel="#{candidate.fullName}" itemValue="#{candidate.id}" converter="RepresentativePickListConverter"/>
+                        <h:outputLabel for="representatives" value="#{bundle.representatives}" styleClass="fieldLabel"/>
+                        <p:pickList id="representatives" value="#{partnerBean.candidates}" var="candidate" itemLabel="#{candidate.fullName}" itemValue="#{candidate.id}" converter="RepresentativePickListConverter"/>
                         
                         <h:inputHidden id="id" value="#{partnerBean.partner.id}"/>
                         
