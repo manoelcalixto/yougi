@@ -82,12 +82,12 @@ public class UserAccountBean implements Serializable {
     }
     
     public LocationBean getLocationBean() {
-		return locationBean;
-	}
+        return locationBean;
+    }
 
-	public void setLocationBean(LocationBean locationBean) {
-		this.locationBean = locationBean;
-	}
+    public void setLocationBean(LocationBean locationBean) {
+        this.locationBean = locationBean;
+    }
 
     public Boolean getNoAccount() {
         return userAccountBsn.noAccount();
