@@ -81,8 +81,7 @@ create table user_account (
     event               tinyint(1)       null default false,
     sponsor             tinyint(1)       null default false,
     speaker             tinyint(1)       null default false,
-    verified            tinyint(1)       null default false,
-    language            varchar(5)       null
+    verified            tinyint(1)       null default false
 ) engine = innodb;
 
 alter table user_account add constraint pk_user_account primary key (id);
@@ -91,7 +90,6 @@ create unique index idx_unique_username on user_account (username);
 alter table user_account add constraint fk_country_user foreign key (country) references country(acronym) on delete set null;
 alter table user_account add constraint fk_province_user foreign key (province) references province(id) on delete set null;
 alter table user_account add constraint fk_city_user foreign key (city) references city(id) on delete set null;
-alter table user_account add constraint fk_language_user foreign key (language) references language(acronym) on delete set null;
 
 create table access_group (
     id           char(32)     not null,
@@ -172,48 +170,12 @@ alter table mailing_list_subscription add constraint pk_mailing_list_subscriptio
 alter table mailing_list_subscription add constraint fk_subscription_mailing_list foreign key (mailing_list) references mailing_list(id) on delete cascade;
 alter table mailing_list_subscription add constraint fk_subsciption_user foreign key (user_account) references user_account(id) on delete set null;
 
-create table mailing_list_message (
-    id            char(32)     not null,
-    mailing_list  char(32)     not null,
-    subject       varchar(255) not null,
-    body          text         not null,
-    sender        varchar(100) not null,
-    when_received datetime     not null,
-    reply_to      char(32)         null,
-    message_type  char(2)          null, # q - question, a - answer, i - info, ri - request_more_info, ir - info_requested, s - solution
-    answer_score  int(5)           null,
-    published     tinyint(1)       null
-) engine = innodb;
-
-alter table mailing_list_message add constraint pk_mailing_list_message primary key (id);
-alter table mailing_list_message add constraint fk_mailing_list_message foreign key (mailing_list) references mailing_list(id) on delete cascade;
-alter table mailing_list_message add constraint fk_message_reply_to foreign key (reply_to) references mailing_list_message(id) on delete set null;
-
 create table topic (
-    id          char(32)     not null,
     name        varchar(50)  not null,
-    description varchar(255)     null
-) engine = innodb;
-
-alter table topic add constraint pk_topic primary key (id);
-
-create table topic_mailinglist_message (
-    id                  char(32) not null,
-    topic               char(32) not null,
-    mailinglist_message char(32) not null
-) engine = innodb;
-
-alter table topic_mailinglist_message add constraint pk_topic_mailinglist_message primary key (id);
-alter table topic_mailinglist_message add constraint fk_topic_mailinglist_message foreign key (mailinglist_message) references mailing_list_message(id) on delete cascade;
-alter table topic_mailinglist_message add constraint fk_mailinglist_message_topic foreign key (topic) references topic(id) on delete cascade;
-
-create table tag (
-    tag        char(40)   not null,
-    kind       tinyint(2) not null,
-    entity     char(32)   not null
+    description text             null
 ) engine = MyISAM;
 
-alter table tag add constraint pk_tag primary key (tag, kind, entity);
+alter table topic add constraint pk_topic primary key (name);
 
 ###############################################################################
 # Partnership                                                                 #

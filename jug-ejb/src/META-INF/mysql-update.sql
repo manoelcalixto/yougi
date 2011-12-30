@@ -193,8 +193,12 @@ alter table language add constraint pk_language primary key (acronym);
 insert into language values ('en', 'English');
 insert into language values ('pt', 'Portugues');
 
-alter table user_account add language varchar(5) null;
-alter table user_account add constraint fk_language_user foreign key (language) references language(acronym) on delete set null;
+create table topic (
+    name        varchar(50)  not null,
+    description text             null
+) engine = MyISAM;
+
+alter table topic add constraint pk_topic primary key (name);
 
 insert into version_database (version, app_version, description) values (
    '0.7', 
@@ -205,6 +209,32 @@ insert into version_database (version, app_version, description) values (
 insert into version_database values 
    ('0.8',
     '0.29',
+    'Allow the user to indicate which language to use in the user interface.');
+
+alter table user_account add language varchar(5) null;
+alter table user_account add constraint fk_language_user foreign key (language) references language(acronym) on delete set null;
+
+create table mailing_list_message (
+    id            char(32)     not null,
+    mailing_list  char(32)     not null,
+    subject       varchar(255) not null,
+    body          text         not null,
+    sender        varchar(100) not null,
+    when_received datetime     not null,
+    reply_to      char(32)         null,
+    message_type  char(2)          null, # q - question, a - answer, i - info, ri - request_more_info, ir - info_requested, s - solution
+    answer_score  int(5)           null,
+    published     tinyint(1)       null
+) engine = innodb;
+
+alter table mailing_list_message add constraint pk_mailing_list_message primary key (id);
+alter table mailing_list_message add constraint fk_mailing_list_message foreign key (mailing_list) references mailing_list(id) on delete cascade;
+alter table mailing_list_message add constraint fk_message_reply_to foreign key (reply_to) references mailing_list_message(id) on delete set null;
+
+###############################################################################
+insert into version_database values 
+   ('0.9',
+    '0.30',
     'Create sessions for the event and speakers for the sessions.');
 
 create table event_session (
