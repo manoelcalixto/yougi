@@ -26,6 +26,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -139,10 +140,15 @@ public class UserAccountBsn {
                  .getResultList();
     }
 
+    /**
+     * Returns user accounts ordered by registration date that were already 
+     * confirmed by their respective users and were not deactivated.
+     */
     @SuppressWarnings("unchecked")
-    public List<UserAccount> findUserAccountsOrderedByRegistration() {
-        return em.createQuery("select ua from UserAccount ua where ua.confirmationCode is null and ua.deactivated = :deactivated order by ua.registrationDate")
-                 .setParameter("deactivated", Boolean.FALSE)
+    public List<UserAccount> findConfirmedUserAccounts(Date from, Date to) {
+        return em.createQuery("select ua from UserAccount ua where ua.confirmationCode is null and ua.registrationDate >= :from and ua.registrationDate <= :to order by ua.registrationDate asc")
+                 .setParameter("from", from)
+                 .setParameter("to", to)
                  .getResultList();
     }
 

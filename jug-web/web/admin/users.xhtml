@@ -4,20 +4,11 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.prime.com.tr/ui">
+      xmlns:p="http://primefaces.org/ui">
     <h:body>
         <ui:composition template="../layout.xhtml">
             <ui:define name="title">#{bundle.users}</ui:define>
             <ui:define name="content">
-                <div class="bread_crumb_area">
-                    <h:form>
-                        <p:breadCrumb styleClass="bread_crumb">
-                            <p:menuitem value="#{bundle.home}" url="../index.xhtml"/>
-                            <p:menuitem value="#{bundle.administration}"/>
-                            <p:menuitem value="#{bundle.users}" url="users.xhtml"/>
-                        </p:breadCrumb>
-                    </h:form>
-                </div>
                 <div class="content">
                     <h1>#{bundle.users}</h1>
                     <h:form>
@@ -133,21 +124,13 @@
                                 </p:dataTable>
                             </p:tab>
                             <p:tab title="#{bundle.privacy}">
-                                <p:stackedColumnChart width="700" value="#{memberBean.communicationPrivacyRanges}" var="range" xfield="#{range.rangeName}">
-                                    <p:chartSeries label="#{bundle.yes}" value="#{range.value}" />
-                                    <p:chartSeries label="#{bundle.no}" value="#{range.total}" />
-                                </p:stackedColumnChart>
+                                <p:barChart value="#{communicationPrivacyRange.communicationPrivacyModel}" legendPosition="ne" stacked="true" xaxisLabel="#{range.rangeName}"/>
                             </p:tab>
                             <p:tab title="#{bundle.growth}">
                                 <h2>#{bundle.growth}</h2>
-                                <p:columnChart width="700" value="#{memberBean.membershipGrowth}" var="range"  xfield="#{range.rangeName}">
-                                    <p:chartSeries label="#{bundle.growth}" value="#{range.value}"/>
-                                </p:columnChart>
-                                
+                                <p:barChart value="#{membershipGrowth.membershipGrowthModel}" xaxisLabel="#{range.rangeName}" legendPosition="ne"/>
                                 <h2>#{bundle.accumulated}</h2>
-                                <p:lineChart width="700" value="#{memberBean.membershipGrowth}" var="range" xfield="#{range.rangeName}">
-                                    <p:chartSeries label="#{bundle.accumulated}" value="#{range.accumulated}" />
-                                </p:lineChart>
+                                <p:lineChart value="#{membershipCumulativeGrowth.membershipGrowthModel}" xaxisLabel="#{range.rangeName}" legendPosition="ne"/>
                             </p:tab>
                         </p:tabView>
                     </h:form>

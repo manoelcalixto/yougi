@@ -112,8 +112,10 @@ public final class WebTextUtils extends TextUtils {
             ResourceBundle rb = new ResourceBundle();
             fullAddress.append(" ");
             fullAddress.append(rb.getMessage("postalCode"));
-            fullAddress.append(": ");
-            fullAddress.append(country.getName());
+            if(country != null) {
+                fullAddress.append(": ");
+                fullAddress.append(country.getName());
+            }
         }
         
         return fullAddress.toString();

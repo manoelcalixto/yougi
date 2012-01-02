@@ -3,21 +3,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.prime.com.tr/ui"
       xmlns:f="http://java.sun.com/jsf/core">
     <h:body>
         <ui:composition template="../layout.xhtml">
             <ui:define name="title">#{bundle.properties}</ui:define>
             <ui:define name="content">
-                <div class="bread_crumb_area">
-                    <h:form>
-                        <p:breadCrumb styleClass="bread_crumb">
-                            <p:menuitem value="#{bundle.home}" url="../index.xhtml"/>
-                            <p:menuitem value="#{bundle.administration}"/>
-                            <p:menuitem value="#{bundle.properties}" url="properties.xhtml"/>
-                        </p:breadCrumb>
-                    </h:form>
-                </div>
                 <div class="content">
                     <h1>#{bundle.properties}</h1>
                     <h:form>
@@ -32,16 +22,16 @@
                             <h:outputLabel for="fileRepositoryPath" value="#{bundle.fileRepositoryPath}" styleClass="fieldLabel"/>
                             <h:inputText id="fileRepositoryPath" label="#{bundle.fileRepositoryPath}" size="30" maxlength="100" value="#{applicationPropertiesBean.applicationProperties['fileRepositoryPath']}"/>
 
-                            <h:panelGrid columns="2">
-                                <h:selectBooleanCheckbox id="sendEmails" label="#{bundle.sendEmails}" value="#{applicationPropertiesBean.sendEmails}"/>
-                                <h:outputLabel for="sendEmails" value="#{bundle.sendEmails}"/>
-                            </h:panelGrid>
-
                             <h:outputLabel for="emailServerType" value="#{bundle.emailServerType}" styleClass="fieldLabel"/>
                             <h:selectOneRadio id="emailServerType" label="#{bundle.emailServerType}" value="#{applicationPropertiesBean.applicationProperties['emailServerType']}">
                                 <f:selectItem itemLabel="#{bundle.pop3}" itemValue="pop3"/>
                                 <f:selectItem itemLabel="#{bundle.imap}" itemValue="imap"/>
                             </h:selectOneRadio>
+                            
+                            <h:panelGrid columns="2">
+                                <h:selectBooleanCheckbox id="sendEmails" label="#{bundle.sendEmails}" value="#{applicationPropertiesBean.sendEmails}"/>
+                                <h:outputLabel for="sendEmails" value="#{bundle.sendEmails}"/>
+                            </h:panelGrid>
 
                             <h:outputText value="&nbsp;"/>
                             <h:panelGrid columns="2">

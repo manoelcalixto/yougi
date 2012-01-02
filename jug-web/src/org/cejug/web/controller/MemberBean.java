@@ -38,8 +38,6 @@ import org.cejug.entity.UserAccount;
 import org.cejug.knowledge.business.MailingListBsn;
 import org.cejug.knowledge.entity.MailingList;
 import org.cejug.knowledge.entity.MailingListSubscription;
-import org.cejug.web.report.CommunicationPrivacyRange;
-import org.cejug.web.report.MembershipGrowthRange;
 
 /**
  * @author Hildeberto Mendonca
@@ -138,14 +136,6 @@ public class MemberBean implements Serializable {
         }
         
         return "users?faces-redirect=true";
-    }
-
-    public List<CommunicationPrivacyRange> getCommunicationPrivacyRanges() {
-        return CommunicationPrivacyRange.generateSeries(userAccountBsn.findUserAccounts());
-    }
-
-    public List<MembershipGrowthRange> getMembershipGrowth() {
-        return MembershipGrowthRange.generateSeries(userAccountBsn.findUserAccountsOrderedByRegistration());
     }
     
     public MailingList[] getSelectedMailingLists() {

@@ -2,23 +2,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.prime.com.tr/ui">
+      xmlns:h="http://java.sun.com/jsf/html">
     <body>
         <ui:composition template="../layout.xhtml">
             <ui:define name="title">#{bundle.country}</ui:define>
             <ui:define name="content">
-                <div class="bread_crumb_area">
-                    <h:form>
-                        <p:breadCrumb styleClass="bread_crumb">
-                            <p:menuitem value="#{bundle.home}" url="../index.xhtml"/>
-                            <p:menuitem value="#{bundle.administration}"/>
-                            <p:menuitem value="#{bundle.location}"/>
-                            <p:menuitem value="#{bundle.countries}" url="countries.xhtml"/>
-                            <p:menuitem value="#{bundle.country}" url="country.xhtml"/>
-                        </p:breadCrumb>
-                    </h:form>
-                </div>
                 <div class="content">
                     <h1>#{bundle.country}</h1>
                     <h:form>

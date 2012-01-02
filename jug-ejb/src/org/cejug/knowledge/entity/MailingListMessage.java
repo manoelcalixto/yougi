@@ -23,7 +23,6 @@ package org.cejug.knowledge.entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -62,9 +61,6 @@ public class MailingListMessage implements Serializable, Cloneable {
     private Integer answerScore;
 
     private Boolean published;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "mailinglistMessage")
-    private List<TopicMailinglistMessage> topics;
 
     @OneToMany(mappedBy = "replyTo")
     private List<MailingListMessage> repliesFrom;
@@ -155,14 +151,6 @@ public class MailingListMessage implements Serializable, Cloneable {
         this.published = published;
     }
 
-    public List<TopicMailinglistMessage> getTopics() {
-        return topics;
-    }
-
-    public void setTopics(List<TopicMailinglistMessage> topics) {
-        this.topics = topics;
-    }
-
     public List<MailingListMessage> getRepliesFrom() {
         return repliesFrom;
     }
@@ -221,7 +209,6 @@ public class MailingListMessage implements Serializable, Cloneable {
         mailingListMessage.setRepliesFrom(this.repliesFrom);
         mailingListMessage.setReplyTo(this.replyTo);
         mailingListMessage.setSender(this.sender);
-        mailingListMessage.setTopics(this.topics);
         return mailingListMessage;
     }
 

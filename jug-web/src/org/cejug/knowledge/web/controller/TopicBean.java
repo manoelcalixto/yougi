@@ -18,10 +18,8 @@
  * find it, write to the Free Software Foundation, Inc., 59 Temple Place, 
  * Suite 330, Boston, MA 02111-1307 USA.
  * */
-package org.cejug.web.controller;
+package org.cejug.knowledge.web.controller;
 
-import org.cejug.business.LanguageBsn;
-import org.cejug.entity.Language;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -29,56 +27,61 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import org.cejug.knowledge.business.TopicBsn;
+import org.cejug.knowledge.entity.Topic;
 
+/**
+ * @author Hildeberto Mendonca
+ */
 @ManagedBean
 @RequestScoped
-public class LanguageBean {
+public class TopicBean {
 
     @EJB
-    private LanguageBsn languageBsn;
+    private TopicBsn topicBsn;
 
-    private Language language;
+    private Topic topic;
 
-    private List<Language> languages;
+    private List<Topic> topics;
     
-    @ManagedProperty(value="#{param.acronym}")
-    private String acronym;
+    @ManagedProperty(value="#{param.topic}")
+    private String topicName;
 
-    public LanguageBean() {
-        this.language = new Language();
+    public TopicBean() {
+        this.topic = new Topic();
     }
 
-    public String getAcronym() {
-        return acronym;
+    public String getTopicName() {
+        return topicName;
     }
 
-    public void setAcronym(String acronym) {
-        this.acronym = acronym;
+    public void setTopicName(String topicName) {
+        this.topicName = topicName;
     }
 
-    public Language getLanguage() {
-        return language;
+    public Topic getTopic() {
+        return topic;
     }
 
-    public void setLanguage(Language language) {
-        this.language = language;
+    public void setTopic(Topic topic) {
+        this.topic = topic;
     }
 
-    public List<Language> getLanguages() {
-        if(this.languages == null)
-            this.languages = languageBsn.findLanguages();
-        return this.languages;
+    public List<Topic> getTopics() {
+        if(this.topics == null)
+            this.topics = topicBsn.findTopics();
+        return this.topics;
     }
     
     @PostConstruct
     public void load() {
-        if(this.acronym != null && !this.acronym.isEmpty()) {
-            this.language = languageBsn.findLanguage(this.acronym);
+        if(this.topicName != null && !this.topicName.isEmpty()) {
+            this.topic = topicBsn.findTopic(topicName);
         }
     }
 
     public String save() {
-        languageBsn.save(this.language);
-        return "languages?faces-redirect=true";
+        topicBsn.save(this.topic);
+        return "topics?faces-redirect=true";
     }
 }

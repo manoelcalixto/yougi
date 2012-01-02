@@ -5,17 +5,11 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:c="http://java.sun.com/jsp/jstl/core"
-      xmlns:p="http://primefaces.prime.com.tr/ui">
+      xmlns:p="http://primefaces.org/ui">
     <body>
         <ui:composition template="./layout.xhtml">
             <ui:define name="title">#{bundle.registration}</ui:define>
             <ui:define name="content">
-                <div class="bread_crumb_area">
-                    <p:breadCrumb styleClass="bread_crumb">
-                        <p:menuitem value="#{bundle.home}" url="index.xhtml"/>
-                        <p:menuitem value="#{bundle.registration}" url="registration.xhtml"/>
-                    </p:breadCrumb>
-                </div>
                 <div class="content">
                     <h1>#{bundle.registration}</h1>
                     <h:form>

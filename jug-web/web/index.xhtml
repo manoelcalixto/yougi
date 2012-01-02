@@ -3,18 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:c="http://java.sun.com/jsp/jstl/core">
     <h:body>
         <ui:composition template="/layout.xhtml">
             <ui:define name="title">#{bundle.home}</ui:define>
             <ui:define name="content">
-                <div class="bread_crumb_area">
-                    <p:breadCrumb styleClass="bread_crumb">
-                        <p:menuitem value="#{bundle.home}" url="#"/>
-                    </p:breadCrumb>
-                </div>
                 <div class="content">
                     <script src="http://widgets.twimg.com/j/2/widget.js"></script>
                     <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
