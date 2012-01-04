@@ -23,6 +23,7 @@ package org.cejug.web.report;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -45,17 +46,25 @@ public class MembershipGrowth {
     @EJB
     private UserAccountBsn userAccountBsn;
     
-    private CartesianChartModel membershipGrowthModel; 
+    private CartesianChartModel membershipGrowthModel;
+    private CartesianChartModel membershipCumulativeGrowthModel;
+    
+    static final Logger logger = Logger.getLogger("org.cejug.web.report.MembershipGrowth");
 
     public MembershipGrowth() {}
 
     public CartesianChartModel getMembershipGrowthModel() {
         return membershipGrowthModel;
     }
+    
+    public CartesianChartModel getMembershipCumulativeGrowthModel() {
+        return membershipCumulativeGrowthModel;
+    }
 
     @PostConstruct
     public void load() {
         membershipGrowthModel = new CartesianChartModel();
+        membershipCumulativeGrowthModel = new CartesianChartModel();
         
         ResourceBundle bundle = new ResourceBundle();
         String[] months = {bundle.getMessage("januaryShort"),
@@ -71,25 +80,31 @@ public class MembershipGrowth {
                             bundle.getMessage("novemberShort"),
                             bundle.getMessage("decemberShort")};
         
-        Calendar today = Calendar.getInstance();
-        today.set(Calendar.DATE, today.getActualMaximum(Calendar.DAY_OF_MONTH));
-        today.set(Calendar.HOUR, today.getActualMaximum(Calendar.HOUR));
-        today.set(Calendar.MINUTE, today.getActualMaximum(Calendar.MINUTE));
-        Date to = today.getTime();
+        Calendar lastDay = Calendar.getInstance();
+        lastDay.set(Calendar.MONTH, Calendar.DECEMBER);
+        lastDay.set(Calendar.DATE, 31);
+        lastDay.set(Calendar.HOUR, 11);
+        lastDay.set(Calendar.MINUTE, 59);
+        lastDay.set(Calendar.SECOND, 59);
+        lastDay.set(Calendar.AM_PM, Calendar.PM);
+        Date to = lastDay.getTime();
         
-        Calendar before = today;
-        before.add(Calendar.YEAR, -2);
-        before.add(Calendar.MONTH, 1);
-        before.set(Calendar.HOUR, 0);
-        before.set(Calendar.MINUTE, 0);
-        Date from = before.getTime();
+        Calendar firstDay = lastDay;
+        firstDay.add(Calendar.YEAR, -1);
+        firstDay.set(Calendar.DAY_OF_MONTH, 1);
+        firstDay.set(Calendar.MONTH, 0);
+        firstDay.set(Calendar.HOUR, 0);
+        firstDay.set(Calendar.MINUTE, 0);
+        lastDay.set(Calendar.SECOND, 0);
+        lastDay.set(Calendar.AM_PM, Calendar.AM);
+        Date from = firstDay.getTime();
         
         List<UserAccount> userAccounts = userAccountBsn.findConfirmedUserAccounts(from, to);
         
         Calendar registrationDate;
         Calendar deactivationDate;
         int[][] data = new int[2][12];
-        int year = -1, month = 0, currentYear = 0;
+        int year, month, currentYear = 0;
         for(UserAccount userAccount: userAccounts) {
             registrationDate = Calendar.getInstance();
             registrationDate.setTime(userAccount.getRegistrationDate());
@@ -118,6 +133,25 @@ public class MembershipGrowth {
                 annualSeries.set(months[j], data[i][j]);
             }
             membershipGrowthModel.addSeries(annualSeries);
+        }
+        
+        ChartSeries accumulatedSeries;
+        int accumulated;
+        for(int i = 0;i < 2;i++) {
+            accumulated = 0;
+            accumulatedSeries = new ChartSeries();
+            accumulatedSeries.setLabel(String.valueOf(currentYear + i));
+            for(int j = 0;j < 12;j++) {
+                accumulated = data[i][j] + accumulated;
+                accumulatedSeries.set(months[j], accumulated);
+            }
+            membershipCumulativeGrowthModel.addSeries(accumulatedSeries);
+        }
+        
+        for(int i = 0;i < 2;i++) {
+            for(int j = 0; j < 12; j++) {
+                logger.info(months[j] +": "+ data[i][j]);
+            }
         }
     }
 }

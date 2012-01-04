@@ -141,8 +141,8 @@ public class UserAccountBsn {
     }
 
     /**
-     * Returns user accounts ordered by registration date that were already 
-     * confirmed by their respective users and were not deactivated.
+     * Returns user accounts ordered by registration date and in which the
+     * registration date is between the informed period of time.
      */
     @SuppressWarnings("unchecked")
     public List<UserAccount> findConfirmedUserAccounts(Date from, Date to) {
@@ -174,11 +174,14 @@ public class UserAccountBsn {
                  .getResultList();
     }
 
+    /** 
+     * Returns all users related to the informed city, independent of their 
+     * confirmation, validation or deactivation status.
+     */
     @SuppressWarnings("unchecked")
     public List<UserAccount> findInhabitantsFrom(City city) {
-        return em.createQuery("select u from UserAccount u where u.city = :city and u.deactivated = :deactivated order by u.firstName")
+        return em.createQuery("select u from UserAccount u where u.city = :city order by u.firstName")
                 .setParameter("city", city)
-                .setParameter("deactivated", Boolean.FALSE)
                 .getResultList();
     }
 

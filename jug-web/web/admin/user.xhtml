@@ -97,7 +97,7 @@
                                     <h:outputLabel for="mailingListCheck" value="#{bundle.activated}"/>
                                 </h:panelGrid>
                                 <h:panelGrid>
-                                    <p:dataTable var="mailingList" value="#{memberBean.mailingLists}" selection="#{memberBean.selectedMailingLists}">
+                                    <p:dataTable var="mailingList" value="#{memberBean.mailingLists}" selection="#{memberBean.selectedMailingLists}" rowKey="#{mailingList.id}">
                                         <f:facet name="header"><h:outputText value="#{bundle.mailingLists}"/></f:facet>
                                         <p:column selectionMode="multiple"/>
                                         <p:column>

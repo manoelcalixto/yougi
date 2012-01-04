@@ -203,7 +203,7 @@ alter table topic add constraint pk_topic primary key (name);
 insert into version_database (version, app_version, description) values (
    '0.7', 
    '0.28', 
-   'Indicates which partners are sponsors of an event, keeps the history of database updates and store the list of supported languages.');
+   'Indicates which partners are sponsors of an event, keeps the history of database updates, stores the list of supported languages and stores the list of topics allowed in the user group.');
 
 ###############################################################################
 insert into version_database values 

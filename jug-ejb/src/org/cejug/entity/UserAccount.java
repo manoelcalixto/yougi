@@ -109,11 +109,7 @@ public class UserAccount implements Serializable {
     
     @Column(name="postal_code")
     private String postalCode;
-    
-    @ManyToOne
-    @JoinColumn(name="language")
-    private Language language;
-    
+        
     @Column(name = "public_profile")
     private Boolean publicProfile;
     
@@ -250,17 +246,6 @@ public class UserAccount implements Serializable {
         this.setUsername(email);
     }
     
-    public Language getLanguage() {
-        if(this.language == null) {
-            this.language = new Language();
-        }
-        return language;
-    }
-
-    public void setLanguage(Language language) {
-        this.language = language;
-    }
-
     public Date getRegistrationDate() {
         return registrationDate;
     }

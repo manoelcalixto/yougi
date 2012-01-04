@@ -53,7 +53,7 @@ import org.cejug.web.util.WebTextUtils;
 @RequestScoped
 public class EventBean {
 	
-	static final Logger logger = Logger.getLogger("org.cejug.event.web.controller.EventBean");
+    static final Logger logger = Logger.getLogger("org.cejug.event.web.controller.EventBean");
 
     @EJB
     private EventBsn eventBsn;
