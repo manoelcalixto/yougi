@@ -90,13 +90,14 @@
                             <h:inputText id="postalCode" label="#{bundle.postalCode}" size="10" maxlength="10" value="#{memberBean.userAccount.postalCode}"/>
                         </h:panelGrid>
                         <p><h:outputText value="#{bundle.privacy}" styleClass="fieldLabel"/></p>
-                        <p:tabView dynamic="false" cache="true">
-                            <p:tab title="#{bundle.mailingList}">
-                                <h:panelGrid columns="2">
-                                    <h:selectBooleanCheckbox id="mailingListCheck" label="#{bundle.mailingList}" value="#{memberBean.userAccount.mailingList}"/>
-                                    <h:outputLabel for="mailingListCheck" value="#{bundle.activated}"/>
-                                </h:panelGrid>
-                                <h:panelGrid>
+                        <h:panelGrid columns="2" columnClasses="panelGridColumn, panelGridColumn">
+                            <p:tabView dynamic="false" cache="true">
+                                <p:tab title="#{bundle.mailingList}" rendered="#{memberBean.userAccount.mailingList}">
+                                    <h:panelGrid columns="2">
+                                        <h:selectBooleanCheckbox id="mailingListCheck" label="#{bundle.mailingList}" value="#{memberBean.userAccount.mailingList}"/>
+                                        <h:outputLabel for="mailingListCheck" value="#{bundle.activated}"/>
+                                    </h:panelGrid>
+                                    
                                     <p:dataTable var="mailingList" value="#{memberBean.mailingLists}" selection="#{memberBean.selectedMailingLists}" rowKey="#{mailingList.id}">
                                         <f:facet name="header"><h:outputText value="#{bundle.mailingLists}"/></f:facet>
                                         <p:column selectionMode="multiple"/>
@@ -113,38 +114,85 @@
                                             <h:outputText value="#{mailingList.email}" />
                                         </p:column>
                                     </p:dataTable>
-                                </h:panelGrid>
-                            </p:tab>
-                            <p:tab title="#{bundle.publicProfile}">
-                                <h:selectBooleanCheckbox id="publicProfile" label="#{bundle.publicProfile}" value="#{memberBean.userAccount.publicProfile}"/>
-                                <h:outputLabel for="publicProfile" value="#{bundle.activated}"/>
-                            </p:tab>
-                            <p:tab title="#{bundle.event}">
-                                <h:selectBooleanCheckbox id="event" label="#{bundle.event}" value="#{memberBean.userAccount.event}"/>
-                                <h:outputLabel for="event" value="#{bundle.activated}"/>
-                            </p:tab>
-                            <p:tab title="#{bundle.news}">
-                                <h:selectBooleanCheckbox id="news" label="#{bundle.news}" value="#{memberBean.userAccount.news}"/>
-                                <h:outputLabel for="news" value="#{bundle.activated}"/>
-                            </p:tab>
-                            <p:tab title="#{bundle.generalOffer}">
-                                <h:selectBooleanCheckbox id="generalOffer" label="#{bundle.generalOffer}" value="#{memberBean.userAccount.generalOffer}"/>
-                                <h:outputLabel for="generalOffer" value="#{bundle.activated}"/>
-                            </p:tab>
-                            <p:tab title="#{bundle.jobOffer}">
-                                <h:selectBooleanCheckbox id="jobOffer" label="#{bundle.jobOffer}" value="#{memberBean.userAccount.jobOffer}"/>
-                                <h:outputLabel for="jobOffer" value="#{bundle.activated}"/>
-                            </p:tab>
-                            <p:tab title="#{bundle.sponsor}">
-                                <h:selectBooleanCheckbox id="sponsor" label="#{bundle.sponsor}" value="#{memberBean.userAccount.sponsor}"/>
-                                <h:outputLabel for="sponsor" value="#{bundle.activated}"/>
-                            </p:tab>
-                            <p:tab title="#{bundle.speaker}">
-                                <h:selectBooleanCheckbox id="speaker" label="#{bundle.speaker}" value="#{memberBean.userAccount.speaker}"/>
-                                <h:outputLabel for="speaker" value="#{bundle.activated}"/>
-                            </p:tab>
-                        </p:tabView>
+                                </p:tab>
+                                <p:tab title="#{bundle.publicProfile}" rendered="#{memberBean.userAccount.publicProfile}">
+                                    <h:selectBooleanCheckbox id="publicProfile" label="#{bundle.publicProfile}" value="#{memberBean.userAccount.publicProfile}"/>
+                                    <h:outputLabel for="publicProfile" value="#{bundle.activated}"/>
+                                </p:tab>
+                                <p:tab title="#{bundle.event}" rendered="#{memberBean.userAccount.event}">
+                                    <h:panelGrid columns="2">
+                                        <h:selectBooleanCheckbox id="event" label="#{bundle.event}" value="#{memberBean.userAccount.event}"/>
+                                        <h:outputLabel for="event" value="#{bundle.activated}"/>
+                                    </h:panelGrid>
+                                    
+                                    <p:dataTable var="evt" value="#{memberBean.attendedEvents}">
+                                        <f:facet name="header"><h:outputText value="#{bundle.attendedEvents}"/></f:facet>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>
+                                            <h:outputText value="#{evt.name}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="#{bundle.venue}"/></f:facet>
+                                            <h:outputText value="#{evt.venue}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header"><h:outputText value="#{bundle.date}"/></f:facet>
+                                            <h:outputText value="#{evt.startDate}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            </h:outputText>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:tab>
+                                <p:tab title="#{bundle.news}" rendered="#{memberBean.userAccount.news}">
+                                    <h:selectBooleanCheckbox id="news" label="#{bundle.news}" value="#{memberBean.userAccount.news}"/>
+                                    <h:outputLabel for="news" value="#{bundle.activated}"/>
+                                </p:tab>
+                                <p:tab title="#{bundle.generalOffer}" rendered="#{memberBean.userAccount.generalOffer}">
+                                    <h:selectBooleanCheckbox id="generalOffer" label="#{bundle.generalOffer}" value="#{memberBean.userAccount.generalOffer}"/>
+                                    <h:outputLabel for="generalOffer" value="#{bundle.activated}"/>
+                                </p:tab>
+                                <p:tab title="#{bundle.jobOffer}" rendered="#{memberBean.userAccount.jobOffer}">
+                                    <h:selectBooleanCheckbox id="jobOffer" label="#{bundle.jobOffer}" value="#{memberBean.userAccount.jobOffer}"/>
+                                    <h:outputLabel for="jobOffer" value="#{bundle.activated}"/>
+                                </p:tab>
+                                <p:tab title="#{bundle.sponsor}" rendered="#{memberBean.userAccount.sponsor}">
+                                    <h:selectBooleanCheckbox id="sponsor" label="#{bundle.sponsor}" value="#{memberBean.userAccount.sponsor}"/>
+                                    <h:outputLabel for="sponsor" value="#{bundle.activated}"/>
+                                </p:tab>
+                                <p:tab title="#{bundle.speaker}" rendered="#{memberBean.userAccount.speaker}">
+                                    <h:selectBooleanCheckbox id="speaker" label="#{bundle.speaker}" value="#{memberBean.userAccount.speaker}"/>
+                                    <h:outputLabel for="speaker" value="#{bundle.activated}"/>
+                                </p:tab>
+                            </p:tabView>
+                            <p:fieldset legend="#{bundle.availablePrivacyOptions}">
+                                <h:panelGrid columns="2">
+                                    <h:selectBooleanCheckbox id="mailingListCheck2" label="#{bundle.mailingList2}" value="#{memberBean.userAccount.mailingList}" rendered="#{!memberBean.userAccount.mailingList}"/>
+                                    <h:outputLabel for="mailingListCheck2" value="#{bundle.mailingList}" rendered="#{!memberBean.userAccount.mailingList}"/>
 
+                                    <h:selectBooleanCheckbox id="publicProfile2" label="#{bundle.publicProfile2}" value="#{memberBean.userAccount.publicProfile}" rendered="#{!memberBean.userAccount.publicProfile}"/>
+                                    <h:outputLabel for="publicProfile2" value="#{bundle.publicProfile}" rendered="#{!memberBean.userAccount.publicProfile}"/>
+
+                                    <h:selectBooleanCheckbox id="event2" label="#{bundle.event2}" value="#{memberBean.userAccount.event}" rendered="#{!memberBean.userAccount.event}"/>
+                                    <h:outputLabel for="event2" value="#{bundle.event}" rendered="#{!memberBean.userAccount.event}"/>
+                                    
+                                    <h:selectBooleanCheckbox id="news2" label="#{bundle.news2}" value="#{memberBean.userAccount.news}" rendered="#{!memberBean.userAccount.news}"/>
+                                    <h:outputLabel for="news2" value="#{bundle.news}" rendered="#{!memberBean.userAccount.news}"/>
+                                    
+                                    <h:selectBooleanCheckbox id="generalOffer2" label="#{bundle.generalOffer2}" value="#{memberBean.userAccount.generalOffer}" rendered="#{!memberBean.userAccount.generalOffer}"/>
+                                    <h:outputLabel for="generalOffer2" value="#{bundle.generalOffer}" rendered="#{!memberBean.userAccount.generalOffer}"/>
+                                    
+                                    <h:selectBooleanCheckbox id="jobOffer2" label="#{bundle.jobOffer2}" value="#{memberBean.userAccount.jobOffer}" rendered="#{!memberBean.userAccount.jobOffer}"/>
+                                    <h:outputLabel for="jobOffer2" value="#{bundle.jobOffer}" rendered="#{!memberBean.userAccount.jobOffer}"/>
+                                    
+                                    <h:selectBooleanCheckbox id="sponsor2" label="#{bundle.sponsor2}" value="#{memberBean.userAccount.sponsor}" rendered="#{!memberBean.userAccount.sponsor}"/>
+                                    <h:outputLabel for="sponsor2" value="#{bundle.sponsor}" rendered="#{!memberBean.userAccount.sponsor}"/>
+                                    
+                                    <h:selectBooleanCheckbox id="speaker2" label="#{bundle.speaker2}" value="#{memberBean.userAccount.speaker}" rendered="#{!memberBean.userAccount.speaker}"/>
+                                    <h:outputLabel for="speaker2" value="#{bundle.speaker}" rendered="#{!memberBean.userAccount.speaker}"/>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </h:panelGrid>
+                        
                         <h:inputHidden id="id" value="#{memberBean.userAccount.id}"/>
                         <h:inputHidden id="idContact" value="#{memberBean.userAccount.id}"/>
                         <p></p>

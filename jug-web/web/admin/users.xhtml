@@ -51,11 +51,7 @@
                                 <p:dataTable value="#{memberBean.userAccounts}" var="member">
                                     <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.firstName}"/></f:facet>
-                                        <h:commandLink value="#{member.firstName}" action="#{memberBean.load(member.id)}"/>
-                                    </p:column>
-                                    <p:column>
-                                        <f:facet name="header"><h:outputText value="#{bundle.lastName}"/></f:facet>
-                                        <h:outputText value="#{member.lastName}"/>
+                                        <h:commandLink value="#{member.firstName} #{member.lastName}" action="#{memberBean.load(member.id)}"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.gender}"/></f:facet>
@@ -95,11 +91,7 @@
                                 <p:dataTable value="#{memberBean.deactivatedUserAccounts}" var="deactivated">
                                     <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.firstName}"/></f:facet>
-                                        <h:commandLink value="#{deactivated.firstName}" action="#{memberBean.load(deactivated.id)}"/>
-                                    </p:column>
-                                    <p:column>
-                                        <f:facet name="header"><h:outputText value="#{bundle.lastName}"/></f:facet>
-                                        <h:outputText value="#{deactivated.lastName}"/>
+                                        <h:commandLink value="#{deactivated.firstName} #{deactivated.lastName}" action="#{memberBean.load(deactivated.id)}"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.email}"/></f:facet>

@@ -35,6 +35,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.UserAccount;
+import org.cejug.event.business.AttendeeBsn;
+import org.cejug.event.entity.Event;
 import org.cejug.knowledge.business.MailingListBsn;
 import org.cejug.knowledge.entity.MailingList;
 import org.cejug.knowledge.entity.MailingListSubscription;
@@ -54,11 +56,15 @@ public class MemberBean implements Serializable {
     @EJB
     private MailingListBsn mailingListBsn;
     
+    @EJB
+    private AttendeeBsn attendeeBsn;
+    
     @ManagedProperty(value="#{locationBean}")
     private LocationBean locationBean;
 
     private List<UserAccount> userAccounts;
     private List<MailingList> mailingLists;
+    private List<Event> attendedEvents;
 
     private String userId;
     private UserAccount userAccount;
@@ -105,7 +111,11 @@ public class MemberBean implements Serializable {
     public void setMailingLists(List<MailingList> mailingLists) {
         this.mailingLists = mailingLists;
     }
-
+    
+    public List<Event> getAttendedEvents() {
+        return this.attendedEvents;
+    }
+    
     public List<UserAccount> getDeactivatedUserAccounts() {
         List<UserAccount> deactivatedUsers = userAccountBsn.findDeactivatedUserAccounts();
         return deactivatedUsers;
@@ -178,12 +188,14 @@ public class MemberBean implements Serializable {
     @PostConstruct
     public void load() {
         this.userAccounts = userAccountBsn.findNotVerifiedUsers();
-        this.mailingLists = mailingListBsn.findMailingLists();
+        //this.mailingLists = mailingListBsn.findMailingLists();
     }
 
     public String load(String userId) {
         this.userId = userId;
         this.userAccount = userAccountBsn.findUserAccount(this.userId);
+        this.mailingLists = mailingListBsn.findMailingLists();
+        this.attendedEvents = attendeeBsn.findAttendeedEvents(this.userAccount);
                 
         locationBean.initialize();
     	

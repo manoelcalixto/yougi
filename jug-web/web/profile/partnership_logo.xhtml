@@ -11,15 +11,14 @@
             <ui:define name="content">
                 <div class="content">
                     <h1>#{bundle.partnership}</h1>
-                    <h:form>
+                    <h:form enctype="multipart/form-data">
                         <h:messages styleClass="alertMessage"/>
                         <h:panelGrid columns="2">
                             <p:graphicImage value="#{partnershipBean.logoImage}" id="logoImage" rendered="#{! empty partnershipBean.logoImage}"/>
                             <h:panelGrid>
                                 <p><h:outputText styleClass="fieldLabel" value="#{bundle.uploadLogo}"/></p>
                                 <p:growl id="messages" showDetail="true"/>
-	                            <p:fileUpload id="logoFileUpload" update="messages logoImage" fileUploadListener="#{partnershipBean.handleFileUpload}"
-	                                          allowTypes="*.png;*.gif;*.jpg;" auto="true" sizeLimit="1024000"/>
+                                <p:fileUpload update="messages logoImage" fileUploadListener="#{partnershipBean.handleFileUpload}" sizeLimit="1024000"/>
                             </h:panelGrid>
                         </h:panelGrid>
                         <p></p>

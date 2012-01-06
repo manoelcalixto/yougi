@@ -22,20 +22,19 @@ package org.cejug.web.handler;
 
 import javax.faces.context.ExceptionHandler;
 
-public class ExceptionHandlerFactory extends
-		javax.faces.context.ExceptionHandlerFactory {
+public class ExceptionHandlerFactory extends javax.faces.context.ExceptionHandlerFactory {
 
-	private javax.faces.context.ExceptionHandlerFactory parent;
+    private javax.faces.context.ExceptionHandlerFactory parent;
 
-	public ExceptionHandlerFactory(
-			javax.faces.context.ExceptionHandlerFactory parent) {
-		this.parent = parent;
-	}
+    public ExceptionHandlerFactory(
+            javax.faces.context.ExceptionHandlerFactory parent) {
+        this.parent = parent;
+    }
 
-	@Override
-	public ExceptionHandler getExceptionHandler() {
-		ExceptionHandler result = parent.getExceptionHandler();
-		result = new CustomExceptionHandler(result);
-		return result;
-	}
+    @Override
+    public ExceptionHandler getExceptionHandler() {
+        ExceptionHandler result = parent.getExceptionHandler();
+        result = new CustomExceptionHandler(result);
+        return result;
+    }
 }

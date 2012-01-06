@@ -17,7 +17,7 @@
                             <f:param value="#{attendeeBean.numberPeopleAttending}"/>
                             <f:param value="#{attendeeBean.numberPeopleAttended}"/>
                         </h:outputFormat></p>
-                        <p:dataTable value="#{attendeeBean.attendees}" var="attendee" selection="#{attendeeBean.selectedAttendees}">
+                        <p:dataTable value="#{attendeeBean.attendees}" var="attendee" selection="#{attendeeBean.selectedAttendees}" rowKey="#{attendee.id}">
                             <p:column>
                                 <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>
                                 <h:outputText value="#{attendee.attendee.firstName}"/>
