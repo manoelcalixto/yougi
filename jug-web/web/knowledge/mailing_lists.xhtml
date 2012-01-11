@@ -12,6 +12,7 @@
                 <div class="content">
                     <h1>#{bundle.mailingLists}</h1>
                     <h:form>
+                        <p><h:link outcome="mailing_list" value="#{bundle.newMailingList}" rendered="#{securityBackingBean.isUserLeader}"/></p>
                         <p:dataTable value="#{mailingListBean.mailingLists}" var="mailingList">
                             <p:column>
                                 <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>

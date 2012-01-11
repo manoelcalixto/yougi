@@ -28,6 +28,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import org.cejug.knowledge.business.MailingListBsn;
 import org.cejug.knowledge.entity.MailingList;
+import org.cejug.knowledge.entity.MailingListSubscription;
 
 /**
  * @author Hildeberto Mendonca
@@ -41,9 +42,16 @@ public class MailingListBean {
 
     @ManagedProperty(value="#{param.id}")
     private String id;
+    
+    @ManagedProperty(value="#{subscriptionBean}")
+    private SubscriptionBean subscriptionBean;
 
     private MailingList mailingList;
-
+    
+    private List<MailingList> mailingLists;
+    
+    private String emailCriteria;
+    
     public MailingListBean() {}
 
     public String getId() {
@@ -54,7 +62,31 @@ public class MailingListBean {
         this.id = id;
     }
 
+    public String getEmailCriteria() {
+        return emailCriteria;
+    }
+
+    public void setEmailCriteria(String emailCriteria) {
+        this.emailCriteria = emailCriteria;
+    }
+
+    public SubscriptionBean getSubscriptionBean() {
+        return subscriptionBean;
+    }
+
+    public void setSubscriptionBean(SubscriptionBean subscriptionBean) {
+        this.subscriptionBean = subscriptionBean;
+    }
+    
     public MailingList getMailingList() {
+        if(this.mailingList == null) {
+            if(id != null && !id.isEmpty()) {
+                this.mailingList = mailingListBsn.findMailingList(id);
+            }
+            else {
+                this.mailingList = new MailingList();
+            }
+        }
         return mailingList;
     }
 
@@ -63,26 +95,40 @@ public class MailingListBean {
     }
 
     public List<MailingList> getMailingLists() {
-        return mailingListBsn.findMailingLists();
+        if(this.mailingLists == null) {
+            this.mailingLists = mailingListBsn.findMailingLists();
+            SubscriptionBean.removeFromSession();
+        }
+        return this.mailingLists;
+    }
+    
+    public List<MailingListSubscription> getSubscriptions() {
+        if(subscriptionBean.getSubscriptions() == null)
+            subscriptionBean.load(this.mailingList);
+        return subscriptionBean.getSubscriptions();
     }
 
     @PostConstruct
     public void load() {
-        if(id != null && !id.isEmpty()) {
-            this.mailingList = mailingListBsn.findMailingList(id);
+        
+    }
+    
+    public String searchByEmail() {
+        if(this.emailCriteria != null) {
+            subscriptionBean.searchByEmail(this.getMailingList(), this.emailCriteria);
         }
-        else {
-            this.mailingList = new MailingList();
-        }
+        return "mailing_list?faces-redirect=true&tab=1&id="+ this.getMailingList().getId();
     }
 
     public String save() {
         mailingListBsn.save(this.mailingList);
+        SubscriptionBean.removeFromSession();
         return "mailing_lists?faces-redirect=true";
     }
 
     public String remove() {
         mailingListBsn.remove(this.mailingList.getId());
+        SubscriptionBean.removeFromSession();
         return "mailing_lists?faces-redirect=true";
     }
 }

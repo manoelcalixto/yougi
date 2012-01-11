@@ -29,15 +29,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
-import javax.mail.Address;
-import javax.mail.Flags;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Store;
+import javax.ejb.Stateless;
+import javax.mail.*;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -74,7 +68,7 @@ public class MailingListBsn {
     }
 
     @SuppressWarnings("unchecked")
-	public List<MailingList> findMailingLists() {
+    public List<MailingList> findMailingLists() {
         return em.createQuery("select ml from MailingList ml order by ml.name asc").getResultList();
     }
 
@@ -101,10 +95,36 @@ public class MailingListBsn {
         }
     }
 
+    /**
+     * Returns a list of subscriptions in different mailing lists in which the
+     * informed user is subscribed.
+     */
     @SuppressWarnings("unchecked")
-	public List<MailingListSubscription> findMailingListSubscriptions(UserAccount userAccount) {
+    public List<MailingListSubscription> findMailingListSubscriptions(UserAccount userAccount) {
         return em.createQuery("select mls from MailingListSubscription mls where mls.emailAddress = :email and mls.unsubscriptionDate is null")
                  .setParameter("email", userAccount.getEmail())
+                 .getResultList();
+    }
+    
+    /** 
+     * Returns a list of subscriptions associated with the informed mailing list.
+     */
+    @SuppressWarnings("unchecked")
+    public List<MailingListSubscription> findMailingListSubscriptions(MailingList mailingList) {
+        return em.createQuery("select mls from MailingListSubscription mls where mls.mailingList = :mailingList order by mls.subscriptionDate")
+                 .setParameter("mailingList", mailingList)
+                 .getResultList();
+    }
+    
+    /** 
+     * Returns a subscription with the informed email and associated with the 
+     * informed mailing list.
+     */
+    @SuppressWarnings("unchecked")
+    public List<MailingListSubscription> findMailingListSubscriptions(MailingList mailingList, String email) {
+        return em.createQuery("select mls from MailingListSubscription mls where mls.mailingList = :mailingList and mls.email = :email")
+                 .setParameter("mailingList", mailingList)
+                 .setParameter("email", email)
                  .getResultList();
     }
 

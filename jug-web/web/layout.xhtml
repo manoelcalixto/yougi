@@ -22,13 +22,15 @@
                         <div class="title"><h:link outcome="/index"><p:graphicImage value="/images/logo.png"/></h:link></div>
                     </td>
                     <td align="right">
-                        <div class="identification"><c:if test="#{empty request.remoteUser}">
-                            <h:form><h:commandLink action="#{securityBackingBean.login}" value="#{bundle.signIn}"/> |
+                        <div class="identification">
+                            <c:if test="#{empty request.remoteUser}">
+                                <h:form><h:commandLink action="#{securityBackingBean.login}" value="#{bundle.signIn}"/> |
                                 <h:link outcome="registration">#{bundle.register}</h:link></h:form>
-                        </c:if>
-                        <c:if test="#{! empty request.remoteUser}">
-                            <h:form><h:commandLink action="#{securityBackingBean.logout}" value="#{bundle.signOut}"/></h:form>
-                        </c:if></div>
+                            </c:if>
+                            <c:if test="#{! empty request.remoteUser}">
+                                <h:form><h:commandLink action="#{securityBackingBean.logout}" value="#{bundle.signOut}"/></h:form>
+                            </c:if>
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -80,7 +82,7 @@
                         <h:outputText value="#{bundle.portuguese}" escape="false"/>
                     </h:commandLink>
                 </h:form>
-                <p>Created and maintained by the <a href="http://www.cejug.org" target="_blank">#{bundle.application}</a> Community! - <b>Version 1.0</b> -
+                <p>Created and maintained by the <a href="http://www.cejug.org" target="_blank">#{bundle.application}</a> Community! - <b>Version 1.1</b> -
                 You can also contribute to this project at <a href="http://cejug.java.net" target="_blank">Java.net</a>!
                 <script type="text/javascript" src="http://www.ohloh.net/p/487784/widgets/project_thin_badge.js"></script></p>
             </div>

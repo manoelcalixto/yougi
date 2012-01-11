@@ -65,6 +65,7 @@
       <url-pattern>/admin/*</url-pattern>
       <url-pattern>/event/event.xhtml</url-pattern>
       <url-pattern>/event/attendees.xhtml</url-pattern>
+      <url-pattern>/knowledge/mailing_list.xhtml</url-pattern>
       <http-method>GET</http-method>
       <http-method>POST</http-method>
     </web-resource-collection>

@@ -1,5 +1,3 @@
-@CHARSET "UTF-8";
-
 a:link {
   color: #993300;
   font-weight : normal;
@@ -25,26 +23,26 @@ a:link:hover, a:visited:hover  {
 body {
     background-color: #ffffff;
     font-size: 12px;
-    font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    font-family: Helvetica,Verdana,Arial,sans-serif;
     color: #000000;
     margin: 0px;
-    background-image: url(../../images/background.jpg);
+    background-image: url(../../images/background.gif);
 }
 
 #bottom {
     position: relative;
-    background-color: #ff9900;
+    background-color: #98C73D;
     width: 100%;
     margin-right: auto;
     margin-left: auto;
     border-bottom-style: solid;
     border-bottom-width: 200px;
-    border-bottom-color: #ff9900;
+    border-bottom-color: #98C73D;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     border-top-style: solid;
     border-top-width: 2px;
-    border-top-color: black;
+    border-top-color: #666666;
 }
 
 .content {
@@ -126,7 +124,7 @@ body {
 }
 
 h1 {
-    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    font-family: Helvetica,Verdana,Arial,sans-serif;
     border-bottom: 1px solid #AFAFAF;
     font-size:  18px;
     font-weight: bold;
@@ -137,7 +135,7 @@ h1 {
 }
 
 h2 {
-    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    font-family: Helvetica,Verdana,Arial,sans-serif;
     border-bottom: 1px solid #AFAFAF;
     font-size:  14px;
     font-weight: bold;
@@ -147,7 +145,7 @@ h2 {
 }
 
 .header3 {
-    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    font-family: Helvetica,Verdana,Arial,sans-serif;
     border-bottom: 1px solid #AFAFAF;
     font-size:  14px;
     font-weight: bold;
@@ -169,7 +167,7 @@ h2 {
     padding-left: 10px;
     padding-bottom: 10px;
     padding-top: 10px;
-    font-family: Arial,Helvetica,sans-serif;
+    font-family: Helvetica,Verdana,Arial,sans-serif;
 }
 
 .infoMessage {
@@ -211,7 +209,7 @@ h2 {
 }
 
 .subSection {
-    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    font-family: Helvetica,Verdana,Arial,sans-serif;
     font-size:  14px;
     font-weight: bold;
     padding: 0px;
@@ -221,11 +219,6 @@ h2 {
 .title {
     padding-right: 10px;
     padding-left: 10px;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    color: white;
-    font-family: Arial,Helvetica,sans-serif;
-    font-size: 28px;
 }
 
 #top {
@@ -243,7 +236,7 @@ h2 {
     border-top-color: #c8c8c8;
     border-left-color: #c8c8c8;
     border-right-color: #c1c1c1;
-    background-color: #cc6600;
+    background-color: #ffffff;
 }
 
 #top_menu {
@@ -260,11 +253,11 @@ h2 {
     border-left-color: #c8c8c8;
     border-bottom-style: solid;
     border-bottom-width: 2px;
-    border-bottom-color: black;
+    border-bottom-color: #999999;
 }
 
 #top a:link, #top a:visited {
-  color: #ffffff;
+  color: #cc9900;
   font-weight : bold;
   text-decoration: none;
 }

@@ -18,8 +18,9 @@
                             <h:outputLabel for="description" value="#{bundle.description}" styleClass="fieldLabel"/>
                             <h:inputTextarea id="description" label="#{bundle.description}" cols="60" rows="5" value="#{topicBean.topic.description}"/>
                         </h:panelGrid>
-                        <h:panelGrid columns="2">
+                        <h:panelGrid columns="3">
                             <h:commandButton value="#{bundle.save}" action="#{topicBean.save}" rendered="#{securityBackingBean.isUserLeader}"/>
+                            <h:commandButton value="#{bundle.remove}" action="#{topicBean.remove}" rendered="#{securityBackingBean.isUserLeader}"/>
                             <h:button value="#{bundle.cancel}" outcome="topics"/>
                         </h:panelGrid>
                     </h:form>

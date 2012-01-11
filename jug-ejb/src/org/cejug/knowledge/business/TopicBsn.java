@@ -56,6 +56,9 @@ public class TopicBsn {
     }
 
     public void remove(String name) {
+        if(name == null || name.isEmpty())
+            return;
+        
         Topic topic = em.find(Topic.class, name);
         if(topic != null)
             em.remove(topic);

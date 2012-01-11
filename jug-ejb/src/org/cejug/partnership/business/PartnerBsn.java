@@ -21,12 +21,10 @@
 package org.cejug.partnership.business;
 
 import java.util.List;
-
-import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import org.cejug.partnership.entity.Partner;
 import org.cejug.util.EntitySupport;
 

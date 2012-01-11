@@ -21,7 +21,6 @@
 package org.cejug.knowledge.web.controller;
 
 import java.util.List;
-
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -82,6 +81,11 @@ public class TopicBean {
 
     public String save() {
         topicBsn.save(this.topic);
+        return "topics?faces-redirect=true";
+    }
+    
+    public String remove() {
+        topicBsn.remove(this.topic.getName());
         return "topics?faces-redirect=true";
     }
 }
