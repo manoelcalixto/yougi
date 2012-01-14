@@ -111,7 +111,7 @@ public class MailingListBsn {
      */
     @SuppressWarnings("unchecked")
     public List<MailingListSubscription> findMailingListSubscriptions(MailingList mailingList) {
-        return em.createQuery("select mls from MailingListSubscription mls where mls.mailingList = :mailingList order by mls.subscriptionDate")
+        return em.createQuery("select mls from MailingListSubscription mls where mls.mailingList = :mailingList order by mls.subscriptionDate desc")
                  .setParameter("mailingList", mailingList)
                  .getResultList();
     }
@@ -122,7 +122,7 @@ public class MailingListBsn {
      */
     @SuppressWarnings("unchecked")
     public List<MailingListSubscription> findMailingListSubscriptions(MailingList mailingList, String email) {
-        return em.createQuery("select mls from MailingListSubscription mls where mls.mailingList = :mailingList and mls.email = :email")
+        return em.createQuery("select mls from MailingListSubscription mls where mls.mailingList = :mailingList and mls.emailAddress = :email")
                  .setParameter("mailingList", mailingList)
                  .setParameter("email", email)
                  .getResultList();

@@ -147,12 +147,12 @@ insert into message_template (id, title, body) values
 ###############################################################################
     
 create table mailing_list (
-    id            char(32)     not null,
-    name          varchar(50)  not null,
-    description   varchar(255)     null,
-    email         varchar(100)     null,
-    subscription  varchar(100)     null,
-    unsubcription varchar(100)     null
+    id             char(32)     not null,
+    name           varchar(50)  not null,
+    description    varchar(255)     null,
+    email          varchar(100)     null,
+    subscription   varchar(100)     null,
+    unsubscription varchar(100)     null
 ) engine = innodb;
 
 alter table mailing_list add constraint pk_mailing_list primary key (id);

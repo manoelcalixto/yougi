@@ -43,12 +43,10 @@ public class MailingListBean {
     @ManagedProperty(value="#{param.id}")
     private String id;
     
-    @ManagedProperty(value="#{subscriptionBean}")
-    private SubscriptionBean subscriptionBean;
-
     private MailingList mailingList;
     
     private List<MailingList> mailingLists;
+    private List<MailingListSubscription> subscriptions;
     
     private String emailCriteria;
     
@@ -70,23 +68,7 @@ public class MailingListBean {
         this.emailCriteria = emailCriteria;
     }
 
-    public SubscriptionBean getSubscriptionBean() {
-        return subscriptionBean;
-    }
-
-    public void setSubscriptionBean(SubscriptionBean subscriptionBean) {
-        this.subscriptionBean = subscriptionBean;
-    }
-    
     public MailingList getMailingList() {
-        if(this.mailingList == null) {
-            if(id != null && !id.isEmpty()) {
-                this.mailingList = mailingListBsn.findMailingList(id);
-            }
-            else {
-                this.mailingList = new MailingList();
-            }
-        }
         return mailingList;
     }
 
@@ -97,38 +79,38 @@ public class MailingListBean {
     public List<MailingList> getMailingLists() {
         if(this.mailingLists == null) {
             this.mailingLists = mailingListBsn.findMailingLists();
-            SubscriptionBean.removeFromSession();
         }
         return this.mailingLists;
     }
     
     public List<MailingListSubscription> getSubscriptions() {
-        if(subscriptionBean.getSubscriptions() == null)
-            subscriptionBean.load(this.mailingList);
-        return subscriptionBean.getSubscriptions();
+        return this.subscriptions;
     }
-
+    
     @PostConstruct
     public void load() {
-        
+        if(id != null && !id.isEmpty()) {
+            this.mailingList = mailingListBsn.findMailingList(id);
+        }
+        else {
+            this.mailingList = new MailingList();
+        }
     }
     
     public String searchByEmail() {
         if(this.emailCriteria != null) {
-            subscriptionBean.searchByEmail(this.getMailingList(), this.emailCriteria);
+            this.subscriptions = mailingListBsn.findMailingListSubscriptions(this.mailingList, this.emailCriteria);
         }
-        return "mailing_list?faces-redirect=true&tab=1&id="+ this.getMailingList().getId();
+        return "subscriptions";
     }
 
     public String save() {
         mailingListBsn.save(this.mailingList);
-        SubscriptionBean.removeFromSession();
         return "mailing_lists?faces-redirect=true";
     }
 
     public String remove() {
         mailingListBsn.remove(this.mailingList.getId());
-        SubscriptionBean.removeFromSession();
         return "mailing_lists?faces-redirect=true";
     }
 }

@@ -64,6 +64,8 @@
                             <p:menuitem value="#{bundle.languages}" url="/admin/languages.xhtml"/>
                             <p:menuitem value="#{bundle.messageTemplates}" url="/admin/message_templates.xhtml"/>
                             <p:menuitem value="#{bundle.properties}" url="/admin/properties.xhtml"/>
+                            <p:separator/>
+                            <p:menuitem value="#{bundle.about}" url="/about.xhtml"/>
                         </p:submenu>
                     </p:menubar>
                 </h:form>
@@ -82,7 +84,7 @@
                         <h:outputText value="#{bundle.portuguese}" escape="false"/>
                     </h:commandLink>
                 </h:form>
-                <p>Created and maintained by the <a href="http://www.cejug.org" target="_blank">#{bundle.application}</a> Community! - <b>Version 1.1</b> -
+                <p>Created and maintained by the <a href="http://www.cejug.org" target="_blank">#{bundle.application}</a> Community! - <b><h:link outcome="/about" value="Version 1.02"/></b> -
                 You can also contribute to this project at <a href="http://cejug.java.net" target="_blank">Java.net</a>!
                 <script type="text/javascript" src="http://www.ohloh.net/p/487784/widgets/project_thin_badge.js"></script></p>
             </div>

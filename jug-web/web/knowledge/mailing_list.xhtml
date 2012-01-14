@@ -14,50 +14,22 @@
                     <h:form>
                         <h:messages styleClass="alertMessage"/>
                         
-                        <p:tabView>
-                            <p:tab title="#{bundle.properties}">
-                                <h:panelGrid columns="1">
-                                    <h:outputText value="#{bundle.name}" styleClass="fieldLabel"/>
-                                    <h:inputText value="#{mailingListBean.mailingList.name}" size="30" maxlength="50" required="true"/>
+                        <h:panelGrid columns="1">
+                            <h:outputText value="#{bundle.name}" styleClass="fieldLabel"/>
+                            <h:inputText value="#{mailingListBean.mailingList.name}" size="30" maxlength="50" required="true"/>
 
-                                    <h:outputText value="#{bundle.description}" styleClass="fieldLabel"/>
-                                    <h:inputTextarea value="#{mailingListBean.mailingList.description}" rows="3" cols="40"/>
+                            <h:outputText value="#{bundle.description}" styleClass="fieldLabel"/>
+                            <h:inputTextarea value="#{mailingListBean.mailingList.description}" rows="3" cols="40"/>
 
-                                    <h:outputText value="#{bundle.email}" styleClass="fieldLabel"/>
-                                    <h:inputText value="#{mailingListBean.mailingList.email}" size="50" maxlength="100"/>
+                            <h:outputText value="#{bundle.email}" styleClass="fieldLabel"/>
+                            <h:inputText value="#{mailingListBean.mailingList.email}" size="50" maxlength="100"/>
 
-                                    <h:outputText value="#{bundle.subscribeTo}" styleClass="fieldLabel"/>
-                                    <h:inputText value="#{mailingListBean.mailingList.subscription}" size="60" maxlength="100"/>
+                            <h:outputText value="#{bundle.subscribeTo}" styleClass="fieldLabel"/>
+                            <h:inputText value="#{mailingListBean.mailingList.subscription}" size="60" maxlength="100"/>
 
-                                    <h:outputText value="#{bundle.unsubscribeFrom}" styleClass="fieldLabel"/>
-                                    <h:inputText value="#{mailingListBean.mailingList.unsubcription}" size="60" maxlength="100"/>
-                                </h:panelGrid>
-                            </p:tab>
-                            <p:tab title="#{bundle.subscriptions}" rendered="#{! empty mailingListBean.id}">
-                                <p:dataTable value="#{mailingListBean.subscriptions}" var="subscription" emptyMessage="#{bundle.noRecordsFound}" paginator="true" rows="20">
-                                    <p:column>
-                                        <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>
-                                        <h:outputText value="#{subscription.userAccount.fullName}"/>
-                                    </p:column>
-                                    <p:column filterBy="#{subscription.emailAddress}" filterMatchMode="startsWith">
-                                        <f:facet name="header"><h:outputText value="#{bundle.email}"/></f:facet>
-                                        <h:outputText value="#{subscription.emailAddress}"/>
-                                    </p:column>
-                                    <p:column>
-                                        <f:facet name="header"><h:outputText value="#{bundle.from}"/></f:facet>
-                                        <h:outputText value="#{subscription.subscriptionDate}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
-                                        </h:outputText>
-                                    </p:column>
-                                    <p:column>
-                                        <f:facet name="header"><h:outputText value="#{bundle.to}"/></f:facet>
-                                        <h:outputText value="#{subscription.unsubscriptionDate}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
-                                        </h:outputText>
-                                    </p:column>
-                                </p:dataTable>
-                            </p:tab>
-                        </p:tabView>
+                            <h:outputText value="#{bundle.unsubscribeFrom}" styleClass="fieldLabel"/>
+                            <h:inputText value="#{mailingListBean.mailingList.unsubscription}" size="60" maxlength="100"/>
+                        </h:panelGrid>
                                                 
                         <h:inputHidden id="id" value="#{mailingListBean.mailingList.id}"/>
 
@@ -66,7 +38,9 @@
                             <h:commandButton value="#{bundle.remove}" action="#{mailingListBean.remove}" rendered="#{! empty mailingListBean.id}">
                                 <f:param name="id" value="#{mailingListBean.mailingList.id}"/>
                             </h:commandButton>    
-                            <h:button value="#{bundle.cancel}" outcome="mailing_lists"/>
+                            <h:button value="#{bundle.cancel}" outcome="mailing_list_view">
+                                <f:param name="id" value="#{mailingListBean.mailingList.id}"/>
+                            </h:button>
                         </h:panelGrid>
                     </h:form>
                 </div>

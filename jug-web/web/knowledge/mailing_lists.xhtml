@@ -16,7 +16,7 @@
                         <p:dataTable value="#{mailingListBean.mailingLists}" var="mailingList">
                             <p:column>
                                 <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>
-                                <h:link outcome="mailing_list" value="#{mailingList.name}">
+                                <h:link outcome="mailing_list_view" value="#{mailingList.name}">
                                     <f:param name="id" value="#{mailingList.id}"/>
                                 </h:link>
                             </p:column>

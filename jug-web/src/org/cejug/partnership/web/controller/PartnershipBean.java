@@ -20,15 +20,9 @@
  * */
 package org.cejug.partnership.web.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -37,15 +31,9 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-
 import org.cejug.business.ApplicationPropertyBsn;
 import org.cejug.business.UserAccountBsn;
-import org.cejug.entity.ApplicationProperty;
-import org.cejug.entity.City;
-import org.cejug.entity.Country;
-import org.cejug.entity.Properties;
-import org.cejug.entity.Province;
-import org.cejug.entity.UserAccount;
+import org.cejug.entity.*;
 import org.cejug.partnership.business.PartnerBsn;
 import org.cejug.partnership.business.RepresentativeBsn;
 import org.cejug.partnership.entity.Partner;
