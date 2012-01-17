@@ -1,15 +1,17 @@
+
 ###############################################################################
 # Core                                                                        #
 ###############################################################################
 
-create table version_database (
-    version      varchar(10) not null,
-    app_version  varchar(10) not null,
-    date_release timestamp   not null default CURRENT_TIMESTAMP,
-    description  text            null    
+create table update_history (
+    db_version        varchar(10) not null,
+    app_version       varchar(10) not null,
+    date_release      timestamp   not null default CURRENT_TIMESTAMP,
+    db_release_notes  text            null,
+    app_release_notes text            null
 ) engine = innodb;
 
-alter table version_database add constraint pk_version_database primary key (version);
+alter table update_history add constraint pk_version_database primary key (db_version, app_version);
 
 create table language (
     acronym varchar(5)  not null,
