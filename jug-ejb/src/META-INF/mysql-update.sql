@@ -207,14 +207,15 @@ insert into version_database (version, app_version, description) values (
 
 ###############################################################################
 insert into version_database values 
-   ('0.8',
+   ('1.0',
     '1.02',
-    'Allow the user to indicate which language to use in the user interface.');
+    'Instead of showing all subscriptions of the mailing list, the interface allows only searching for subscribers. Showing all subscribers was not pratical due to the possible large number of subscribers.');
 
 alter table mailing_list change unsubcription unsubscription varchar(100) null;
 
 update mailing_list_subscription set subscription_date = '2010-12-31' where subscription_date is null;
 
+###############################################################################
 alter table user_account add language varchar(5) null;
 alter table user_account add constraint fk_language_user foreign key (language) references language(acronym) on delete set null;
 
