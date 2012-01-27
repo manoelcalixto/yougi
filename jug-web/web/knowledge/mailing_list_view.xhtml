@@ -35,7 +35,7 @@
                             <f:param name="id" value="#{mailingListBean.mailingList.id}"/>
                         </h:button>
                         <h:button value="#{bundle.searchSubscriptions}" outcome="subscriptions" rendered="#{securityBackingBean.isUserLeader}">
-                            <f:param name="id" value="#{mailingListBean.mailingList.id}"/>
+                            <f:param name="list" value="#{mailingListBean.mailingList.id}"/>
                         </h:button>
                         <h:button value="#{bundle.back}" outcome="mailing_lists"/>
                     </h:form>

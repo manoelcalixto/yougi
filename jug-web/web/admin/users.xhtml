@@ -16,8 +16,8 @@
                             <p:tab title="#{bundle.allUsers}">
                                 <h:panelGrid columns="3">
                                     <h:outputLabel for="emailCriteria" value="#{bundle.email}" styleClass="fieldLabel"/>
-                                    <h:inputText id="emailCriteria" label="#{bundle.email}" size="30" maxlength="100" value="#{mailingListBean.emailCriteria}" onchange="formatEmail(this)"/>
-                                    <h:commandButton action="#{mailingListBean.findUserAccountByEmail}" value="#{bundle.search}"/>
+                                    <h:inputText id="emailCriteria" label="#{bundle.email}" size="30" maxlength="100" value="#{memberBean.emailCriteria}" onchange="formatEmail(this)"/>
+                                    <h:commandButton action="#{memberBean.findUserAccountByEmail}" value="#{bundle.search}"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="26" cellspacing="0" cellpadding="0">
                                     <h:commandButton disabled="#{memberBean.firstLetterCriteria == 'A'}" value="A" action="#{memberBean.findUserAccountByFirstLetter('A')}"/>

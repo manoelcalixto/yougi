@@ -28,7 +28,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import org.cejug.knowledge.business.MailingListBsn;
 import org.cejug.knowledge.entity.MailingList;
-import org.cejug.knowledge.entity.MailingListSubscription;
 
 /**
  * @author Hildeberto Mendonca
@@ -46,10 +45,7 @@ public class MailingListBean {
     private MailingList mailingList;
     
     private List<MailingList> mailingLists;
-    private List<MailingListSubscription> subscriptions;
-    
-    private String emailCriteria;
-    
+        
     public MailingListBean() {}
 
     public String getId() {
@@ -58,14 +54,6 @@ public class MailingListBean {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getEmailCriteria() {
-        return emailCriteria;
-    }
-
-    public void setEmailCriteria(String emailCriteria) {
-        this.emailCriteria = emailCriteria;
     }
 
     public MailingList getMailingList() {
@@ -83,10 +71,6 @@ public class MailingListBean {
         return this.mailingLists;
     }
     
-    public List<MailingListSubscription> getSubscriptions() {
-        return this.subscriptions;
-    }
-    
     @PostConstruct
     public void load() {
         if(id != null && !id.isEmpty()) {
@@ -97,13 +81,6 @@ public class MailingListBean {
         }
     }
     
-    public String searchByEmail() {
-        if(this.emailCriteria != null) {
-            this.subscriptions = mailingListBsn.findMailingListSubscriptions(this.mailingList, this.emailCriteria);
-        }
-        return "subscriptions";
-    }
-
     public String save() {
         mailingListBsn.save(this.mailingList);
         return "mailing_lists?faces-redirect=true";

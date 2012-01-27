@@ -122,6 +122,9 @@ public class UserAccountBsn {
         }
     }
 
+    /**
+     * Returns all activated user accounts ordered by name.
+     */
     @SuppressWarnings("unchecked")
     public List<UserAccount> findUserAccounts() {
         return em.createQuery("select ua from UserAccount ua where ua.deactivated = :deactivated and ua.confirmationCode is null order by ua.firstName")

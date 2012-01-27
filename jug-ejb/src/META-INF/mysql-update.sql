@@ -1,9 +1,14 @@
 
 ###############################################################################
-insert into version_database values 
-   ('0.9',
-    '0.30',
+insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 
+   ('1.0',
+    '1.02',
+    'Fixes a typo in one of the columns in the mailing_list table. A standard subscription data was set to all mailing list subscribers who registered before the system went into production.',
     'Allow the user to indicate which language to use in the user interface. Create sessions for the event and speakers for the sessions.');
+
+drop table version_database;
+    
+update user_account set event = true where id in (select attendee from attendee) and event = false;
 
 alter table user_account add language varchar(5) null;
 alter table user_account add constraint fk_language_user foreign key (language) references language(acronym) on delete set null;

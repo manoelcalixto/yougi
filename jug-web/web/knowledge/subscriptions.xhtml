@@ -13,26 +13,30 @@
                     <h1>#{bundle.subscriptions}</h1>
                     
                     <h:panelGrid cellpadding="3">
-                        <h:outputText value="#{mailingListBean.mailingList.name}" style="font-size: 18px; font-weight: bold;"/>
-                        <h:outputText value="#{mailingListBean.mailingList.description}" escape="false" style="font-size: 14px;"/>
+                        <h:outputText value="#{subscriptionBean.mailingList.name}" style="font-size: 18px; font-weight: bold;"/>
+                        <h:outputText value="#{subscriptionBean.mailingList.description}" escape="false" style="font-size: 14px;"/>
                     </h:panelGrid>
                     <p/>
                     <h:form>
                         <h:messages styleClass="alertMessage"/>
-                        <h:outputText value="#{bundle.email}"/>
-                        <h:inputText id="searchCriteria" value="#{mailingListBean.emailCriteria}"/>
-                        <h:commandButton value="#{bundle.search}" action="#{mailingListBean.searchByEmail()}">
-                            <f:param name="id" value="#{mailingListBean.mailingList.id}"/>
-                        </h:commandButton>
+                        <h:panelGrid columns="3">
+                            <h:outputText value="#{bundle.email}"/>
+                            <h:inputText id="searchCriteria" value="#{subscriptionBean.emailCriteria}" size="40" maxlength="100"/>
+                            <h:commandButton value="#{bundle.search}" action="#{subscriptionBean.searchByEmail()}">
+                                <f:param name="list" value="#{subscriptionBean.mailingList.id}"/>
+                            </h:commandButton>
+                        </h:panelGrid>
                         <p/>
-                        <p:dataTable value="#{mailingListBean.subscriptions}" var="subscription" emptyMessage="#{bundle.noRecordsFound}">
+                        <p:dataTable value="#{subscriptionBean.subscriptions}" var="subscription" emptyMessage="#{bundle.noRecordsFound}">
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="#{bundle.email}"/></f:facet>
+                                <h:link outcome="subscription" value="#{subscription.emailAddress}">
+                                    <f:param name="id" value="#{subscription.id}"/>
+                                </h:link>
+                            </p:column>
                             <p:column>
                                 <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>
                                 <h:outputText value="#{subscription.userAccount.fullName}"/>
-                            </p:column>
-                            <p:column>
-                                <f:facet name="header"><h:outputText value="#{bundle.email}"/></f:facet>
-                                <h:outputText value="#{subscription.emailAddress}"/>
                             </p:column>
                             <p:column>
                                 <f:facet name="header"><h:outputText value="#{bundle.from}"/></f:facet>
@@ -50,7 +54,7 @@
                         <p/>
                         <h:panelGrid columns="3">
                             <h:button value="#{bundle.back}" outcome="mailing_list_view">
-                                <f:param name="id" value="#{mailingListBean.mailingList.id}"/>
+                                <f:param name="id" value="#{subscriptionBean.mailingList.id}"/>
                             </h:button>
                         </h:panelGrid>
                     </h:form>
