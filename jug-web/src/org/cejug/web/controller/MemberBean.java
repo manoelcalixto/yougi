@@ -38,6 +38,7 @@ import org.cejug.entity.UserAccount;
 import org.cejug.event.business.AttendeeBsn;
 import org.cejug.event.entity.Event;
 import org.cejug.knowledge.business.MailingListBsn;
+import org.cejug.knowledge.business.SubscriptionBsn;
 import org.cejug.knowledge.entity.MailingList;
 import org.cejug.knowledge.entity.MailingListSubscription;
 
@@ -57,22 +58,30 @@ public class MemberBean implements Serializable {
     private MailingListBsn mailingListBsn;
     
     @EJB
+    private SubscriptionBsn subscriptionBsn;
+
+    @EJB
     private AttendeeBsn attendeeBsn;
-    
-    @ManagedProperty(value="#{locationBean}")
+
+    @ManagedProperty(value = "#{locationBean}")
     private LocationBean locationBean;
 
     private List<UserAccount> userAccounts;
+
     private List<MailingList> mailingLists;
+
     private List<Event> attendedEvents;
 
     private String userId;
+
     private UserAccount userAccount;
+
     private String emailCriteria;
+
     private String firstLetterCriteria;
 
     private MailingList[] selectedMailingLists;
-    
+
     public MemberBean() {
     }
 
@@ -91,14 +100,14 @@ public class MemberBean implements Serializable {
     public void setUserAccount(UserAccount userAccount) {
         this.userAccount = userAccount;
     }
- 
-    public LocationBean getLocationBean() {
-		return locationBean;
-	}
 
-	public void setLocationBean(LocationBean locationBean) {
-		this.locationBean = locationBean;
-	}
+    public LocationBean getLocationBean() {
+        return locationBean;
+    }
+
+    public void setLocationBean(LocationBean locationBean) {
+        this.locationBean = locationBean;
+    }
 
     public List<UserAccount> getUserAccounts() {
         return this.userAccounts;
@@ -111,23 +120,23 @@ public class MemberBean implements Serializable {
     public void setMailingLists(List<MailingList> mailingLists) {
         this.mailingLists = mailingLists;
     }
-    
+
     public List<Event> getAttendedEvents() {
         return this.attendedEvents;
     }
-    
+
     public List<UserAccount> getDeactivatedUserAccounts() {
         List<UserAccount> deactivatedUsers = userAccountBsn.findDeactivatedUserAccounts();
         return deactivatedUsers;
     }
 
     public String findUserAccountByEmail() {
-        if(this.emailCriteria == null || this.emailCriteria.isEmpty())
+        if (this.emailCriteria == null || this.emailCriteria.isEmpty()) {
             this.userAccounts = userAccountBsn.findNotVerifiedUsers();
-        else {
+        } else {
             List<UserAccount> uas = new ArrayList<UserAccount>(1);
             UserAccount ua = userAccountBsn.findUserAccountByEmail(this.emailCriteria);
-            if(ua != null) {
+            if (ua != null) {
                 uas.add(ua);
             }
             this.userAccounts = uas;
@@ -137,17 +146,17 @@ public class MemberBean implements Serializable {
     }
 
     public String findUserAccountByFirstLetter(String firstLetterCriteria) {
-        if(firstLetterCriteria == null || firstLetterCriteria.isEmpty())
+        if (firstLetterCriteria == null || firstLetterCriteria.isEmpty()) {
             this.userAccounts = userAccountBsn.findNotVerifiedUsers();
-        else {
+        } else {
             this.firstLetterCriteria = firstLetterCriteria;
             this.userAccounts = userAccountBsn.findUserAccountsStartingWith(this.firstLetterCriteria);
             this.emailCriteria = null;
         }
-        
+
         return "users?faces-redirect=true";
     }
-    
+
     public MailingList[] getSelectedMailingLists() {
         return selectedMailingLists;
     }
@@ -173,14 +182,15 @@ public class MemberBean implements Serializable {
     }
 
     public boolean isConfirmed() {
-        if(userAccount.getConfirmationCode() == null || userAccount.getConfirmationCode().isEmpty())
+        if (userAccount.getConfirmationCode() == null || userAccount.getConfirmationCode().isEmpty()) {
             return true;
+        }
         return false;
     }
 
     public void validateUserId(FacesContext context, UIComponent toValidate, Object value) throws ValidatorException {
         String usrId = (String) value;
-        if(-1 == usrId.indexOf("@")) {
+        if (-1 == usrId.indexOf("@")) {
             throw new ValidatorException(new FacesMessage("Invalid email address."));
         }
     }
@@ -188,7 +198,6 @@ public class MemberBean implements Serializable {
     @PostConstruct
     public void load() {
         this.userAccounts = userAccountBsn.findNotVerifiedUsers();
-        //this.mailingLists = mailingListBsn.findMailingLists();
     }
 
     public String load(String userId) {
@@ -196,30 +205,33 @@ public class MemberBean implements Serializable {
         this.userAccount = userAccountBsn.findUserAccount(this.userId);
         this.mailingLists = mailingListBsn.findMailingLists();
         this.attendedEvents = attendeeBsn.findAttendeedEvents(this.userAccount);
-                
-        locationBean.initialize();
-    	
-        if(this.userAccount.getCountry() != null)
-        	locationBean.setSelectedCountry(this.userAccount.getCountry().getAcronym());
-        
-        if(this.userAccount.getProvince() != null)
-        	locationBean.setSelectedProvince(this.userAccount.getProvince().getId());
-        
-        if(this.userAccount.getCity() != null)
-        	locationBean.setSelectedCity(this.userAccount.getCity().getId());
 
-        List<MailingListSubscription> mailingListSubscriptions = mailingListBsn.findMailingListSubscriptions(this.userAccount);
-        if(mailingListSubscriptions != null) {
+        locationBean.initialize();
+
+        if (this.userAccount.getCountry() != null) {
+            locationBean.setSelectedCountry(this.userAccount.getCountry().getAcronym());
+        }
+
+        if (this.userAccount.getProvince() != null) {
+            locationBean.setSelectedProvince(this.userAccount.getProvince().getId());
+        }
+
+        if (this.userAccount.getCity() != null) {
+            locationBean.setSelectedCity(this.userAccount.getCity().getId());
+        }
+
+        List<MailingListSubscription> mailingListSubscriptions = subscriptionBsn.findMailingListSubscriptions(this.userAccount);
+        if (mailingListSubscriptions != null) {
             this.selectedMailingLists = new MailingList[mailingListSubscriptions.size()];
             int i = 0;
-            for(MailingListSubscription mailingListSubscription: mailingListSubscriptions) {
+            for (MailingListSubscription mailingListSubscription : mailingListSubscriptions) {
                 this.selectedMailingLists[i++] = mailingListSubscription.getMailingList();
             }
         }
 
         return "user?faces-redirect=true";
     }
-    
+
     public String save() {
         save(null);
         return "users?faces-redirect=true";
@@ -228,10 +240,10 @@ public class MemberBean implements Serializable {
     private void save(Boolean verified) {
         UserAccount existingUserAccount = userAccountBsn.findUserAccount(userAccount.getId());
 
-    	existingUserAccount.setCountry(this.locationBean.getCountry());
-    	existingUserAccount.setProvince(this.locationBean.getProvince());
-    	existingUserAccount.setCity(this.locationBean.getCity());
-    	        
+        existingUserAccount.setCountry(this.locationBean.getCountry());
+        existingUserAccount.setProvince(this.locationBean.getProvince());
+        existingUserAccount.setCity(this.locationBean.getCity());
+
         existingUserAccount.setFirstName(userAccount.getFirstName());
         existingUserAccount.setLastName(userAccount.getLastName());
         existingUserAccount.setGender(userAccount.getGender());
@@ -245,14 +257,15 @@ public class MemberBean implements Serializable {
         existingUserAccount.setEvent(userAccount.getEvent());
         existingUserAccount.setSponsor(userAccount.getSponsor());
         existingUserAccount.setSpeaker(userAccount.getSpeaker());
-        
-        if(verified != null)
+
+        if (verified != null) {
             existingUserAccount.setVerified(verified);
+        }
 
         List<MailingList> mailingListsToSubscribe = new ArrayList<MailingList>();
         mailingListsToSubscribe.addAll(Arrays.asList(this.selectedMailingLists));
-        mailingListBsn.subscribe(mailingListsToSubscribe, existingUserAccount);
-        
+        subscriptionBsn.subscribe(mailingListsToSubscribe, existingUserAccount);
+
         userAccountBsn.save(existingUserAccount);
     }
 
@@ -264,14 +277,14 @@ public class MemberBean implements Serializable {
     public String confirm() {
         try {
             userAccountBsn.confirmUser(userAccount.getConfirmationCode());
-        } catch(IllegalArgumentException iae) {
+        } catch (IllegalArgumentException iae) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(iae.getMessage()));
             return "user";
         }
         removeSessionScoped();
         return "users?faces-redirect=true";
     }
-    
+
     public String checkUserAsVerified() {
         save(Boolean.TRUE);
         removeSessionScoped();
