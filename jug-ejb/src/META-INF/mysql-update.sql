@@ -6,6 +6,35 @@ insert into update_history (db_version, app_version, db_release_notes, app_relea
     'Fixes a typo in one of the columns in the mailing_list table. A standard subscription data was set to all mailing list subscribers who registered before the system went into production.',
     'Allow the user to indicate which language to use in the user interface. Create sessions for the event and speakers for the sessions.');
 
+create table event_session (
+    id           char(32)     not null,
+    event        char(32)     not null,
+    title        varchar(255) not null,
+    abstract     text             null,
+    topics       varchar(255)     null,
+    session_date date             null,
+    start_time   time             null,
+    end_time     time             null,
+    room         varchar(30)      null
+) engine = innodb;
+
+alter table event_session add constraint pk_event_session primary key (id);
+create index idx_event_session on event_session (event);
+alter table event_session add constraint fk_event_session foreign key (event) references event (id) on delete cascade;
+
+create table speaker (
+    id           char(32) not null,
+    session      char(32) not null,
+    user_account char(32) not null,
+    short_cv     text         null
+) engine = innodb;
+
+alter table speaker add constraint pk_speaker primary key (id);
+create index idx_session_speaker on speaker (session);
+create index idx_user_speaker on speaker (user_account);
+alter table speaker add constraint fk_session_speaker foreign key (session) references event_session(id) on delete cascade;
+alter table speaker add constraint fk_user_speaker foreign key (user_account) references user_account(id) on delete cascade;
+
 drop table version_database;
     
 update user_account set event = true where id in (select attendee from attendee) and event = false;
@@ -29,31 +58,6 @@ create table mailing_list_message (
 alter table mailing_list_message add constraint pk_mailing_list_message primary key (id);
 alter table mailing_list_message add constraint fk_mailing_list_message foreign key (mailing_list) references mailing_list(id) on delete cascade;
 alter table mailing_list_message add constraint fk_message_reply_to foreign key (reply_to) references mailing_list_message(id) on delete set null;
-
-create table event_session (
-    id           char(32)     not null,
-    event        char(32)     not null,
-    title        varchar(255) not null,
-    abstract     text             null,
-    session_date date             null,
-    start_time   time             null,
-    end_time     time             null,
-    room         varchar(30)      null
-) engine = innodb;
-
-alter table event_session add constraint pk_event_session primary key (id);
-alter table event_session add constraint fk_event_session foreign key (event) references event(id) on delete cascade;
-
-create table speaker (
-    id       char(32)   not null,
-    session  char(32)   not null,
-    speaker  char(32)   not null,
-    short_cv text           null
-) engine = innodb;
-
-alter table speaker add constraint pk_speaker primary key (id);
-alter table speaker add constraint fk_session_speaker foreign key (session) references event_session(id) on delete cascade;
-alter table speaker add constraint fk_user_speaker foreign key (speaker) references user_account(id) on delete cascade;
 
 ###############################################################################
 create table update_history (
