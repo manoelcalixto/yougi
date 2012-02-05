@@ -38,9 +38,7 @@
                             <h:commandButton value="#{bundle.remove}" action="#{mailingListBean.remove}" rendered="#{! empty mailingListBean.id}">
                                 <f:param name="id" value="#{mailingListBean.mailingList.id}"/>
                             </h:commandButton>    
-                            <h:button value="#{bundle.cancel}" outcome="mailing_list_view">
-                                <f:param name="id" value="#{mailingListBean.mailingList.id}"/>
-                            </h:button>
+                            <h:button value="#{bundle.cancel}" outcome="mailing_lists"/>
                         </h:panelGrid>
                     </h:form>
                 </div>

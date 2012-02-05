@@ -23,8 +23,6 @@ package org.cejug.entity;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  *
@@ -39,19 +37,13 @@ public class UpdateHistory implements Serializable {
     @EmbeddedId
     protected UpdateHistoryPK updateHistoryPK;
 
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "date_release")
+    @Column(name = "date_release", nullable=false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateRelease;
 
-    @Lob
-    @Size(max = 65535)
     @Column(name = "db_release_notes")
     private String dbReleaseNotes;
 
-    @Lob
-    @Size(max = 65535)
     @Column(name = "app_release_notes")
     private String appReleaseNotes;
 
@@ -112,7 +104,6 @@ public class UpdateHistory implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof UpdateHistory)) {
             return false;
         }
