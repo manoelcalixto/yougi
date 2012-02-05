@@ -22,7 +22,6 @@
     <group-name>partners</group-name>
     <group-name>leaders</group-name>
   </security-role-mapping>
-  <glassfish-web-app error-url="">
-    <parameter-encoding default-charset="UTF-8"/>
-  </glassfish-web-app>
+  
+  <parameter-encoding default-charset="UTF-8"/>
 </sun-web-app>
