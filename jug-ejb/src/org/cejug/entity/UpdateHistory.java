@@ -39,7 +39,7 @@ public class UpdateHistory implements Serializable {
 
     @Column(name = "date_release", nullable=false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateRelease;
+    private Date releaseDate;
 
     @Column(name = "db_release_notes")
     private String dbReleaseNotes;
@@ -54,9 +54,9 @@ public class UpdateHistory implements Serializable {
         this.updateHistoryPK = updateHistoryPK;
     }
 
-    public UpdateHistory(UpdateHistoryPK updateHistoryPK, Date dateRelease) {
+    public UpdateHistory(UpdateHistoryPK updateHistoryPK, Date releaseDate) {
         this.updateHistoryPK = updateHistoryPK;
-        this.dateRelease = dateRelease;
+        this.releaseDate = releaseDate;
     }
 
     public UpdateHistory(String dbVersion, String appVersion) {
@@ -71,12 +71,12 @@ public class UpdateHistory implements Serializable {
         this.updateHistoryPK = updateHistoryPK;
     }
 
-    public Date getDateRelease() {
-        return dateRelease;
+    public Date getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setDateRelease(Date dateRelease) {
-        this.dateRelease = dateRelease;
+    public void setReleaseDate(Date releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
     public String getDbReleaseNotes() {

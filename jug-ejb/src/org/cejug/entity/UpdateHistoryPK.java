@@ -44,6 +44,14 @@ public class UpdateHistoryPK implements Serializable {
         this.dbVersion = dbVersion;
         this.appVersion = appVersion;
     }
+    
+    public boolean isValid() {
+        if(this.dbVersion != null && !this.dbVersion.isEmpty() &&
+           this.appVersion != null && !this.appVersion.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
 
     public String getDbVersion() {
         return dbVersion;

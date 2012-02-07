@@ -27,6 +27,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.cejug.entity.UpdateHistory;
 import org.cejug.entity.UpdateHistoryPK;
+import org.cejug.exception.InvalidParameterException;
 
 /**
  *
@@ -46,18 +47,15 @@ public class UpdateHistoryBsn {
     }
     
     public List<UpdateHistory> findLastUpdate() {
-        return em.createQuery("select uh from UpdateHistory uh where s.session.event = :event order by s.userAccount.firstName asc")
+        return em.createQuery("select uh from UpdateHistory uh where uh.releaseDate = (select max(uh.releaseDate) from UpdateHistory uh)")
                  .getResultList();
     }
     
-    public List<Speaker> findSpeakers(EventSession session) {
-        return em.createQuery("select s from Speaker s where s.session = :session order by s.userAccount.firstName asc")
-                 .setParameter("session", session)
-                 .getResultList();
-    }
-    
-    public void save(Speaker speaker) {
-        if (speaker != null && speaker.getId() == null || speaker.getId().isEmpty()) {
+    public void save(UpdateHistory updateHistory) {
+        if(updateHistory == null)
+            throw new InvalidParameterException();
+        
+        if (updateHistory.getUpdateHistoryPK() == null || !updateHistory.getUpdateHistoryPK().isValid()) {
             speaker.setId(EntitySupport.generateEntityId());
             em.persist(speaker);
         } else {
