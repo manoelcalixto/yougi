@@ -51,6 +51,15 @@
 		                                    <f:param value="#{eventBean.getFormattedStartTime(event.startTime)}"/>
 		                                    <f:param value="#{eventBean.getFormattedEndTime(event.endTime)}"/>
 		                                </h:outputFormat>
+                                                <h:panelGrid columns="3">
+                                                    <h:link value="#{bundle.moreInformation}" outcome="event">
+                                                        <f:param name="id" value="#{event.id}"/>
+                                                    </h:link>
+                                                    <h:outputText value=" | " rendered="#{!eventBean.event.external}"/>
+                                                    <h:link value="#{bundle.attend}" outcome="event/attendee" rendered="#{!eventBean.event.external}">
+                                                        <f:param name="id" value="#{eventBean.event.id}"/>
+                                                    </h:link>
+                                                </h:panelGrid>
 		                            </h:panelGrid>
 		                        </c:forEach>
 		                    </p:panel>
