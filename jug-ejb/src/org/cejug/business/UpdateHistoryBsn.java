@@ -27,7 +27,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.cejug.entity.UpdateHistory;
 import org.cejug.entity.UpdateHistoryPK;
-import org.cejug.exception.InvalidParameterException;
+import org.cejug.exception.BusinessLogicException;
 
 /**
  *
@@ -53,20 +53,24 @@ public class UpdateHistoryBsn {
     
     public void save(UpdateHistory updateHistory) {
         if(updateHistory == null)
-            throw new InvalidParameterException();
+            throw new IllegalArgumentException();
         
         if (updateHistory.getUpdateHistoryPK() == null || !updateHistory.getUpdateHistoryPK().isValid()) {
-            speaker.setId(EntitySupport.generateEntityId());
-            em.persist(speaker);
-        } else {
-            em.merge(speaker);
+            throw new BusinessLogicException();
+        }
+        
+        try {
+            em.merge(updateHistory);
+        }
+        catch(IllegalArgumentException iae) {
+            em.persist(updateHistory);
         }
     }
 
     public void remove(String id) {
-        Speaker speaker = em.find(Speaker.class, id);
-        if (speaker != null) {
-            em.remove(speaker);
+        UpdateHistory updateHistory = em.find(UpdateHistory.class, id);
+        if (updateHistory != null) {
+            em.remove(updateHistory);
         }
     }
 }
