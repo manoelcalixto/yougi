@@ -147,11 +147,5 @@ public class MembershipGrowth {
             }
             membershipCumulativeGrowthModel.addSeries(accumulatedSeries);
         }
-        
-        for(int i = 0;i < 2;i++) {
-            for(int j = 0; j < 12; j++) {
-                logger.info(months[j] +": "+ data[i][j]);
-            }
-        }
     }
 }
