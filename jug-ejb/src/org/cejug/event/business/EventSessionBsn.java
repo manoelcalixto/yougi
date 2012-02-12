@@ -21,12 +21,14 @@
 package org.cejug.event.business;
 
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.cejug.event.entity.Event;
 import org.cejug.event.entity.EventSession;
+import org.cejug.knowledge.business.TopicBsn;
 import org.cejug.util.EntitySupport;
 
 /**
@@ -40,13 +42,16 @@ public class EventSessionBsn {
     @PersistenceContext
     private EntityManager em;
     
+    @EJB
+    private TopicBsn topicBsn;
+    
     public EventSession findEventSession(String id) {
         if (id != null)
             return em.find(EventSession.class, id);
         return null;
     }
     
-    public List<EventSession> findSessions(Event event) {
+    public List<EventSession> findEventSessions(Event event) {
         return em.createQuery("select es from EventSession es where es.event = :event order by es.sessionDate, es.startTime asc")
                  .setParameter("event", event)
                  .getResultList();
@@ -59,6 +64,10 @@ public class EventSessionBsn {
         } else {
             em.merge(eventSession);
         }
+        
+        
+        
+        topicBsn.consolidateTopics(eventSession.getTopics());
     }
 
     public void remove(String id) {

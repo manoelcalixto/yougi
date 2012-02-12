@@ -21,13 +21,13 @@
 package org.cejug.event.business;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-
-import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
+import javax.persistence.Query;
 import org.cejug.event.entity.Event;
 import org.cejug.util.EntitySupport;
 
@@ -50,19 +50,26 @@ public class EventBsn {
     }
     
     @SuppressWarnings("unchecked")
-	public List<Event> findEvents() {
+    public List<Event> findEvents() {
     	List<Event> events = em.createQuery("select e from Event e order by e.endDate desc")
-        		               .getResultList();
+        		       .getResultList();
         return events;
     }
     
     @SuppressWarnings("unchecked")
-	public List<Event> findCommingEvents() {
+    public List<Event> findCommingEvents() {
     	Calendar today = Calendar.getInstance();
         List<Event> events = em.createQuery("select e from Event e where e.endDate >= :today order by e.endDate desc")
-        		               .setParameter("today", today.getTime())
+        		       .setParameter("today", today.getTime())
                                .getResultList();
         return events;
+    }
+    
+    public void consolidateEventPeriod(Event event, Date date, Date startDate, Date endDate) {
+        if(event == null)
+            return;
+        
+        Query query = em.createQuery("");
     }
 
     public void save(Event event) {

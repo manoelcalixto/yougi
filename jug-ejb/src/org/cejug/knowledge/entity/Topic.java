@@ -24,6 +24,7 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.cejug.exception.BusinessLogicException;
 
 /**
  * @author Hildeberto Mendonca
@@ -36,8 +37,12 @@ public class Topic implements Serializable {
 
     @Id
     private String name;
+    
+    private String label;
 
     private String description;
+    
+    private Boolean valid;
     
     public Topic() {}
 
@@ -45,12 +50,41 @@ public class Topic implements Serializable {
         this.name = name;
     }
 
+    /**
+     * Name is the id of the entity Topic and it must be fully uppercase,
+     * independent if the user typed it like that or not. What the user types is
+     * actually preserved in the field Label.
+     */
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        if(name == null)
+            throw new BusinessLogicException();
+        
+        this.name = name.trim().toUpperCase();
+    }
+
+    /**
+     * Label preserves exactly what the user typed in order to preserve its
+     * visualization on the user interface. It is used for visualization
+     * purpose only. All search and indexation is done with the field Name.
+     */
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public Boolean getValid() {
+        return valid;
+    }
+
+    public void setValid(Boolean valid) {
+        this.valid = valid;
     }
 
     public String getDescription() {
@@ -82,6 +116,6 @@ public class Topic implements Serializable {
 
     @Override
     public String toString() {
-        return this.name;
+        return this.label;
     }
 }

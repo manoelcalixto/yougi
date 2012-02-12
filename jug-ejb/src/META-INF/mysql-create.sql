@@ -174,7 +174,9 @@ alter table mailing_list_subscription add constraint fk_subsciption_user foreign
 
 create table topic (
     name        varchar(50)  not null,
-    description text             null
+    label       varchar(50)  not null,
+    description text             null,
+    valid       tinyint(1)       null default false
 ) engine = MyISAM;
 
 alter table topic add constraint pk_topic primary key (name);
@@ -185,7 +187,7 @@ alter table topic add constraint pk_topic primary key (name);
 
 create table partner (
     id          char(32)     not null,
-    name        varchar(32)  not null,
+    name        varchar(100) not null,
     description text             null,
     logo        varchar(100)     null,
     url         varchar(255)     null,

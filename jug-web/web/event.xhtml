@@ -21,7 +21,7 @@
                                 <f:param value="#{eventBean.formattedEndTime}"/>
                             </h:outputFormat>
                         </h:panelGrid>
-                        
+                        <p/>
                         <h:button value="#{bundle.attend}" outcome="event/attendee" rendered="#{!eventBean.event.external}">
                            <f:param name="id" value="#{eventBean.event.id}"/>
                         </h:button>

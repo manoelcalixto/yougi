@@ -1,4 +1,24 @@
 
+alter table user_account add language varchar(5) null;
+alter table user_account add constraint fk_language_user foreign key (language) references language(acronym) on delete set null;
+
+create table mailing_list_message (
+    id            char(32)     not null,
+    mailing_list  char(32)     not null,
+    subject       varchar(255) not null,
+    body          text         not null,
+    sender        varchar(100) not null,
+    when_received datetime     not null,
+    reply_to      char(32)         null,
+    message_type  char(2)          null, # q - question, a - answer, i - info, ri - request_more_info, ir - info_requested, s - solution
+    answer_score  int(5)           null,
+    published     tinyint(1)       null
+) engine = innodb;
+
+alter table mailing_list_message add constraint pk_mailing_list_message primary key (id);
+alter table mailing_list_message add constraint fk_mailing_list_message foreign key (mailing_list) references mailing_list(id) on delete cascade;
+alter table mailing_list_message add constraint fk_message_reply_to foreign key (reply_to) references mailing_list_message(id) on delete set null;
+
 ###############################################################################
 insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 
    ('1.0',
@@ -35,29 +55,29 @@ create index idx_user_speaker on speaker (user_account);
 alter table speaker add constraint fk_session_speaker foreign key (session) references event_session(id) on delete cascade;
 alter table speaker add constraint fk_user_speaker foreign key (user_account) references user_account(id) on delete cascade;
 
+drop table topic;
+
+create table topic (
+    name        varchar(50)  not null,
+    label       varchar(50)  not null,
+    description text             null,
+    valid       tinyint(1)       null default false
+) engine = MyISAM;
+
+alter table topic add constraint pk_topic primary key (name);
+
 drop table version_database;
-    
+
 update user_account set event = true where id in (select attendee from attendee) and event = false;
 
-alter table user_account add language varchar(5) null;
-alter table user_account add constraint fk_language_user foreign key (language) references language(acronym) on delete set null;
+###############################################################################
+insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 
+   ('1.1',
+    '1.03',
+    'Database fix on the table -partner- to support a name with 100 characteres.',
+    '');
 
-create table mailing_list_message (
-    id            char(32)     not null,
-    mailing_list  char(32)     not null,
-    subject       varchar(255) not null,
-    body          text         not null,
-    sender        varchar(100) not null,
-    when_received datetime     not null,
-    reply_to      char(32)         null,
-    message_type  char(2)          null, # q - question, a - answer, i - info, ri - request_more_info, ir - info_requested, s - solution
-    answer_score  int(5)           null,
-    published     tinyint(1)       null
-) engine = innodb;
-
-alter table mailing_list_message add constraint pk_mailing_list_message primary key (id);
-alter table mailing_list_message add constraint fk_mailing_list_message foreign key (mailing_list) references mailing_list(id) on delete cascade;
-alter table mailing_list_message add constraint fk_message_reply_to foreign key (reply_to) references mailing_list_message(id) on delete set null;
+alter table partner change name name varchar(100) null;
 
 ###############################################################################
 create table update_history (

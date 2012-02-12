@@ -21,11 +21,11 @@
 package org.cejug.knowledge.business;
 
 import java.util.List;
-import javax.ejb.Stateless;
+import java.util.StringTokenizer;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import org.cejug.knowledge.entity.Topic;
 
 /**
@@ -49,10 +49,33 @@ public class TopicBsn {
 
     public void save(Topic topic) {
         Topic existing = em.find(Topic.class, topic.getName());
-        if(existing == null)
+        if(existing == null) {
             em.persist(topic);
+        }
         else
             em.merge(topic);
+    }
+    
+    /** 
+     * Receive a list of topics separated by comma and verify if they already 
+     * exist. Topics are created with default values if they don't exist yet.
+     */
+    public void consolidateTopics(String topics) {
+        StringTokenizer st = new StringTokenizer(topics, ",");
+        String topicName;
+        Topic topic;
+        while(st.hasMoreTokens()) {
+            topicName = st.nextToken().trim();
+            topic = findTopic(topicName.toUpperCase());
+            if(topic == null) {
+                topic = new Topic();
+                topic.setName(topicName);
+                topic.setLabel(topicName);
+                topic.setDescription(topicName);
+                topic.setValid(Boolean.TRUE);
+                em.persist(topic);
+            }
+        }
     }
 
     public void remove(String name) {
