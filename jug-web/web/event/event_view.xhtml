@@ -4,7 +4,8 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:c="http://java.sun.com/jsp/jstl/core">
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
     <body>
         <ui:composition template="../layout.xhtml">
             <ui:define name="title">#{bundle.event}</ui:define>
@@ -14,18 +15,33 @@
                     <h:form>
                         <h:panelGrid cellpadding="3">
                             <h:outputText value="#{eventBean.event.name}" style="font-size: 24px; font-weight: bold;"/>
-                            <h:outputFormat value="#{bundle.numberPeopleAttendingEvent}" style="font-weight: bold; color: blue;">
-                                <f:param value="#{eventBean.numberPeopleAttending}"/>
-                                <f:param value="#{eventBean.numberPeopleAttended}"/>
-                            </h:outputFormat>
-                            <h:outputText value="#{eventBean.formattedEventDescription}" escape="false" style="font-size: 14px;"/>
+                            
                             <h:outputFormat value="#{bundle.eventAppointment}" escape="false">
                                 <f:param value="#{eventBean.event.venue}"/>
                                 <f:param value="#{eventBean.formattedStartDate}"/>
                                 <f:param value="#{eventBean.formattedStartTime}"/>
                                 <f:param value="#{eventBean.formattedEndTime}"/>
                             </h:outputFormat>
-                            <h:outputText/>
+                            
+                            <h:outputFormat value="#{bundle.numberPeopleAttendingEvent}" style="font-weight: bold; color: blue;">
+                                <f:param value="#{eventBean.numberPeopleAttending}"/>
+                                <f:param value="#{eventBean.numberPeopleAttended}"/>
+                            </h:outputFormat>
+                            
+                            <h:outputText value="#{eventBean.formattedEventDescription}" escape="false" style="font-size: 14px;"/>
+                            
+                            <p:dataList value="#{eventBean.event.eventSessions}" var="ses" type="definition" style="border-color: white">
+                                <b> <h:outputText value="#{ses.startTime}">
+                                        <f:convertDateTime pattern="HH:mm"/>
+                                    </h:outputText>: 
+                                    <h:outputText value="#{ses.title}"/>
+                                    - <i><h:outputText value="#{ses.speakersName}"/></i></b>
+                                <f:facet name="description">
+                                    <h:outputText value="#{ses.abstract}"/>
+                                    <br/><br/>
+                                </f:facet>
+                            </p:dataList>
+                            
                             <h:outputFormat value="#{bundle.iWillAttend}" style="font-weight: bold; color: blue;" rendered="#{eventBean.isAttending}">
                                 <f:param value="#{eventBean.formattedRegistrationDate}"/>
                             </h:outputFormat>

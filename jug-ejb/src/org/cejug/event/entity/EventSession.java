@@ -22,6 +22,7 @@ package org.cejug.event.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.*;
 
 /**
@@ -62,7 +63,10 @@ public class EventSession implements Serializable {
     private Date endTime;
 
     private String room;
-
+    
+    @OneToMany(mappedBy="session", fetch= FetchType.EAGER)
+    private List<Speaker> speakers;
+    
     public EventSession() {
     }
 
@@ -141,6 +145,32 @@ public class EventSession implements Serializable {
     public void setRoom(String room) {
         this.room = room;
     }
+   
+    /**
+     * @return At least one speaker that is alocated in this event session to 
+     * give a speech.
+     */
+    public List<Speaker> getSpeakers() {
+        return speakers;
+    }
+    
+    public String getSpeakersName() {
+        if(speakers == null || speakers.isEmpty())
+            return "";
+        
+        StringBuilder speakersName = new StringBuilder();
+        String separator = "";
+        for(Speaker speaker: speakers) {
+            speakersName.append(separator);
+            speakersName.append(speaker.toString());
+            separator = ", ";
+        }
+        return speakersName.toString();
+    }
+
+    public void setSpeakers(List<Speaker> speakers) {
+        this.speakers = speakers;
+    }
 
     @Override
     public int hashCode() {
@@ -165,5 +195,5 @@ public class EventSession implements Serializable {
     @Override
     public String toString() {
         return this.title;
-    }   
+    }
 }

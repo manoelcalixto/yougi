@@ -22,15 +22,8 @@ package org.cejug.event.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-
+import java.util.List;
+import javax.persistence.*;
 import org.cejug.entity.City;
 import org.cejug.entity.Country;
 import org.cejug.entity.Province;
@@ -94,6 +87,9 @@ public class Event implements Serializable {
     private String longitude;
 
     private Boolean external;
+    
+    @OneToMany(mappedBy="event")
+    private List<EventSession> eventSessions;
 
     public String getId() {
         return id;
@@ -223,6 +219,18 @@ public class Event implements Serializable {
         return external;
     }
 
+    /**
+     * @return the sessions in which the event is organized.
+     */
+    public List<EventSession> getEventSessions() {
+        return eventSessions;
+    }
+
+    public void setEventSessions(List<EventSession> eventSessions) {
+        this.eventSessions = eventSessions;
+    }
+
+    @Override
     public String toString() {
         return this.name;
     }

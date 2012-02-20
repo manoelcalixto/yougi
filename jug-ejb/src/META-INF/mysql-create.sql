@@ -272,8 +272,8 @@ create table event_session (
     id           char(32)     not null,
     event        char(32)     not null,
     title        varchar(255) not null,
-    abstract     text             null,
     topics       varchar(255)     null,
+    abstract     text             null,
     session_date date             null,
     start_time   time             null,
     end_time     time             null,
@@ -281,18 +281,17 @@ create table event_session (
 ) engine = innodb;
 
 alter table event_session add constraint pk_event_session primary key (id);
-create index idx_event_session on event_session (event);
 alter table event_session add constraint fk_event_session foreign key (event) references event (id) on delete cascade;
 
 create table speaker (
     id           char(32) not null,
+    event        char(32) not null,
     session      char(32) not null,
     user_account char(32) not null,
     short_cv     text         null
 ) engine = innodb;
 
 alter table speaker add constraint pk_speaker primary key (id);
-create index idx_session_speaker on speaker (session);
-create index idx_user_speaker on speaker (user_account);
+alter table speaker add constraint fk_event_speaker foreign key (event) references event(id) on delete cascade;
 alter table speaker add constraint fk_session_speaker foreign key (session) references event_session(id) on delete cascade;
 alter table speaker add constraint fk_user_speaker foreign key (user_account) references user_account(id) on delete cascade;

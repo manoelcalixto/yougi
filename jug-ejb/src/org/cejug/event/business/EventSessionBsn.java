@@ -65,8 +65,6 @@ public class EventSessionBsn {
             em.merge(eventSession);
         }
         
-        
-        
         topicBsn.consolidateTopics(eventSession.getTopics());
     }
 

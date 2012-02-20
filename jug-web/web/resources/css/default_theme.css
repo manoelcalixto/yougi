@@ -31,13 +31,13 @@ body {
 
 #bottom {
     position: relative;
-    background-color: #98C73D;
+    background-color: #ebe9e9;
     width: 100%;
     margin-right: auto;
     margin-left: auto;
     border-bottom-style: solid;
     border-bottom-width: 200px;
-    border-bottom-color: #98C73D;
+    border-bottom-color: #ebe9e9;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     border-top-style: solid;

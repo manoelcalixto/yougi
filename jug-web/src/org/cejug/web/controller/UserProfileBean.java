@@ -26,8 +26,11 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import org.cejug.business.LanguageBsn;
+import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.Language;
+import org.cejug.entity.UserAccount;
 
 /**
  * @author Hildeberto Mendonca
@@ -38,8 +41,12 @@ public class UserProfileBean {
 
     @EJB
     private LanguageBsn languageBsn;
+    
+    @EJB
+    private UserAccountBsn userAccountBsn;
 
     private Language language;
+    private UserAccount userAccount;
 
     static final Logger logger = Logger.getLogger("org.cejug.web.controller.UserProfileBean");
 
@@ -62,5 +69,20 @@ public class UserProfileBean {
         Locale locale = new Locale(language.getAcronym());
         fc.getViewRoot().setLocale(locale);
         return "index?faces-redirect=true";
+    }
+    
+    /** 
+     * In the first invocation, it loads the user account in the session, using
+     * the authenticated user to search for the corresponding user in the
+     * database. Subsequent invocations return the user account in the session.
+     */
+    public UserAccount getUserAccount() {
+    	if(userAccount == null) {
+            FacesContext fc = FacesContext.getCurrentInstance();
+            HttpServletRequest request = (HttpServletRequest)fc.getExternalContext().getRequest();
+            String username = request.getRemoteUser();
+            this.userAccount = userAccountBsn.findUserAccountByUsername(username);
+    	}
+    	return userAccount;
     }
 }

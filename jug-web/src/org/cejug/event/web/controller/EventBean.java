@@ -61,7 +61,7 @@ public class EventBean {
 
     @EJB
     private PartnerBsn partnerBsn;
-
+    
     @EJB
     private UserAccountBsn userAccountBsn;
 

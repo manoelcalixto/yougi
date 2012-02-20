@@ -25,7 +25,9 @@ import javax.persistence.*;
 import org.cejug.entity.UserAccount;
 
 /**
- *
+ * Person with knowledge and experience to give a speech in an event, respecting
+ * the scope of subjects in the domain explored by the user group.
+ * 
  * @author Hildeberto Mendonca
  */
 @Entity
@@ -37,6 +39,10 @@ public class Speaker implements Serializable {
     @Id
     private String id;
 
+    @ManyToOne
+    @JoinColumn(name = "event", nullable=false)
+    private Event event;
+    
     @ManyToOne
     @JoinColumn(name = "session", nullable=false)
     private EventSession session;
@@ -79,6 +85,20 @@ public class Speaker implements Serializable {
         this.shortCv = shortCv;
     }
 
+    /**
+     * @return The event that the speaker is giving a speech.
+     */
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    /**
+     * @return The session in which the speaker is scheduled to speak.
+     */
     public EventSession getSession() {
         return session;
     }

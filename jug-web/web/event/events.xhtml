@@ -34,12 +34,12 @@
 		                                <h:link value="#{bundle.edit}" outcome="event" rendered="#{securityBackingBean.isUserLeader}">
 	                                            <f:param name="id" value="#{event.id}"/>
 	                                        </h:link>
-                                                <h:outputText value=" | "/>
-                                                <h:link value="#{bundle.sessions}" outcome="sessions">
+                                                <h:outputText value=" | " rendered="#{securityBackingBean.isUserLeader}"/>
+                                                <h:link value="#{bundle.sessions}" outcome="sessions" rendered="#{securityBackingBean.isUserLeader}">
                                                     <f:param name="eventId" value="#{event.id}"/>
                                                 </h:link>
-                                                <h:outputText value=" | "/>
-                                                <h:link value="#{bundle.speakers}" outcome="speakers">
+                                                <h:outputText value=" | " rendered="#{securityBackingBean.isUserLeader}"/>
+                                                <h:link value="#{bundle.speakers}" outcome="speakers" rendered="#{securityBackingBean.isUserLeader}">
                                                     <f:param name="eventId" value="#{event.id}"/>
                                                 </h:link>
                                                 <h:outputText value=" | " rendered="#{securityBackingBean.isUserLeader and !event.external}"/>

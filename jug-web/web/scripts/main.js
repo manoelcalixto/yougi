@@ -6,3 +6,7 @@
 function formatEmail(email) {
     email.value = email.value.toLowerCase();
 }
+
+function back() {
+    document.location.history(-1);
+}
