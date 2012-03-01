@@ -1,3 +1,11 @@
+alter table city add timezone varchar(20) null;
+update city set timezone = 'UTC -3:00' where country = 'BRA';
+
+alter table user_account add timezone varchar(20) null;
+update user_account set timezone = 'UTC -3:00' where country = 'BRA';
+
+alter table attendee add certificate_code char(36) null;
+
 alter table user_account add language varchar(5) null;
 alter table user_account add constraint fk_language_user foreign key (language) references language(acronym) on delete set null;
 

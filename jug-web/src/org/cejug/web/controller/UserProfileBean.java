@@ -21,15 +21,19 @@
 package org.cejug.web.controller;
 
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
+import org.cejug.business.ApplicationPropertyBsn;
 import org.cejug.business.LanguageBsn;
 import org.cejug.business.UserAccountBsn;
+import org.cejug.entity.ApplicationProperty;
 import org.cejug.entity.Language;
+import org.cejug.entity.Properties;
 import org.cejug.entity.UserAccount;
 
 /**
@@ -44,6 +48,9 @@ public class UserProfileBean {
     
     @EJB
     private UserAccountBsn userAccountBsn;
+    
+    @EJB
+    private ApplicationPropertyBsn applicationPropertyBsn;
 
     private Language language;
     private UserAccount userAccount;
@@ -84,5 +91,28 @@ public class UserProfileBean {
             this.userAccount = userAccountBsn.findUserAccountByUsername(username);
     	}
     	return userAccount;
+    }
+    
+    /**
+     * Returns the time zone of the authenticated user. If no user is 
+     * authenticated, then it returns the time zone defined in the application
+     * properties. If the time zone was not defined in the application
+     * properties yet, then it returns the default time zone where the system is
+     * running.
+     */
+    public String getTimeZone() {
+        UserAccount userAcc = getUserAccount();
+        if(userAcc != null && userAcc.getTimeZone() != null && !userAcc.getTimeZone().isEmpty()) {
+            return userAcc.getTimeZone();
+        }
+        else {
+            ApplicationProperty appPropTimeZone = applicationPropertyBsn.findApplicationProperty(Properties.TIMEZONE);
+            if(appPropTimeZone.getPropertyValue().isEmpty()) {
+                TimeZone tz = TimeZone.getDefault();
+                return tz.getID();
+            }
+            else
+                return appPropTimeZone.getPropertyValue();
+        }
     }
 }

@@ -76,13 +76,13 @@
                                     <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.registrationDate}"/></f:facet>
                                         <h:outputText value="#{member.registrationDate}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                            <f:convertDateTime pattern="#{bundle.formatDateAndTime}" timeZone="#{userProfileBean.timeZone}"/>
                                         </h:outputText>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.lastUpdate}"/></f:facet>
                                         <h:outputText value="#{member.lastUpdate}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                            <f:convertDateTime pattern="#{bundle.formatDateAndTime}" timeZone="#{userProfileBean.timeZone}"/>
                                         </h:outputText>
                                     </p:column>
                                 </p:dataTable>
@@ -106,7 +106,7 @@
                                     <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.date}"/></f:facet>
                                         <h:outputText value="#{deactivated.deactivationDate}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            <f:convertDateTime pattern="#{bundle.formatDate}" timeZone="#{userProfileBean.timeZone}"/>
                                         </h:outputText>
                                     </p:column>
                                     <p:column>

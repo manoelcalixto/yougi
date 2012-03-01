@@ -21,12 +21,7 @@
 package org.cejug.entity;
 
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * City is the smallest geographic region where a JUG can operate. A JUG can
@@ -34,28 +29,36 @@ import javax.persistence.Table;
  * his/her own city if it is not listed in the select field. However, cities
  * added this way should pass through a validation process before being
  * considered as a city covered by the JUG.
+ *
  * @author Hildeberto Mendonca
  */
 @Entity
 @Table(name = "city")
 public class City implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     private String id;
+
     private String name;
+
     private Boolean valid;
-    
+
     @JoinColumn(name = "country")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Country country;
-    
+
     @JoinColumn(name = "province")
     @ManyToOne(fetch = FetchType.LAZY)
     private Province province;
-    
+
     private String latitude;
+
     private String longitude;
+    
+    @Column(name="timezone")
+    private String timeZone;
 
     public City() {
     }
@@ -110,22 +113,33 @@ public class City implements Serializable {
     }
 
     public String getLatitude() {
-		return latitude;
-	}
+        return latitude;
+    }
 
-	public void setLatitude(String latitude) {
-		this.latitude = latitude;
-	}
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
 
-	public String getLongitude() {
-		return longitude;
-	}
+    public String getLongitude() {
+        return longitude;
+    }
 
-	public void setLongitude(String longitude) {
-		this.longitude = longitude;
-	}
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
 
-	@Override
+    /**
+     * @return the timezone of the city.
+     */
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
+    }
+
+    @Override
     public int hashCode() {
         int hash = 0;
         hash += (id != null ? id.hashCode() : 0);

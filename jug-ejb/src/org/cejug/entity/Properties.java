@@ -28,7 +28,9 @@ public enum Properties {
     URL                 ("url",                ""),
     GROUP_NAME          ("groupName",          ""),
     SEND_EMAILS         ("sendEmails",         "false"),
-    EMAIL_SERVER_TYPE   ("emailServerType",    "pop3");
+    EMAIL_SERVER_TYPE   ("emailServerType",    "pop3"),
+    TIMEZONE            ("timezone",           "UTC"),
+    DEFAULT_LANGUAGE    ("language",           "en");
 
     private String key;
     private String defaultValue;

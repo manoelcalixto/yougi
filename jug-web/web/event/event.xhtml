@@ -25,16 +25,17 @@
                                     <h:outputLabel for="external" value="#{bundle.external}"/>
                                 </h:panelGrid>
                                 
-                                <h:panelGrid columns="2">
-                                    <h:outputLabel for="venue" value="#{bundle.venue} *" styleClass="fieldLabel"/>
-                                    <h:outputLabel for="address" value="#{bundle.address}" styleClass="fieldLabel"/>
-                                        <h:selectOneMenu id="venue" label="#{bundle.venue}" required="true" value="#{eventBean.selectedVenue}">
-                                            <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
-                                            <f:selectItems value="#{eventBean.venues}" var="venue" itemLabel="#{venue.name}" itemValue="#{venue.id}"/>
-                                            <f:ajax render="address country province city"/>
-                                        </h:selectOneMenu>
-                                    <h:inputText id="address" label="#{bundle.address}" required="false" size="30" maxlength="255" value="#{eventBean.event.address}"/>
+                                <h:outputLabel for="venue" value="#{bundle.venue} *" styleClass="fieldLabel"/>
+                                <h:selectOneMenu id="venue" label="#{bundle.venue}" required="true" value="#{eventBean.selectedVenue}">
+                                    <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
+                                    <f:selectItems value="#{eventBean.venues}" var="venue" itemLabel="#{venue.name}" itemValue="#{venue.id}"/>
+                                    <f:ajax render="address country province city"/>
+                                </h:selectOneMenu>
+                                
+                                <h:outputLabel for="address" value="#{bundle.address}" styleClass="fieldLabel"/>
+                                <h:inputText id="address" label="#{bundle.address}" required="false" size="50" maxlength="255" value="#{eventBean.event.address}"/>
 
+                                <h:panelGrid columns="2">
                                     <h:outputLabel for="country" value="#{bundle.country}" styleClass="fieldLabel"/>
                                     <h:outputLabel for="province" value="#{bundle.province}" styleClass="fieldLabel"/>
 
@@ -71,19 +72,19 @@
                                     <h:outputLabel for="endDate" value="#{bundle.end} *" styleClass="fieldLabel"/>
                                     <h:outputText/>
 
-                                    <p:calendar value="#{eventBean.event.startDate}" id="startDate" pattern="#{bundle.formatDate}" size="10" timeZone="GMT-3"/>
+                                    <p:calendar value="#{eventBean.event.startDate}" id="startDate" pattern="#{bundle.formatDate}" size="10" timeZone="#{userProfileBean.timeZone}"/>
                                     <p:inputMask value="#{eventBean.event.startTime}" mask="99:99" size="5">
-                                        <f:convertDateTime pattern="#{bundle.formatTime}" timeZone="GMT-3"/>
+                                        <f:convertDateTime pattern="#{bundle.formatTime}" timeZone="#{userProfileBean.timeZone}"/>
                                     </p:inputMask>
-                                    <p:calendar value="#{eventBean.event.endDate}" id="endDate" pattern="#{bundle.formatDate}" size="10" timeZone="GMT-3"/>
+                                    <p:calendar value="#{eventBean.event.endDate}" id="endDate" pattern="#{bundle.formatDate}" size="10" timeZone="#{userProfileBean.timeZone}"/>
                                     <p:inputMask value="#{eventBean.event.endTime}" mask="99:99" size="5">
-                                       <f:convertDateTime pattern="#{bundle.formatTime}" timeZone="GMT-3"/>
+                                       <f:convertDateTime pattern="#{bundle.formatTime}" timeZone="#{userProfileBean.timeZone}"/>
                                     </p:inputMask>
 
-                                    <h:outputText value="dd/mm/yyyy" styleClass="fieldFormat"/>
-                                    <h:outputText value="hh:mm" styleClass="fieldFormat"/>
-                                    <h:outputText value="dd/mm/yyyy" styleClass="fieldFormat"/>
-                                    <h:outputText value="hh:mm" styleClass="fieldFormat"/>
+                                    <h:outputText value="#{bundle.formatDateLabel}" styleClass="fieldFormat"/>
+                                    <h:outputText value="#{bundle.formatTimeLabel}" styleClass="fieldFormat"/>
+                                    <h:outputText value="#{bundle.formatDateLabel}" styleClass="fieldFormat"/>
+                                    <h:outputText value="#{bundle.formatTimeLabel}" styleClass="fieldFormat"/>
                                 </h:panelGrid>
                             </h:panelGrid>
                             <h:panelGrid columns="1">

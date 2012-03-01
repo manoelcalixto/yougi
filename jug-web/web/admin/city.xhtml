@@ -17,18 +17,20 @@
                         <p:tabView>
                             <p:tab title="#{bundle.properties}">
                                 <h:panelGrid columns="1">
-                                    <h:outputLabel for="name" value="#{bundle.name}" styleClass="mandatoryField"/>
+                                    <h:outputLabel for="name" value="#{bundle.name}" style="fieldLabel"/>
                                     <h:inputText id="name" label="#{bundle.name}" required="true" size="30" maxlength="100" value="#{cityBean.city.name}"/>
 
-                                    <h:outputLabel for="country" value="#{bundle.country}" styleClass="mandatoryField"/>
-                                    <h:selectOneMenu id="country" label="#{bundle.country}" required="true" value="#{cityBean.selectedCountry}">
-                                        <f:selectItems value="#{cityBean.countries}"/>
+                                    <h:outputLabel for="country" value="#{bundle.country}" style="fieldLabel"/>
+                                    <h:selectOneMenu id="country" label="#{bundle.country}" value="#{locationBean.selectedCountry}">
+                                        <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
+                                        <f:selectItems value="#{locationBean.countries}" var="country" itemLabel="#{country.name}" itemValue="#{country.acronym}"/>
                                         <f:ajax render="province"/>
                                     </h:selectOneMenu>
 
-                                    <h:outputLabel for="province" value="#{bundle.province}"/>
-                                    <h:selectOneMenu id="province" label="#{bundle.province}" value="#{cityBean.selectedProvince}">
-                                        <f:selectItems value="#{cityBean.provinces}"/>
+                                    <h:outputLabel for="province" value="#{bundle.province}" style="fieldLabel"/>
+                                    <h:selectOneMenu id="province" label="#{bundle.province}" value="#{locationBean.selectedProvince}">
+                                        <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
+                                        <f:selectItems value="#{locationBean.provinces}" var="province" itemLabel="#{province.name}" itemValue="#{province.id}"/>
                                     </h:selectOneMenu>
 
                                     <h:panelGrid columns="2">
@@ -36,12 +38,17 @@
                                         <h:outputLabel for="valid" value="#{bundle.valid}"/>
                                     </h:panelGrid>
                                     
-                                    <h:panelGrid columns="2">
-                                        <h:outputLabel for="latitude" value="#{bundle.latitude}"/>
-                                        <h:outputLabel for="longitude" value="#{bundle.longitude}"/>
+                                    <h:panelGrid columns="3">
+                                        <h:outputLabel for="latitude" value="#{bundle.latitude}" style="fieldLabel"/>
+                                        <h:outputLabel for="longitude" value="#{bundle.longitude}" style="fieldLabel"/>
+                                        <h:outputLabel for="timeZone" value="#{bundle.timeZone}" style="fieldLabel"/>
                                     
                                         <h:inputText id="latitude" label="#{bundle.latitude}" size="15" maxlength="15" value="#{cityBean.city.latitude}"/>
                                         <h:inputText id="longitude" label="#{bundle.longitude}" size="15" maxlength="15" value="#{cityBean.city.longitude}"/>
+                                        <h:selectOneMenu id="timeZone" label="#{bundle.timeZone}" value="#{cityBean.city.timeZone}">
+                                            <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
+                                            <f:selectItems value="#{cityBean.timeZones}" var="tz" itemLabel="#{tz}" itemValue="#{tz}"/>
+                                        </h:selectOneMenu>
                                     </h:panelGrid>
 
                                     <h:panelGrid columns="3">
@@ -73,13 +80,13 @@
                                     <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.registrationDate}"/></f:facet>
                                         <h:outputText value="#{inhabitant.registrationDate}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                            <f:convertDateTime pattern="#{bundle.formatDateAndTime}" timeZone="#{userProfileBean.timeZone}"/>
                                         </h:outputText>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.lastUpdate}"/></f:facet>
                                         <h:outputText value="#{inhabitant.lastUpdate}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                            <f:convertDateTime pattern="#{bundle.formatDateAndTime}" timeZone="#{userProfileBean.timeZone}"/>
                                         </h:outputText>
                                     </p:column>
                                 </p:dataTable>

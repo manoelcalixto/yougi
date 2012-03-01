@@ -33,21 +33,21 @@
                             <p:column style="text-align: right">
                                 <f:facet name="header"><h:outputText value="#{bundle.date}"/></f:facet>
                                 <h:outputText value="#{sess.sessionDate}">
-                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                    <f:convertDateTime pattern="#{bundle.formatDate}" timeZone="#{userProfileBean.timeZone}"/>
                                 </h:outputText>
                             </p:column>
                             
                             <p:column style="text-align: right">
                                 <f:facet name="header"><h:outputText value="#{bundle.start}"/></f:facet>
                                 <h:outputText value="#{sess.startTime}">
-                                    <f:convertDateTime pattern="HH:mm"/>
+                                    <f:convertDateTime pattern="#{bundle.formatTime}" timeZone="#{userProfileBean.timeZone}"/>
                                 </h:outputText>
                             </p:column>
                             
                             <p:column style="text-align: right">
                                 <f:facet name="header"><h:outputText value="#{bundle.end}"/></f:facet>
                                 <h:outputText value="#{sess.endTime}">
-                                    <f:convertDateTime pattern="HH:mm"/>
+                                    <f:convertDateTime pattern="#{bundle.formatTime}" timeZone="#{userProfileBean.timeZone}"/>
                                 </h:outputText>
                             </p:column>
                         </p:dataTable>

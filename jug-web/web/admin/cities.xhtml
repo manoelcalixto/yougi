@@ -17,7 +17,9 @@
                         <p:dataTable id="cities" value="#{cityBean.cities}" var="city">
                             <p:column>
                                 <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>
-                                <h:commandLink action="#{cityBean.load(city.id)}" value="#{city.name}"/>
+                                <h:link outcome="city" value="#{city.name}">
+                                    <f:param name="id" value="#{city.id}"/>
+                                </h:link>
                             </p:column>
 
                             <p:column>

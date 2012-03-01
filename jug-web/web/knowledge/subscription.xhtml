@@ -36,26 +36,26 @@
                             <h:outputText value="#{bundle.to}" styleClass="fieldLabel"/>
                             
                             <h:outputText value="#{subscriptionBean.subscription.subscriptionDate}">
-                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                <f:convertDateTime pattern="#{bundle.formatDate}" timeZone="#{userProfileBean.timeZone}"/>
                             </h:outputText>
                             <h:outputText value="#{subscriptionBean.subscription.unsubscriptionDate}">
-                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                <f:convertDateTime pattern="#{bundle.formatDate}" timeZone="#{userProfileBean.timeZone}"/>
                             </h:outputText>
                             
                             <h:outputLabel for="subscriptionDate" value="#{bundle.subscriptionDate} *" styleClass="fieldLabel" rendered="#{!subscriptionBean.isSubscribed}"/>
                             <h:outputLabel for="unsubscriptionDate" value="#{bundle.unsubscriptionDate} *" styleClass="fieldLabel" rendered="#{subscriptionBean.isSubscribed}"/>
                             <h:outputText/>
                             
-                            <p:calendar value="#{subscriptionBean.subscriptionDate}" id="subscriptionDate" pattern="#{bundle.formatDate}" size="10" timeZone="GMT-3" rendered="#{!subscriptionBean.isSubscribed}"/>
-                            <p:calendar value="#{subscriptionBean.unsubscriptionDate}" id="unsubscriptionDate" pattern="#{bundle.formatDate}" size="10" timeZone="GMT-3" rendered="#{subscriptionBean.isSubscribed}"/>
+                            <p:calendar value="#{subscriptionBean.subscriptionDate}" id="subscriptionDate" pattern="#{bundle.formatDate}" size="10" timeZone="#{userProfileBean.timeZone}" rendered="#{!subscriptionBean.isSubscribed}"/>
+                            <p:calendar value="#{subscriptionBean.unsubscriptionDate}" id="unsubscriptionDate" pattern="#{bundle.formatDate}" size="10" timeZone="#{userProfileBean.timeZone}" rendered="#{subscriptionBean.isSubscribed}"/>
                             <h:outputText/>
                         </h:panelGrid>
                         <h:inputHidden id="id" value="#{subscriptionBean.subscription.id}"/>
                         <h:inputHidden value="#{subscriptionBean.subscription.subscriptionDate}">
-                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            <f:convertDateTime pattern="#{bundle.formatDate}" timeZone="#{userProfileBean.timeZone}"/>
                         </h:inputHidden>
                         <h:inputHidden value="#{subscriptionBean.subscription.unsubscriptionDate}">
-                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            <f:convertDateTime pattern="#{bundle.formatDate}" timeZone="#{userProfileBean.timeZone}"/>
                         </h:inputHidden>
                         <p/>
                         <h:panelGrid columns="3">

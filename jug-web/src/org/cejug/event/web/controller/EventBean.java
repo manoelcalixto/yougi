@@ -41,6 +41,7 @@ import org.cejug.event.entity.Event;
 import org.cejug.partnership.business.PartnerBsn;
 import org.cejug.partnership.entity.Partner;
 import org.cejug.web.controller.LocationBean;
+import org.cejug.web.controller.UserProfileBean;
 import org.cejug.web.util.ResourceBundle;
 import org.cejug.web.util.WebTextUtils;
 
@@ -73,6 +74,9 @@ public class EventBean {
 
     @ManagedProperty(value = "#{locationBean}")
     private LocationBean locationBean;
+    
+    @ManagedProperty(value = "#{userProfileBean}")
+    private UserProfileBean userProfileBean;
 
     private Event event;
 
@@ -107,6 +111,14 @@ public class EventBean {
 
     public void setLocationBean(LocationBean locationBean) {
         this.locationBean = locationBean;
+    }
+
+    public UserProfileBean getUserProfileBean() {
+        return userProfileBean;
+    }
+
+    public void setUserProfileBean(UserProfileBean userProfileBean) {
+        this.userProfileBean = userProfileBean;
     }
 
     public Event getEvent() {
@@ -211,19 +223,19 @@ public class EventBean {
     }
 
     public String getFormattedStartTime() {
-        return WebTextUtils.getFormattedTime(event.getStartTime());
+        return WebTextUtils.getFormattedTime(event.getStartTime(), userProfileBean.getTimeZone());
     }
 
     public String getFormattedStartTime(Date startTime) {
-        return WebTextUtils.getFormattedTime(startTime);
+        return WebTextUtils.getFormattedTime(startTime, userProfileBean.getTimeZone());
     }
 
     public String getFormattedEndTime() {
-        return WebTextUtils.getFormattedTime(event.getEndTime());
+        return WebTextUtils.getFormattedTime(event.getEndTime(), userProfileBean.getTimeZone());
     }
 
     public String getFormattedEndTime(Date endTime) {
-        return WebTextUtils.getFormattedTime(endTime);
+        return WebTextUtils.getFormattedTime(endTime, userProfileBean.getTimeZone());
     }
 
     public String getFormattedRegistrationDate() {
@@ -287,7 +299,7 @@ public class EventBean {
                 newAttendee.getEvent(),
                 rb.getMessage("formatDate"),
                 rb.getMessage("formatTime"),
-                "GMT-3");
+                userProfileBean.getTimeZone());
         return "events?faces-redirect=true";
     }
 

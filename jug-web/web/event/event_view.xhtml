@@ -32,7 +32,7 @@
                             
                             <p:dataList value="#{eventBean.event.eventSessions}" var="ses" type="definition" style="border-color: white">
                                 <b> <h:outputText value="#{ses.startTime}">
-                                        <f:convertDateTime pattern="HH:mm"/>
+                                        <f:convertDateTime pattern="#{bundle.formatTime}" timeZone="#{userProfileBean.timeZone}"/>
                                     </h:outputText>: 
                                     <h:outputText value="#{ses.title}"/>
                                     - <i><h:outputText value="#{ses.speakersName}"/></i></b>

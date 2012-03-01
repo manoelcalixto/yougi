@@ -27,7 +27,7 @@
                                     <f:converter converterId="GenderNumberToString"/>
                                 </h:outputText>
                                 <h:outputText value="#{profileBean.userAccount.birthDate}">
-                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                    <f:convertDateTime pattern="#{bundle.formatDate}" timeZone="#{userProfileBean.timeZone}"/>
                                 </h:outputText>
 
                                 <h:outputText value="#{bundle.email}" styleClass="fieldLabel"/>

@@ -37,7 +37,7 @@
                             </h:selectOneRadio>
                             <h:panelGrid columns="2">
                                 <p:inputMask value="#{memberBean.userAccount.birthDate}" id="birthDate" mask="99/99/9999" size="10">
-                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                    <f:convertDateTime pattern="#{bundle.formatDate}" timeZone="#{userProfileBean.timeZone}"/>
                                 </p:inputMask>
                                 <h:outputText value="#{bundle.dateFormat}" styleClass="fieldFormat"/>
                             </h:panelGrid>
@@ -46,10 +46,10 @@
                             <h:outputText value="#{bundle.lastUpdate}" styleClass="fieldLabel"/>
 
                             <h:outputText value="#{memberBean.userAccount.registrationDate}">
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                <f:convertDateTime pattern="#{bundle.formatDateAndTime}" timeZone="#{userProfileBean.timeZone}"/>
                             </h:outputText>
                             <h:outputText value="#{memberBean.userAccount.lastUpdate}">
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                <f:convertDateTime pattern="#{bundle.formatDateAndTime}" timeZone="#{userProfileBean.timeZone}"/>
                             </h:outputText>
 
                             <h:outputLabel for="website" value="#{bundle.website}" styleClass="fieldLabel"/>
@@ -138,7 +138,7 @@
                                         <p:column>
                                             <f:facet name="header"><h:outputText value="#{bundle.date}"/></f:facet>
                                             <h:outputText value="#{evt.startDate}">
-                                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                                <f:convertDateTime pattern="#{bundle.formatDate}" timeZone="#{userProfileBean.timeZone}"/>
                                             </h:outputText>
                                         </p:column>
                                     </p:dataTable>

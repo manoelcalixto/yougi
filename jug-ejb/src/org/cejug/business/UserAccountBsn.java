@@ -372,6 +372,18 @@ public class UserAccountBsn {
 
         logger.log(Level.INFO, "Number of removed non confirmed accounts: {0}", i);
     }
+    
+    /**
+     * Update the time zone of all users that inhabit the informed city.
+     */
+    public void updateTimeZoneInhabitants(City city) {
+        if(city.getTimeZone() != null && !city.getTimeZone().isEmpty()) {
+            List<UserAccount> userAccounts = findInhabitantsFrom(city);
+            for(UserAccount user: userAccounts) {
+                user.setTimeZone(city.getTimeZone());
+            }
+        }
+    }
 
     public void remove(String userId) {
         UserAccount userAccount = em.find(UserAccount.class, userId);

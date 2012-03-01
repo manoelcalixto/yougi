@@ -21,6 +21,7 @@
 package org.cejug.web.controller;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -30,6 +31,9 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import org.cejug.business.ApplicationPropertyBsn;
+import org.cejug.business.LanguageBsn;
+import org.cejug.business.LocationBsn;
+import org.cejug.entity.Language;
 import org.cejug.entity.Properties;
 import org.cejug.web.util.ResourceBundle;
 
@@ -44,11 +48,19 @@ public class ApplicationPropertiesBean implements Serializable {
 
     @EJB
     private ApplicationPropertyBsn applicationPropertyBsn;
+    
+    @EJB
+    private LocationBsn locationBsn;
+    
+    @EJB
+    private LanguageBsn languageBsn;
 
     private Map<String, String> applicationProperties;
 
     private Boolean sendEmails;
-
+    
+    private List<Language> languages;
+        
     public Map<String, String> getApplicationProperties() {
         return applicationProperties;
     }
@@ -63,6 +75,16 @@ public class ApplicationPropertiesBean implements Serializable {
 
     public void setSendEmails(Boolean sendEmails) {
         this.sendEmails = sendEmails;
+    }
+    
+    public List<String> getTimeZones() {
+        return locationBsn.getTimeZones();
+    }
+    
+    public List<Language> getLanguages() {
+        if(this.languages == null)
+            this.languages = languageBsn.findLanguages();
+        return this.languages;
     }
 
     public String save() {

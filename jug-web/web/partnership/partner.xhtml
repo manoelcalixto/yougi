@@ -33,7 +33,7 @@
                                 <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
                                 <f:selectItems value="#{locationBean.countries}" var="country" itemLabel="#{country.name}" itemValue="#{country.acronym}"/>
                                 <f:ajax render="province city"/>
-                            </h:selectOneMenu>                            
+                            </h:selectOneMenu>
                             <h:selectOneMenu id="province" label="#{bundle.province}" value="#{locationBean.selectedProvince}">
                                 <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
                                 <f:selectItems value="#{locationBean.provinces}" var="province" itemLabel="#{province.name}" itemValue="#{province.id}"/>

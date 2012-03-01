@@ -28,8 +28,8 @@
                                 <f:selectItem itemLabel="#{bundle.female}" itemValue="0"/>
                             </h:selectOneRadio>
                             <h:panelGrid columns="2">
-                                <p:calendar value="#{userAccountBean.userAccount.birthDate}" id="birthDate" pattern="dd/MM/yyyy"/>
-                                <h:outputText value="dd/mm/yyyy" styleClass="fieldFormat"/>
+                                <p:calendar value="#{userAccountBean.userAccount.birthDate}" id="birthDate" pattern="#{bundle.formatDate}" timeZone="#{userProfileBean.timeZone}"/>
+                                <h:outputText value="#{bundle.formatDateLabel}" styleClass="fieldFormat"/>
                             </h:panelGrid>
 
                             <h:outputLabel for="website" value="#{bundle.website}" styleClass="fieldLabel"/>

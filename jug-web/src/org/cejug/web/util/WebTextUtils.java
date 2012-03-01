@@ -22,7 +22,6 @@ package org.cejug.web.util;
 
 import java.util.Date;
 import java.util.StringTokenizer;
-
 import org.cejug.entity.City;
 import org.cejug.entity.Country;
 import org.cejug.entity.Province;
@@ -63,20 +62,20 @@ public final class WebTextUtils extends TextUtils {
     	return getFormattedDate(date, rb.getMessage("formatDate"));
     }
     
-    public static String getFormattedTime(Date time) {
+    public static String getFormattedTime(Date time, String timeZone) {
     	if(time == null)
     		return "";
     	
     	ResourceBundle rb = new ResourceBundle();
-    	return getFormattedTime(time, rb.getMessage("formatTime"), "GMT-3");
+    	return getFormattedTime(time, rb.getMessage("formatTime"), timeZone);
     }
     
-    public static String getFormattedDateTime(Date dateTime) {
+    public static String getFormattedDateTime(Date dateTime, String timeZone) {
     	if(dateTime == null)
     		return "";
     	
     	ResourceBundle rb = new ResourceBundle();
-    	return getFormattedDateTime(dateTime, rb.getMessage("formatDateTime"), "GMT-3");
+    	return getFormattedDateTime(dateTime, rb.getMessage("formatDateTime"), timeZone);
     }
     
     public static String printAddress(String address, Country country, Province province, City city, String postalCode) {

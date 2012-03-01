@@ -20,9 +20,11 @@
  * */
 package org.cejug.business;
 
+import java.util.ArrayList;
 import java.util.List;
-import javax.ejb.Stateless;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.cejug.entity.City;
@@ -41,6 +43,9 @@ import org.cejug.util.EntitySupport;
 public class LocationBsn {
     @PersistenceContext
     private EntityManager em;
+    
+    @EJB
+    private UserAccountBsn userAccountBsn;
 
     public Country findCountry(String acronym) {
         if(acronym != null)
@@ -137,6 +142,25 @@ public class LocationBsn {
         else
             return null;
     }
+    
+    /**
+     * Returns a list of time zones according to UTC standard.
+     */
+    public List<String> getTimeZones() {
+        String prefix = "UTC";
+        String signal = " ";
+        String minutes = ":00";
+        List<String> timeZones = new ArrayList<String>();
+        for(int i = -12;i <= 14;i++) {
+            if(i > 0)
+                signal = " +";
+            if(i != 0)
+                timeZones.add(prefix + signal + i + minutes);
+            else
+                timeZones.add(prefix);
+        }
+        return timeZones;
+    }
 
     public void saveCountry(Country country) {
         Country existing = em.find(Country.class, country.getAcronym());
@@ -176,6 +200,8 @@ public class LocationBsn {
         else {
             em.merge(city);
         }
+        
+        userAccountBsn.updateTimeZoneInhabitants(city);
     }
 
     public void removeCity(String id) {
