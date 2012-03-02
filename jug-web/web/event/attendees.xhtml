@@ -17,6 +17,11 @@
                             <f:param value="#{attendeeBean.numberPeopleAttending}"/>
                             <f:param value="#{attendeeBean.numberPeopleAttended}"/>
                         </h:outputFormat></p>
+                        <p>
+                            <h:panelGrid width="100%" columnClasses="alignColumnRight">
+                                <h:commandButton value="#{bundle.print}" action="#{attendeeBean.print}"/>
+                            </h:panelGrid>
+                        </p>
                         <p:dataTable value="#{attendeeBean.attendees}" var="attendee" selection="#{attendeeBean.selectedAttendees}" rowKey="#{attendee.id}">
                             <p:column>
                                 <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>
@@ -26,7 +31,7 @@
                             </p:column>
 
                             <p:column>
-                                <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>
+                                <f:facet name="header"><h:outputText value="#{bundle.email}"/></f:facet>
                                 <h:outputText value="#{attendee.attendee.email}"/>
                             </p:column>
                             

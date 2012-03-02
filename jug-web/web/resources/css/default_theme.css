@@ -20,6 +20,10 @@ a:link:hover, a:visited:hover  {
     color: red;
 }
 
+.alignColumnRight {
+    text-align: right;
+}
+
 body {
     background-color: #ffffff;
     font-size: 12px;
