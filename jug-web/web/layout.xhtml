@@ -49,6 +49,7 @@
                         </p:submenu>
                         <p:submenu label="#{bundle.events}">
                             <p:menuitem value="#{bundle.events}" url="/event/events.xhtml"/>
+                            <p:menuitem value="#{bundle.certificate}" url="/event/certificate_validation.xhtml"/>
                         </p:submenu>
                         <p:submenu label="#{bundle.partnership}">
                             <p:menuitem value="#{bundle.partners}" url="/partnership/partners.xhtml"/>
@@ -80,15 +81,7 @@
         </div>
         <div id="bottom">
             <div class="footer">
-                <h:form>
-                    <h:commandLink action="#{userProfileBean.changeLanguage('en')}">
-                        <h:outputText value="#{bundle.english}" escape="false"/>
-                    </h:commandLink> |
-                    <h:commandLink action="#{userProfileBean.changeLanguage('pt')}">
-                        <h:outputText value="#{bundle.portuguese}" escape="false"/>
-                    </h:commandLink>
-                </h:form>
-                <p>Created and maintained by the <a href="http://www.cejug.org" target="_blank">#{bundle.application}</a> Community! - <b><h:link outcome="/about" value="#{bundle.versionNumber}"/></b> -
+                <p>Created and maintained by the <a href="http://www.cejug.org" target="_blank">CEJUG</a> Community! - <b><h:link outcome="/about" value="#{bundle.versionNumber}"/></b> -
                 You can also contribute to this project at <a href="http://cejug.java.net" target="_blank">Java.net</a>!
                 <script type="text/javascript" src="http://www.ohloh.net/p/487784/widgets/project_thin_badge.js"></script></p>
             </div>

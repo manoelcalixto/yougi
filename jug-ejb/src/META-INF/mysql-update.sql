@@ -1,10 +1,3 @@
-alter table city add timezone varchar(20) null;
-update city set timezone = 'UTC -3:00' where country = 'BRA';
-
-alter table user_account add timezone varchar(20) null;
-update user_account set timezone = 'UTC -3:00' where country = 'BRA';
-
-alter table attendee add certificate_code char(36) null;
 
 alter table user_account add language varchar(5) null;
 alter table user_account add constraint fk_language_user foreign key (language) references language(acronym) on delete set null;
@@ -25,6 +18,28 @@ create table mailing_list_message (
 alter table mailing_list_message add constraint pk_mailing_list_message primary key (id);
 alter table mailing_list_message add constraint fk_mailing_list_message foreign key (mailing_list) references mailing_list(id) on delete cascade;
 alter table mailing_list_message add constraint fk_message_reply_to foreign key (reply_to) references mailing_list_message(id) on delete set null;
+
+###############################################################################
+insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 
+   ('1.4',
+    '1.06',
+    'Adding a property for the certificate in the table attendee.',
+    'Generation of certificates in PDF format on demmand of those who attended an event.');
+
+alter table attendee add certificate_code char(36) null;
+
+###############################################################################
+insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 
+   ('1.3',
+    '1.05',
+    'Changing tables city and user_account to support timezone.',
+    'Definition of the default timezones, the timezone of cities and the custom timezone of users. Generation of a PDF document containing a list of all event\'s attendees.');
+
+alter table city add timezone varchar(20) null;
+update city set timezone = 'UTC -3:00' where country = 'BRA';
+
+alter table user_account add timezone varchar(20) null;
+update user_account set timezone = 'UTC -3:00' where country = 'BRA';
 
 ###############################################################################
 insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 

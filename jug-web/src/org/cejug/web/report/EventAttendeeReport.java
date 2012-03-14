@@ -23,8 +23,6 @@ package org.cejug.web.report;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.List;
 import org.cejug.event.entity.Attendee;
 

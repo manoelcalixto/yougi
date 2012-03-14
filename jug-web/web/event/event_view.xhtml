@@ -54,6 +54,9 @@
                             <h:button value="#{bundle.notAttending}" outcome="attendee_cancel" rendered="#{eventBean.isAttending}">
                                 <f:param name="id" value="#{eventBean.event.id}"/>
                             </h:button>
+                            <h:commandButton value="#{bundle.getCertificate}" action="#{eventBean.getCertificate}" rendered="#{eventBean.attended}">
+                                <f:param name="id" value="#{eventBean.event.id}"/>
+                            </h:commandButton>
                         </c:if>
                         <h:button value="#{bundle.back}" outcome="events"/>
                     </h:form>

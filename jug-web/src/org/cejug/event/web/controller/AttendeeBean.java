@@ -1,4 +1,4 @@
-/* Jug Management is a web application conceived to manage user groups or 
+ /* Jug Management is a web application conceived to manage user groups or 
  * communities focused on a certain domain of knowledge, whose members are 
  * constantly sharing information and participating in social and educational 
  * events. Copyright (C) 2011 Ceara Java User Group - CEJUG.
@@ -136,6 +136,9 @@ public class AttendeeBean implements Serializable {
         context.getExternalContext().getSessionMap().remove("partnerBean");
     }
     
+    /**
+     * Generates a PDF with the list of registered members in the event.
+     */
     public void print() {
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletResponse response = (HttpServletResponse)context.getExternalContext().getResponse();

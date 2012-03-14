@@ -22,15 +22,8 @@ package org.cejug.event.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-
+import java.util.UUID;
+import javax.persistence.*;
 import org.cejug.entity.UserAccount;
 
 /**
@@ -58,6 +51,9 @@ public class Attendee implements Serializable {
     private Date registrationDate;
 
     private Boolean attended;
+    
+    @Column(name="certificate_code")
+    private String certificateCode;
 
     public String getId() {
         return id;
@@ -97,6 +93,32 @@ public class Attendee implements Serializable {
 
     public void setAttended(Boolean attended) {
         this.attended = attended;
+    }
+
+    /**
+     * @return the certificateCode is used to verify the authenticity of the
+     * generated certificate by third parts.
+     */
+    public String getCertificateCode() {
+        return certificateCode;
+    }
+
+    /**
+     * It generates the certification code if it is not yet defined and the
+     * member actually attended the event.
+     */
+    public void generateCertificateCode() {
+        if(this.certificateCode == null && attended)
+            this.certificateCode = UUID.randomUUID().toString().toUpperCase();
+    }
+    
+    /**
+     * It sets the certificate code to its default value if the member did not 
+     * attended. The default value is not valid for certificate validation.
+     */
+    public void resetCertificateCode() {
+        if(!attended)
+            this.certificateCode = null;
     }
 
     @Override

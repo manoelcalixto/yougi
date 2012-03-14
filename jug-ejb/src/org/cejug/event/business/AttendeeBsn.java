@@ -21,13 +21,11 @@
 package org.cejug.event.business;
 
 import java.util.List;
-
-import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-
 import org.cejug.entity.UserAccount;
 import org.cejug.event.entity.Attendee;
 import org.cejug.event.entity.Event;
@@ -115,26 +113,40 @@ public class AttendeeBsn {
         }
     }
 
+    /**
+     * Confirm the attendance of a list of members in a event.
+     */
     public void confirmMembersAttendance(Event event, Attendee[] confirmedAttendees) {
+        // If the received list is empty then nobody attended the event.
         if (confirmedAttendees == null) {
             confirmedAttendees = new Attendee[0];
         }
 
+        /* Compares the existing list of attendees with the list of confirmed 
+         * attendees.*/
         List<Attendee> attendees = findAttendees(event);
         boolean confirmed;
         for (Attendee attendee : attendees) {
+            // We initially assume that the member didn't attend.
             confirmed = false;
+            
+            /* Check whether the attendee is in the list of confirmed
+             * attendees. If yes, then his(er) attendance is confirmed. */
             for (Attendee confirmedAttendee : confirmedAttendees) {
                 if (attendee.equals(confirmedAttendee)) {
                     attendee.setAttended(true);
+                    attendee.generateCertificateCode();
                     em.merge(attendee);
                     confirmed = true;
                     break;
                 }
             }
 
+            /* If the attendee is not in the list of confirmed attendees then
+             * (s)he is set as not attending. */
             if (!confirmed) {
                 attendee.setAttended(false);
+                attendee.resetCertificateCode();
                 em.merge(attendee);
             }
         }

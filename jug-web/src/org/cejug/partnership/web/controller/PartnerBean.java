@@ -141,17 +141,17 @@ public class PartnerBean implements Serializable {
             
             AccessGroup accessGroup = accessGroupBsn.findAccessGroupByName("partners"); 
         	List<UserAccount> usersGroup = userGroupBsn.findUsersGroup(accessGroup);
-            List<UserAccount> representatives = new ArrayList<UserAccount>();
-            representatives.addAll(representativeBsn.findRepresentativePersons(this.partner));
-            usersGroup.removeAll(representatives);
-            this.candidates = new DualListModel<UserAccount>(usersGroup, representatives);
+            List<UserAccount> reps = new ArrayList<UserAccount>();
+            reps.addAll(representativeBsn.findRepresentativePersons(this.partner));
+            usersGroup.removeAll(reps);
+            this.candidates = new DualListModel<UserAccount>(usersGroup, reps);
         } else {
             this.partner = new Partner();
             
             AccessGroup accessGroup = accessGroupBsn.findAccessGroupByName("partners"); 
         	List<UserAccount> usersGroup = userGroupBsn.findUsersGroup(accessGroup);
-            List<UserAccount> representatives = new ArrayList<UserAccount>();
-            this.candidates = new DualListModel<UserAccount>(usersGroup, representatives);
+            List<UserAccount> reps = new ArrayList<UserAccount>();
+            this.candidates = new DualListModel<UserAccount>(usersGroup, reps);
         }
     }
 
@@ -172,15 +172,15 @@ public class PartnerBean implements Serializable {
             this.partner.setCity(city);
         }
         
-        List<UserAccount> representatives = new ArrayList<UserAccount>();
+        List<UserAccount> reps = new ArrayList<UserAccount>();
         List selectedCandidates = this.candidates.getTarget();
         UserAccount userAccount;
         for(int i = 0;i < selectedCandidates.size();i++) {
             userAccount = new UserAccount(((UserAccount)selectedCandidates.get(i)).getId());
-            representatives.add(userAccount);
+            reps.add(userAccount);
         }
 
-        representativeBsn.save(this.partner, representatives);
+        representativeBsn.save(this.partner, reps);
         
         return "partners?faces-redirect=true";
     }

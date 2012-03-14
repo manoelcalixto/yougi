@@ -263,7 +263,8 @@ create table attendee (
     event             char(32)   not null,
     attendee          char(32)   not null,
     registration_date datetime   not null,
-    attended          tinyint(1)     null
+    attended          tinyint(1)     null,
+    certificate_code  char(36)       null
 ) engine = innodb;
 
 alter table attendee add constraint pk_attendee primary key (id);

@@ -62,6 +62,9 @@ public class Event implements Serializable {
     @Column(name = "end_time")
     @Temporal(javax.persistence.TemporalType.TIME)
     private Date endTime;
+    
+    @Transient
+    private int duration;
 
     private String description;
 
@@ -145,6 +148,18 @@ public class Event implements Serializable {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    /**
+     * @return the difference in hours between start date and time and end date
+     * and time.
+     */
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 
     public String getDescription() {

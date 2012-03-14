@@ -27,8 +27,6 @@ import java.util.UUID;
  */
 public class EntitySupport {
     
-    //static final Logger logger = Logger.getLogger("org.cejug.util.EntitySupport");
-
     public static String generateEntityId() {
         UUID uuid = UUID.randomUUID();
         return uuid.toString().replaceAll("-", "").toUpperCase();

@@ -20,9 +20,16 @@
  * */
 package org.cejug.event.web.controller;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -31,8 +38,12 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.cejug.business.ApplicationPropertyBsn;
 import org.cejug.business.MessengerBsn;
 import org.cejug.business.UserAccountBsn;
+import org.cejug.entity.ApplicationProperty;
+import org.cejug.entity.Properties;
 import org.cejug.entity.UserAccount;
 import org.cejug.event.business.AttendeeBsn;
 import org.cejug.event.business.EventBsn;
@@ -42,6 +53,7 @@ import org.cejug.partnership.business.PartnerBsn;
 import org.cejug.partnership.entity.Partner;
 import org.cejug.web.controller.LocationBean;
 import org.cejug.web.controller.UserProfileBean;
+import org.cejug.web.report.EventAttendeeCertificate;
 import org.cejug.web.util.ResourceBundle;
 import org.cejug.web.util.WebTextUtils;
 
@@ -68,6 +80,9 @@ public class EventBean {
 
     @EJB
     private MessengerBsn messengerBsn;
+    
+    @EJB
+    private ApplicationPropertyBsn applicationPropertyBsn;
 
     @ManagedProperty(value = "#{param.id}")
     private String id;
@@ -143,17 +158,19 @@ public class EventBean {
 
     public void setSelectedVenue(String selectedVenue) {
         this.selectedVenue = selectedVenue;
+        
         Partner venue = partnerBsn.findPartner(selectedVenue);
-        if (this.event.getAddress() == null) {
+        
+        if (this.event.getAddress() == null && venue.getAddress() != null) {
             this.event.setAddress(venue.getAddress());
         }
-        if (this.event.getCountry() == null) {
+        if (this.event.getCountry() == null && venue.getCountry() != null) {
             this.locationBean.setSelectedCountry(venue.getCountry().getAcronym());
         }
-        if (this.event.getProvince() == null) {
+        if (this.event.getProvince() == null && venue.getProvince() != null) {
             this.locationBean.setSelectedProvince(venue.getProvince().getId());
         }
-        if (this.event.getCity() == null) {
+        if (this.event.getCity() == null && venue.getCity() != null) {
             this.locationBean.setSelectedCity(venue.getCity().getId());
         }
     }
@@ -163,6 +180,13 @@ public class EventBean {
             return true;
         }
         return false;
+    }
+    
+    public Boolean getAttended() {
+        if(attendee != null) {
+            return attendee.getAttended();
+        }
+        return Boolean.FALSE;
     }
 
     public List<Event> getEvents() {
@@ -314,6 +338,37 @@ public class EventBean {
         attendeeBsn.remove(existingAttendee.getId());
 
         return "events?faces-redirect=true";
+    }
+    
+    public void getCertificate() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletResponse response = (HttpServletResponse)context.getExternalContext().getResponse();
+        response.setContentType("application/pdf");
+        response.setHeader("Content-disposition", "inline=filename=file.pdf");
+
+        try {
+            Document document = new Document(PageSize.A4.rotate());
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            PdfWriter writer = PdfWriter.getInstance(document, output);
+            document.open();
+
+            ApplicationProperty fileRepositoryPath = applicationPropertyBsn.findApplicationProperty(Properties.FILE_REPOSITORY_PATH);
+            
+            EventAttendeeCertificate eventAttendeeCertificate = new EventAttendeeCertificate(document);
+            eventAttendeeCertificate.setCertificateTemplate(writer, fileRepositoryPath.getPropertyValue() + "/certificate.pdf");
+            eventAttendeeCertificate.generateCertificate(this.attendee);
+
+            document.close();
+
+            response.getOutputStream().write(output.toByteArray());
+            response.getOutputStream().flush();
+            response.getOutputStream().close();
+            context.responseComplete();
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        } catch (DocumentException de) {
+            logger.log(Level.SEVERE, de.getMessage(), de);
+        }
     }
 
     public String save() {
