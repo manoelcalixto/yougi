@@ -30,7 +30,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.UserAccount;
-import org.cejug.web.util.ResourceBundle;
+import org.cejug.web.util.ResourceBundleHelper;
 import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.ChartSeries;
 
@@ -66,7 +66,7 @@ public class MembershipGrowth {
         membershipGrowthModel = new CartesianChartModel();
         membershipCumulativeGrowthModel = new CartesianChartModel();
         
-        ResourceBundle bundle = new ResourceBundle();
+        ResourceBundleHelper bundle = new ResourceBundleHelper();
         String[] months = {bundle.getMessage("januaryShort"),
                             bundle.getMessage("februaryShort"),
                             bundle.getMessage("marchShort"),

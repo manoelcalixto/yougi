@@ -58,7 +58,7 @@ public final class WebTextUtils extends TextUtils {
     	if(date == null)
     		return "";
     	
-    	ResourceBundle rb = new ResourceBundle();
+    	ResourceBundleHelper rb = new ResourceBundleHelper();
     	return getFormattedDate(date, rb.getMessage("formatDate"));
     }
     
@@ -66,7 +66,7 @@ public final class WebTextUtils extends TextUtils {
     	if(time == null)
     		return "";
     	
-    	ResourceBundle rb = new ResourceBundle();
+    	ResourceBundleHelper rb = new ResourceBundleHelper();
     	return getFormattedTime(time, rb.getMessage("formatTime"), timeZone);
     }
     
@@ -74,7 +74,7 @@ public final class WebTextUtils extends TextUtils {
     	if(dateTime == null)
     		return "";
     	
-    	ResourceBundle rb = new ResourceBundle();
+    	ResourceBundleHelper rb = new ResourceBundleHelper();
     	return getFormattedDateTime(dateTime, rb.getMessage("formatDateTime"), timeZone);
     }
     
@@ -108,7 +108,7 @@ public final class WebTextUtils extends TextUtils {
         if(postalCode != null) {
             if(!fullAddress.toString().isEmpty())
                 fullAddress.append(".");
-            ResourceBundle rb = new ResourceBundle();
+            ResourceBundleHelper rb = new ResourceBundleHelper();
             fullAddress.append(" ");
             fullAddress.append(rb.getMessage("postalCode"));
             if(country != null) {

@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.UserAccount;
-import org.cejug.web.util.ResourceBundle;
+import org.cejug.web.util.ResourceBundleHelper;
 
 /**
  * @author Hildeberto Mendonca
@@ -63,7 +63,7 @@ public class SecurityBackingBean {
 
     public String login() {
         if(userAccountBsn.noAccount()) {
-            ResourceBundle bundle = new ResourceBundle();
+            ResourceBundleHelper bundle = new ResourceBundleHelper();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getMessage("infoFirstUser"), ""));
             return "registration";
         }

@@ -36,7 +36,7 @@ import org.cejug.knowledge.business.MailingListBsn;
 import org.cejug.knowledge.business.SubscriptionBsn;
 import org.cejug.knowledge.entity.MailingList;
 import org.cejug.knowledge.entity.MailingListSubscription;
-import org.cejug.web.util.ResourceBundle;
+import org.cejug.web.util.ResourceBundleHelper;
 
 /**
  *
@@ -217,7 +217,7 @@ public class SubscriptionBean {
     
     public String subscribe() {
         FacesContext context = FacesContext.getCurrentInstance();
-        ResourceBundle bundle = new ResourceBundle();
+        ResourceBundleHelper bundle = new ResourceBundleHelper();
         
         if(this.subscriptionDate == null) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorMessageSubscriptionDate"),""));
@@ -242,7 +242,7 @@ public class SubscriptionBean {
     
     public String unsubscribe() {
         FacesContext context = FacesContext.getCurrentInstance();
-        ResourceBundle bundle = new ResourceBundle();
+        ResourceBundleHelper bundle = new ResourceBundleHelper();
         
         if(this.unsubscriptionDate == null) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorMessageUnsubscriptionDate"),""));

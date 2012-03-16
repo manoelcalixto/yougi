@@ -259,12 +259,16 @@ alter table event_sponsor add constraint fk_sponsor_event foreign key (event) re
 alter table event_sponsor add constraint fk_sponsor_partner foreign key (partner) references partner(id) on delete cascade;
 
 create table attendee (
-    id                char(32)   not null,
-    event             char(32)   not null,
-    attendee          char(32)   not null,
-    registration_date datetime   not null,
-    attended          tinyint(1)     null,
-    certificate_code  char(36)       null
+    id                   char(32)     not null,
+    event                char(32)     not null,
+    attendee             char(32)     not null,
+    registration_date    datetime     not null,
+    attended             tinyint(1)       null,
+    certificate_fullname varchar(100)     null,
+    certificate_event    varchar(100)     null,
+    certificate_venue    varchar(100)     null,
+    certificate_date     date             null,
+    certificate_code     char(36)         null
 ) engine = innodb;
 
 alter table attendee add constraint pk_attendee primary key (id);

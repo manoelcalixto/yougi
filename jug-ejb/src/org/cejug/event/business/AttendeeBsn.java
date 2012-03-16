@@ -28,6 +28,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import org.cejug.entity.UserAccount;
 import org.cejug.event.entity.Attendee;
+import org.cejug.event.entity.Certificate;
 import org.cejug.event.entity.Event;
 import org.cejug.util.EntitySupport;
 
@@ -135,7 +136,7 @@ public class AttendeeBsn {
             for (Attendee confirmedAttendee : confirmedAttendees) {
                 if (attendee.equals(confirmedAttendee)) {
                     attendee.setAttended(true);
-                    attendee.generateCertificateCode();
+                    attendee.generateCertificateData();
                     em.merge(attendee);
                     confirmed = true;
                     break;
@@ -149,6 +150,29 @@ public class AttendeeBsn {
                 attendee.resetCertificateCode();
                 em.merge(attendee);
             }
+        }
+    }
+    
+    /**
+     * @return true if the data of the certificate match exactly the record of 
+     * the related attendee.
+     */
+    public Boolean verifyAuthenticityCertificate(Certificate certificate) {
+        try {
+            Attendee attendee = (Attendee) em.createQuery("select a from Attendee a where a.certificateCode = :certificateCode and a.certificateFullname = :certificateFullname and a.certificateEvent = :certificateEvent and a.certificateVenue = :certificateVenue")
+                                            .setParameter("certificateCode", certificate.getCertificateCode())
+                                            .setParameter("certificateFullname", certificate.getCertificateFullname())
+                                            .setParameter("certificateEvent", certificate.getCertificateEvent())
+                                            .setParameter("certificateVenue", certificate.getCertificateVenue())
+                                            .getSingleResult();
+            
+            if(attendee != null)
+                return true;
+            else
+                return false;
+        }
+        catch(NoResultException nre) {
+            return false;
         }
     }
 }

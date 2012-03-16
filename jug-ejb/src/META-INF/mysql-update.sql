@@ -23,9 +23,13 @@ alter table mailing_list_message add constraint fk_message_reply_to foreign key 
 insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 
    ('1.4',
     '1.06',
-    'Adding a property for the certificate in the table attendee.',
+    'Adding properties for the certificate in the table attendee.',
     'Generation of certificates in PDF format on demmand of those who attended an event.');
 
+alter table attendee add certificate_fullname varchar(100) null;
+alter table attendee add certificate_event varchar(100) null;
+alter table attendee add certificate_venue varchar(100) null;
+alter table attendee add certificate_date date null;
 alter table attendee add certificate_code char(36) null;
 
 ###############################################################################

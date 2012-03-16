@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -54,7 +55,7 @@ import org.cejug.partnership.entity.Partner;
 import org.cejug.web.controller.LocationBean;
 import org.cejug.web.controller.UserProfileBean;
 import org.cejug.web.report.EventAttendeeCertificate;
-import org.cejug.web.util.ResourceBundle;
+import org.cejug.web.util.ResourceBundleHelper;
 import org.cejug.web.util.WebTextUtils;
 
 /**
@@ -174,7 +175,24 @@ public class EventBean {
             this.locationBean.setSelectedCity(venue.getCity().getId());
         }
     }
+    
+    /**
+     * @return true if the event ocurred on the day before today.
+     */
+    public Boolean getHappened() {
+        TimeZone tz = TimeZone.getTimeZone(userProfileBean.getTimeZone());
+        Calendar today = Calendar.getInstance(tz);
+        
+        if(this.event.getStartDate().before(today.getTime()))
+            return true;
+        
+        return false;
+    }
 
+    /**
+     * @return true if the member has the intention to attend the event. It does
+     * not mean that s(he) actually attended it.
+     */
     public Boolean getIsAttending() {
         if (attendee != null) {
             return true;
@@ -182,6 +200,9 @@ public class EventBean {
         return false;
     }
     
+    /**
+     * @return true if the member actually attended the event.
+     */
     public Boolean getAttended() {
         if(attendee != null) {
             return attendee.getAttended();
@@ -318,7 +339,7 @@ public class EventBean {
         newAttendee.setAttendee(person);
         newAttendee.setRegistrationDate(Calendar.getInstance().getTime());
         attendeeBsn.save(newAttendee);
-        ResourceBundle rb = new ResourceBundle();
+        ResourceBundleHelper rb = new ResourceBundleHelper();
         messengerBsn.sendConfirmationEventAttendance(newAttendee.getAttendee(),
                 newAttendee.getEvent(),
                 rb.getMessage("formatDate"),
@@ -341,6 +362,9 @@ public class EventBean {
     }
     
     public void getCertificate() {
+        if(!this.attendee.getAttended())
+            return;
+        
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletResponse response = (HttpServletResponse)context.getExternalContext().getResponse();
         response.setContentType("application/pdf");
@@ -356,6 +380,8 @@ public class EventBean {
             
             EventAttendeeCertificate eventAttendeeCertificate = new EventAttendeeCertificate(document);
             eventAttendeeCertificate.setCertificateTemplate(writer, fileRepositoryPath.getPropertyValue() + "/certificate.pdf");
+            
+            this.attendee.generateCertificateData();
             eventAttendeeCertificate.generateCertificate(this.attendee);
 
             document.close();

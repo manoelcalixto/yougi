@@ -28,7 +28,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.UserAccount;
-import org.cejug.web.util.ResourceBundle;
+import org.cejug.web.util.ResourceBundleHelper;
 import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.ChartSeries;
 
@@ -87,7 +87,7 @@ public class CommunicationPrivacyRange implements Serializable {
                 totalSpeaker++;
         }
         
-        ResourceBundle bundle = new ResourceBundle();
+        ResourceBundleHelper bundle = new ResourceBundleHelper();
         ChartSeries communicarionPrivacyActive = new ChartSeries();
         communicarionPrivacyActive.setLabel(bundle.getMessage("active"));
         communicarionPrivacyActive.set(bundle.getMessage("publicProfile"), totalPublicProfile);

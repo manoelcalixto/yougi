@@ -35,7 +35,7 @@ import org.cejug.business.LanguageBsn;
 import org.cejug.business.LocationBsn;
 import org.cejug.entity.Language;
 import org.cejug.entity.Properties;
-import org.cejug.web.util.ResourceBundle;
+import org.cejug.web.util.ResourceBundleHelper;
 
 /**
  * @author Hildeberto Mendonca
@@ -91,7 +91,7 @@ public class ApplicationPropertiesBean implements Serializable {
         this.applicationProperties.put(Properties.SEND_EMAILS.getKey(), sendEmails.toString());
         applicationPropertyBsn.save(this.applicationProperties);
 
-        ResourceBundle bundle = new ResourceBundle();
+        ResourceBundleHelper bundle = new ResourceBundleHelper();
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getMessage("infoPropertiesSaved"), ""));
 
         return "properties";

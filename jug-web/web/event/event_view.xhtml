@@ -48,13 +48,13 @@
                         </h:panelGrid>
                         <p/>
                         <c:if test="#{!eventBean.event.external}">
-                            <h:button value="#{bundle.attend}" outcome="attendee" rendered="#{! eventBean.isAttending}">
+                            <h:button value="#{bundle.attend}" outcome="attendee" rendered="#{! eventBean.isAttending and ! eventBean.happened}">
                                 <f:param name="id" value="#{eventBean.event.id}"/>
                             </h:button>
-                            <h:button value="#{bundle.notAttending}" outcome="attendee_cancel" rendered="#{eventBean.isAttending}">
+                            <h:button value="#{bundle.notAttending}" outcome="attendee_cancel" rendered="#{eventBean.isAttending and ! eventBean.happened}">
                                 <f:param name="id" value="#{eventBean.event.id}"/>
                             </h:button>
-                            <h:commandButton value="#{bundle.getCertificate}" action="#{eventBean.getCertificate}" rendered="#{eventBean.attended}">
+                            <h:commandButton value="#{bundle.getCertificate}" action="#{eventBean.getCertificate}" rendered="#{eventBean.attended and eventBean.happened}">
                                 <f:param name="id" value="#{eventBean.event.id}"/>
                             </h:commandButton>
                         </c:if>
