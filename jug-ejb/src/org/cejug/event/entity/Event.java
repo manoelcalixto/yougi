@@ -91,6 +91,9 @@ public class Event implements Serializable {
 
     private Boolean external;
     
+    @Column(name = "certificate_template")
+    private String certificateTemplate;
+    
     @OneToMany(mappedBy="event")
     private List<EventSession> eventSessions;
 
@@ -232,6 +235,18 @@ public class Event implements Serializable {
 
     public Boolean getExternal() {
         return external;
+    }
+
+    /**
+     * @return the name of the file containing the template to be used on the
+     * certificate generation.
+     */
+    public String getCertificateTemplate() {
+        return certificateTemplate;
+    }
+
+    public void setCertificateTemplate(String certificateTemplate) {
+        this.certificateTemplate = certificateTemplate;
     }
 
     /**

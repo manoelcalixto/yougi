@@ -97,6 +97,7 @@
                         </h:panelGrid>
                         
                         <h:inputHidden id="id" value="#{eventBean.event.id}"/>
+                        <h:inputHidden id="certificateTemplate" value="#{eventBean.event.certificateTemplate}"/>
 
                         <h:panelGrid columns="3">
                             <h:commandButton value="#{bundle.save}" action="#{eventBean.save}"/>

@@ -222,22 +222,23 @@ alter table representative add constraint fk_representative_partner foreign key 
 ###############################################################################
 
 create table event (
-    id                char(32)     not null,
-    name              varchar(100) not null,
-    venue             char(32)     not null,
-    start_date        date         not null,
-    end_date          date         not null,
-    start_time        time             null,
-    end_time          time             null,
-    description       text             null,
-    short_description varchar(255)     null,
-    address           varchar(255)     null,
-    country           char(3)          null,
-    province          char(32)         null,
-    city              char(32)         null,
-    latitude          varchar(15)      null,
-    longitude         varchar(15)      null,
-    external          tinyint(1)       null default false
+    id                   char(32)     not null,
+    name                 varchar(100) not null,
+    venue                char(32)     not null,
+    start_date           date         not null,
+    end_date             date         not null,
+    start_time           time             null,
+    end_time             time             null,
+    description          text             null,
+    short_description    varchar(255)     null,
+    address              varchar(255)     null,
+    country              char(3)          null,
+    province             char(32)         null,
+    city                 char(32)         null,
+    latitude             varchar(15)      null,
+    longitude            varchar(15)      null,
+    external             tinyint(1)       null default false,
+    certificate_template varchar(100)     null
 ) engine = innodb;
 
 alter table event add constraint pk_event primary key (id);

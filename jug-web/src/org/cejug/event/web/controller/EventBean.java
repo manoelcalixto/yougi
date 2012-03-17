@@ -57,6 +57,7 @@ import org.cejug.web.controller.UserProfileBean;
 import org.cejug.web.report.EventAttendeeCertificate;
 import org.cejug.web.util.ResourceBundleHelper;
 import org.cejug.web.util.WebTextUtils;
+import org.primefaces.model.chart.PieChartModel;
 
 /**
  * @author Hildeberto Mendonca
@@ -107,6 +108,8 @@ public class EventBean {
     private Long numberPeopleAttending;
 
     private Long numberPeopleAttended;
+    
+    private PieChartModel pieChartModel;
 
     private String selectedVenue;
 
@@ -246,6 +249,13 @@ public class EventBean {
     public Long getNumberPeopleAttended() {
         return numberPeopleAttended;
     }
+    
+    public PieChartModel getPieChartModel() {
+        pieChartModel = new PieChartModel();
+        pieChartModel.set("Registered", numberPeopleAttending);
+        pieChartModel.set("Attended", numberPeopleAttended);
+        return pieChartModel;
+    }
 
     public String getFormattedEventDescription() {
         return WebTextUtils.convertLineBreakToHTMLParagraph(event.getDescription());
@@ -379,7 +389,11 @@ public class EventBean {
             ApplicationProperty fileRepositoryPath = applicationPropertyBsn.findApplicationProperty(Properties.FILE_REPOSITORY_PATH);
             
             EventAttendeeCertificate eventAttendeeCertificate = new EventAttendeeCertificate(document);
-            eventAttendeeCertificate.setCertificateTemplate(writer, fileRepositoryPath.getPropertyValue() + "/certificate.pdf");
+            StringBuilder certificateTemplatePath = new StringBuilder();
+            certificateTemplatePath.append(fileRepositoryPath.getPropertyValue());
+            certificateTemplatePath.append("/");
+            certificateTemplatePath.append(event.getCertificateTemplate());
+            eventAttendeeCertificate.setCertificateTemplate(writer, certificateTemplatePath.toString());
             
             this.attendee.generateCertificateData();
             eventAttendeeCertificate.generateCertificate(this.attendee);

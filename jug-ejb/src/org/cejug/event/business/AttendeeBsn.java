@@ -62,11 +62,11 @@ public class AttendeeBsn {
     public Long findNumberPeopleAttending(Event event) {
         return (Long) em.createQuery("select count(a) from Attendee a where a.event = :event").setParameter("event", event).getSingleResult();
     }
-
+    
     public Long findNumberPeopleAttended(Event event) {
         return (Long) em.createQuery("select count(a) from Attendee a where a.event = :event and a.attended = :attended").setParameter("event", event).setParameter("attended", true).getSingleResult();
     }
-
+    
     public Boolean isAttending(Event event, UserAccount person) {
         try {
             Attendee attendee = (Attendee) em.createQuery("select a from Attendee a where a.attendee = :person and a.event = :event").setParameter("person", person).setParameter("event", event).getSingleResult();
