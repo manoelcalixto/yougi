@@ -24,7 +24,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
-import org.cejug.web.util.ResourceBundle;
+import org.cejug.web.util.ResourceBundleHelper;
 
 /**
  * @author Hildeberto Mendonca
@@ -43,7 +43,7 @@ public class GenderNumberToString implements Converter {
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
         Integer gender = (Integer) value;
-        ResourceBundle bundle = new ResourceBundle();
+        ResourceBundleHelper bundle = new ResourceBundleHelper();
         if(gender == 1)
             return bundle.getMessage("male");
         else

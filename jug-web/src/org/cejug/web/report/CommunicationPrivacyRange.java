@@ -20,36 +20,47 @@
  * */
 package org.cejug.web.report;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.UserAccount;
-import org.cejug.web.util.ResourceBundle;
+import org.cejug.web.util.ResourceBundleHelper;
+import org.primefaces.model.chart.CartesianChartModel;
+import org.primefaces.model.chart.ChartSeries;
 
 /**
  * This class feeds a column chart that shows members' preferences in terms of
  * privacy.
  * @author Hildeberto Mendonca
  */
-public class CommunicationPrivacyRange {
+@ManagedBean
+@RequestScoped
+public class CommunicationPrivacyRange implements Serializable {
 
-    private String rangeName;
-    private Integer value;
-    private Integer total;
-
+    @EJB
+    private UserAccountBsn userAccountBsn;
+    
+    private CartesianChartModel communicationPrivacyModel; 
+    
     public CommunicationPrivacyRange() {}
-
-    private CommunicationPrivacyRange(String rangeName, Integer value, Integer total) {
-        this.rangeName = rangeName;
-        this.value = value;
-        this.total = total;
+    
+    public CartesianChartModel getCommunicationPrivacyModel() {
+        return this.communicationPrivacyModel;
     }
-
-    public static List<CommunicationPrivacyRange> generateSeries(List<UserAccount> userAccounts) {
-        List<CommunicationPrivacyRange> communicationPrivacyRanges = new ArrayList<CommunicationPrivacyRange>();
+    
+    @PostConstruct
+    public void load() {
+        communicationPrivacyModel = new CartesianChartModel();
         
         Integer totalPublicProfile = 0, totalMailingList = 0, totalNews = 0,
-                totalGeneralOffer = 0, totalJobOffer = 0, totalEvent = 0, totalSponsor = 0;
-
+                totalGeneralOffer = 0, totalJobOffer = 0, totalEvent = 0, 
+                totalSponsor = 0, totalSpeaker = 0;
+        
+        List<UserAccount> userAccounts = userAccountBsn.findUserAccounts();
         for(UserAccount userAccount: userAccounts) {
             if(userAccount.getPublicProfile())
                 totalPublicProfile++;
@@ -71,62 +82,35 @@ public class CommunicationPrivacyRange {
 
             if(userAccount.getSponsor())
                 totalSponsor++;
+            
+            if(userAccount.getSpeaker())
+                totalSpeaker++;
         }
-
+        
+        ResourceBundleHelper bundle = new ResourceBundleHelper();
+        ChartSeries communicarionPrivacyActive = new ChartSeries();
+        communicarionPrivacyActive.setLabel(bundle.getMessage("active"));
+        communicarionPrivacyActive.set(bundle.getMessage("publicProfile"), totalPublicProfile);
+        communicarionPrivacyActive.set(bundle.getMessage("mailingList"), totalMailingList);
+        communicarionPrivacyActive.set(bundle.getMessage("news"), totalNews);
+        communicarionPrivacyActive.set(bundle.getMessage("generalOffer"), totalGeneralOffer);
+        communicarionPrivacyActive.set(bundle.getMessage("jobOffer"), totalJobOffer);
+        communicarionPrivacyActive.set(bundle.getMessage("event"), totalEvent);
+        communicarionPrivacyActive.set(bundle.getMessage("sponsor"), totalSponsor);
+        communicarionPrivacyActive.set(bundle.getMessage("speaker"), totalSpeaker);
+        this.communicationPrivacyModel.addSeries(communicarionPrivacyActive);
+        
         Integer ttl = userAccounts.size();
-        ResourceBundle bundle = new ResourceBundle();
-        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("publicProfile"), 
-                                                                     totalPublicProfile,
-                                                                     ttl - totalPublicProfile));
-
-        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("mailingList"),
-                                                                     totalMailingList,
-                                                                     ttl - totalMailingList));
-
-        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("news"),
-                                                                     totalNews,
-                                                                     ttl - totalNews));
-
-        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("generalOffer"),
-                                                                     totalGeneralOffer,
-                                                                     ttl - totalGeneralOffer));
-
-        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("jobOffer"),
-                                                                     totalJobOffer,
-                                                                     ttl - totalJobOffer));
-
-        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("event"),
-                                                                     totalEvent,
-                                                                     ttl - totalEvent));
-
-        communicationPrivacyRanges.add(new CommunicationPrivacyRange(bundle.getMessage("sponsor"),
-                                                                     totalSponsor,
-                                                                     ttl - totalSponsor));
-
-        return communicationPrivacyRanges;
-    }
-
-    public String getRangeName() {
-        return rangeName;
-    }
-
-    public void setRangeName(String rangeName) {
-        this.rangeName = rangeName;
-    }
-
-    public Integer getValue() {
-        return value;
-    }
-
-    public void setValue(Integer value) {
-        this.value = value;
-    }
-
-    public Integer getTotal() {
-        return total;
-    }
-
-    public void setTotal(Integer total) {
-        this.total = total;
+        ChartSeries communicarionPrivacyInactive = new ChartSeries();
+        communicarionPrivacyInactive.setLabel(bundle.getMessage("inactive"));
+        communicarionPrivacyInactive.set(bundle.getMessage("publicProfile"), ttl - totalPublicProfile);
+        communicarionPrivacyInactive.set(bundle.getMessage("mailingList"), ttl - totalMailingList);
+        communicarionPrivacyInactive.set(bundle.getMessage("news"), ttl - totalNews);
+        communicarionPrivacyInactive.set(bundle.getMessage("generalOffer"), ttl - totalGeneralOffer);
+        communicarionPrivacyInactive.set(bundle.getMessage("jobOffer"), ttl - totalJobOffer);
+        communicarionPrivacyInactive.set(bundle.getMessage("event"), ttl - totalEvent);
+        communicarionPrivacyInactive.set(bundle.getMessage("sponsor"), ttl - totalSponsor);
+        communicarionPrivacyInactive.set(bundle.getMessage("speaker"), ttl - totalSpeaker);
+        this.communicationPrivacyModel.addSeries(communicarionPrivacyInactive);
     }
 }

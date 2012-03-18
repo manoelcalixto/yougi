@@ -4,20 +4,11 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.prime.com.tr/ui">
+      xmlns:p="http://primefaces.org/ui">
     <h:body>
         <ui:composition template="../layout.xhtml">
             <ui:define name="title">#{bundle.users}</ui:define>
             <ui:define name="content">
-                <div class="bread_crumb_area">
-                    <h:form>
-                        <p:breadCrumb styleClass="bread_crumb">
-                            <p:menuitem value="#{bundle.home}" url="../index.xhtml"/>
-                            <p:menuitem value="#{bundle.administration}"/>
-                            <p:menuitem value="#{bundle.users}" url="users.xhtml"/>
-                        </p:breadCrumb>
-                    </h:form>
-                </div>
                 <div class="content">
                     <h1>#{bundle.users}</h1>
                     <h:form>
@@ -60,11 +51,7 @@
                                 <p:dataTable value="#{memberBean.userAccounts}" var="member">
                                     <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.firstName}"/></f:facet>
-                                        <h:commandLink value="#{member.firstName}" action="#{memberBean.load(member.id)}"/>
-                                    </p:column>
-                                    <p:column>
-                                        <f:facet name="header"><h:outputText value="#{bundle.lastName}"/></f:facet>
-                                        <h:outputText value="#{member.lastName}"/>
+                                        <h:commandLink value="#{member.firstName} #{member.lastName}" action="#{memberBean.load(member.id)}"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.gender}"/></f:facet>
@@ -89,13 +76,13 @@
                                     <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.registrationDate}"/></f:facet>
                                         <h:outputText value="#{member.registrationDate}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                            <f:convertDateTime pattern="#{bundle.formatDateAndTime}" timeZone="#{userProfileBean.timeZone}"/>
                                         </h:outputText>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.lastUpdate}"/></f:facet>
                                         <h:outputText value="#{member.lastUpdate}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                            <f:convertDateTime pattern="#{bundle.formatDateAndTime}" timeZone="#{userProfileBean.timeZone}"/>
                                         </h:outputText>
                                     </p:column>
                                 </p:dataTable>
@@ -104,11 +91,7 @@
                                 <p:dataTable value="#{memberBean.deactivatedUserAccounts}" var="deactivated">
                                     <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.firstName}"/></f:facet>
-                                        <h:commandLink value="#{deactivated.firstName}" action="#{memberBean.load(deactivated.id)}"/>
-                                    </p:column>
-                                    <p:column>
-                                        <f:facet name="header"><h:outputText value="#{bundle.lastName}"/></f:facet>
-                                        <h:outputText value="#{deactivated.lastName}"/>
+                                        <h:commandLink value="#{deactivated.firstName} #{deactivated.lastName}" action="#{memberBean.load(deactivated.id)}"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.email}"/></f:facet>
@@ -123,7 +106,7 @@
                                     <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.date}"/></f:facet>
                                         <h:outputText value="#{deactivated.deactivationDate}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            <f:convertDateTime pattern="#{bundle.formatDate}" timeZone="#{userProfileBean.timeZone}"/>
                                         </h:outputText>
                                     </p:column>
                                     <p:column>
@@ -133,21 +116,13 @@
                                 </p:dataTable>
                             </p:tab>
                             <p:tab title="#{bundle.privacy}">
-                                <p:stackedColumnChart width="700" value="#{memberBean.communicationPrivacyRanges}" var="range" xfield="#{range.rangeName}">
-                                    <p:chartSeries label="#{bundle.yes}" value="#{range.value}" />
-                                    <p:chartSeries label="#{bundle.no}" value="#{range.total}" />
-                                </p:stackedColumnChart>
+                                <p:barChart value="#{communicationPrivacyRange.communicationPrivacyModel}" legendPosition="ne" stacked="true" xaxisLabel="#{range.rangeName}"/>
                             </p:tab>
                             <p:tab title="#{bundle.growth}">
                                 <h2>#{bundle.growth}</h2>
-                                <p:columnChart width="700" value="#{memberBean.membershipGrowth}" var="range"  xfield="#{range.rangeName}">
-                                    <p:chartSeries label="#{bundle.growth}" value="#{range.value}"/>
-                                </p:columnChart>
-                                
-                                <h2>#{bundle.acumulated}</h2>
-                                <p:lineChart width="700" value="#{memberBean.membershipGrowth}" var="range" xfield="#{range.rangeName}">
-                                    <p:chartSeries label="#{bundle.acumulated}" value="#{range.acumulated}" />
-                                </p:lineChart>
+                                <p:barChart value="#{membershipGrowth.membershipGrowthModel}" xaxisLabel="#{range.rangeName}" legendPosition="ne"/>
+                                <h2>#{bundle.accumulated}</h2>
+                                <p:lineChart value="#{membershipGrowth.membershipCumulativeGrowthModel}" xaxisLabel="#{range.rangeName}" legendPosition="ne"/>
                             </p:tab>
                         </p:tabView>
                     </h:form>

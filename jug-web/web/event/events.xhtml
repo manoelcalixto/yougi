@@ -4,25 +4,16 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.prime.com.tr/ui"
-      xmlns:c="http://java.sun.com/jsp/jstl/core">
+      xmlns:p="http://primefaces.org/ui">
     <h:body>
         <ui:composition template="../layout.xhtml">
             <ui:define name="title">#{bundle.events}</ui:define>
             <ui:define name="content">
-                <div class="bread_crumb_area">
-                    <h:form>
-                        <p:breadCrumb styleClass="bread_crumb">
-                            <p:menuitem value="#{bundle.home}" url="../index.xhtml"/>
-                            <p:menuitem value="#{bundle.events}"/>
-                        </p:breadCrumb>
-                    </h:form>
-                </div>
                 <div class="content">
                     <h1>#{bundle.events}</h1>
                     <p><h:link outcome="event" value="#{bundle.newEvent}" rendered="#{securityBackingBean.isUserLeader}"/></p>
                     <h:form>
-	                    <p:dataGrid var="event" value="#{eventBean.events}" columns="1" rows="3" paginator="true" effect="true">
+	                    <p:dataGrid var="event" value="#{eventBean.events}" columns="1" rows="3" paginator="true">
 	                        <p:column>
 	                            <p:panel>
 	                                <h:panelGrid>
@@ -39,17 +30,25 @@
 	                                        <f:param value="#{eventBean.getFormattedStartTime(event.startTime)}"/>
 	                                        <f:param value="#{eventBean.getFormattedEndTime(event.endTime)}"/>
 	                                    </h:outputFormat>
-	                                    <h:panelGrid columns="5">
-		                                    <h:link value="#{bundle.edit}" outcome="event" rendered="#{securityBackingBean.isUserLeader}">
+	                                    <h:panelGrid columns="9">
+		                                <h:link value="#{bundle.edit}" outcome="event" rendered="#{securityBackingBean.isUserLeader}">
 	                                            <f:param name="id" value="#{event.id}"/>
 	                                        </h:link>
-                                            <h:outputText value=" | " rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
-                                            <h:commandLink value="#{bundle.attendees}" action="#{attendeeBean.load(event.id)}" rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
-                                            <h:outputText value=" | " rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
-                                            <h:link value="#{bundle.sponsors}" outcome="sponsors" rendered="#{securityBackingBean.isUserLeader and !event.external}">
-                                                <f:param name="id" value="#{event.id}"/>
-                                            </h:link>
-                                        </h:panelGrid>
+                                                <h:outputText value=" | " rendered="#{securityBackingBean.isUserLeader}"/>
+                                                <h:link value="#{bundle.sessions}" outcome="sessions" rendered="#{securityBackingBean.isUserLeader}">
+                                                    <f:param name="eventId" value="#{event.id}"/>
+                                                </h:link>
+                                                <h:outputText value=" | " rendered="#{securityBackingBean.isUserLeader}"/>
+                                                <h:link value="#{bundle.speakers}" outcome="speakers" rendered="#{securityBackingBean.isUserLeader}">
+                                                    <f:param name="eventId" value="#{event.id}"/>
+                                                </h:link>
+                                                <h:outputText value=" | " rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
+                                                <h:commandLink value="#{bundle.attendees}" action="#{attendeeBean.load(event.id)}" rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
+                                                <h:outputText value=" | " rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
+                                                <h:link value="#{bundle.sponsors}" outcome="sponsors" rendered="#{securityBackingBean.isUserLeader and !event.external}">
+                                                    <f:param name="eventId" value="#{event.id}"/>
+                                                </h:link>
+                                            </h:panelGrid>
 	                                </h:panelGrid>
 	                            </p:panel>
 	                        </p:column>

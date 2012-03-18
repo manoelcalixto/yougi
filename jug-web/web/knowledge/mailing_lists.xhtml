@@ -4,27 +4,19 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.prime.com.tr/ui">
+      xmlns:p="http://primefaces.org/ui">
     <h:body>
         <ui:composition template="../layout.xhtml">
             <ui:define name="title">#{bundle.mailingLists}</ui:define>
             <ui:define name="content">
-                <div class="bread_crumb_area">
-                    <h:form>
-                        <p:breadCrumb styleClass="bread_crumb">
-                            <p:menuitem value="#{bundle.home}" url="../index.xhtml"/>
-                            <p:menuitem value="#{bundle.knowledge}"/>
-                            <p:menuitem value="#{bundle.mailingLists}"  url="mailing_lists.xhtml"/>
-                        </p:breadCrumb>
-                    </h:form>
-                </div>
                 <div class="content">
                     <h1>#{bundle.mailingLists}</h1>
                     <h:form>
+                        <p><h:link outcome="mailing_list" value="#{bundle.newMailingList}" rendered="#{securityBackingBean.isUserLeader}"/></p>
                         <p:dataTable value="#{mailingListBean.mailingLists}" var="mailingList">
                             <p:column>
                                 <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>
-                                <h:link outcome="mailing_list" value="#{mailingList.name}">
+                                <h:link outcome="mailing_list_view" value="#{mailingList.name}">
                                     <f:param name="id" value="#{mailingList.id}"/>
                                 </h:link>
                             </p:column>

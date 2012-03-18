@@ -21,14 +21,12 @@
 package org.cejug.web.controller;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.RequestScoped;
 import org.cejug.business.LocationBsn;
 import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.City;
@@ -40,23 +38,26 @@ import org.cejug.entity.UserAccount;
  * @author Hildeberto Mendonca
  */
 @ManagedBean
-@SessionScoped
+@RequestScoped
 public class CityBean implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@EJB
+    @EJB
     private LocationBsn locationBsn;
 
     @EJB
     private UserAccountBsn userAccountBsn;
-
+    
+    @ManagedProperty(value = "#{param.id}")
     private String id;
-    private Country selectedCountry;
-    private Province selectedProvince;
+    
+    @ManagedProperty(value="#{locationBean}")
+    private LocationBean locationBean;
+
     private City city;
 
     public CityBean() {
-        
+        this.city = new City();
     }
 
     public String getId() {
@@ -65,6 +66,14 @@ public class CityBean implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+    
+    public LocationBean getLocationBean() {
+        return locationBean;
+    }
+
+    public void setLocationBean(LocationBean locationBean) {
+        this.locationBean = locationBean;
     }
 
     public City getCity() {
@@ -75,31 +84,6 @@ public class CityBean implements Serializable {
         this.city = city;
     }
 
-    public List<SelectItem> getCountries() {
-        List<Country> countries = locationBsn.findCountries();
-        List<SelectItem> selectItems = new ArrayList<SelectItem>();
-        SelectItem selectItem = new SelectItem("", "Select...");
-        selectItems.add(selectItem);
-        for(Country country: countries) {
-            selectItem = new SelectItem(country.getAcronym(), country.getName());
-            selectItems.add(selectItem);
-        }
-        return selectItems;
-    }
-
-    public SelectItem[] getProvinces() {
-        List<Province> provinces = locationBsn.findProvinces(selectedCountry);
-        SelectItem[] selectItems = new SelectItem[provinces.size() + 1];
-        SelectItem selectItem = new SelectItem("", "Select...");
-        int i = 0;
-        selectItems[i++] = selectItem;
-        for(Province province: provinces) {
-            selectItem = new SelectItem(province.getId(), province.getName());
-            selectItems[i++] = selectItem;
-        }
-        return selectItems;
-    }
-
     public List<City> getCities() {
         return locationBsn.findCities();
     }
@@ -107,73 +91,50 @@ public class CityBean implements Serializable {
     public List<UserAccount> getInhabitants() {
         return userAccountBsn.findInhabitantsFrom(this.city);
     }
-
-    public String getSelectedCountry() {
-        if(selectedCountry == null)
-            return null;
-
-        return selectedCountry.getAcronym();
-    }
-
-    public void setSelectedCountry(String acronym) {
-        if(acronym == null || acronym.isEmpty())
-            return;
-
-        this.selectedCountry = locationBsn.findCountry(acronym);
-    }
-
-    public String getSelectedProvince() {
-        if(selectedProvince == null)
-            return null;
-
-        return selectedProvince.getId();
-    }
-
-    public void setSelectedProvince(String id) {
-        if(id == null || id.isEmpty())
-            return;
-
-        this.selectedProvince = locationBsn.findProvince(id);
+    
+    public List<String> getTimeZones() {
+        return locationBsn.getTimeZones();
     }
 
     @PostConstruct
     public void load() {
-        this.city = new City();
-    }
+        if (this.id != null && !this.id.isEmpty()) {
+            this.city = locationBsn.findCity(id);
+            
+            locationBean.initialize();
 
-    public String load(String id) {
-        this.id = id;
-        this.city = locationBsn.findCity(id);
-        this.selectedCountry = this.city.getCountry();
-        this.selectedProvince = this.city.getProvince();
-        return "city?faces-redirect=true";
+            if (this.city.getCountry() != null) {
+                locationBean.setSelectedCountry(this.city.getCountry().getAcronym());
+            }
+
+            if (this.city.getProvince() != null) {
+                locationBean.setSelectedProvince(this.city.getProvince().getId());
+            }
+        }
     }
 
     public String save() {
-        this.city.setCountry(selectedCountry);
-        this.city.setProvince(selectedProvince);
+        Country country = this.locationBean.getCountry();
+        if (country != null) {
+            this.city.setCountry(country);
+        }
+
+        Province province = this.locationBean.getProvince();
+        if (province != null) {
+            this.city.setProvince(province);
+        }
+        
         locationBsn.saveCity(this.city);
-
-        removeSessionScoped();
-
+        
         return "cities?faces-redirect=true";
     }
 
     public String remove() {
         locationBsn.removeCity(city.getId());
-
-        removeSessionScoped();
-
         return "cities?faces-redirect=true";
     }
 
     public String cancel() {
-        removeSessionScoped();
         return "cities?faces-redirect=true";
-    }
-
-    private void removeSessionScoped() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        context.getExternalContext().getSessionMap().remove("cityBean");
     }
 }

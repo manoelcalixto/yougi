@@ -23,18 +23,16 @@ package org.cejug.business;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
-import org.cejug.entity.AccessGroup;
-import org.cejug.entity.DeactivationType;
-import org.cejug.entity.EmailMessage;
-import org.cejug.entity.MessageTemplate;
-import org.cejug.entity.UserAccount;
+import org.cejug.entity.*;
 import org.cejug.event.entity.Event;
 import org.cejug.util.TextUtils;
 
@@ -52,6 +50,8 @@ public class MessengerBsn {
     @EJB
     private MessageTemplateBsn messageTemplateBsn;
     
+    static final Logger logger = Logger.getLogger("org.cejug.business.MessengerBsn");
+    
     public void sendEmailConfirmationRequest(UserAccount userAccount, String serverAddress) {
         MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("E3F122DCC87D42248872878412B34CEE");
         Map<String, Object> values = new HashMap<String, Object>();
@@ -66,7 +66,7 @@ public class MessengerBsn {
             Transport.send(emailMessage.createMimeMessage(mailSession));
         }
         catch(MessagingException me) {
-            throw new RuntimeException("Error when sending the mail confirmation. The registration was not finalized.",me);
+            logger.log(Level.WARNING, "Error when sending the mail confirmation. The registration was not finalized.", me);
         }
     }
 
@@ -82,7 +82,7 @@ public class MessengerBsn {
             Transport.send(emailMessage.createMimeMessage(mailSession));
         }
         catch(MessagingException me) {
-            throw new RuntimeException("Error when sending the deactivation reason to user "+ userAccount.getUsername(),me);
+            logger.log(Level.WARNING, "Error when sending the deactivation reason to user "+ userAccount.getUsername(), me);
         }
     }
 
@@ -100,7 +100,7 @@ public class MessengerBsn {
             Transport.send(emailMessage.createMimeMessage(mailSession));
         }
         catch(MessagingException me) {
-            throw new RuntimeException("Error when sending alert to administrators about the registration of "+ newMember.getUsername(),me);
+            logger.log(Level.WARNING, "Error when sending alert to administrators about the registration of "+ newMember.getUsername(), me);
         }
     }
 
@@ -125,7 +125,7 @@ public class MessengerBsn {
             Transport.send(emailMessage.createMimeMessage(mailSession));
         }
         catch(MessagingException me) {
-            throw new RuntimeException("Error when sending the deactivation reason to user "+ userAccount.getUsername(),me);
+            logger.log(Level.WARNING, "Error when sending the deactivation reason to user "+ userAccount.getUsername(), me);
         }
     }
 
@@ -143,7 +143,7 @@ public class MessengerBsn {
             Transport.send(emailMessage.createMimeMessage(mailSession));
         }
         catch(MessagingException me) {
-            throw new RuntimeException("Error when sending the deactivation reason from "+ userAccount.getUsername() +" to leaders.",me);
+            logger.log(Level.WARNING, "Error when sending the deactivation reason from "+ userAccount.getUsername() +" to leaders.", me);
         }
     }
 
@@ -161,7 +161,7 @@ public class MessengerBsn {
             Transport.send(emailMessage.createMimeMessage(mailSession));
         }
         catch(MessagingException me) {
-            throw new RuntimeException("Error when sending the mail confirmation. The registration was not finalized.",me);
+            logger.log(Level.WARNING, "Error when sending the mail confirmation. The registration was not finalized.", me);
         }
     }
 
@@ -179,7 +179,7 @@ public class MessengerBsn {
             Transport.send(emailMessage.createMimeMessage(mailSession));
         }
         catch(MessagingException me) {
-            throw new RuntimeException("Error when sending the group assignment alert to "+ userAccount.getFullName(), me);
+            logger.log(Level.WARNING, "Error when sending the group assignment alert to "+ userAccount.getFullName(), me);
         }
     }
     
@@ -203,7 +203,7 @@ public class MessengerBsn {
             Transport.send(emailMessage.createMimeMessage(mailSession));
         }
         catch(MessagingException me) {
-            throw new RuntimeException("Error when sending the confirmation of event attendance to user "+ userAccount.getUsername(),me);
+            logger.log(Level.WARNING, "Error when sending the confirmation of event attendance to user "+ userAccount.getUsername(), me);
         }
     }
 }

@@ -26,27 +26,17 @@ import java.security.NoSuchAlgorithmException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.ejb.LocalBean;
-import javax.ejb.Schedule;
-import javax.ejb.Schedules;
-import javax.ejb.Timer;
+import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
-import org.cejug.entity.AccessGroup;
-import org.cejug.entity.ApplicationProperty;
-import org.cejug.entity.City;
-import org.cejug.entity.DeactivationType;
-import org.cejug.entity.Properties;
-import org.cejug.entity.UserAccount;
-import org.cejug.entity.UserGroup;
+import org.cejug.entity.*;
 import org.cejug.util.Base64Encoder;
 import org.cejug.util.EntitySupport;
 
@@ -132,6 +122,9 @@ public class UserAccountBsn {
         }
     }
 
+    /**
+     * Returns all activated user accounts ordered by name.
+     */
     @SuppressWarnings("unchecked")
     public List<UserAccount> findUserAccounts() {
         return em.createQuery("select ua from UserAccount ua where ua.deactivated = :deactivated and ua.confirmationCode is null order by ua.firstName")
@@ -139,10 +132,15 @@ public class UserAccountBsn {
                  .getResultList();
     }
 
+    /**
+     * Returns user accounts ordered by registration date and in which the
+     * registration date is between the informed period of time.
+     */
     @SuppressWarnings("unchecked")
-    public List<UserAccount> findUserAccountsOrderedByRegistration() {
-        return em.createQuery("select ua from UserAccount ua where ua.confirmationCode is null and ua.deactivated = :deactivated order by ua.registrationDate")
-                 .setParameter("deactivated", Boolean.FALSE)
+    public List<UserAccount> findConfirmedUserAccounts(Date from, Date to) {
+        return em.createQuery("select ua from UserAccount ua where ua.confirmationCode is null and ua.registrationDate >= :from and ua.registrationDate <= :to order by ua.registrationDate asc")
+                 .setParameter("from", from)
+                 .setParameter("to", to)
                  .getResultList();
     }
 
@@ -168,11 +166,14 @@ public class UserAccountBsn {
                  .getResultList();
     }
 
+    /** 
+     * Returns all users related to the informed city, independent of their 
+     * confirmation, validation or deactivation status.
+     */
     @SuppressWarnings("unchecked")
     public List<UserAccount> findInhabitantsFrom(City city) {
-        return em.createQuery("select u from UserAccount u where u.city = :city and u.deactivated = :deactivated order by u.firstName")
+        return em.createQuery("select u from UserAccount u where u.city = :city order by u.firstName")
                 .setParameter("city", city)
-                .setParameter("deactivated", Boolean.FALSE)
                 .getResultList();
     }
 
@@ -370,6 +371,18 @@ public class UserAccountBsn {
                   .executeUpdate();
 
         logger.log(Level.INFO, "Number of removed non confirmed accounts: {0}", i);
+    }
+    
+    /**
+     * Update the time zone of all users that inhabit the informed city.
+     */
+    public void updateTimeZoneInhabitants(City city) {
+        if(city.getTimeZone() != null && !city.getTimeZone().isEmpty()) {
+            List<UserAccount> userAccounts = findInhabitantsFrom(city);
+            for(UserAccount user: userAccounts) {
+                user.setTimeZone(city.getTimeZone());
+            }
+        }
     }
 
     public void remove(String userId) {

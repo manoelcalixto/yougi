@@ -4,21 +4,11 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.prime.com.tr/ui">
+      xmlns:p="http://primefaces.org/ui">
     <h:body>
         <ui:composition template="../layout.xhtml">
             <ui:define name="title">#{bundle.attendees}</ui:define>
             <ui:define name="content">
-                <div class="bread_crumb_area">
-                    <h:form>
-                        <p:breadCrumb styleClass="bread_crumb">
-                            <p:menuitem value="#{bundle.home}" url="../index.xhtml"/>
-                            <p:menuitem value="#{bundle.events}" url="../events.xhtml"/>
-                            <p:menuitem value="#{bundle.event}"/>
-                            <p:menuitem value="#{bundle.attendees}"/>
-                        </p:breadCrumb>
-                    </h:form>
-                </div>
                 <div class="content">
                     <h1>#{bundle.attendees}</h1>
                     <h:outputText value="#{attendeeBean.event.name}" style="font-size: 18px; font-weight: bold;"/>
@@ -27,7 +17,12 @@
                             <f:param value="#{attendeeBean.numberPeopleAttending}"/>
                             <f:param value="#{attendeeBean.numberPeopleAttended}"/>
                         </h:outputFormat></p>
-                        <p:dataTable value="#{attendeeBean.attendees}" var="attendee" selection="#{attendeeBean.selectedAttendees}">
+                        <p>
+                            <h:panelGrid width="100%" columnClasses="alignColumnRight">
+                                <h:commandButton value="#{bundle.print}" action="#{attendeeBean.print}"/>
+                            </h:panelGrid>
+                        </p>
+                        <p:dataTable value="#{attendeeBean.attendees}" var="attendee" selection="#{attendeeBean.selectedAttendees}" rowKey="#{attendee.id}">
                             <p:column>
                                 <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>
                                 <h:outputText value="#{attendee.attendee.firstName}"/>
@@ -36,7 +31,7 @@
                             </p:column>
 
                             <p:column>
-                                <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>
+                                <f:facet name="header"><h:outputText value="#{bundle.email}"/></f:facet>
                                 <h:outputText value="#{attendee.attendee.email}"/>
                             </p:column>
                             
@@ -48,7 +43,7 @@
                             <p:column>
                                 <f:facet name="header"><h:outputText value="#{bundle.registrationDate}"/></f:facet>
                                 <h:outputText value="#{attendee.registrationDate}">
-                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                    <f:convertDateTime pattern="#{bundle.formatDate}" timeZone="#{userProfileBean.timeZone}"/>
                                 </h:outputText>
                             </p:column>
                             

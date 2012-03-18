@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <ui:composition template="../layout.xhtml">
+            <ui:define name="title">#{bundle.session}</ui:define>
+            <ui:define name="content">
+                <div class="content">
+                    <h1>#{bundle.session}</h1>
+                    <h:form>
+                        <h:messages styleClass="alertMessage"/>
+                        <h:panelGrid>
+                            <h:outputLabel for="event" value="#{bundle.event} *" styleClass="fieldLabel"/>
+                            <h:selectOneMenu id="event" label="#{bundle.event}" value="#{eventSessionBean.selectedEvent}" required="true">
+                                <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
+                                <f:selectItems value="#{eventSessionBean.events}" var="event" itemLabel="#{event.name}" itemValue="#{event.id}"/>
+                            </h:selectOneMenu>
+                            
+                            <h:outputLabel for="title" value="#{bundle.title} *" styleClass="fieldLabel"/>
+                            <h:inputText id="title" label="#{bundle.title}" value="#{eventSessionBean.eventSession.title}" size="60" maxlength="255" required="true" class="ui-inputfield ui-state-default ui-corner-all"/>
+                            
+                            <h:panelGrid columns="4">
+                                <h:outputLabel for="sessionDate" value="#{bundle.date}" styleClass="fieldLabel"/>
+                                <h:outputLabel for="startTime" value="#{bundle.start}" styleClass="fieldLabel"/>
+                                <h:outputLabel for="endTime" value="#{bundle.end}" styleClass="fieldLabel"/>
+                                <h:outputLabel for="room" value="#{bundle.room}" styleClass="fieldLabel"/>
+                                
+                                <p:calendar value="#{eventSessionBean.eventSession.sessionDate}" id="sessionDate" pattern="#{bundle.formatDate}" size="10" timeZone="#{userProfileBean.timeZone}"/>
+                                <p:inputMask value="#{eventSessionBean.eventSession.startTime}" mask="99:99" size="5">
+                                    <f:convertDateTime pattern="#{bundle.formatTime}" timeZone="#{userProfileBean.timeZone}"/>
+                                </p:inputMask>
+                                <p:inputMask value="#{eventSessionBean.eventSession.endTime}" mask="99:99" size="5">
+                                    <f:convertDateTime pattern="#{bundle.formatTime}" timeZone="#{userProfileBean.timeZone}"/>
+                                </p:inputMask>
+                                <h:inputText id="room" label="#{bundle.room}" value="#{eventSessionBean.eventSession.room}" size="17" maxlength="30" class="ui-inputfield ui-state-default ui-corner-all"/>
+                            </h:panelGrid>
+                            
+                            <h:outputLabel for="abstract" value="#{bundle.abstract}" styleClass="fieldLabel"/>
+                            <h:inputTextarea id="abstract" value="#{eventSessionBean.eventSession.abstract}" label="#{bundle.abstract}" rows="4" cols="45" class="ui-inputfield ui-state-default ui-corner-all"/>
+                            
+                            <h:outputLabel for="topics" value="#{bundle.topics} *" styleClass="fieldLabel"/>
+                            <h:inputText id="topics" label="#{bundle.topics}" value="#{eventSessionBean.eventSession.topics}" size="60" maxlength="255" class="ui-inputfield ui-state-default ui-corner-all"/>
+                        </h:panelGrid>
+
+                        <h:inputHidden id="id" value="#{eventSessionBean.eventSession.id}"/>
+                        <p/>
+                        <h:panelGrid columns="3">
+                            <h:commandButton value="#{bundle.save}" action="#{eventSessionBean.save}">
+                                <f:param name="eventId" value="#{eventSessionBean.eventSession.event.id}"/>
+                                <f:param name="id" value="#{eventSessionBean.eventSession.id}"/>
+                            </h:commandButton>
+                            <h:commandButton value="#{bundle.remove}" action="#{eventSessionBean.remove}" rendered="#{! empty eventSessionBean.id}">
+                                <f:param name="eventId" value="#{eventSessionBean.eventSession.event.id}"/>
+                                <f:param name="id" value="#{eventSessionBean.eventSession.id}"/>
+                            </h:commandButton>
+                            <h:button value="#{bundle.cancel}" outcome="sessions">
+                                <f:param name="eventId" value="#{eventSessionBean.eventSession.event.id}"/>
+                            </h:button>
+                        </h:panelGrid>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

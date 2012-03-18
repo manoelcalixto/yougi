@@ -95,10 +95,14 @@ public class AccessGroupBsn {
         return em.createQuery("select ag from AccessGroup ag order by ag.name").getResultList();
     }
 
-    public AccessGroup findAccessGroupByName(String name) throws NoResultException {
-        return (AccessGroup) em.createQuery("select ag from AccessGroup ag where ag.name = :name")
+    public AccessGroup findAccessGroupByName(String name) {
+        try {
+            return (AccessGroup) em.createQuery("select ag from AccessGroup ag where ag.name = :name")
                                .setParameter("name", name)
                                .getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
     }
 
     public void save(AccessGroup accessGroup, List<UserAccount> members) {

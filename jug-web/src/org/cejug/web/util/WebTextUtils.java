@@ -22,7 +22,6 @@ package org.cejug.web.util;
 
 import java.util.Date;
 import java.util.StringTokenizer;
-
 import org.cejug.entity.City;
 import org.cejug.entity.Country;
 import org.cejug.entity.Province;
@@ -59,30 +58,30 @@ public final class WebTextUtils extends TextUtils {
     	if(date == null)
     		return "";
     	
-    	ResourceBundle rb = new ResourceBundle();
+    	ResourceBundleHelper rb = new ResourceBundleHelper();
     	return getFormattedDate(date, rb.getMessage("formatDate"));
     }
     
-    public static String getFormattedTime(Date time) {
+    public static String getFormattedTime(Date time, String timeZone) {
     	if(time == null)
     		return "";
     	
-    	ResourceBundle rb = new ResourceBundle();
-    	return getFormattedTime(time, rb.getMessage("formatTime"), "GMT-3");
+    	ResourceBundleHelper rb = new ResourceBundleHelper();
+    	return getFormattedTime(time, rb.getMessage("formatTime"), timeZone);
     }
     
-    public static String getFormattedDateTime(Date dateTime) {
+    public static String getFormattedDateTime(Date dateTime, String timeZone) {
     	if(dateTime == null)
     		return "";
     	
-    	ResourceBundle rb = new ResourceBundle();
-    	return getFormattedDateTime(dateTime, rb.getMessage("formatDateTime"), "GMT-3");
+    	ResourceBundleHelper rb = new ResourceBundleHelper();
+    	return getFormattedDateTime(dateTime, rb.getMessage("formatDateTime"), timeZone);
     }
     
     public static String printAddress(String address, Country country, Province province, City city, String postalCode) {
         StringBuilder fullAddress = new StringBuilder();
         String commaSeparator = ", ";
-        if(address != null || !address.isEmpty())
+        if(address != null && !address.isEmpty())
             fullAddress.append(address);
         
         if(city != null) {
@@ -109,11 +108,13 @@ public final class WebTextUtils extends TextUtils {
         if(postalCode != null) {
             if(!fullAddress.toString().isEmpty())
                 fullAddress.append(".");
-            ResourceBundle rb = new ResourceBundle();
+            ResourceBundleHelper rb = new ResourceBundleHelper();
             fullAddress.append(" ");
             fullAddress.append(rb.getMessage("postalCode"));
-            fullAddress.append(": ");
-            fullAddress.append(country.getName());
+            if(country != null) {
+                fullAddress.append(": ");
+                fullAddress.append(country.getName());
+            }
         }
         
         return fullAddress.toString();

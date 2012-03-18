@@ -21,10 +21,10 @@
 package org.cejug.knowledge.entity;
 
 import java.io.Serializable;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.cejug.exception.BusinessLogicException;
 
 /**
  * @author Hildeberto Mendonca
@@ -36,38 +36,55 @@ public class Topic implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String id;
-
-    @Column(nullable = false)
     private String name;
+    
+    private String label;
 
     private String description;
     
+    private Boolean valid;
+    
     public Topic() {}
 
-    public Topic(String id) {
-        this.id = id;
-    }
-
-    public Topic(String id, String name) {
-        this.id = id;
+    public Topic(String name) {
         this.name = name;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
+    /**
+     * Name is the id of the entity Topic and it must be fully uppercase,
+     * independent if the user typed it like that or not. What the user types is
+     * actually preserved in the field Label.
+     */
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        if(name == null)
+            throw new BusinessLogicException();
+        
+        this.name = name.trim().toUpperCase();
+    }
+
+    /**
+     * Label preserves exactly what the user typed in order to preserve its
+     * visualization on the user interface. It is used for visualization
+     * purpose only. All search and indexation is done with the field Name.
+     */
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public Boolean getValid() {
+        return valid;
+    }
+
+    public void setValid(Boolean valid) {
+        this.valid = valid;
     }
 
     public String getDescription() {
@@ -81,18 +98,17 @@ public class Topic implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (name != null ? name.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Topic)) {
             return false;
         }
         Topic other = (Topic) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.name == null && other.name != null) || (this.name != null && !this.name.equals(other.name))) {
             return false;
         }
         return true;
@@ -100,6 +116,6 @@ public class Topic implements Serializable {
 
     @Override
     public String toString() {
-        return this.name;
+        return this.label;
     }
 }

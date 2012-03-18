@@ -73,6 +73,12 @@ public class Partner implements Serializable {
 	@Column(name="postal_code")
 	private String postalCode;
 	
+	public Partner() {}
+	
+	public Partner(String id) {
+		this.id = id;
+	}
+	
 	public String getId() {
 		return id;
 	}

@@ -1,3 +1,4 @@
+
 /* Jug Management is a web application conceived to manage user groups or 
  * communities focused on a certain domain of knowledge, whose members are 
  * constantly sharing information and participating in social and educational 
@@ -21,12 +22,10 @@
 package org.cejug.event.business;
 
 import java.util.List;
-
-import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import org.cejug.event.entity.Event;
 import org.cejug.event.entity.EventSponsor;
 import org.cejug.partnership.entity.Partner;
@@ -34,49 +33,47 @@ import org.cejug.util.EntitySupport;
 
 /**
  * This class implements the business logic of events' sponsors.
+ *
  * @author Hildeberto Mendonca
  */
 @Stateless
 @LocalBean
 public class EventSponsorBsn {
-	
+
     @PersistenceContext
     private EntityManager em;
 
     public EventSponsor findEventSponsor(String id) {
-        if(id != null)
+        if (id != null) {
             return em.find(EventSponsor.class, id);
-        else
+        } else {
             return null;
+        }
     }
-    
+
     @SuppressWarnings("unchecked")
-	public List<EventSponsor> findEventSponsors(Event event) {
-    	return em.createQuery("select es from EventSponsor es where es.event = :event order by es.partner.name asc")
-        		 .setParameter("event", event)
-        		 .getResultList();
+    public List<EventSponsor> findEventSponsors(Event event) {
+        return em.createQuery("select es from EventSponsor es where es.event = :event order by es.partner.name asc").setParameter("event", event).getResultList();
     }
-    
+
     @SuppressWarnings("unchecked")
-	public List<EventSponsor> findSponsorEvents(Partner sponsor) {
-    	return em.createQuery("select es from EventSponsor es where es.partner = :sponsor order by es.event.name asc")
-        		 .setParameter("sponsor", sponsor)
-                 .getResultList();
+    public List<EventSponsor> findSponsorEvents(Partner sponsor) {
+        return em.createQuery("select es from EventSponsor es where es.partner = :sponsor order by es.event.name asc").setParameter("sponsor", sponsor).getResultList();
     }
 
     public void save(EventSponsor eventSponsor) {
-    	if(eventSponsor.getId() == null || eventSponsor.getId().isEmpty()) {
+        if (eventSponsor.getId() == null || eventSponsor.getId().isEmpty()) {
             eventSponsor.setId(EntitySupport.generateEntityId());
             em.persist(eventSponsor);
-        }
-        else {
+        } else {
             em.merge(eventSponsor);
         }
     }
 
     public void remove(String id) {
         EventSponsor eventSponsor = em.find(EventSponsor.class, id);
-        if(eventSponsor != null)
+        if (eventSponsor != null) {
             em.remove(eventSponsor);
+        }
     }
 }

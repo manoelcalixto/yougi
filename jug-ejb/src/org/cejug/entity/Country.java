@@ -34,7 +34,9 @@ import javax.persistence.Table;
 public class Country implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @Id
     private String acronym;
+    
     private String name;
     
     public Country() {
@@ -49,7 +51,6 @@ public class Country implements Serializable {
         this.name = name;
     }
 
-    @Id
     public String getAcronym() {
         return acronym;
     }

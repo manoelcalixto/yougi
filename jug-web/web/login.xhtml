@@ -2,18 +2,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.prime.com.tr/ui">
+      xmlns:ui="http://java.sun.com/jsf/facelets">
     <h:body>
         <ui:composition template="/layout.xhtml">
             <ui:define name="title">#{bundle.signIn}</ui:define>
             <ui:define name="content">
-                <div class="bread_crumb_area">
-                    <p:breadCrumb styleClass="bread_crumb">
-                        <p:menuitem value="#{bundle.home}" url="index.xhtml"/>
-                        <p:menuitem value="#{bundle.signIn}" url="login.xhtml"/>
-                    </p:breadCrumb>
-                </div>
                 <div class="content">
                     <h1>#{bundle.signIn}</h1>
                     <p><h:messages styleClass="alertMessage"/></p>
@@ -33,6 +26,8 @@
                         </h:panelGrid>
                         <p></p>
                         <h:link outcome="request_password_change" value="#{bundle.forgotPassword}"/>
+                        <h:outputText value=" | "/>
+                        <h:link outcome="registration" value="#{bundle.register}"/>
                     </form>
                 </div>
             </ui:define>

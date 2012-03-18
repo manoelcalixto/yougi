@@ -42,12 +42,12 @@ import org.primefaces.model.map.Marker;
 @RequestScoped
 public class MembersMapDistribution implements Serializable {  
   
-	private static final long serialVersionUID = 1L;
-	
-	private MapModel simpleModel;
-	
-	@EJB
-	private LocationBsn locationBsn;
+    private static final long serialVersionUID = 1L;
+
+    private MapModel simpleModel;
+
+    @EJB
+    private LocationBsn locationBsn;
 
     public MembersMapDistribution() {  
         simpleModel = new DefaultMapModel();

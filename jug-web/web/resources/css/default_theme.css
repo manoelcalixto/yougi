@@ -1,19 +1,17 @@
-@CHARSET "UTF-8";
-
 a:link {
-  color: #045491;
+  color: #993300;
   font-weight : normal;
   text-decoration: none;
 }
 
 a:visited {
-  color: #0070c6;
+  color: #993300;
   font-weight : normal;
   text-decoration: none;
 }
 
 a:link:hover, a:visited:hover  {
-  color: #045491;
+  color: #ff3300;
   font-weight : normal;
   text-decoration : underline;
 }
@@ -22,50 +20,33 @@ a:link:hover, a:visited:hover  {
     color: red;
 }
 
+.alignColumnRight {
+    text-align: right;
+}
+
 body {
     background-color: #ffffff;
     font-size: 12px;
-    font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    font-family: Helvetica,Verdana,Arial,sans-serif;
     color: #000000;
-    margin: 10px;
-    background-image: url(../../images/background_blue.gif);
+    margin: 0px;
+    background-image: url(../../images/background.png);
 }
 
 #bottom {
     position: relative;
-    background-color: #e2e2e2;
-    width: 1000px;
-    margin-right: auto;
-    margin-left: auto;
-    border-left-style: solid;
-    border-left-width: 1px;
-    border-right-style: solid;
-    border-right-width: 1px;
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
-    border-bottom-color: #c1c1c1;
-    border-right-color: #c1c1c1;
-    border-left-color: #c8c8c8;
-}
-
-.bread_crumb {
-    border-right-color: #eeeeee;
-    border-left-color: #eeeeee;
-    border-bottom-color: #eeeeee;
-    border-top-color: #eeeeee;
-    background-color: #eeeeee;
-}
-
-.bread_crumb_area {
-    height: 33px;
+    background-color: #ebe9e9;
     width: 100%;
-    background-color: #eeeeee;
     margin-right: auto;
     margin-left: auto;
-    position: relative;
     border-bottom-style: solid;
-    border-bottom-width: 1px;
-    border-bottom-color: silver;
+    border-bottom-width: 200px;
+    border-bottom-color: #ebe9e9;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-top-style: solid;
+    border-top-width: 2px;
+    border-top-color: #666666;
 }
 
 .content {
@@ -86,9 +67,12 @@ body {
     border-right-width: 1px;
     border-right-color: #c1c1c1;
     border-left-color: #c8c8c8;
-    background-color: white;
-
-    opacity:0.9;
+    background-color: #ffffff;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    
 }
 
 .dataTable {
@@ -144,18 +128,18 @@ body {
 }
 
 h1 {
-    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    font-family: Helvetica,Verdana,Arial,sans-serif;
     border-bottom: 1px solid #AFAFAF;
     font-size:  18px;
     font-weight: bold;
     margin-bottom: 10px;
     padding: 0px;
     color: #036fab;
-    margin-top: 0px;
+    margin-top: 10px;
 }
 
 h2 {
-    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    font-family: Helvetica,Verdana,Arial,sans-serif;
     border-bottom: 1px solid #AFAFAF;
     font-size:  14px;
     font-weight: bold;
@@ -165,7 +149,7 @@ h2 {
 }
 
 .header3 {
-    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    font-family: Helvetica,Verdana,Arial,sans-serif;
     border-bottom: 1px solid #AFAFAF;
     font-size:  14px;
     font-weight: bold;
@@ -187,8 +171,7 @@ h2 {
     padding-left: 10px;
     padding-bottom: 10px;
     padding-top: 10px;
-    color: blue;
-    font-family: Arial,Helvetica,sans-serif;
+    font-family: Helvetica,Verdana,Arial,sans-serif;
 }
 
 .infoMessage {
@@ -230,7 +213,7 @@ h2 {
 }
 
 .subSection {
-    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    font-family: Helvetica,Verdana,Arial,sans-serif;
     font-size:  14px;
     font-weight: bold;
     padding: 0px;
@@ -240,16 +223,11 @@ h2 {
 .title {
     padding-right: 10px;
     padding-left: 10px;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    color: white;
-    font-family: Arial,Helvetica,sans-serif;
-    font-size: 28px;
 }
 
 #top {
     position: relative;
-    width: 1000px;
+    width: 100%;
     margin-right: auto;
     margin-left: auto;
 
@@ -262,15 +240,13 @@ h2 {
     border-top-color: #c8c8c8;
     border-left-color: #c8c8c8;
     border-right-color: #c1c1c1;
-    background-color: white;
-
-    opacity:0.8;
+    background-color: #ffffff;
 }
 
 #top_menu {
     margin-right: auto;
     margin-left: auto;
-    width: 1000px;
+    width: 100%;
     position: relative;
     background-color: #e0e0e0;
     border-left-style: solid;
@@ -279,10 +255,13 @@ h2 {
     border-right-width: 1px;
     border-right-color: #c1c1c1;
     border-left-color: #c8c8c8;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-color: #999999;
 }
 
 #top a:link, #top a:visited {
-  color: blue;
+  color: #cc9900;
   font-weight : bold;
   text-decoration: none;
 }

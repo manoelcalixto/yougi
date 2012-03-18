@@ -20,15 +20,9 @@
  * */
 package org.cejug.partnership.web.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -37,15 +31,9 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-
 import org.cejug.business.ApplicationPropertyBsn;
 import org.cejug.business.UserAccountBsn;
-import org.cejug.entity.ApplicationProperty;
-import org.cejug.entity.City;
-import org.cejug.entity.Country;
-import org.cejug.entity.Properties;
-import org.cejug.entity.Province;
-import org.cejug.entity.UserAccount;
+import org.cejug.entity.*;
 import org.cejug.partnership.business.PartnerBsn;
 import org.cejug.partnership.business.RepresentativeBsn;
 import org.cejug.partnership.entity.Partner;
@@ -193,7 +181,7 @@ public class PartnershipBean {
         return "profile?faces-redirect=true";
     }
 
-    public void loadLogoImage() {
+    private void loadLogoImage() {
         try {
             String logoPath = this.representative.getPartner().getLogo();
 
@@ -207,7 +195,7 @@ public class PartnershipBean {
         }
     }
 
-    public void handleFileUpload(FileUploadEvent event) {
+    public void handleLogoFileUpload(FileUploadEvent event) {
         UploadedFile uploadedFile = event.getFile();
         logger.log(Level.INFO, "JUG-0001: File {0} of type {1} temporarely uploaded to {2}", new String[]{uploadedFile.getFileName(), uploadedFile.getContentType(), System.getProperty("java.io.tmpdir")});
         try {
@@ -228,7 +216,7 @@ public class PartnershipBean {
             filePath.append(this.representative.getPartner().getId());
             filePath.append(fileExtension);
             OutputStream out = new FileOutputStream(new File(filePath.toString()));
-            int read = 0;
+            int read;
             byte[] bytes = new byte[1024];
 
             while ((read = in.read(bytes)) != -1) {
@@ -251,5 +239,23 @@ public class PartnershipBean {
         }
         FacesMessage msg = new FacesMessage("Succesful", uploadedFile.getSize() + " bytes of the file " + uploadedFile.getFileName() + " are uploaded.");
         FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+    
+    public String removeLogoImage() {
+        try {
+            String logoPath = this.representative.getPartner().getLogo();
+
+            if (logoPath != null) {
+                File logo = new File(logoPath);
+                
+                logo.delete();
+                InputStream in = new FileInputStream(new File(logoPath));
+                logger.log(Level.INFO, "JUG-0002: Loading logo file {0}", new String[]{logoPath});
+                logoImage = new DefaultStreamedContent(in, "image/jpeg");
+            }
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
+        return "profile?faces-redirect=true&tab=2";
     }
 }

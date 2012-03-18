@@ -22,6 +22,7 @@ package org.cejug.web.util;
 
 import java.util.Locale;
 import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 import javax.faces.context.FacesContext;
 
 /**
@@ -30,20 +31,29 @@ import javax.faces.context.FacesContext;
  * a solution presented to spec leaders.
  * @author Hildeberto Mendonca
  */
-public class ResourceBundle {
+public class ResourceBundleHelper {
+    
+    private Locale locale;
+    
+    public ResourceBundleHelper() {
+        this.locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+    }
+    
+    public ResourceBundleHelper(Locale locale) {
+        this.locale = locale;
+    }
 
     public String getMessage(String key) {
         return getMessageFromResourceBundle(key);
     }
 
     private String getMessageFromResourceBundle(String key) {
-        java.util.ResourceBundle bundle = null;
+        ResourceBundle bundle = null;
         String bundleName = "org.cejug.web.bundles.Resources";
         String message = "";
-        Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
-
+        
         try {
-            bundle = java.util.ResourceBundle.getBundle(bundleName, locale, getCurrentLoader(bundleName));
+            bundle = ResourceBundle.getBundle(bundleName, locale, getCurrentLoader(bundleName));
         } catch (MissingResourceException e) {
             return "?";
         }

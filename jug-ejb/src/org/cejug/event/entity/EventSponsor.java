@@ -51,7 +51,7 @@ public class EventSponsor implements Serializable {
 	@JoinColumn(name="partner", nullable=false)
 	private Partner partner;
 	
-	private BigDecimal ammount;
+	private BigDecimal amount;
 	
 	private String description;
 
@@ -79,12 +79,12 @@ public class EventSponsor implements Serializable {
 		this.partner = partner;
 	}
 
-	public BigDecimal getAmmount() {
-		return ammount;
+	public BigDecimal getAmount() {
+		return amount;
 	}
 
-	public void setAmmount(BigDecimal ammount) {
-		this.ammount = ammount;
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
 	}
 
 	public String getDescription() {
@@ -93,5 +93,9 @@ public class EventSponsor implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	public String toString() {
+		return this.partner.getName();
 	}
 }

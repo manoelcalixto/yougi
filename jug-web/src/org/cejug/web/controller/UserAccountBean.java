@@ -39,7 +39,7 @@ import org.cejug.entity.ApplicationProperty;
 import org.cejug.entity.City;
 import org.cejug.entity.Properties;
 import org.cejug.entity.UserAccount;
-import org.cejug.web.util.ResourceBundle;
+import org.cejug.web.util.ResourceBundleHelper;
 
 /**
  * @author Hildeberto Mendonca
@@ -82,12 +82,12 @@ public class UserAccountBean implements Serializable {
     }
     
     public LocationBean getLocationBean() {
-		return locationBean;
-	}
+        return locationBean;
+    }
 
-	public void setLocationBean(LocationBean locationBean) {
-		this.locationBean = locationBean;
-	}
+    public void setLocationBean(LocationBean locationBean) {
+        this.locationBean = locationBean;
+    }
 
     public Boolean getNoAccount() {
         return userAccountBsn.noAccount();
@@ -135,7 +135,7 @@ public class UserAccountBean implements Serializable {
 
     public String register() {
         FacesContext context = FacesContext.getCurrentInstance();
-        ResourceBundle bundle = new ResourceBundle();
+        ResourceBundleHelper bundle = new ResourceBundleHelper();
         
         if(!userAccount.isEmailConfirmed()) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorMessageEmailConfirmation"),""));

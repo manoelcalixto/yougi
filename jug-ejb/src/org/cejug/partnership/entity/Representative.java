@@ -54,6 +54,13 @@ public class Representative implements Serializable {
 	
 	private String position;
 
+	public Representative() {}
+	
+	public Representative(Partner partner, UserAccount person) {
+		this.partner = partner;
+		this.person = person;
+	}
+	
 	public String getId() {
 		return id;
 	}
@@ -92,5 +99,36 @@ public class Representative implements Serializable {
 
 	public void setPosition(String position) {
 		this.position = position;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((partner == null) ? 0 : partner.hashCode());
+		result = prime * result + ((person == null) ? 0 : person.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Representative other = (Representative) obj;
+		if (partner == null) {
+			if (other.partner != null)
+				return false;
+		} else if (!partner.equals(other.partner))
+			return false;
+		if (person == null) {
+			if (other.person != null)
+				return false;
+		} else if (!person.equals(other.person))
+			return false;
+		return true;
 	}
 }

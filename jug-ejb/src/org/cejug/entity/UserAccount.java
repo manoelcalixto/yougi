@@ -23,16 +23,7 @@ package org.cejug.entity;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import org.cejug.util.TextUtils;
 
 /**
@@ -110,6 +101,9 @@ public class UserAccount implements Serializable {
     @Column(name="postal_code")
     private String postalCode;
     
+    @Column(name="timezone")
+    private String timeZone;
+        
     @Column(name = "public_profile")
     private Boolean publicProfile;
     
@@ -245,7 +239,7 @@ public class UserAccount implements Serializable {
         this.email = email;
         this.setUsername(email);
     }
-
+    
     public Date getRegistrationDate() {
         return registrationDate;
     }
@@ -343,6 +337,18 @@ public class UserAccount implements Serializable {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    /**
+     * @return the timezone from where the user is located. It is automatically
+     * set based on the city where the user is located.
+     */
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
     }
 
     public Boolean getSpeaker() {

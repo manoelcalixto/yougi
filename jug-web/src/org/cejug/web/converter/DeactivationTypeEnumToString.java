@@ -25,7 +25,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import org.cejug.entity.DeactivationType;
-import org.cejug.web.util.ResourceBundle;
+import org.cejug.web.util.ResourceBundleHelper;
 
 /**
  * DeactivationType is a Enum. This converter is responsible for transforming
@@ -48,7 +48,7 @@ public class DeactivationTypeEnumToString implements Converter {
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
         DeactivationType deactivationType = (DeactivationType) value;
-        ResourceBundle bundle = new ResourceBundle();
+        ResourceBundleHelper bundle = new ResourceBundleHelper();
         if(deactivationType == DeactivationType.OWNWILL)
             return bundle.getMessage("ownWill");
         else if(deactivationType == DeactivationType.ADMINISTRATIVE)

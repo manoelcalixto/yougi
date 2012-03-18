@@ -22,4 +22,6 @@
     <group-name>partners</group-name>
     <group-name>leaders</group-name>
   </security-role-mapping>
+  
+  <parameter-encoding default-charset="UTF-8"/>
 </sun-web-app>

@@ -1,6 +1,53 @@
+
 ###############################################################################
 # Core                                                                        #
 ###############################################################################
+
+create table application_property (
+    property_key   varchar(100) not null,
+    property_value text             null
+) engine = MyISAM;
+
+alter table application_property add constraint pk_application_property primary key (property_key);
+
+create table message_template (
+    id    char(32)     not null,
+    title varchar(255) not null,
+    body  text         not null
+) engine = MyISAM;
+
+alter table message_template add constraint pk_message_template primary key (id);
+
+insert into message_template (id, title, body) values
+    ('03BD6F3ACE4C48BD8660411FC8673DB4', '[JUG] Registration Deactivated', '<p>Dear <b>#{userAccount.firstName}</b>,</p><p>We are very sorry to inform that we cannot keep you as a CEJUG member.</p><p>Reason: <i>#{userAccount.deactivationReason}</i></p><p>We kindly appologize for the inconvenience and we count on your understanding.</p><p>Best Regards,</p><p><b>JUG Leadership Team</b></p>'),
+    ('0D6F96382D91454F8155A720F3326F1B', '[JUG Admin] A New Member Joint the Group', '<p>Dear JUG Leader,</p><p><b>#{userAccount.fullName}</b> joint the JUG at #{userAccount.registrationDate}.</p><p>Regards,</p><p><b>JUG Management</b></p>'),
+    ('47DEE5C2E0E14F8BA4605F3126FBFAF4', '[JUG] Welcome to CEJUG', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you are confirmed as a member of the JUG. Welcome to the <b><a href=''http://www.cejug.org''>JUG Community</a></b>!</p><p>Thank you!</p><p><b>JUG Leadership Team</b></p>'),
+    ('67BE6BEBE45945D29109A8D6CD878344', '[JUG] Request for Password Change', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you requested to change your JUG password. The authorization code to perform this operation is:</p><p>#{userAccount.confirmationCode}</p><p>Inform this code in the form that you just saw right after requesting the new password or just follow the link below to fill out the form authomatically:</p><p><a href=''http://#{serverAddress}/change_password.xhtml?cc=#{userAccount.confirmationCode}''>http://#{serverAddress}/change_password.xhtml?cc=#{userAccount.confirmationCode}</a></p><p>Thank you!<br/>\r\n\r\n<b>JUG Leadership Team</b></p>'),
+    ('E3F122DCC87D42248872878412B34CEE', '[JUG] Email Confirmation', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you seems to register yourself as a member of JUG. We would like to confirm your email address to be able to contact you when necessary. You just have to click on the link below to confirm your email:</p><p><a href=''http://#{serverAddress}/EmailConfirmation?code=#{userAccount.confirmationCode}''>http://#{serverAddress}/EmailConfirmation?code=#{userAccount.confirmationCode}</a></p><p>If the address above does not look like a link, please select, copy and paste it your web browser. If you do not registered on JUG and beleave that this message was sent by mistake, please ignore it and accept our apologes.</p><p>Best Regards,</p><p><b>JUG Leadership Team</b></p>'),
+    ('IKWMAJSNDOE3F122DCC87D4224887287', '[JUG] Membership Deactivated', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>we just knew that you wanna leave us :( Thank you for all contributions you have made to the JUG community.</p><p>All the best,</p><p><b>JUG Leadership Team</b></p>'),
+    ('0D6F96382IKEJSUIWOK5A720F3326F1B', '[JUG Admin] A Member Was Deactivated', '<p>Dear JUG Leader,</p><p><b>#{userAccount.fullName}</b> was deactivated from the JUG due to the following reason:</p><p><i>#{userAccount.deactivationReason}</i></p><p>Regards,</p><p><b>JUG Management</b></p>'),
+    ('09JDIIE82O39IDIDOSJCHXUDJJXHCKP0', '[JUG Admin] Group Assigment', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>You were assigned to the <b>#{accessGroup.name}</b> group. Changes on your rights may apply.</p><p>Regards,</p><p><b>JUG Management</b></p> '),
+    ('KJDIEJKHFHSDJDUWJHAJSNFNFJHDJSLE', '[JUG] Event Attendance', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you have confirmed your attendance in the event <b>#{event.name}</b> that will take place at <b>#{event.venue}</b>, on <b>#{event.startDate}</b>, from <b>#{event.startTime}</b> to <b>#{event.endTime}</b>.</p><p>We are looking forward to see you there!</p><p>Best Regards,</p><p><b>JUG Leadership Team</b></p>');
+
+create table update_history (
+    db_version        varchar(10) not null,
+    app_version       varchar(10) not null,
+    date_release      timestamp   not null default CURRENT_TIMESTAMP,
+    db_release_notes  text            null,
+    app_release_notes text            null
+) engine = MyISAM;
+
+alter table update_history add constraint pk_version_database primary key (db_version, app_version);
+
+create table language (
+    acronym varchar(5)  not null,
+    name    varchar(30) not null
+) engine innodb;
+
+alter table language add constraint pk_language primary key (acronym);
+
+insert into language values ('en', 'English');
+insert into language values ('pt', 'Portugues');
 
 create table country (
     acronym char(3)      not null,
@@ -25,7 +72,8 @@ create table city (
     province  char(32)         null,
     valid     tinyint(1)       null,
     latitude  varchar(15)      null,
-    longitude varchar(15)      null
+    longitude varchar(15)      null,
+    timezone  varchar(20)      null
 ) engine = innodb;
 
 alter table city add constraint pk_city primary key (id);
@@ -53,7 +101,8 @@ create table user_account (
     country             char(3)          null,
     province            char(32)         null,
     city                char(32)         null,
-    postal_code         char(10)         null,
+    postal_code         varchar(10)      null,
+    timezone            varchar(20)      null,
     public_profile      tinyint(1)       null default false,
     mailing_list        tinyint(1)       null default false,
     news                tinyint(1)       null default false,
@@ -97,43 +146,17 @@ alter table user_group add constraint pk_user_group primary key (group_id, user_
 alter table user_group add constraint fk_group_user foreign key (group_id) references access_group(id) on delete cascade;
 alter table user_group add constraint fk_user_group foreign key (user_id) references user_account(id) on delete cascade;
 
-create table application_property (
-    property_key   varchar(100) not null,
-    property_value text             null
-) engine = MyISAM;
-
-alter table application_property add constraint pk_application_property primary key (property_key);
-
-create table message_template (
-    id    char(32)     not null,
-    title varchar(255) not null,
-    body  text         not null
-) engine = MyISAM;
-
-alter table message_template add constraint pk_message_template primary key (id);
-
-insert into message_template (id, title, body) values
-    ('03BD6F3ACE4C48BD8660411FC8673DB4', '[JUG] Registration Deactivated', '<p>Dear <b>#{userAccount.firstName}</b>,</p><p>We are very sorry to inform that we cannot keep you as a CEJUG member.</p><p>Reason: <i>#{userAccount.deactivationReason}</i></p><p>We kindly appologize for the inconvenience and we count on your understanding.</p><p>Best Regards,</p><p><b>JUG Leadership Team</b></p>'),
-    ('0D6F96382D91454F8155A720F3326F1B', '[JUG Admin] A New Member Joint the Group', '<p>Dear JUG Leader,</p><p><b>#{userAccount.fullName}</b> joint the JUG at #{userAccount.registrationDate}.</p><p>Regards,</p><p><b>JUG Management</b></p>'),
-    ('47DEE5C2E0E14F8BA4605F3126FBFAF4', '[JUG] Welcome to CEJUG', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you are confirmed as a member of the JUG. Welcome to the <b><a href=''http://www.cejug.org''>JUG Community</a></b>!</p><p>Thank you!</p><p><b>JUG Leadership Team</b></p>'),
-    ('67BE6BEBE45945D29109A8D6CD878344', '[JUG] Request for Password Change', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you requested to change your JUG password. The authorization code to perform this operation is:</p><p>#{userAccount.confirmationCode}</p><p>Inform this code in the form that you just saw right after requesting the new password or just follow the link below to fill out the form authomatically:</p><p><a href=''http://#{serverAddress}/change_password.xhtml?cc=#{userAccount.confirmationCode}''>http://#{serverAddress}/change_password.xhtml?cc=#{userAccount.confirmationCode}</a></p><p>Thank you!<br/>\r\n\r\n<b>JUG Leadership Team</b></p>'),
-    ('E3F122DCC87D42248872878412B34CEE', '[JUG] Email Confirmation', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you seems to register yourself as a member of JUG. We would like to confirm your email address to be able to contact you when necessary. You just have to click on the link below to confirm your email:</p><p><a href=''http://#{serverAddress}/EmailConfirmation?code=#{userAccount.confirmationCode}''>http://#{serverAddress}/EmailConfirmation?code=#{userAccount.confirmationCode}</a></p><p>If the address above does not look like a link, please select, copy and paste it your web browser. If you do not registered on JUG and beleave that this message was sent by mistake, please ignore it and accept our apologes.</p><p>Best Regards,</p><p><b>JUG Leadership Team</b></p>'),
-    ('IKWMAJSNDOE3F122DCC87D4224887287', '[JUG] Membership Deactivated', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>we just knew that you wanna leave us :( Thank you for all contributions you have made to the JUG community.</p><p>All the best,</p><p><b>JUG Leadership Team</b></p>'),
-    ('0D6F96382IKEJSUIWOK5A720F3326F1B', '[JUG Admin] A Member Was Deactivated', '<p>Dear JUG Leader,</p><p><b>#{userAccount.fullName}</b> was deactivated from the JUG due to the following reason:</p><p><i>#{userAccount.deactivationReason}</i></p><p>Regards,</p><p><b>JUG Management</b></p>'),
-    ('09JDIIE82O39IDIDOSJCHXUDJJXHCKP0', '[JUG Admin] Group Assigment', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>You were assigned to the <b>#{accessGroup.name}</b> group. Changes on your rights may apply.</p><p>Regards,</p><p><b>JUG Management</b></p> '),
-    ('KJDIEJKHFHSDJDUWJHAJSNFNFJHDJSLE', '[JUG] Event Attendance', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you have confirmed your attendance in the event <b>#{event.name}</b> that will take place at <b>#{event.venue}</b>, on <b>#{event.startDate}</b>, from <b>#{event.startTime}</b> to <b>#{event.endTime}</b>.</p><p>We are looking forward to see you there!</p><p>Best Regards,</p><p><b>JUG Leadership Team</b></p>');
-
 ###############################################################################
 # Knowledge                                                                   #
 ###############################################################################
     
 create table mailing_list (
-    id            char(32)     not null,
-    name          varchar(50)  not null,
-    description   varchar(255)     null,
-    email         varchar(100)     null,
-    subscription  varchar(100)     null,
-    unsubcription varchar(100)     null
+    id             char(32)     not null,
+    name           varchar(50)  not null,
+    description    varchar(255)     null,
+    email          varchar(100)     null,
+    subscription   varchar(100)     null,
+    unsubscription varchar(100)     null
 ) engine = innodb;
 
 alter table mailing_list add constraint pk_mailing_list primary key (id);
@@ -151,48 +174,14 @@ alter table mailing_list_subscription add constraint pk_mailing_list_subscriptio
 alter table mailing_list_subscription add constraint fk_subscription_mailing_list foreign key (mailing_list) references mailing_list(id) on delete cascade;
 alter table mailing_list_subscription add constraint fk_subsciption_user foreign key (user_account) references user_account(id) on delete set null;
 
-create table mailing_list_message (
-    id            char(32)     not null,
-    mailing_list  char(32)     not null,
-    subject       varchar(255) not null,
-    body          text         not null,
-    sender        varchar(100) not null,
-    when_received datetime     not null,
-    reply_to      char(32)         null,
-    message_type  char(2)          null, # q - question, a - answer, i - info, ri - request_more_info, ir - info_requested, s - solution
-    answer_score  int(5)           null,
-    published     tinyint(1)       null
-) engine = innodb;
-
-alter table mailing_list_message add constraint pk_mailing_list_message primary key (id);
-alter table mailing_list_message add constraint fk_mailing_list_message foreign key (mailing_list) references mailing_list(id) on delete cascade;
-alter table mailing_list_message add constraint fk_message_reply_to foreign key (reply_to) references mailing_list_message(id) on delete set null;
-
 create table topic (
-    id          char(32)     not null,
     name        varchar(50)  not null,
-    description varchar(255)     null
-) engine = innodb;
-
-alter table topic add constraint pk_topic primary key (id);
-
-create table topic_mailinglist_message (
-    id                  char(32) not null,
-    topic               char(32) not null,
-    mailinglist_message char(32) not null
-) engine = innodb;
-
-alter table topic_mailinglist_message add constraint pk_topic_mailinglist_message primary key (id);
-alter table topic_mailinglist_message add constraint fk_topic_mailinglist_message foreign key (mailinglist_message) references mailing_list_message(id) on delete cascade;
-alter table topic_mailinglist_message add constraint fk_mailinglist_message_topic foreign key (topic) references topic(id) on delete cascade;
-
-create table tag (
-    tag        char(40)   not null,
-    kind       tinyint(2) not null,
-    entity     char(32)   not null
+    label       varchar(50)  not null,
+    description text             null,
+    valid       tinyint(1)       null default false
 ) engine = MyISAM;
 
-alter table tag add constraint pk_tag primary key (tag, kind, entity);
+alter table topic add constraint pk_topic primary key (name);
 
 ###############################################################################
 # Partnership                                                                 #
@@ -200,14 +189,14 @@ alter table tag add constraint pk_tag primary key (tag, kind, entity);
 
 create table partner (
     id          char(32)     not null,
-    name        varchar(32)  not null,
+    name        varchar(100) not null,
     description text             null,
     logo        varchar(100)     null,
     url         varchar(255)     null,
     address     varchar(255)     null,
-    city        char(32)         null,
-    province    char(32)         null,
     country     char(3)          null,
+    province    char(32)         null,
+    city        char(32)         null,
     postal_code char(10)         null
 ) engine = innodb;
 
@@ -233,22 +222,23 @@ alter table representative add constraint fk_representative_partner foreign key 
 ###############################################################################
 
 create table event (
-    id                char(32)     not null,
-    name              varchar(100) not null,
-    venue             char(32)     not null,
-    start_date        date         not null,
-    end_date          date         not null,
-    start_time        time             null,
-    end_time          time             null,
-    description       text             null,
-    short_description varchar(255)     null,
-    address           varchar(255)     null,
-    country           char(3)          null,
-    province          char(32)         null,
-    city              char(32)         null,
-    latitude          varchar(15)      null,
-    longitude         varchar(15)      null,
-    external          tinyint(1)       null default false
+    id                   char(32)     not null,
+    name                 varchar(100) not null,
+    venue                char(32)     not null,
+    start_date           date         not null,
+    end_date             date         not null,
+    start_time           time             null,
+    end_time             time             null,
+    description          text             null,
+    short_description    varchar(255)     null,
+    address              varchar(255)     null,
+    country              char(3)          null,
+    province             char(32)         null,
+    city                 char(32)         null,
+    latitude             varchar(15)      null,
+    longitude            varchar(15)      null,
+    external             tinyint(1)       null default false,
+    certificate_template varchar(100)     null
 ) engine = innodb;
 
 alter table event add constraint pk_event primary key (id);
@@ -257,24 +247,29 @@ alter table event add constraint fk_country_event foreign key (country) referenc
 alter table event add constraint fk_province_event foreign key (province) references province(id) on delete set null;
 alter table event add constraint fk_city_event foreign key (city) references city(id) on delete set null;
 
-create table sponsor_event (
+create table event_sponsor (
     id          char(32)      not null,
     event       char(32)      not null,
     partner     char(32)      not null,
-    ammount     decimal(12,2)     null,
+    amount      decimal(12,2)     null,
     description text              null
 ) engine = innodb;
 
-alter table sponsor_event add constraint pk_sponsor_event primary key (id);
-alter table sponsor_event add constraint fk_sponsor_event foreign key (event) references event(id) on delete cascade;
-alter table sponsor_event add constraint fk_sponsor_partner foreign key (partner) references partner(id) on delete cascade;
+alter table event_sponsor add constraint pk_event_sponsor primary key (id);
+alter table event_sponsor add constraint fk_sponsor_event foreign key (event) references event(id) on delete cascade;
+alter table event_sponsor add constraint fk_sponsor_partner foreign key (partner) references partner(id) on delete cascade;
 
 create table attendee (
-    id                char(32)   not null,
-    event             char(32)   not null,
-    attendee          char(32)   not null,
-    registration_date datetime   not null,
-    attended          tinyint(1)     null
+    id                   char(32)     not null,
+    event                char(32)     not null,
+    attendee             char(32)     not null,
+    registration_date    datetime     not null,
+    attended             tinyint(1)       null,
+    certificate_fullname varchar(100)     null,
+    certificate_event    varchar(100)     null,
+    certificate_venue    varchar(100)     null,
+    certificate_date     date             null,
+    certificate_code     char(36)         null
 ) engine = innodb;
 
 alter table attendee add constraint pk_attendee primary key (id);
@@ -285,6 +280,7 @@ create table event_session (
     id           char(32)     not null,
     event        char(32)     not null,
     title        varchar(255) not null,
+    topics       varchar(255)     null,
     abstract     text             null,
     session_date date             null,
     start_time   time             null,
@@ -293,15 +289,17 @@ create table event_session (
 ) engine = innodb;
 
 alter table event_session add constraint pk_event_session primary key (id);
-alter table event_session add constraint fk_event_session foreign key (event) references event(id) on delete cascade;
+alter table event_session add constraint fk_event_session foreign key (event) references event (id) on delete cascade;
 
 create table speaker (
-    id       char(32)   not null,
-    session  char(32)   not null,
-    speaker  char(32)   not null,
-    short_cv text           null
+    id           char(32) not null,
+    event        char(32) not null,
+    session      char(32) not null,
+    user_account char(32) not null,
+    short_cv     text         null
 ) engine = innodb;
 
 alter table speaker add constraint pk_speaker primary key (id);
+alter table speaker add constraint fk_event_speaker foreign key (event) references event(id) on delete cascade;
 alter table speaker add constraint fk_session_speaker foreign key (session) references event_session(id) on delete cascade;
-alter table speaker add constraint fk_user_speaker foreign key (speaker) references user_account(id) on delete cascade;
+alter table speaker add constraint fk_user_speaker foreign key (user_account) references user_account(id) on delete cascade;

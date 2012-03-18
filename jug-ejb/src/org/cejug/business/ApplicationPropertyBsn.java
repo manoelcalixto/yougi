@@ -20,13 +20,9 @@
  * */
 package org.cejug.business;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import javax.ejb.Stateless;
+import java.util.*;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -44,7 +40,7 @@ public class ApplicationPropertyBsn {
     EntityManager em;
 
     @SuppressWarnings("unchecked")
-	public Map<String, String> findApplicationProperties() {
+    public Map<String, String> findApplicationProperties() {
         Map<String, String> propertiesMap = new HashMap<String, String>();
         List<ApplicationProperty> properties = em.createQuery("select ap from ApplicationProperty ap").getResultList();
         for(ApplicationProperty property: properties) {
@@ -83,14 +79,16 @@ public class ApplicationPropertyBsn {
                 }
             }
         }
-
         return propertiesMap;
     }
 
-    /** Given a certain enumeration org.cejug.entity.Properties, this method return the
-     *  corresponding property and its value stored in the database. */
+    /** 
+     * Returns the ApplicationProperty that corresponds to the informed enum 
+     * property. If the ApplicationProperty does not exist, then it creates one
+     * with the default value.
+     */
     public ApplicationProperty findApplicationProperty(Properties properties) {
-        ApplicationProperty applicationProperty = null;
+        ApplicationProperty applicationProperty;
         try {
             applicationProperty = (ApplicationProperty)em.createQuery("select ap from ApplicationProperty ap where ap.propertyKey = :key")
                                                                          .setParameter("key", properties.getKey())
@@ -105,7 +103,7 @@ public class ApplicationPropertyBsn {
     }
 
     @SuppressWarnings("unchecked")
-	public void save(Map<String, String> properties) {
+    public void save(Map<String, String> properties) {
         List<ApplicationProperty> existingProperties = em.createQuery("select ap from ApplicationProperty ap").getResultList();
         String value;
         for(ApplicationProperty property: existingProperties) {

@@ -18,39 +18,46 @@
  * find it, write to the Free Software Foundation, Inc., 59 Temple Place, 
  * Suite 330, Boston, MA 02111-1307 USA.
  * */
-package org.cejug.knowledge.entity;
+package org.cejug.event.entity;
 
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import org.cejug.entity.UserAccount;
 
 /**
+ * Person with knowledge and experience to give a speech in an event, respecting
+ * the scope of subjects in the domain explored by the user group.
+ * 
  * @author Hildeberto Mendonca
  */
 @Entity
-@Table(name = "topic_mailinglist_message")
-public class TopicMailinglistMessage implements Serializable {
+@Table(name = "speaker")
+public class Speaker implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     private String id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "mailinglist_message", nullable = false)
-    private MailingListMessage mailinglistMessage;
+    @ManyToOne
+    @JoinColumn(name = "event", nullable=false)
+    private Event event;
     
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "topic", nullable = false)
-    private Topic topic;
+    @ManyToOne
+    @JoinColumn(name = "session", nullable=false)
+    private EventSession session;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_account", nullable=false)
+    private UserAccount userAccount;
 
-    public TopicMailinglistMessage() {
+    @Column(name = "short_cv")
+    private String shortCv;   
+
+    public Speaker() {
     }
 
-    public TopicMailinglistMessage(String id) {
+    public Speaker(String id) {
         this.id = id;
     }
 
@@ -62,20 +69,42 @@ public class TopicMailinglistMessage implements Serializable {
         this.id = id;
     }
 
-    public MailingListMessage getMailinglistMessage() {
-        return mailinglistMessage;
+    public UserAccount getUserAccount() {
+        return userAccount;
     }
 
-    public void setMailinglistMessage(MailingListMessage mailinglistMessage) {
-        this.mailinglistMessage = mailinglistMessage;
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
     }
 
-    public Topic getTopic() {
-        return topic;
+    public String getShortCv() {
+        return shortCv;
     }
 
-    public void setTopic(Topic topic) {
-        this.topic = topic;
+    public void setShortCv(String shortCv) {
+        this.shortCv = shortCv;
+    }
+
+    /**
+     * @return The event that the speaker is giving a speech.
+     */
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    /**
+     * @return The session in which the speaker is scheduled to speak.
+     */
+    public EventSession getSession() {
+        return session;
+    }
+
+    public void setSession(EventSession session) {
+        this.session = session;
     }
 
     @Override
@@ -87,11 +116,10 @@ public class TopicMailinglistMessage implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TopicMailinglistMessage)) {
+        if (!(object instanceof Speaker)) {
             return false;
         }
-        TopicMailinglistMessage other = (TopicMailinglistMessage) object;
+        Speaker other = (Speaker) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -100,6 +128,6 @@ public class TopicMailinglistMessage implements Serializable {
 
     @Override
     public String toString() {
-        return this.topic.getName() + " - " + this.mailinglistMessage.getSubject();
+        return this.userAccount.getFullName();
     }
 }

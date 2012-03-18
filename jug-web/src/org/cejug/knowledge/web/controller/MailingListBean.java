@@ -41,9 +41,11 @@ public class MailingListBean {
 
     @ManagedProperty(value="#{param.id}")
     private String id;
-
+    
     private MailingList mailingList;
-
+    
+    private List<MailingList> mailingLists;
+        
     public MailingListBean() {}
 
     public String getId() {
@@ -63,9 +65,12 @@ public class MailingListBean {
     }
 
     public List<MailingList> getMailingLists() {
-        return mailingListBsn.findMailingLists();
+        if(this.mailingLists == null) {
+            this.mailingLists = mailingListBsn.findMailingLists();
+        }
+        return this.mailingLists;
     }
-
+    
     @PostConstruct
     public void load() {
         if(id != null && !id.isEmpty()) {
@@ -75,7 +80,7 @@ public class MailingListBean {
             this.mailingList = new MailingList();
         }
     }
-
+    
     public String save() {
         mailingListBsn.save(this.mailingList);
         return "mailing_lists?faces-redirect=true";

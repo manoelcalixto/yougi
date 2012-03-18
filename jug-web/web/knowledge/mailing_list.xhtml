@@ -3,38 +3,42 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.prime.com.tr/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
     <body>
         <ui:composition template="../layout.xhtml">
             <ui:define name="title">#{bundle.mailingList}</ui:define>
             <ui:define name="content">
-                <div class="bread_crumb_area">
-                    <h:form>
-                        <p:breadCrumb styleClass="bread_crumb">
-                            <p:menuitem value="#{bundle.home}" url="../index.xhtml"/>
-                            <p:menuitem value="#{bundle.knowledge}"/>
-                            <p:menuitem value="#{bundle.mailingLists}"  url="mailing_lists.xhtml"/>
-                            <p:menuitem value="#{bundle.mailingList}"  url="mailing_list.xhtml"/>
-                        </p:breadCrumb>
-                    </h:form>
-                </div>
                 <div class="content">
                     <h1>#{bundle.mailingList}</h1>
                     <h:form>
                         <h:messages styleClass="alertMessage"/>
+                        
                         <h:panelGrid columns="1">
                             <h:outputText value="#{bundle.name}" styleClass="fieldLabel"/>
-                            <h:outputText value="#{mailingListBean.mailingList.name}"/>
+                            <h:inputText value="#{mailingListBean.mailingList.name}" size="30" maxlength="50" required="true"/>
 
                             <h:outputText value="#{bundle.description}" styleClass="fieldLabel"/>
-                            <h:outputText value="#{mailingListBean.mailingList.description}"/>
-                        </h:panelGrid>
+                            <h:inputTextarea value="#{mailingListBean.mailingList.description}" rows="3" cols="40"/>
 
-                        <h:panelGrid columns="4" cellpadding="10">
-                            <h:outputLink value="mailto:#{mailingListBean.mailingList.email}" target="_blank">#{bundle.sendMessage}</h:outputLink>
-                            <h:outputLink value="mailto:#{mailingListBean.mailingList.subscription}" target="_blank">#{bundle.subscribeTo}</h:outputLink>
-                            <h:outputLink value="mailto:#{mailingListBean.mailingList.unsubcription}" target="_blank">#{bundle.unsubscribeFrom}</h:outputLink>
-                            <h:link outcome="mailing_lists" value="#{bundle.back}"/>
+                            <h:outputText value="#{bundle.email}" styleClass="fieldLabel"/>
+                            <h:inputText value="#{mailingListBean.mailingList.email}" size="50" maxlength="100"/>
+
+                            <h:outputText value="#{bundle.subscribeTo}" styleClass="fieldLabel"/>
+                            <h:inputText value="#{mailingListBean.mailingList.subscription}" size="60" maxlength="100"/>
+
+                            <h:outputText value="#{bundle.unsubscribeFrom}" styleClass="fieldLabel"/>
+                            <h:inputText value="#{mailingListBean.mailingList.unsubscription}" size="60" maxlength="100"/>
+                        </h:panelGrid>
+                                                
+                        <h:inputHidden id="id" value="#{mailingListBean.mailingList.id}"/>
+
+                        <h:panelGrid columns="3">
+                            <h:commandButton value="#{bundle.save}" action="#{mailingListBean.save}"/>
+                            <h:commandButton value="#{bundle.remove}" action="#{mailingListBean.remove}" rendered="#{! empty mailingListBean.id}">
+                                <f:param name="id" value="#{mailingListBean.mailingList.id}"/>
+                            </h:commandButton>    
+                            <h:button value="#{bundle.cancel}" outcome="mailing_lists"/>
                         </h:panelGrid>
                     </h:form>
                 </div>

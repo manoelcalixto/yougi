@@ -1,0 +1,89 @@
+/* Jug Management is a web application conceived to manage user groups or 
+ * communities focused on a certain domain of knowledge, whose members are 
+ * constantly sharing information and participating in social and educational 
+ * events. Copyright (C) 2011 Ceara Java User Group - CEJUG.
+ * 
+ * This application is free software; you can redistribute it and/or modify it 
+ * under the terms of the GNU Lesser General Public License as published by the 
+ * Free Software Foundation; either version 2.1 of the License, or (at your 
+ * option) any later version.
+ * 
+ * This application is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public 
+ * License for more details.
+ * 
+ * There is a full copy of the GNU Lesser General Public License along with 
+ * this library. Look for the file license.txt at the root level. If you do not
+ * find it, write to the Free Software Foundation, Inc., 59 Temple Place, 
+ * Suite 330, Boston, MA 02111-1307 USA.
+ * */
+package org.cejug.knowledge.business;
+
+import java.util.List;
+import java.util.StringTokenizer;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import org.cejug.knowledge.entity.Topic;
+
+/**
+ * @author Hildeberto Mendonca
+ */
+@Stateless
+@LocalBean
+public class TopicBsn {
+
+    @PersistenceContext
+    private EntityManager em;
+
+    public Topic findTopic(String name) {
+        return em.find(Topic.class, name);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Topic> findTopics() {
+        return em.createQuery("select t from Topic t order by t.name asc").getResultList();
+    }
+
+    public void save(Topic topic) {
+        Topic existing = em.find(Topic.class, topic.getName());
+        if(existing == null) {
+            em.persist(topic);
+        }
+        else
+            em.merge(topic);
+    }
+    
+    /** 
+     * Receive a list of topics separated by comma and verify if they already 
+     * exist. Topics are created with default values if they don't exist yet.
+     */
+    public void consolidateTopics(String topics) {
+        StringTokenizer st = new StringTokenizer(topics, ",");
+        String topicName;
+        Topic topic;
+        while(st.hasMoreTokens()) {
+            topicName = st.nextToken().trim();
+            topic = findTopic(topicName.toUpperCase());
+            if(topic == null) {
+                topic = new Topic();
+                topic.setName(topicName);
+                topic.setLabel(topicName);
+                topic.setDescription(topicName);
+                topic.setValid(Boolean.TRUE);
+                em.persist(topic);
+            }
+        }
+    }
+
+    public void remove(String name) {
+        if(name == null || name.isEmpty())
+            return;
+        
+        Topic topic = em.find(Topic.class, name);
+        if(topic != null)
+            em.remove(topic);
+    }
+}

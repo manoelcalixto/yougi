@@ -26,7 +26,7 @@ import java.util.UUID;
  * @author Hildeberto Mendonca
  */
 public class EntitySupport {
-
+    
     public static String generateEntityId() {
         UUID uuid = UUID.randomUUID();
         return uuid.toString().replaceAll("-", "").toUpperCase();

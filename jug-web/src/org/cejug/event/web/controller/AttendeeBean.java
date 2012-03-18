@@ -1,4 +1,4 @@
-/* Jug Management is a web application conceived to manage user groups or 
+ /* Jug Management is a web application conceived to manage user groups or 
  * communities focused on a certain domain of knowledge, whose members are 
  * constantly sharing information and participating in social and educational 
  * events. Copyright (C) 2011 Ceara Java User Group - CEJUG.
@@ -20,18 +20,25 @@
  * */
 package org.cejug.event.web.controller;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-
+import javax.servlet.http.HttpServletResponse;
 import org.cejug.event.business.AttendeeBsn;
 import org.cejug.event.business.EventBsn;
 import org.cejug.event.entity.Attendee;
 import org.cejug.event.entity.Event;
+import org.cejug.web.report.EventAttendeeReport;
 
 /**
  * @author Hildeberto Mendonca
@@ -41,6 +48,8 @@ import org.cejug.event.entity.Event;
 public class AttendeeBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    static final Logger logger = Logger.getLogger("org.cejug.event.web.controller.AttendeeBean");
 
     @EJB
     private EventBsn eventBsn;
@@ -125,5 +134,36 @@ public class AttendeeBean implements Serializable {
     private void removeSessionScoped() {
         FacesContext context = FacesContext.getCurrentInstance();
         context.getExternalContext().getSessionMap().remove("partnerBean");
+    }
+    
+    /**
+     * Generates a PDF with the list of registered members in the event.
+     */
+    public void print() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletResponse response = (HttpServletResponse)context.getExternalContext().getResponse();
+        response.setContentType("application/pdf");
+        response.setHeader("Content-disposition", "inline=filename=file.pdf");
+
+        try {
+            Document document = new Document();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PdfWriter.getInstance(document, baos);
+            document.open();
+
+            EventAttendeeReport eventAttendeeReport = new EventAttendeeReport(document);
+            eventAttendeeReport.printReport(this.attendees);
+
+            document.close();
+
+            response.getOutputStream().write(baos.toByteArray());
+            response.getOutputStream().flush();
+            response.getOutputStream().close();
+            context.responseComplete();
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        } catch (DocumentException de) {
+            logger.log(Level.SEVERE, de.getMessage(), de);
+        }
     }
 }

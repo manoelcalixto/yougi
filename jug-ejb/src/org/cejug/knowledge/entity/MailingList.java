@@ -41,7 +41,7 @@ public class MailingList implements Serializable {
     private String description;
     private String email;
     private String subscription;
-    private String unsubcription;
+    private String unsubscription;
 
     public MailingList() {
     }
@@ -95,12 +95,12 @@ public class MailingList implements Serializable {
         this.subscription = subscription;
     }
 
-    public String getUnsubcription() {
-        return unsubcription;
+    public String getUnsubscription() {
+        return unsubscription;
     }
 
-    public void setUnsubcription(String unsubcription) {
-        this.unsubcription = unsubcription;
+    public void setUnsubscription(String unsubscription) {
+        this.unsubscription = unsubscription;
     }
 
     @Override
@@ -112,7 +112,6 @@ public class MailingList implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof MailingList)) {
             return false;
         }
