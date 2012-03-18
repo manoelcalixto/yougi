@@ -1630,7 +1630,7 @@ to\z@{\kern0.55\wd0\vrule\@height0.45\ht0\hss}\box0}}}}
     \vskip 1.5em               % Vertical space after date.
   \fi
  \vfill
- {\Large Springer\par}
+ {\Large CEJUG - The Ceara Java User Group\par}
 %\vskip 5\p@
 %\large
 %  Berlin\enspace Heidelberg\enspace New\kern0.1em York\\

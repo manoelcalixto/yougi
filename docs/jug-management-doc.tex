@@ -5,12 +5,16 @@
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage[bottom]{footmisc}
+\usepackage{hyperref}
+\usepackage{color}
+
+\hypersetup{colorlinks=true, linkcolor=black, citecolor=black, urlcolor=black}
 
 \makeindex
 
 \author{Hildeberto Mendonca}
-\title{JUG Management}
-\subtitle{An Open Source Software to Manage Java User Groups}
+\title{UGM - User Group Management}
+\subtitle{An Open Source Application that Implements the User Group Domain}
 
 \begin{document}
 
@@ -26,11 +30,39 @@ Notice: copies of this document may be made for your own use and for distributio
 
 \tableofcontents
 
+\listoffigures
+
+\listoftables
+
 \mainmatter
 
-\part{User Guide}
-
 \chapter{Introduction}
+
+\section{What is a User Group?}
+
+\section{Case Study}
+
+The chosen case study is based on the personal experience of the team who is developing UGM. Most of contributions come from the Cear\'{a} Java User Group, which is a technical user group located in the Northeast cost of Brazil. Despite being part of a specific domain, we believe that the proposed model is generic enough to cover the management's needs of most user groups out there.
+
+\subsection{The Java User Group Scenario}
+
+Java User Groups (JUG) are independent and entrepreneur communities of students and professionals around the Java platform and related technologies. They are globally spread with larger concentration in Europe, North America and South America.
+
+Their independence from the industry is particularly interesting because, in general, user groups are promoted by the industry, which is the case of GUG, attached to Google; OUG, attached to Oracle; and MUG, attached to Microsoft.
+
+\subsection{JUGs Around the World}
+
+\subsection{Starting a New JUG}
+
+\subsection{The Need for a Mature User Group Management}
+
+\section{UGM Vision and Mission}
+
+\section{Overview}
+
+\section{Conventions Used in this Book}
+
+\part{User Guide}
 
 \chapter{Membership Management}
 
@@ -71,6 +103,8 @@ At the same time, all data input by the ancient member in the database will not 
 
 Events are strategic for user groups. They disseminate knowledge and promote networking, strengthening the links between members. It is important to have an efficient event management in order to keep everything under control, measure member's participation and get their feedback.
 
+\section{Event Registration}
+
 To start organizing events, UG Leaders should register venues available and suitable for user group events. A venue might have one or more rooms where event sessions will take place. In case of multiple rooms available, the event can manage multiple sessions in parallel.
 
 Events are allocated in existing venues for a certain time. When an event is registered and allocated to a venue, the venue's contact receives a request email containing details about the event and a list of resources that are expected from them. After a negotiation process the event is confirmed or not. The confirmation occurs when the venue's contact clicks on the confirmation link in the email message. Without this confirmation the event cannot occur.
@@ -83,124 +117,39 @@ Detailed information about the event is also formatted to be published on the UG
 
 Right after the event registration, the member receives a confirmation message just to let him/her know that he/she is successfully registered to attend the event. Registered members will receive a remind email message seven days before the event and a second one on the day before the event. They can cancel their registration at any time before the event.
 
-At the entrance of the event, a member of the UG staff checks the inscription of each person in an available computer. If the person is a member registered in the event, then his/her presence1 is confirmed. If the person is a member but he/she is not registered in the event, then his/her registration is made at the entrance. If the person is not a member, then he/she should agree to become a member of the UG, otherwise it is not possible to join the event. If he/she agrees to become a member, his/her registration in the UG and in the event is done at the entrance of the event.
+\section{Controlling the Event}
+
+At the entrance of the event, a member of the UG staff checks the inscription of each person in an available computer. If the person is a member registered in the event, then his/her presence is confirmed. If the person is a member but he/she is not registered in the event, then his/her registration is made at the entrance. If the person is not a member, then he/she should agree to become a member of the UG, otherwise it is not possible to join the event. If he/she agrees to become a member, his/her registration in the UG and in the event is done at the entrance of the event.
+
+\section{After the Event}
 
 When the event has passed, no information about the event can be changed anymore. It will be available only in a read-only mode from the day after. Speakers will not be able to update their profiles either until being allocated to another event. However, UG Leaders are able to publish additional resources related to the event, such as pictures, documents, presentations, etc.
 
 \chapter{Partnership Management}
 
+\section{Registration of Partners}
+
+\section{Sponsorship}
+
+\section{Exclusive Services for Partners}
+
+\subsection{Dissemination of Job Offers}
+
+\subsection{Offers of Products and Services}
+
+\subsection{Knowledge Exchange}
+
 \chapter{Knowledge Management}
+
+\section{Topics in the Scope of the User Group}
+
+\section{Mailing Lists Management}
 
 \part{Development Guide}
 
-\chapter{Architecture}
-
-JUG Management should be deployed in an Application Server (AS). This platform is responsible for the system execution, the connectivity to several resources available in the environment and the availability for several users and systems. For the moment, Glassfish 3.0.1 is the standard AS for this application. This JEE Server has gained lots of attention for constantly run towards the state-of-the-art of the Java server side technology. It has an aggressive roadmap, being always the first product on the market to fully implement the last version of the JEE specification.
-
-One of the main advantages of using an application server like Glassfish is to keep the application free of complex code, such as a) manual control of database transactions; b) database access configuration; c) security authentication and authorization; e) sending and receiving e-mail messages, among many other complexities that are non-functional requirements, consuming the time we would be spending on functional requirements.
-
-No test was performed in other AS up to now, mainly because when the project started Glassfish was the only AS implementing the JEE 6 specification (JPA2, EJB 3.1, JSF 2.0, etc.). The AS should have access and provide the following resources:
-
-\begin{itemize}
-\item \textit{Security Realm}: is a provider of authentication and authorization data to identify users who want to access the application and verify whether they have rights to access protected resources.  The application's database, besides storing UG's data, also stores users and their roles, which makes it the realm provider, referenced by Glassfish in the realm configuration.
-
-\item \textit{Database Server}: a database driver allows connections to a relational database and a connection pool manages several simultaneous connections to this database, allowing scalability and performance. MySQL is the database system chosen to organize and protect UG's data.
-
-\item \textit{Email Server}: A JavaMail service connects to an email server and provide sessions to the application, allowing it to send and receive email messages without any special configuration on the implementation side.
-
-\item \textit{File System}: the application should be able to save and access files in a specific directory of the file system. Unfortunately, the AS does not manage access to the file system. The application is responsible for managing all uploaded files.
-\end{itemize}
-
-The resources provided by the application server help to simplify the overall application architecture. The connectivity with those resources characterizes a n-tier architecture, where each tier is physically separated. The application architecture, in turn, is divided in four layers, as depicted in Figure 1. These layers provide a model to create a flexible and reusable implementation. This way, new features can be efficiently accommodated, with a minimal impact on existing code.
-
-The 4 logical layers are:
-
-\begin{itemize}
-\item \textit{View}: implements the user interface by defining the layout of the screens, position UI components, performing data validation (e.g. invalid date format), formatting data to be presented, internationalizing and localizing text, and giving feedback about the user interaction.
-
-\item \textit{Controller}: controls the navigation flow according to the user interaction and intermediates data from the view to the business and vice-versa. It performs business validation (e.g. user already exists), data conversion from user friendly to business model-compliant and vice-versa, accesses business services, creates model objects that do not exist yet and manipulates existing ones. According to the state of the IS, the controller knows which flow should be followed and what to do in case of exceptions and security constraints.
-
-\item \textit{Business}: due to its objectivity, the business layer is not subdivided. It is considered as concrete and it will perform transactional business operations over the data model. Every business operation should guarantee that the data model is consistent before and after its execution. Therefore, the data model can only be access through this layer.
-
-\item \textit{Persistence}: maps data model entities with database tables to manage the lifecycle of entity objects. These objects can be created (insert), updated (update), queried (select) and deleted (delete). These operations are widely used by the data access object layer in order to interact with the database. The persistence layer can manage one or more data sources, but a data source is managed by one and only one data source.
-\end{itemize}
-
-\section{Chosen Technologies}
-
-Table \ref{tab:chosen-technologies} lists the technologies adopted by the development team to implement the application.
-
-\begin{table}
-\centering
-\caption{Chosen technologies to implement logical layers}
-\label{tab:chosen-technologies}
-\begin{tabular}{lll}
-\hline\noalign{\smallskip}
-Logical Layer & Technology & Version \\
-\noalign{\smallskip}\hline\noalign{\smallskip}
-View & JSF Facelets & 2.0 \\
- & Primefaces UI Library & 2.1.1 \\
-\noalign{\smallskip}
-Controller & Primefaces & 2.1.1 \\
- & JSF Managed Beans & 2.0 \\
-\noalign{\smallskip}
-Business & EJB Session Beans & 3.1 \\
- & EJB Timer & 3.1 \\
-\noalign{\smallskip}
-Persistence & JPA & 2.0 \\
- & EclipseLink & 2.0 \\
- & JTA & 1.2 \\
-\noalign{\smallskip}\hline
-\end{tabular}
-\end{table}
-
-These technologies were selected based on the current needs, resources and knowledge of the development team. We decided to adopt a minimalist approach where most libs needed by the application are also distributed with the AS, such as Eclipse Link and Mojarra, and most configurations are made through the administrative console, such as database connection pool, JavaMail session and Security Realm. For the moment, the only external lib is the Primefaces component library. We make extensive use of annotations and avoid as much as we can XML for configuration purpose. Transactions are fully managed by the container. This way, we keep focused on the source code of the JUG community model. Eventually, other technologies out of this table may be adopted if well justified. Therefore, a new technology would be considered in case a very special UG's need must be fulfilled.
-
-Going into details about the chosen technologies, we describe each one of them, completing the description of Figure 1:
-
-\begin{itemize}
-\item \textbf{JSF 2.0}: The Java Server Faces technology is the standard technology for developing web-based applications in the JEE platform.
-   \begin{itemize}
-   \item \textit{Primefaces}: extensive library of UI Widgets 
-   available for the JSF technology.
-   \item \textit{Converters}: converts data from user friendly to
-   business model-compliant and vice-versa.
-   \item \textit{ManagedBeans}: POJO annotated classes that have
-   access to special resources available on the
-   application context.
-   \item \textit{Validators}: performs server-side validation of
-   data informed by the user before going forward in the
-   controller processing.
-   \end{itemize}
-\item \textbf{JNDI}: the Java Naming and Directory Service helps to localize and retrieve instances of resources available in the context of the server, reusing existing instances and avoiding the complexity behind creating those instances.
-\item \textbf{EJB 3.1}: transactional, distributed and secure component model to encapsulate reusable business logic.
-   \begin{itemize}
-   \item \textit{Stateless Session Beans}: EJB that does not store
-   the state of components in memory, optimizing memory
-   allocation and scalability across multiple servers.
-   \item \textit{Timer}: EJB capable of scheduling itself to
-   execute business logic in a certain time or in a
-   certain frequency of time. The schedule of routines is
-   very appropriate to perform automatic maintenance
-   tasks such as cleaning temporary data, generating
-   complex reports, sending alert messages, etc. Timers
-   are also useful to efficiently use computational
-   resources when systems are in idle mode.
-   \item \textit{ManagedBeans}: POJO annotated classes that have
-   access to  special resources available on the enterprise
-   context.
-   \end{itemize}
-\item \textbf{JPA 2.0}: Java Persistence API is an entity-relational mapping specification that manages the lifecycle of objects persisted in the database. It reduces the degree of database dependency, the complexity of the source code and the maintenance cost in case of changes in the relational model.
-   \begin{itemize}
-   \item \textit{Entity Model}: POJO annotated classes mapped to
-   database tables where their instances represent table records
-   for the business logic.
-   \item \textit{JTA}: The Java Transaction API.
-   \end{itemize}
-\end{itemize}
-
 \chapter{Installation}
 
-To install the JUG Management application we need:
+To install UGM we need:
 
 \begin{itemize}
 \item Java Standard Edition JDK 6;
@@ -225,7 +174,7 @@ The initial installation takes some time, but it will guarantee easy updates whe
 
 \section{Creating the MySQL Database}
 
-The JUG Management application has access to only one database. This database is created using the administrative console and a SQL script. As mentioned before, this instructions consider that the MySQL database, version 5.0 or superior, is already installed and configured. In terms of configuration, we also consider that the path of the operating system is pointing to the folder where all MySQL commands are located.
+UGM has access to only one database. This database is created using the administrative console and a SQL script. As mentioned before, this instructions consider that the MySQL database, version 5.0 or superior, is already installed and configured. In terms of configuration, we also consider that the path of the operating system is pointing to the folder where all MySQL commands are located.
 
 The procedure starts executing the administrative console, using the following command:
 
@@ -364,7 +313,7 @@ The installation process takes some time, but all these steps are executed only 
 \item Check if everything went well accessing http://localhost:8080/jug if deploying on your own computer or http://[servername]:8080/jug if deploying on the server.
 \end{enumerate}
 
-The jug application will appear in the list of applications. In case of updating an application already deployed, the process is very simplified because of the initial configuration:
+UGM will appear in the list of applications. In case of updating an application already deployed, the process is very simplified because of the initial configuration:
 
 \begin{enumerate}
 \item enter in the administrative console (http://[server-name]:4848).
@@ -375,52 +324,176 @@ The jug application will appear in the list of applications. In case of updating
 \item Check if everything went well accessing http://[server-name]:8080/jug.
 \end{enumerate}
 
-\section{Configuring the Application According to the JUG's Specific Needs}
+\section{Configuring the Application According to the UG's Specific Needs}
 
-Before using the application, the database should be initialized with some initial data that are specific for each JUG. The following steps are necessary:
+Before using the application, the database should be initialized with some initial data that are specific for each UG. The following steps are necessary:
 
 \begin{enumerate}
 \item registration of the administrative user: after the initial deployment, there is no user registered in the application. Even the administrator is not present. When the user tries to authenticate while there is no registered user, the navigation redirects him/her to the registration page. On the top of the form, the user is alerted that he/she is going to be the first member and will be considered as administrator. The form is a simplified version of the original registration form because some mandatory data are not available yet, such as geographic location. As an initial user, he/she is automatically confirmed, without the need of a confirmation by email.
-\item definition of the JUG location and geographic coverage: because country and city are mandatory fields in the registration form for all other users, the administrator should define them as soon as he/she have access to the application. The administrator should register at least a country to allow the registration of members, but it is expected from him/her that the location of the JUG and its coverage are also registered. It means that the administrator should register all countries, provinces and cities where the JUG has influence.
+\item definition of the UG location and geographic coverage: because country and city are mandatory fields in the registration form for all other users, the administrator should define them as soon as he/she have access to the application. The administrator should register at least a country to allow the registration of members, but it is expected from him/her that the location of the UG and its coverage are also registered. It means that the administrator should register all countries, provinces and cities where the UG has influence.
 \item definition of application properties: at last, but not least, the administrator should review and modify, if needed, the default value of application properties. This properties are initialized in a way that allows the application run normally. However, some properties are missing by default and others might be different from what is expected.
 \end{enumerate}
 
+\chapter{Architecture}
+
+UGM should be deployed in an Application Server (AS). This platform is responsible for the system execution, the connectivity to several resources available in the environment and the availability for several users and systems. For the moment, Glassfish 3.0.1 is the standard AS for this application. This JEE Server has gained lots of attention for constantly run towards the state-of-the-art of the Java server side technology. It has an aggressive roadmap, being always the first product on the market to fully implement the last version of the JEE specification.
+
+One of the main advantages of using an application server like Glassfish is to keep the application free of complex code, such as a) manual control of database transactions; b) database access configuration; c) security authentication and authorization; e) sending and receiving e-mail messages, among many other complexities that are non-functional requirements, consuming the time we would be spending on functional requirements.
+
+No test was performed in other AS up to now, mainly because when the project started Glassfish was the only AS implementing the JEE 6 specification (JPA2, EJB 3.1, JSF 2.0, etc.). The AS should have access and provide the following resources:
+
+\begin{itemize}
+\item \textit{Security Realm}: is a provider of authentication and authorization data to identify users who want to access the application and verify whether they have rights to access protected resources.  The application's database, besides storing UG's data, also stores users and their roles, which makes it the realm provider, referenced by Glassfish in the realm configuration.
+
+\item \textit{Database Server}: a database driver allows connections to a relational database and a connection pool manages several simultaneous connections to this database, allowing scalability and performance. MySQL is the database system chosen to organize and protect UG's data.
+
+\item \textit{Email Server}: A JavaMail service connects to an email server and provide sessions to the application, allowing it to send and receive email messages without any special configuration on the implementation side.
+
+\item \textit{File System}: the application should be able to save and access files in a specific directory of the file system. Unfortunately, the AS does not manage access to the file system. The application is responsible for managing all uploaded files.
+\end{itemize}
+
+The resources provided by the application server help to simplify the overall application architecture. The connectivity with those resources characterizes a n-tier architecture, where each tier is physically separated. The application architecture, in turn, is divided in four layers, as depicted in Figure 1. These layers provide a model to create a flexible and reusable implementation. This way, new features can be efficiently accommodated, with a minimal impact on existing code.
+
+The 4 logical layers are:
+
+\begin{itemize}
+\item \textit{View}: implements the user interface by defining the layout of the screens, position UI components, performing data validation (e.g. invalid date format), formatting data to be presented, internationalizing and localizing text, and giving feedback about the user interaction.
+
+\item \textit{Controller}: controls the navigation flow according to the user interaction and intermediates data from the view to the business and vice-versa. It performs business validation (e.g. user already exists), data conversion from user friendly to business model-compliant and vice-versa, accesses business services, creates model objects that do not exist yet and manipulates existing ones. According to the state of the IS, the controller knows which flow should be followed and what to do in case of exceptions and security constraints.
+
+\item \textit{Business}: due to its objectivity, the business layer is not subdivided. It is considered as concrete and it will perform transactional business operations over the data model. Every business operation should guarantee that the data model is consistent before and after its execution. Therefore, the data model can only be access through this layer.
+
+\item \textit{Persistence}: maps data model entities with database tables to manage the lifecycle of entity objects. These objects can be created (insert), updated (update), queried (select) and deleted (delete). These operations are widely used by the data access object layer in order to interact with the database. The persistence layer can manage one or more data sources, but a data source is managed by one and only one data source.
+\end{itemize}
+
+\section{Chosen Technologies}
+
+Table \ref{tab:chosen-technologies} lists the technologies adopted by the development team to implement the application.
+
+\begin{table}
+\centering
+\caption{Chosen technologies to implement logical layers}
+\label{tab:chosen-technologies}
+\begin{tabular}{lll}
+\hline\noalign{\smallskip}
+Logical Layer & Technology & Version \\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+View & JSF Facelets & 2.0 \\
+ & Primefaces UI Library & 2.1.1 \\
+\noalign{\smallskip}
+Controller & Primefaces & 2.1.1 \\
+ & JSF Managed Beans & 2.0 \\
+\noalign{\smallskip}
+Business & EJB Session Beans & 3.1 \\
+ & EJB Timer & 3.1 \\
+\noalign{\smallskip}
+Persistence & JPA & 2.0 \\
+ & EclipseLink & 2.0 \\
+ & JTA & 1.2 \\
+\noalign{\smallskip}\hline
+\end{tabular}
+\end{table}
+
+These technologies were selected based on the current needs, resources and knowledge of the development team. We decided to adopt a minimalist approach where most libs needed by the application are also distributed with the AS, such as Eclipse Link and Mojarra, and most configurations are made through the administrative console, such as database connection pool, JavaMail session and Security Realm. For the moment, the only external lib is the Primefaces component library. We make extensive use of annotations and avoid as much as we can XML for configuration purpose. Transactions are fully managed by the container. This way, we keep focused on the source code of the UG community model. Eventually, other technologies out of this table may be adopted if well justified. Therefore, a new technology would be considered in case a very special UG's need must be fulfilled.
+
+Going into details about the chosen technologies, we describe each one of them, completing the description of Figure 1:
+
+\begin{itemize}
+\item \textbf{JSF 2.0}: The Java Server Faces technology is the standard technology for developing web-based applications in the JEE platform.
+   \begin{itemize}
+   \item \textit{Primefaces}: extensive library of UI Widgets 
+   available for the JSF technology.
+   \item \textit{Converters}: converts data from user friendly to
+   business model-compliant and vice-versa.
+   \item \textit{ManagedBeans}: POJO annotated classes that have
+   access to special resources available on the
+   application context.
+   \item \textit{Validators}: performs server-side validation of
+   data informed by the user before going forward in the
+   controller processing.
+   \end{itemize}
+\item \textbf{JNDI}: the Java Naming and Directory Service helps to localize and retrieve instances of resources available in the context of the server, reusing existing instances and avoiding the complexity behind creating those instances.
+\item \textbf{EJB 3.1}: transactional, distributed and secure component model to encapsulate reusable business logic.
+   \begin{itemize}
+   \item \textit{Stateless Session Beans}: EJB that does not store
+   the state of components in memory, optimizing memory
+   allocation and scalability across multiple servers.
+   \item \textit{Timer}: EJB capable of scheduling itself to
+   execute business logic in a certain time or in a
+   certain frequency of time. The schedule of routines is
+   very appropriate to perform automatic maintenance
+   tasks such as cleaning temporary data, generating
+   complex reports, sending alert messages, etc. Timers
+   are also useful to efficiently use computational
+   resources when systems are in idle mode.
+   \item \textit{ManagedBeans}: POJO annotated classes that have
+   access to  special resources available on the enterprise
+   context.
+   \end{itemize}
+\item \textbf{JPA 2.0}: Java Persistence API is an entity-relational mapping specification that manages the lifecycle of objects persisted in the database. It reduces the degree of database dependency, the complexity of the source code and the maintenance cost in case of changes in the relational model.
+   \begin{itemize}
+   \item \textit{Entity Model}: POJO annotated classes mapped to
+   database tables where their instances represent table records
+   for the business logic.
+   \item \textit{JTA}: The Java Transaction API.
+   \end{itemize}
+\end{itemize}
+
 \chapter{Development}
 
-\section{Configuration Management}
+\section{Preparing the Development Environment}
 
-Git is the version control system (VCS) used to control JUG Management source code. For being a distributed VCS, Git is not trivial. Its foundations are a bit different from traditional VCSs, such as CVS and SVN. There is a master repository located at http://cejug.java.net, where the main trunk (master) is centralized, but every client is also a full featured VCS, where is possible perform commits off line, create branches and merge with other clients without acknowledging the master.
+Git is the version control system (VCS) used to control UGM source code. For being a distributed VCS, Git is not trivial. Its foundations are a bit different from traditional VCSs, such as CVS and SVN. There is a master repository located at http://cejug.java.net, where the main trunk (master) is centralized, but every client is also a full featured VCS, where is possible perform commits off line, create branches and merge with other clients without acknowledging the master.
 
-To install and use JUG Management is not necessary to start from the source code. The binary package is available at http://cejug.java.net. Just follow the instructions described in chapter 7. On the other hand, if the intention is to contribute to the project, the use of Git to retrieve the source code is necessary. The potential contributor should:
+To install and use UGM is not necessary to start from the source code. The binary package is available at http://cejug.java.net. Just follow the instructions described in chapter 7. On the other hand, if the intention is to contribute to the project, the use of Git to retrieve the source code is necessary. The potential contributor should:
 
 \begin{enumerate}
 \item install Git in the development machine: the installation is dependent of platform, thus the instructions for the target platform are only available on the Git website: http://git-scm.com.
-\item configure Git to access the master repository: JUG Management's Git accepts only secure SSH (Security Shell protocol) connection, making the initial steps more complicated than expected. After this initial configuration, the access to the master becomes transparent and secure.
+\item configure Git to access the master repository: UGM's Git accepts only secure SSH (Security Shell protocol) connection, making the initial steps more complicated than expected. After this initial configuration, the access to the master becomes transparent and secure.
 \item register at java.net:
 \item copy and paste the public key in the java.net personal profile:
-\item create a local repository for the project: 
-\item download the source code from the repository:
+\item register yourself in CEJUG's project at java.net. You will have access to the repository only if you are a member of the project.
+\item When you login on Java.net and go to the source code section, you will be able to see the checkout URI of UGM's repository. The address contains your username. Example: ssh://[user-name]@git.java.net/cejug~jug-management.
+\item Copy the URI above and go to the command line and type the following command to checkout the code: git clone ssh://[user-name]@git.java.net/cejug~jug-management. It will create a folder "cejug-jug-management" in the directory you ran the command and the full source code will be available there.
 \end{enumerate}
-1.
 
-1.register yourself in CEJUG's project at java.net. You will have access to the repository only if you are a member of the project. Registering in the project doesn't mean you will become a CEJUG member. Actually, we use JUG Management to control our members ;-)
-2.When you login on Java.net and go to the source code section, you will be able to see the checkout URI of JUG Management's repository. The address contains your username. Example: ssh://[user-name]@git.java.net/cejug~jug-management.
-3.Copy the URI above and go to the command line and type the following command to checkout the code: git clone ssh://[user-name]@git.java.net/cejug~jug-management. It will create a folder "cejug-jug-management" in the directory you ran the command and the full source code will be available there.
 To make sure that the code in the server branch is perfectly working, we have to update the local copy with the latest changes available on the server, test the system locally with those changes and if everything is working well, the local commits can finally be pushed to its respective branch. Before updating the local, make sure that there is no pending commit using:
+\begin{verbatim}
 # git status
+\end{verbatim}
 If there are changed files add them using:
+\begin{verbatim}
 # git add [file]
+\end{verbatim}
 Use the command above for each modified file or if they all make sense to be committed together use:
+\begin{verbatim}
 # git commit -a -m “[message]”
+\end{verbatim}
 to add all changed files and commit right after. If files were added individually use:
+\begin{verbatim}
 # git commit -m “[message]”
+\end{verbatim}
 After performing the last commits, it is time to update the local copy using:
+\begin{verbatim}
 # git pull
+\end{verbatim}
 or
+\begin{verbatim}
 # git fetch
-#git merge FETCH_HEAD
-Changes available on the server 
-#git push origin maste
+# git merge FETCH_HEAD
+\end{verbatim}
+
+Changes available on the server
+\begin{verbatim}
+#git push origin master
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics[height=10cm, angle=90]{figures/relational-model}
+\caption{Please write your figure caption here}
+\label{fig:1}
+\end{figure}
 
 \backmatter
 
