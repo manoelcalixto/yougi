@@ -23,13 +23,14 @@ package org.cejug.business;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import org.cejug.entity.AccessGroup;
+import org.cejug.entity.Authentication;
 import org.cejug.entity.UserAccount;
 import org.cejug.entity.UserGroup;
 import org.cejug.util.EntitySupport;
@@ -58,7 +59,7 @@ public class AccessGroupBsn {
     }
 
     public AccessGroup findUserDefaultGroup() {
-        AccessGroup defaultUserGroup = null;
+        AccessGroup defaultUserGroup;
         try {
             defaultUserGroup = (AccessGroup) em.createQuery("select ag from AccessGroup ag where ag.userDefault = :default")
                                         .setParameter("default", Boolean.TRUE)
@@ -76,7 +77,7 @@ public class AccessGroupBsn {
     /** Returns the existing administrative group. If it doesn't find anyone 
      *  then a new one is created and returned. */
     public AccessGroup findAdministrativeGroup() {
-        AccessGroup group = null;
+        AccessGroup group;
         try {
             group = (AccessGroup) em.createQuery("select ag from AccessGroup ag where ag.name = :name")
                                         .setParameter("name", ADMIN_GROUP)
@@ -126,12 +127,11 @@ public class AccessGroupBsn {
             em.merge(accessGroup);
 
         if(members != null) {
-            UserAccount usr;
+            Authentication auth;
             List<UserGroup> usersGroup = new ArrayList<UserGroup>();
             for(UserAccount member: members) {
-                usr = userAccountBsn.findUserAccount(member.getId());
-
-                usersGroup.add(new UserGroup(accessGroup, usr));
+                auth = userAccountBsn.findAuthenticationUser(member.getId());
+                usersGroup.add(new UserGroup(accessGroup, auth));
             }
             userGroupBsn.update(accessGroup, usersGroup);
         }

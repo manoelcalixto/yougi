@@ -34,8 +34,8 @@
                             <h:outputLabel for="password" value="#{bundle.password} *" styleClass="fieldLabel"/>
                             <h:outputLabel for="confirmPassword" value="#{bundle.confirmPassword} *" styleClass="fieldLabel"/>
 
-                            <h:inputSecret id="password" autocomplete="off" label="#{bundle.password}" required="true" size="15" maxlength="30" value="#{userAccountBean.userAccount.password}"/>
-                            <h:inputSecret id="confirmPassword" autocomplete="off" label="#{bundle.confirmPassword}" required="true" size="15" maxlength="30" value="#{userAccountBean.userAccount.confirmPassword}"/>
+                            <h:inputSecret id="password" autocomplete="off" label="#{bundle.password}" required="true" size="15" maxlength="30" value="#{userAccountBean.password}"/>
+                            <h:inputSecret id="confirmPassword" autocomplete="off" label="#{bundle.passwordConfirmation}" required="true" size="15" maxlength="30" value="#{userAccountBean.passwordConfirmation}"/>
 
                             <h:outputLabel for="gender" value="#{bundle.gender} *" styleClass="fieldLabel"/>
                             <h:outputLabel for="birthDate" value="#{bundle.birthDate}" styleClass="fieldLabel"/>
@@ -86,7 +86,7 @@
 		                                <f:selectItems value="#{locationBean.cities}" var="city" itemLabel="#{city.name}" itemValue="#{city.id}"/>
 		                            </h:selectOneMenu>
                                     <h:outputText value="#{bundle.oor}"/>
-                                    <p:autoComplete id="cityNotListed" value="#{locationBean.cityNotListed}" completeMethod="#{locationBean.getCitiesStartingWith}"/>
+                                    <p:autoComplete id="cityNotListed" value="#{locationBean.cityNotListed}" completeMethod="#{locationBean.getCitiesStartingWith()}"/>
                                 </h:panelGrid>
                                 <h:inputText id="postalCode" label="#{bundle.postalCode}" size="10" maxlength="10" value="#{userAccountBean.userAccount.postalCode}"/>
                             </c:if>

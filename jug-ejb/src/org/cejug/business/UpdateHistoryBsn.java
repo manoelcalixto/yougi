@@ -56,7 +56,7 @@ public class UpdateHistoryBsn {
             throw new IllegalArgumentException();
         
         if (updateHistory.getUpdateHistoryPK() == null || !updateHistory.getUpdateHistoryPK().isValid()) {
-            throw new BusinessLogicException();
+            throw new BusinessLogicException("Update history not saved. Its id is invalid.");
         }
         
         try {

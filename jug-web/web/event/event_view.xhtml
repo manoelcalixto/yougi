@@ -61,7 +61,9 @@
                                 </c:if>
                             </p:tab>
                             <p:tab title="#{bundle.statistics}" rendered="#{securityBackingBean.isUserLeader}">
-                                <p:pieChart value="#{eventBean.pieChartModel}" title="#{bundle.attendanceRate}" legendPosition="e" showDataLabels="true"/>
+                                <h:panelGrid>
+                                    <p:pieChart value="#{eventBean.attendanceRateChartModel}" title="#{bundle.attendanceRate}" legendPosition="e" showDataLabels="true"/>
+                                </h:panelGrid>
                             </p:tab>
                         </p:tabView>
                         <p/>

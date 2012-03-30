@@ -40,11 +40,9 @@ public class UserAccount implements Serializable {
     
     private String email;
     
-    private String username;
+    @Transient
+    private String confirmEmail;
     
-    @Column(nullable=false)
-    private String password;
-
     @Column(name="first_name", nullable=false)
     private String firstName;
 
@@ -125,12 +123,6 @@ public class UserAccount implements Serializable {
     private Boolean speaker;
     
     private Boolean verified = false;
-
-    @Transient
-    private String confirmPassword;
-    
-    @Transient
-    private String confirmEmail;
     
     public UserAccount() {}
 
@@ -150,26 +142,6 @@ public class UserAccount implements Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
-
-    public Boolean isPasswordConfirmed() {
-        return confirmPassword.equals(password);
     }
 
     public String getFirstName() {
@@ -222,14 +194,6 @@ public class UserAccount implements Serializable {
         return 0;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -237,7 +201,6 @@ public class UserAccount implements Serializable {
     public void setEmail(String email) {
         email = email.toLowerCase();
         this.email = email;
-        this.setUsername(email);
     }
     
     public Date getRegistrationDate() {

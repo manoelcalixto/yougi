@@ -30,8 +30,11 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class UserGroupId implements Serializable {
     private static final long serialVersionUID = 1L;
-    
+
+    @Column(name = "group_id", nullable = false)
     private String groupId;
+    
+    @Column(name = "user_id", nullable= false)
     private String userId;
 
     public UserGroupId() {
@@ -42,7 +45,6 @@ public class UserGroupId implements Serializable {
         this.userId = userId;
     }
 
-    @Column(name = "group_id", nullable = false)
     public String getGroupId() {
         return groupId;
     }
@@ -51,7 +53,6 @@ public class UserGroupId implements Serializable {
         this.groupId = groupId;
     }
 
-    @Column(name = "user_id", nullable= false)
     public String getUserId() {
         return userId;
     }

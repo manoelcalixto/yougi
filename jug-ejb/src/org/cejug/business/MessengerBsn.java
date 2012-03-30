@@ -82,7 +82,7 @@ public class MessengerBsn {
             Transport.send(emailMessage.createMimeMessage(mailSession));
         }
         catch(MessagingException me) {
-            logger.log(Level.WARNING, "Error when sending the deactivation reason to user "+ userAccount.getUsername(), me);
+            logger.log(Level.WARNING, "Error when sending the deactivation reason to user "+ userAccount.getEmail(), me);
         }
     }
 
@@ -100,7 +100,7 @@ public class MessengerBsn {
             Transport.send(emailMessage.createMimeMessage(mailSession));
         }
         catch(MessagingException me) {
-            logger.log(Level.WARNING, "Error when sending alert to administrators about the registration of "+ newMember.getUsername(), me);
+            logger.log(Level.WARNING, "Error when sending alert to administrators about the registration of "+ newMember.getEmail(), me);
         }
     }
 
@@ -125,7 +125,7 @@ public class MessengerBsn {
             Transport.send(emailMessage.createMimeMessage(mailSession));
         }
         catch(MessagingException me) {
-            logger.log(Level.WARNING, "Error when sending the deactivation reason to user "+ userAccount.getUsername(), me);
+            logger.log(Level.WARNING, "Error when sending the deactivation reason to user "+ userAccount.getEmail(), me);
         }
     }
 
@@ -143,7 +143,7 @@ public class MessengerBsn {
             Transport.send(emailMessage.createMimeMessage(mailSession));
         }
         catch(MessagingException me) {
-            logger.log(Level.WARNING, "Error when sending the deactivation reason from "+ userAccount.getUsername() +" to leaders.", me);
+            logger.log(Level.WARNING, "Error when sending the deactivation reason from "+ userAccount.getEmail() +" to leaders.", me);
         }
     }
 
@@ -203,7 +203,7 @@ public class MessengerBsn {
             Transport.send(emailMessage.createMimeMessage(mailSession));
         }
         catch(MessagingException me) {
-            logger.log(Level.WARNING, "Error when sending the confirmation of event attendance to user "+ userAccount.getUsername(), me);
+            logger.log(Level.WARNING, "Error when sending the confirmation of event attendance to user "+ userAccount.getEmail(), me);
         }
     }
 }

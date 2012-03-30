@@ -21,6 +21,27 @@ alter table mailing_list_message add constraint fk_message_reply_to foreign key 
 
 ###############################################################################
 insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 
+   ('1.5',
+    '1.07',
+    '',
+    '');
+
+create table authentication (
+    username            varchar(100) not null,
+    password            varchar(100) not null,
+    user_account        char(32)     not null
+) engine = innodb;
+
+alter table authentication add constraint pk_authentication primary key (username);
+alter table authentication add constraint fk_user_authentication foreign key (user_account) references user_account(id) on delete cascade;
+
+insert into authentication (username, password, user_account) select username, password, id from user_account;
+
+alter table user_account drop column username;
+alter table user_account drop column password;
+
+###############################################################################
+insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 
    ('1.4',
     '1.06',
     'Adding properties for the certificate in the table attendee and event.',

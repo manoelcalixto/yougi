@@ -35,10 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.cejug.business.ApplicationPropertyBsn;
 import org.cejug.business.UserAccountBsn;
-import org.cejug.entity.ApplicationProperty;
-import org.cejug.entity.City;
-import org.cejug.entity.Properties;
-import org.cejug.entity.UserAccount;
+import org.cejug.entity.*;
 import org.cejug.web.util.ResourceBundleHelper;
 
 /**
@@ -61,6 +58,10 @@ public class UserAccountBean implements Serializable {
 
     private String userId;
     private UserAccount userAccount;
+    //private Authentication authentication;
+
+    private String password;
+    private String passwordConfirmation;
     
     public UserAccountBean() {
     }
@@ -79,6 +80,40 @@ public class UserAccountBean implements Serializable {
 
     public void setUserAccount(UserAccount userAccount) {
         this.userAccount = userAccount;
+    }
+//    
+//    public Authentication getAuthentication() {
+//        return this.authentication;
+//    }
+//
+//    public void setAuthentication(Authentication authentication) {
+//        this.authentication = authentication;
+//    }
+
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * That is not a entity property and it will not be saved in the database.
+     * It is used only to check if the user properly typed his password.
+     */
+    public String getPasswordConfirmation() {
+        return passwordConfirmation;
+    }
+
+    public void setPasswordConfirmation(String passwordConfirmation) {
+        this.passwordConfirmation = passwordConfirmation;
     }
     
     public LocationBean getLocationBean() {
@@ -112,6 +147,7 @@ public class UserAccountBean implements Serializable {
         String username = request.getRemoteUser();
         if(username != null) {
             this.userAccount = userAccountBsn.findUserAccountByUsername(username);
+//            this.authentication = userAccountBsn.findAuthenticationUser(this.userAccount);
                         	
             if(this.userAccount.getCountry() != null)
                 locationBean.setSelectedCountry(this.userAccount.getCountry().getAcronym());
@@ -130,6 +166,7 @@ public class UserAccountBean implements Serializable {
         }
         else {
             this.userAccount = new UserAccount();
+//            this.authentication = new Authentication();
         }
     }
 
@@ -142,12 +179,12 @@ public class UserAccountBean implements Serializable {
             context.validationFailed();
         }
 
-        if(userAccountBsn.existingAccount(userAccount)) {
+        if(userAccountBsn.existingAccount(this.userAccount.getEmail())) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorMessageExistingAccount"),""));
             context.validationFailed();
         }
 
-        if(!userAccount.isPasswordConfirmed()) {
+        if(!isPasswordConfirmed()) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorMessagePasswordNotConfirmed"),""));
             context.validationFailed();
         }
@@ -176,9 +213,12 @@ public class UserAccountBean implements Serializable {
         
         City newCity = locationBean.getNotListedCity();
 
+        Authentication authentication = new Authentication();
         try {
-            userAccount.setUsername(userAccount.getEmail());
-            userAccountBsn.register(userAccount, newCity, serverAddress);
+            authentication.setUserAccount(this.userAccount);
+            authentication.setUsername(userAccount.getEmail());
+            authentication.setPassword(this.password);
+            userAccountBsn.register(userAccount, authentication, newCity, serverAddress);
         }
         catch(Exception e) {
             context.addMessage(userId, new FacesMessage(e.getCause().getMessage()));
@@ -191,6 +231,14 @@ public class UserAccountBean implements Serializable {
             context.addMessage(userId, new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getMessage("infoRegistrationConfirmationRequest"), ""));
         
         return "registration_confirmation";
+    }
+    
+    /**
+     * Compares the informed password with its respective confirmation.
+     * @return true if the password matches with its confirmation.
+     */
+    private boolean isPasswordConfirmed() {
+        return this.password.equals(passwordConfirmation);
     }
 
     public String savePersonalData() {

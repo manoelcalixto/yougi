@@ -250,7 +250,7 @@ public class EventBean {
         return numberPeopleAttended;
     }
     
-    public PieChartModel getPieChartModel() {
+    public PieChartModel getAttendanceRateChartModel() {
         pieChartModel = new PieChartModel();
         pieChartModel.set("Registered", numberPeopleAttending);
         pieChartModel.set("Attended", numberPeopleAttended);
@@ -396,6 +396,7 @@ public class EventBean {
             eventAttendeeCertificate.setCertificateTemplate(writer, certificateTemplatePath.toString());
             
             this.attendee.generateCertificateData();
+            this.attendeeBsn.save(this.attendee);
             eventAttendeeCertificate.generateCertificate(this.attendee);
 
             document.close();

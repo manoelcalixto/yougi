@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.cejug.business.ApplicationPropertyBsn;
 import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.ApplicationProperty;
+import org.cejug.entity.Authentication;
 import org.cejug.entity.Properties;
 import org.cejug.entity.UserAccount;
 
@@ -111,13 +112,17 @@ public class ChangePasswordBean {
     public void load() {
         if(confirmationCode != null && !confirmationCode.isEmpty()) {
             UserAccount userAccount = userAccountBsn.findUserAccountByConfirmationCode(confirmationCode);
+            Authentication authentication = userAccountBsn.findAuthenticationUser(userAccount);
             if(userAccount != null)
-                this.username = userAccount.getUsername();
+                this.username = authentication.getUsername();
             else
                 invalid = true;
         }
     }
 
+    /**
+     * @return returns the next step in the navigation flow.
+     */
     public String requestPasswordChange() {
         try {
             ApplicationProperty url = applicationPropertyBsn.findApplicationProperty(Properties.URL);
@@ -130,27 +135,42 @@ public class ChangePasswordBean {
         }
         return "change_password";
     }
+    
+    /**
+     * Compares the informed password with its respective confirmation.
+     * @return true if the password matches with its confirmation.
+     */
+    private boolean isPasswordConfirmed() {
+        return password.equals(confirmPassword);
+    }
 
+    /**
+     * It changes the password in case the user has forgotten it. It checks whether
+     * the confirmation code sent to the user's email is valid before proceeding
+     * with the password change.
+     * @return returns the next step in the navigation flow.
+     */
     public String changeForgottenPassword() {
         UserAccount userAccount = userAccountBsn.findUserAccountByConfirmationCode(confirmationCode);
-
+        
         if(userAccount == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The confirmation code does not match."));
             return "change_password";
         }
-        
-        userAccount.setPassword(password);
-        userAccount.setConfirmPassword(confirmPassword);
-
-        if(!userAccount.isPasswordConfirmed()) {
+                
+        if(!isPasswordConfirmed()) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The password confirmation does not match."));
             return "change_password";
         }
 
-        userAccountBsn.changePassword(userAccount);
+        userAccountBsn.changePassword(userAccount, this.password);
         return "login?faces-redirect=true";
     }
 
+    /**
+     * It changes the password in case the user still knows his(er) own password.
+     * @return returns the next step in the navigation flow.
+     */
     public String changePassword() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         username = request.getRemoteUser();
@@ -160,15 +180,13 @@ public class ChangePasswordBean {
             return "change_password";
         }
 
-        userAccount.setPassword(password);
-        userAccount.setConfirmPassword(confirmPassword);
-
-        if(!userAccount.isPasswordConfirmed()) {
+        // If password doesn't match its confirmation.
+        if(!isPasswordConfirmed()) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The password confirmation does not match."));
             return "change_password";
         }
 
-        userAccountBsn.changePassword(userAccount);
+        userAccountBsn.changePassword(userAccount, this.password);
         return "profile?faces-redirect=true";
     }
 }

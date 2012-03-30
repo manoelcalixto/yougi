@@ -26,7 +26,7 @@
                             <h:outputLink value="mailto:#{memberBean.userAccount.email}">
                                 <f:verbatim>#{memberBean.userAccount.email}</f:verbatim>
                             </h:outputLink>
-                            <h:outputText value="#{memberBean.userAccount.username}"/>
+                            <h:outputText value="#{memberBean.authentication.username}"/>
 
                             <h:outputLabel for="gender" value="#{bundle.gender} *" styleClass="fieldLabel"/>
                             <h:outputLabel for="birthDate" value="#{bundle.birthDate}" styleClass="fieldLabel"/>
@@ -197,8 +197,9 @@
                         <h:inputHidden id="idContact" value="#{memberBean.userAccount.id}"/>
                         <p></p>
                         <h:panelGrid columns="5">
-                            <h:commandButton value="#{bundle.save}" action="#{memberBean.save}"/>
-                            <h:commandButton rendered="#{!memberBean.userAccount.confirmed}" value="#{bundle.confirm}" action="#{memberBean.confirm}"/>
+                            <h:commandButton value="#{bundle.save}" rendered="#{!memberBean.userAccount.deactivated}" action="#{memberBean.save}"/>
+                            <h:commandButton value="#{bundle.remove}" rendered="#{memberBean.userAccount.deactivated}" action="#{memberBean.removeUserAccount}"/>
+                            <h:commandButton rendered="#{!memberBean.userAccount.confirmed and !memberBean.userAccount.deactivated}" value="#{bundle.confirm}" action="#{memberBean.confirm}"/>
                             <h:commandButton rendered="#{!memberBean.userAccount.verified and memberBean.userAccount.confirmed}" value="#{bundle.verified}" action="#{memberBean.checkUserAsVerified}"/>
                             <h:button rendered="#{!memberBean.userAccount.deactivated}" value="#{bundle.deactivateMembership}" outcome="user_deactivation"/>
                             <h:button outcome="users" value="#{bundle.cancel}"/>

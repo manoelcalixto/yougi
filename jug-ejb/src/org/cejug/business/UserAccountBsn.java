@@ -20,9 +20,6 @@
  * */
 package org.cejug.business;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -37,7 +34,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import org.cejug.entity.*;
-import org.cejug.util.Base64Encoder;
+import org.cejug.exception.BusinessLogicException;
 import org.cejug.util.EntitySupport;
 
 /**
@@ -67,9 +64,16 @@ public class UserAccountBsn {
 
     static final Logger logger = Logger.getLogger("org.cejug.business.UserAccountBsn");
 
-    /** This method checks whether an user account exists in the database. */
-    public boolean existingAccount(UserAccount userAccount) {
-        UserAccount existing = findUserAccountByUsername(userAccount.getUsername());
+    /**
+     * Checks whether an user account exists in the database.
+     * @param username the username that unically identify users.
+     * @return true if the account already exists.
+     */
+    public boolean existingAccount(String username) {
+        if(username == null || username.isEmpty())
+            throw new BusinessLogicException("It is not possible to check if the account exists because the username was not informed.");
+        
+        UserAccount existing = findUserAccountByUsername(username);
         return existing != null;
     }
 
@@ -91,7 +95,7 @@ public class UserAccountBsn {
 
     public UserAccount findUserAccountByUsername(String username) {
         try {
-            return (UserAccount) em.createQuery("select ua from UserAccount ua where ua.username = :username")
+            return (UserAccount) em.createQuery("select a.userAccount from Authentication a where a.username = :username")
                                    .setParameter("username", username)
                                    .getSingleResult();
         }
@@ -176,6 +180,36 @@ public class UserAccountBsn {
                 .setParameter("city", city)
                 .getResultList();
     }
+    
+    /**
+     * @param userAccount the user who has authentication credentials registered.
+     * @return the user's authentication data.
+     */
+    public Authentication findAuthenticationUser(UserAccount userAccount) {
+        try {
+            return (Authentication) em.createQuery("select a from Authentication a where a.userAccount = :userAccount")
+                                   .setParameter("userAccount", userAccount)
+                                   .getSingleResult();
+        }
+        catch(NoResultException nre) {
+            return null;
+        }
+    }
+    
+    /**
+     * @param userAccount the id of the user who has authentication credentials registered.
+     * @return the user's authentication data.
+     */
+    public Authentication findAuthenticationUser(String userAccount) {
+        try {
+            return (Authentication) em.createQuery("select a from Authentication a where a.userAccount.id = :userAccount")
+                                   .setParameter("userAccount", userAccount)
+                                   .getSingleResult();
+        }
+        catch(NoResultException nre) {
+            return null;
+        }
+    }
 
     /** <p>Register new user accounts. For the moment, this is the only way an
      * user account can be created. In the moment of the registration, data,
@@ -187,7 +221,7 @@ public class UserAccountBsn {
      * container.</p>
      * <p>When there is no user, the first registration creates a super user
      * with administrative rights.</p> */
-    public void register(UserAccount userAccount, City newCity, String serverAddress) {
+    public void register(UserAccount userAccount, Authentication authentication, City newCity, String serverAddress) {
         boolean noAccount = noAccount();
 
         if(newCity != null) {
@@ -199,14 +233,14 @@ public class UserAccountBsn {
 
         userAccount.setConfirmationCode(generateConfirmationCode());
         userAccount.setRegistrationDate(Calendar.getInstance().getTime());
-        userAccount.setPassword(encryptPassword(userAccount.getPassword()));
         userAccount.setId(EntitySupport.generateEntityId());
         em.persist(userAccount);
+        em.persist(authentication);
 
         if(noAccount) {
             userAccount.setConfirmationCode(null);            
             AccessGroup adminGroup = accessGroupBsn.findAdministrativeGroup();
-            UserGroup userGroup = new UserGroup(adminGroup, userAccount);
+            UserGroup userGroup = new UserGroup(adminGroup, authentication);
             userGroupBsn.add(userGroup);
         }
         else {
@@ -224,7 +258,7 @@ public class UserAccountBsn {
      * */
     public void confirmUser(String confirmationCode) {
     	if(confirmationCode == null || confirmationCode.isEmpty())
-    		return;
+            return;
     	
         try {
             UserAccount userAccount = (UserAccount)em.createQuery("select ua from UserAccount ua where ua.confirmationCode = :code")
@@ -234,20 +268,20 @@ public class UserAccountBsn {
             	userAccount.setConfirmationCode(null);
             	userAccount.setRegistrationDate(Calendar.getInstance().getTime());
             
-	            // This step effectively allows the user to access the application.
-	            AccessGroup defaultGroup = accessGroupBsn.findUserDefaultGroup();
-	            
-	            UserGroup userGroup = new UserGroup(defaultGroup, userAccount);
-	            userGroupBsn.add(userGroup);
-	
-	            ApplicationProperty appProp = applicationPropertyBsn.findApplicationProperty(Properties.SEND_EMAILS);
-	            if(appProp.sendEmailsEnabled()) {
-	                messengerBsn.sendWelcomeMessage(userAccount);
-	
-	                AccessGroup administrativeGroup = accessGroupBsn.findAdministrativeGroup();
-	                List<UserAccount> leaders = userGroupBsn.findUsersGroup(administrativeGroup);
-	                messengerBsn.sendNewMemberAlertMessage(userAccount, leaders);
-	            }
+                // This step effectively allows the user to access the application.
+                AccessGroup defaultGroup = accessGroupBsn.findUserDefaultGroup();
+                Authentication authentication = findAuthenticationUser(userAccount);
+                UserGroup userGroup = new UserGroup(defaultGroup, authentication);
+                userGroupBsn.add(userGroup);
+
+                ApplicationProperty appProp = applicationPropertyBsn.findApplicationProperty(Properties.SEND_EMAILS);
+                if(appProp.sendEmailsEnabled()) {
+                    messengerBsn.sendWelcomeMessage(userAccount);
+
+                    AccessGroup administrativeGroup = accessGroupBsn.findAdministrativeGroup();
+                    List<UserAccount> leaders = userGroupBsn.findUsersGroup(administrativeGroup);
+                    messengerBsn.sendNewMemberAlertMessage(userAccount, leaders);
+                }
             }
         }
         catch(NoResultException nre) {
@@ -305,25 +339,6 @@ public class UserAccountBsn {
             messengerBsn.sendDeactivationAlertMessage(existingUserAccount, leaders);
     }
 
-    private String encryptPassword(String string) {
-        MessageDigest md = null;
-        byte stringBytes[] = null;
-        try {
-            md = MessageDigest.getInstance("MD5");
-            stringBytes = string.getBytes("UTF8");
-        }
-        catch(NoSuchAlgorithmException nsae) {
-            throw new SecurityException("The Requested encoding algorithm was not found in this execution platform.", nsae);
-        }
-        catch(UnsupportedEncodingException uee) {
-            throw new SecurityException("UTF8 is not supported in this execution platform.", uee);
-        }
-         
-        byte stringCriptBytes[] = md.digest(stringBytes);
-        char[] encoded = Base64Encoder.encode(stringCriptBytes);
-        return String.valueOf(encoded);
-    }
-
     private String generateConfirmationCode() {
         UUID uuid = UUID.randomUUID();
         return uuid.toString().replaceAll("-", "");
@@ -343,17 +358,47 @@ public class UserAccountBsn {
             throw new PersistenceException("Usuário inexistente:"+ username);
     }
 
+    /**
+     * Compares the informed password with the one stored in the database.
+     * @param userAccount the user account that has authentication credentials.
+     * @param passwordToCheck the password to be compared with the one in the database.
+     * @return true if the password matches.
+     */
     public Boolean passwordMatches(UserAccount userAccount, String passwordToCheck) {
-        if(userAccount.getPassword().equals(encryptPassword(passwordToCheck)))
-            return Boolean.TRUE;
-        else
+        try {
+            Authentication authentication = (Authentication) em.createQuery("select a from Authentication a where a.userAccount = :userAccount and a.password = :password")
+                                            .setParameter("userAccount", userAccount)
+                                            .setParameter("password", (new Authentication()).hashPassword(passwordToCheck))
+                                            .getSingleResult();
+            if(authentication != null)
+                return Boolean.TRUE;
+        }
+        catch(NoResultException nre) {
             return Boolean.FALSE;
+        }
+        
+        return Boolean.FALSE;
     }
 
-    public void changePassword(UserAccount userAccount) {
-        userAccount.setPassword(encryptPassword(userAccount.getPassword()));
-        userAccount.setConfirmationCode(null);
-        save(userAccount);
+    /**
+     * @param userAccount account of the user who wants to change his password.
+     * @param newPassword the new password of the user.
+     */
+    public void changePassword(UserAccount userAccount, String newPassword) {
+        try {
+            // Retrieve the user authentication where the password is saved.
+            Authentication authentication = (Authentication) em.createQuery("select a from Authentication a where a.userAccount = :userAccount")
+                                            .setParameter("userAccount", userAccount)
+                                            .getSingleResult();
+            if(authentication != null) {
+                authentication.setPassword(newPassword);
+                userAccount.setConfirmationCode(null);
+                save(userAccount);
+            }
+        }
+        catch(NoResultException nre) {
+            throw new BusinessLogicException("User account not found. It is not possible to change the password.");
+        }
     }
 
     @Schedules({ @Schedule(hour="*/12") })

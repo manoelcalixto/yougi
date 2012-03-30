@@ -101,7 +101,9 @@ At the same time, all data input by the ancient member in the database will not 
 \chapter{Event Management}
 \label{chp:event-management}
 
-Events are strategic for user groups. They disseminate knowledge and promote networking, strengthening the links between members. It is important to have an efficient event management in order to keep everything under control, measure member's participation and get their feedback.
+Events are strategic for user groups and for companies that want to promote the use of their technology or attract talent people to compose their dream team. The occasion is appropriate to disseminate knowledge and promote networking, strengthening the links between people and increasing the likelihood of new opportunities. Nowadays, there are several ways to build a network virtually, but the body language still is the most efficient way to know people's behaviour, reliability and friendliness. Those good experiences Good ex
+
+It is important to have an efficient event management in order to keep everything under control, measure member's participation and get their feedback.
 
 \section{Event Registration}
 
@@ -137,7 +139,7 @@ When the event has passed, no information about the event can be changed anymore
 
 \subsection{Offers of Products and Services}
 
-\subsection{Knowledge Exchange}
+\subsection{Search for Talent People}
 
 \chapter{Knowledge Management}
 
@@ -146,6 +148,120 @@ When the event has passed, no information about the event can be changed anymore
 \section{Mailing Lists Management}
 
 \part{Development Guide}
+
+\chapter{Architecture}
+
+UGM should be deployed in an Application Server (AS). This platform is responsible for the system execution, the connectivity to several resources available in the environment and the availability for several users and systems. For the moment, Glassfish 3.0.1 is the standard AS for this application. This JEE Server has gained lots of attention for constantly run towards the state-of-the-art of the Java server side technology. It has an aggressive roadmap, being always the first product on the market to fully implement the last version of the JEE specification.
+
+One of the main advantages of using an application server like Glassfish is to keep the application free of complex code, such as a) manual control of database transactions; b) database access configuration; c) security authentication and authorization; e) sending and receiving e-mail messages, among many other complexities that are non-functional requirements, consuming the time we would be spending on functional requirements.
+
+No test was performed in other AS up to now, mainly because when the project started Glassfish was the only AS implementing the JEE 6 specification (JPA2, EJB 3.1, JSF 2.0, etc.). The AS should have access and provide the following resources:
+
+\begin{itemize}
+\item \textit{Security Realm}: is a provider of authentication and authorization data to identify users who want to access the application and verify whether they have rights to access protected resources.  The application's database, besides storing UG's data, also stores users and their roles, which makes it the realm provider, referenced by Glassfish in the realm configuration.
+
+\item \textit{Database Server}: a database driver allows connections to a relational database and a connection pool manages several simultaneous connections to this database, allowing scalability and performance. MySQL is the database system chosen to organize and protect UG's data.
+
+\item \textit{Email Server}: A JavaMail service connects to an email server and provide sessions to the application, allowing it to send and receive email messages without any special configuration on the implementation side.
+
+\item \textit{File System}: the application should be able to save and access files in a specific directory of the file system. Unfortunately, the AS does not manage access to the file system. The application is responsible for managing all uploaded files.
+\end{itemize}
+
+The resources provided by the application server help to simplify the overall application architecture. The connectivity with those resources characterizes a n-tier architecture, where each tier is physically separated. The application architecture, in turn, is divided in four layers, as depicted in Figure 1. These layers provide a model to create a flexible and reusable implementation. This way, new features can be efficiently accommodated, with a minimal impact on existing code.
+
+The 4 logical layers are:
+
+\begin{itemize}
+\item \textit{View}: implements the user interface by defining the layout of the screens, position UI components, performing data validation (e.g. invalid date format), formatting data to be presented, internationalizing and localizing text, and giving feedback about the user interaction.
+
+\item \textit{Controller}: controls the navigation flow according to the user interaction and intermediates data from the view to the business and vice-versa. It performs business validation (e.g. user already exists), data conversion from user friendly to business model-compliant and vice-versa, accesses business services, creates model objects that do not exist yet and manipulates existing ones. According to the state of the IS, the controller knows which flow should be followed and what to do in case of exceptions and security constraints.
+
+\item \textit{Business}: due to its objectivity, the business layer is not subdivided. It is considered as concrete and it will perform transactional business operations over the data model. Every business operation should guarantee that the data model is consistent before and after its execution. Therefore, the data model can only be access through this layer.
+
+\item \textit{Persistence}: maps data model entities with database tables to manage the lifecycle of entity objects. These objects can be created (insert), updated (update), queried (select) and deleted (delete). These operations are widely used by the data access object layer in order to interact with the database. The persistence layer can manage one or more data sources, but a data source is managed by one and only one data source.
+\end{itemize}
+
+\section{Chosen Technologies}
+
+Table \ref{tab:chosen-technologies} lists the technologies adopted by the development team to implement the application.
+
+\begin{table}
+\centering
+\caption{Chosen technologies to implement logical layers}
+\label{tab:chosen-technologies}
+\begin{tabular}{lll}
+\hline\noalign{\smallskip}
+Logical Layer & Technology & Version \\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+View & JSF Facelets & 2.0 \\
+ & Primefaces UI Library & 2.1.1 \\
+\noalign{\smallskip}
+Controller & Primefaces & 2.1.1 \\
+ & JSF Managed Beans & 2.0 \\
+\noalign{\smallskip}
+Business & EJB Session Beans & 3.1 \\
+ & EJB Timer & 3.1 \\
+\noalign{\smallskip}
+Persistence & JPA & 2.0 \\
+ & EclipseLink & 2.0 \\
+ & JTA & 1.2 \\
+\noalign{\smallskip}\hline
+\end{tabular}
+\end{table}
+
+These technologies were selected based on the current needs, resources and knowledge of the development team. We decided to adopt a minimalist approach where most libs needed by the application are also distributed with the AS, such as Eclipse Link and Mojarra, and most configurations are made through the administrative console, such as database connection pool, JavaMail session and Security Realm. For the moment, the only external lib is the Primefaces component library. We make extensive use of annotations and avoid as much as we can XML for configuration purpose. Transactions are fully managed by the container. This way, we keep focused on the source code of the UG community model. Eventually, other technologies out of this table may be adopted if well justified. Therefore, a new technology would be considered in case a very special UG's need must be fulfilled.
+
+Going into details about the chosen technologies, we describe each one of them, completing the description of Figure 1:
+
+\begin{itemize}
+\item \textbf{JSF 2.0}: The Java Server Faces technology is the standard technology for developing web-based applications in the JEE platform.
+   \begin{itemize}
+   \item \textit{Primefaces}: extensive library of UI Widgets 
+   available for the JSF technology.
+   \item \textit{Converters}: converts data from user friendly to
+   business model-compliant and vice-versa.
+   \item \textit{ManagedBeans}: POJO annotated classes that have
+   access to special resources available on the
+   application context.
+   \item \textit{Validators}: performs server-side validation of
+   data informed by the user before going forward in the
+   controller processing.
+   \end{itemize}
+\item \textbf{JNDI}: the Java Naming and Directory Service helps to localize and retrieve instances of resources available in the context of the server, reusing existing instances and avoiding the complexity behind creating those instances.
+\item \textbf{EJB 3.1}: transactional, distributed and secure component model to encapsulate reusable business logic.
+   \begin{itemize}
+   \item \textit{Stateless Session Beans}: EJB that does not store
+   the state of components in memory, optimizing memory
+   allocation and scalability across multiple servers.
+   \item \textit{Timer}: EJB capable of scheduling itself to
+   execute business logic in a certain time or in a
+   certain frequency of time. The schedule of routines is
+   very appropriate to perform automatic maintenance
+   tasks such as cleaning temporary data, generating
+   complex reports, sending alert messages, etc. Timers
+   are also useful to efficiently use computational
+   resources when systems are in idle mode.
+   \item \textit{ManagedBeans}: POJO annotated classes that have
+   access to  special resources available on the enterprise
+   context.
+   \end{itemize}
+\item \textbf{JPA 2.0}: Java Persistence API is an entity-relational mapping specification that manages the lifecycle of objects persisted in the database. It reduces the degree of database dependency, the complexity of the source code and the maintenance cost in case of changes in the relational model.
+   \begin{itemize}
+   \item \textit{Entity Model}: POJO annotated classes mapped to
+   database tables where their instances represent table records
+   for the business logic.
+   \item \textit{JTA}: The Java Transaction API.
+   \end{itemize}
+\end{itemize}
+
+\section{Database Model}
+
+\begin{figure}
+\centering
+\includegraphics[height=10cm, angle=90]{figures/relational-model}
+\caption{Please write your figure caption here}
+\label{fig:1}
+\end{figure}
 
 \chapter{Installation}
 
@@ -334,110 +450,14 @@ Before using the application, the database should be initialized with some initi
 \item definition of application properties: at last, but not least, the administrator should review and modify, if needed, the default value of application properties. This properties are initialized in a way that allows the application run normally. However, some properties are missing by default and others might be different from what is expected.
 \end{enumerate}
 
-\chapter{Architecture}
+\section{Application Update}
 
-UGM should be deployed in an Application Server (AS). This platform is responsible for the system execution, the connectivity to several resources available in the environment and the availability for several users and systems. For the moment, Glassfish 3.0.1 is the standard AS for this application. This JEE Server has gained lots of attention for constantly run towards the state-of-the-art of the Java server side technology. It has an aggressive roadmap, being always the first product on the market to fully implement the last version of the JEE specification.
-
-One of the main advantages of using an application server like Glassfish is to keep the application free of complex code, such as a) manual control of database transactions; b) database access configuration; c) security authentication and authorization; e) sending and receiving e-mail messages, among many other complexities that are non-functional requirements, consuming the time we would be spending on functional requirements.
-
-No test was performed in other AS up to now, mainly because when the project started Glassfish was the only AS implementing the JEE 6 specification (JPA2, EJB 3.1, JSF 2.0, etc.). The AS should have access and provide the following resources:
-
-\begin{itemize}
-\item \textit{Security Realm}: is a provider of authentication and authorization data to identify users who want to access the application and verify whether they have rights to access protected resources.  The application's database, besides storing UG's data, also stores users and their roles, which makes it the realm provider, referenced by Glassfish in the realm configuration.
-
-\item \textit{Database Server}: a database driver allows connections to a relational database and a connection pool manages several simultaneous connections to this database, allowing scalability and performance. MySQL is the database system chosen to organize and protect UG's data.
-
-\item \textit{Email Server}: A JavaMail service connects to an email server and provide sessions to the application, allowing it to send and receive email messages without any special configuration on the implementation side.
-
-\item \textit{File System}: the application should be able to save and access files in a specific directory of the file system. Unfortunately, the AS does not manage access to the file system. The application is responsible for managing all uploaded files.
-\end{itemize}
-
-The resources provided by the application server help to simplify the overall application architecture. The connectivity with those resources characterizes a n-tier architecture, where each tier is physically separated. The application architecture, in turn, is divided in four layers, as depicted in Figure 1. These layers provide a model to create a flexible and reusable implementation. This way, new features can be efficiently accommodated, with a minimal impact on existing code.
-
-The 4 logical layers are:
-
-\begin{itemize}
-\item \textit{View}: implements the user interface by defining the layout of the screens, position UI components, performing data validation (e.g. invalid date format), formatting data to be presented, internationalizing and localizing text, and giving feedback about the user interaction.
-
-\item \textit{Controller}: controls the navigation flow according to the user interaction and intermediates data from the view to the business and vice-versa. It performs business validation (e.g. user already exists), data conversion from user friendly to business model-compliant and vice-versa, accesses business services, creates model objects that do not exist yet and manipulates existing ones. According to the state of the IS, the controller knows which flow should be followed and what to do in case of exceptions and security constraints.
-
-\item \textit{Business}: due to its objectivity, the business layer is not subdivided. It is considered as concrete and it will perform transactional business operations over the data model. Every business operation should guarantee that the data model is consistent before and after its execution. Therefore, the data model can only be access through this layer.
-
-\item \textit{Persistence}: maps data model entities with database tables to manage the lifecycle of entity objects. These objects can be created (insert), updated (update), queried (select) and deleted (delete). These operations are widely used by the data access object layer in order to interact with the database. The persistence layer can manage one or more data sources, but a data source is managed by one and only one data source.
-\end{itemize}
-
-\section{Chosen Technologies}
-
-Table \ref{tab:chosen-technologies} lists the technologies adopted by the development team to implement the application.
-
-\begin{table}
+\begin{figure}
 \centering
-\caption{Chosen technologies to implement logical layers}
-\label{tab:chosen-technologies}
-\begin{tabular}{lll}
-\hline\noalign{\smallskip}
-Logical Layer & Technology & Version \\
-\noalign{\smallskip}\hline\noalign{\smallskip}
-View & JSF Facelets & 2.0 \\
- & Primefaces UI Library & 2.1.1 \\
-\noalign{\smallskip}
-Controller & Primefaces & 2.1.1 \\
- & JSF Managed Beans & 2.0 \\
-\noalign{\smallskip}
-Business & EJB Session Beans & 3.1 \\
- & EJB Timer & 3.1 \\
-\noalign{\smallskip}
-Persistence & JPA & 2.0 \\
- & EclipseLink & 2.0 \\
- & JTA & 1.2 \\
-\noalign{\smallskip}\hline
-\end{tabular}
-\end{table}
-
-These technologies were selected based on the current needs, resources and knowledge of the development team. We decided to adopt a minimalist approach where most libs needed by the application are also distributed with the AS, such as Eclipse Link and Mojarra, and most configurations are made through the administrative console, such as database connection pool, JavaMail session and Security Realm. For the moment, the only external lib is the Primefaces component library. We make extensive use of annotations and avoid as much as we can XML for configuration purpose. Transactions are fully managed by the container. This way, we keep focused on the source code of the UG community model. Eventually, other technologies out of this table may be adopted if well justified. Therefore, a new technology would be considered in case a very special UG's need must be fulfilled.
-
-Going into details about the chosen technologies, we describe each one of them, completing the description of Figure 1:
-
-\begin{itemize}
-\item \textbf{JSF 2.0}: The Java Server Faces technology is the standard technology for developing web-based applications in the JEE platform.
-   \begin{itemize}
-   \item \textit{Primefaces}: extensive library of UI Widgets 
-   available for the JSF technology.
-   \item \textit{Converters}: converts data from user friendly to
-   business model-compliant and vice-versa.
-   \item \textit{ManagedBeans}: POJO annotated classes that have
-   access to special resources available on the
-   application context.
-   \item \textit{Validators}: performs server-side validation of
-   data informed by the user before going forward in the
-   controller processing.
-   \end{itemize}
-\item \textbf{JNDI}: the Java Naming and Directory Service helps to localize and retrieve instances of resources available in the context of the server, reusing existing instances and avoiding the complexity behind creating those instances.
-\item \textbf{EJB 3.1}: transactional, distributed and secure component model to encapsulate reusable business logic.
-   \begin{itemize}
-   \item \textit{Stateless Session Beans}: EJB that does not store
-   the state of components in memory, optimizing memory
-   allocation and scalability across multiple servers.
-   \item \textit{Timer}: EJB capable of scheduling itself to
-   execute business logic in a certain time or in a
-   certain frequency of time. The schedule of routines is
-   very appropriate to perform automatic maintenance
-   tasks such as cleaning temporary data, generating
-   complex reports, sending alert messages, etc. Timers
-   are also useful to efficiently use computational
-   resources when systems are in idle mode.
-   \item \textit{ManagedBeans}: POJO annotated classes that have
-   access to  special resources available on the enterprise
-   context.
-   \end{itemize}
-\item \textbf{JPA 2.0}: Java Persistence API is an entity-relational mapping specification that manages the lifecycle of objects persisted in the database. It reduces the degree of database dependency, the complexity of the source code and the maintenance cost in case of changes in the relational model.
-   \begin{itemize}
-   \item \textit{Entity Model}: POJO annotated classes mapped to
-   database tables where their instances represent table records
-   for the business logic.
-   \item \textit{JTA}: The Java Transaction API.
-   \end{itemize}
-\end{itemize}
+\includegraphics[width=15cm]{figures/software-release-process}
+\caption{Release process}
+\label{fig:1}
+\end{figure}
 
 \chapter{Development}
 
@@ -488,14 +508,6 @@ To push local commit to the server, use:
 \begin{verbatim}
 #git push origin master
 \end{verbatim}
-
-<<<<<<< HEAD
-\begin{figure}
-\centering
-\includegraphics[height=10cm, angle=90]{figures/relational-model}
-\caption{Please write your figure caption here}
-\label{fig:1}
-\end{figure}
 
 \backmatter
 

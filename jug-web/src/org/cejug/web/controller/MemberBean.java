@@ -34,6 +34,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import org.cejug.business.UserAccountBsn;
+import org.cejug.entity.Authentication;
 import org.cejug.entity.UserAccount;
 import org.cejug.event.business.AttendeeBsn;
 import org.cejug.event.entity.Event;
@@ -75,6 +76,8 @@ public class MemberBean implements Serializable {
     private String userId;
 
     private UserAccount userAccount;
+    
+    private Authentication authentication;
 
     private String emailCriteria;
 
@@ -99,6 +102,20 @@ public class MemberBean implements Serializable {
 
     public void setUserAccount(UserAccount userAccount) {
         this.userAccount = userAccount;
+    }
+    
+    /**
+     * @return the user credentials
+     */
+    public Authentication getAuthentication() {
+        return authentication;
+    }
+
+    /**
+     * @param authentication the user credentials to set
+     */
+    public void setAuthentication(Authentication authentication) {
+        this.authentication = authentication;
     }
 
     public LocationBean getLocationBean() {
@@ -203,6 +220,7 @@ public class MemberBean implements Serializable {
     public String load(String userId) {
         this.userId = userId;
         this.userAccount = userAccountBsn.findUserAccount(this.userId);
+        this.authentication = userAccountBsn.findAuthenticationUser(this.userAccount);
         this.mailingLists = mailingListBsn.findMailingLists();
         this.attendedEvents = attendeeBsn.findAttendeedEvents(this.userAccount);
 
@@ -237,6 +255,9 @@ public class MemberBean implements Serializable {
         return "users?faces-redirect=true";
     }
 
+    /**
+     * @param verified if true, the user account if saved with the status of verified.
+     */
     private void save(Boolean verified) {
         UserAccount existingUserAccount = userAccountBsn.findUserAccount(userAccount.getId());
 
@@ -287,6 +308,16 @@ public class MemberBean implements Serializable {
 
     public String checkUserAsVerified() {
         save(Boolean.TRUE);
+        removeSessionScoped();
+        return "users?faces-redirect=true";
+    }
+    
+    /**
+     * Remove the current user permanently and navigate to the users view.
+     * @return the next step in the navigation logic.
+     */
+    public String removeUserAccount() {
+        userAccountBsn.remove(this.userAccount.getId());
         removeSessionScoped();
         return "users?faces-redirect=true";
     }
