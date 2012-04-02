@@ -99,7 +99,7 @@ public class LocationBean {
         return this.cities;
     }
 
-    public List<String> getCitiesStartingWith(String initials) {
+    public List<String> findCitiesStartingWith(String initials) {
         List<City> cits = locationBsn.findCitiesStartingWith(initials);
         List<String> citiesStartingWith = new ArrayList<String>();
         for (City city : cits) {
@@ -112,6 +112,10 @@ public class LocationBean {
         return cityNotListed;
     }
 
+    /**
+     * @return an instance of City not registered yet, according to the
+     * parameters informed by the user.
+     */
     public City getNotListedCity() {
         City newCity = null;
         if (this.cityNotListed != null && !this.cityNotListed.isEmpty()) {

@@ -86,7 +86,7 @@
 		                                <f:selectItems value="#{locationBean.cities}" var="city" itemLabel="#{city.name}" itemValue="#{city.id}"/>
 		                            </h:selectOneMenu>
                                     <h:outputText value="#{bundle.oor}"/>
-                                    <p:autoComplete id="cityNotListed" value="#{locationBean.cityNotListed}" completeMethod="#{locationBean.getCitiesStartingWith()}"/>
+                                    <p:autoComplete id="cityNotListed" value="#{locationBean.cityNotListed}" completeMethod="#{locationBean.findCitiesStartingWith}"/>
                                 </h:panelGrid>
                                 <h:inputText id="postalCode" label="#{bundle.postalCode}" size="10" maxlength="10" value="#{userAccountBean.userAccount.postalCode}"/>
                             </c:if>

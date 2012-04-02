@@ -58,7 +58,6 @@ public class UserAccountBean implements Serializable {
 
     private String userId;
     private UserAccount userAccount;
-    //private Authentication authentication;
 
     private String password;
     private String passwordConfirmation;
@@ -81,14 +80,6 @@ public class UserAccountBean implements Serializable {
     public void setUserAccount(UserAccount userAccount) {
         this.userAccount = userAccount;
     }
-//    
-//    public Authentication getAuthentication() {
-//        return this.authentication;
-//    }
-//
-//    public void setAuthentication(Authentication authentication) {
-//        this.authentication = authentication;
-//    }
 
     /**
      * @return the password
@@ -147,7 +138,6 @@ public class UserAccountBean implements Serializable {
         String username = request.getRemoteUser();
         if(username != null) {
             this.userAccount = userAccountBsn.findUserAccountByUsername(username);
-//            this.authentication = userAccountBsn.findAuthenticationUser(this.userAccount);
                         	
             if(this.userAccount.getCountry() != null)
                 locationBean.setSelectedCountry(this.userAccount.getCountry().getAcronym());
@@ -166,7 +156,6 @@ public class UserAccountBean implements Serializable {
         }
         else {
             this.userAccount = new UserAccount();
-//            this.authentication = new Authentication();
         }
     }
 

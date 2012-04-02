@@ -28,7 +28,7 @@ package org.cejug.entity;
  */
 public enum DeactivationType {
 
-    ADMINISTRATIVE("administrative"), OWNWILL("ownwill");
+    ADMINISTRATIVE("administrative"), OWNWILL("ownwill"), UNREGISTERED("unregistered");
  
     private String name;
 

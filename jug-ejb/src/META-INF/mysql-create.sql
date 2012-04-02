@@ -82,8 +82,6 @@ alter table city add constraint fk_province_city foreign key (province) referenc
 create table user_account (
     id                  char(32)     not null,
     email               varchar(100) not null,
-    username            varchar(100) not null,
-    password            varchar(100) not null,
     first_name          varchar(50)  not null,
     last_name           varchar(50)  not null,
     gender              tinyint(1)   not null,
@@ -94,7 +92,7 @@ create table user_account (
     deactivated         tinyint(1)       null default false,
     deactivation_date   timestamp        null,
     deactivation_reason varchar(255)     null,
-    deactivation_type   tinyint(1)       null,  # 0 - administrative  1 - ownwill
+    deactivation_type   tinyint(1)       null,  # 0 - administrative  1 - ownwill  2 - unregistered
     website             varchar(100)     null,
     twitter             varchar(30)      null,
     country             char(3)          null,
@@ -119,6 +117,15 @@ create unique index idx_unique_username on user_account (username);
 alter table user_account add constraint fk_country_user foreign key (country) references country(acronym) on delete set null;
 alter table user_account add constraint fk_province_user foreign key (province) references province(id) on delete set null;
 alter table user_account add constraint fk_city_user foreign key (city) references city(id) on delete set null;
+
+create table authentication (
+    username            varchar(100) not null,
+    password            varchar(100) not null,
+    user_account        char(32)     not null
+) engine = innodb;
+
+alter table authentication add constraint pk_authentication primary key (username);
+alter table authentication add constraint fk_user_authentication foreign key (user_account) references user_account(id) on delete cascade;
 
 create table access_group (
     id           char(32)     not null,

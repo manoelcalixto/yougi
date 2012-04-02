@@ -19,12 +19,15 @@ alter table mailing_list_message add constraint pk_mailing_list_message primary 
 alter table mailing_list_message add constraint fk_mailing_list_message foreign key (mailing_list) references mailing_list(id) on delete cascade;
 alter table mailing_list_message add constraint fk_message_reply_to foreign key (reply_to) references mailing_list_message(id) on delete set null;
 
+insert into user_account (id, email, first_name, last_name, gender, deactivated, deactivation_type) 
+select id, email_address, '', '', 1, true, 2 from mailing_list_subscription where email_address not in (select email from user_account);
+
 ###############################################################################
 insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 
-   ('1.5',
+   ('1.7',
     '1.07',
-    '',
-    '');
+    'Separation of authentication data from the user_account table. The password is retrieved only for authentication purpose and when changing the password.',
+    'Implementation of the separation of authentication data from the UserAccount. Several small fixes in the application.');
 
 create table authentication (
     username            varchar(100) not null,

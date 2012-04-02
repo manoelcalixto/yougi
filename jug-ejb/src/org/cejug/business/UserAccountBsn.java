@@ -163,10 +163,14 @@ public class UserAccountBsn {
                  .getResultList();
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * @return the list of deactivated user accounts that were deactivated by
+     * their own will or administratively.
+     */
     public List<UserAccount> findDeactivatedUserAccounts() {
-        return em.createQuery("select ua from UserAccount ua where ua.deactivated = :deactivated order by ua.deactivationDate desc")
+        return em.createQuery("select ua from UserAccount ua where ua.deactivated = :deactivated and ua.deactivationType <> :type order by ua.deactivationDate desc")
                  .setParameter("deactivated", Boolean.TRUE)
+                 .setParameter("type", DeactivationType.UNREGISTERED)
                  .getResultList();
     }
 
@@ -224,11 +228,18 @@ public class UserAccountBsn {
     public void register(UserAccount userAccount, Authentication authentication, City newCity, String serverAddress) {
         boolean noAccount = noAccount();
 
+        // A potential new city was informed.
         if(newCity != null) {
-            newCity.setId(EntitySupport.generateEntityId());
-            newCity.setValid(false);
-            locationBsn.saveCity(newCity);
-            userAccount.setCity(newCity);
+            // Check if the informed city already exists.
+            City existingCity = locationBsn.findCityByName(newCity.getName());
+            
+            // If the city exists it simply set the property of the user account.
+            if(existingCity != null)
+                userAccount.setCity(existingCity);
+            else { // If the city does not exist it is created and used to set the property of the user account.
+                locationBsn.saveCity(newCity);
+                userAccount.setCity(newCity);
+            }
         }
 
         userAccount.setConfirmationCode(generateConfirmationCode());

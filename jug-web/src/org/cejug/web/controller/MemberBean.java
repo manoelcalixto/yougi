@@ -68,9 +68,11 @@ public class MemberBean implements Serializable {
     private LocationBean locationBean;
 
     private List<UserAccount> userAccounts;
+    
+    private List<UserAccount> deactivatedUsers;
 
     private List<MailingList> mailingLists;
-
+    
     private List<Event> attendedEvents;
 
     private String userId;
@@ -143,7 +145,8 @@ public class MemberBean implements Serializable {
     }
 
     public List<UserAccount> getDeactivatedUserAccounts() {
-        List<UserAccount> deactivatedUsers = userAccountBsn.findDeactivatedUserAccounts();
+        if(deactivatedUsers == null)
+            deactivatedUsers = userAccountBsn.findDeactivatedUserAccounts();
         return deactivatedUsers;
     }
 

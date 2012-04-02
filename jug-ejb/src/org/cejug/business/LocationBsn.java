@@ -131,7 +131,10 @@ public class LocationBsn {
         return em.createQuery("select c from City c where c.name like '"+ initials +"%' order by c.name").getResultList();
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * @param name The name of the city.
+     * @return An instance of city or null if there is not city with the given name.
+     */
     public City findCityByName(String name) {
         List<City> candidates = em.createQuery("select c from City c where c.name = :name")
                  .setParameter("name", name)
