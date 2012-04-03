@@ -273,7 +273,7 @@ public class UserAccountBean implements Serializable {
     }
 
     public String deactivateMembership() {
-        userAccountBsn.deactivateOwnMembership(userAccount);
+        userAccountBsn.deactivateMembership(userAccount, DeactivationType.OWNWILL);
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         try {

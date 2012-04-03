@@ -305,16 +305,19 @@ public class UserAccountBsn {
         em.merge(userAccount);
     }
 
-    public void deactivateMembership(UserAccount userAccount) {
+    public void deactivateMembership(UserAccount userAccount, DeactivationType deactivationType) {
         UserAccount existingUserAccount = findUserAccount(userAccount.getId());
 
         existingUserAccount.setDeactivated(Boolean.TRUE);
         existingUserAccount.setDeactivationDate(Calendar.getInstance().getTime());
         existingUserAccount.setDeactivationReason(userAccount.getDeactivationReason());
-        existingUserAccount.setDeactivationType(DeactivationType.ADMINISTRATIVE);
+        existingUserAccount.setDeactivationType(deactivationType);
 
         save(existingUserAccount);
-        userGroupBsn.removeUserFromAllGroups(userAccount);
+        
+        userGroupBsn.removeUserFromAllGroups(existingUserAccount);
+        
+        removeUserAuthentication(existingUserAccount);
 
         ApplicationProperty appProp = applicationPropertyBsn.findApplicationProperty(Properties.SEND_EMAILS);
 
@@ -327,27 +330,11 @@ public class UserAccountBsn {
         if(appProp.sendEmailsEnabled())
             messengerBsn.sendDeactivationAlertMessage(existingUserAccount, leaders);
     }
-
-    public void deactivateOwnMembership(UserAccount userAccount) {
-        UserAccount existingUserAccount = findUserAccount(userAccount.getId());
-
-        existingUserAccount.setDeactivated(Boolean.TRUE);
-        existingUserAccount.setDeactivationDate(Calendar.getInstance().getTime());
-        existingUserAccount.setDeactivationReason(userAccount.getDeactivationReason());
-        existingUserAccount.setDeactivationType(DeactivationType.OWNWILL);
-
-        ApplicationProperty appProp = applicationPropertyBsn.findApplicationProperty(Properties.SEND_EMAILS);
-
-        save(existingUserAccount);
-        userGroupBsn.removeUserFromAllGroups(userAccount);
-        if(!existingUserAccount.getDeactivationReason().trim().isEmpty() && appProp.sendEmailsEnabled()) {
-            messengerBsn.sendDeactivationReason(existingUserAccount);
-        }
-        AccessGroup administrativeGroup = accessGroupBsn.findAdministrativeGroup();
-        List<UserAccount> leaders = userGroupBsn.findUsersGroup(administrativeGroup);
-
-        if(appProp.sendEmailsEnabled())
-            messengerBsn.sendDeactivationAlertMessage(existingUserAccount, leaders);
+    
+    public void removeUserAuthentication(UserAccount userAccount) {
+        em.createQuery("delete from Authentication a where a.userAccount = :userAccount")
+                .setParameter("userAccount", userAccount)
+                .executeUpdate();
     }
 
     private String generateConfirmationCode() {

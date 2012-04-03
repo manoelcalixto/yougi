@@ -35,6 +35,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.Authentication;
+import org.cejug.entity.DeactivationType;
 import org.cejug.entity.UserAccount;
 import org.cejug.event.business.AttendeeBsn;
 import org.cejug.event.entity.Event;
@@ -294,7 +295,7 @@ public class MemberBean implements Serializable {
     }
 
     public String deactivateMembership() {
-        userAccountBsn.deactivateMembership(userAccount);
+        userAccountBsn.deactivateMembership(userAccount, DeactivationType.ADMINISTRATIVE);
         return "users?faces-redirect=true";
     }
 
