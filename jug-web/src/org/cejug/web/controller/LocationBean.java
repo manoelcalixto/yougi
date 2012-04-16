@@ -133,7 +133,7 @@ public class LocationBean {
 
     public Country getCountry() {
         if (this.selectedCountry != null) {
-            return new Country(this.selectedCountry);
+            return locationBsn.findCountry(this.selectedCountry);
         } else {
             return null;
         }
@@ -151,7 +151,7 @@ public class LocationBean {
 
     public Province getProvince() {
         if (this.selectedProvince != null && !this.selectedProvince.isEmpty()) {
-            return new Province(this.selectedProvince);
+            return locationBsn.findProvince(this.selectedProvince);
         } else {
             return null;
         }
@@ -168,7 +168,7 @@ public class LocationBean {
 
     public City getCity() {
         if (this.selectedCity != null && !this.selectedCity.isEmpty()) {
-            return new City(this.selectedCity);
+            return locationBsn.findCity(this.selectedCity);
         } else {
             return null;
         }

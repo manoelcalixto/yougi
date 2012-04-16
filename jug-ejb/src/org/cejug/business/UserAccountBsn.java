@@ -65,7 +65,7 @@ public class UserAccountBsn {
     static final Logger logger = Logger.getLogger("org.cejug.business.UserAccountBsn");
 
     /**
-     * Checks whether an user account exists in the database.
+     * Checks whether an user account exists.
      * @param username the username that unically identify users.
      * @return true if the account already exists.
      */
@@ -78,8 +78,7 @@ public class UserAccountBsn {
     }
 
     /**
-     * This method returns true if there is no account registered in the 
-     * database.
+     * @return true if there is no account registered in the database.
      * */
     public boolean noAccount() {
         Long totalUserAccounts = (Long)em.createQuery("select count(u) from UserAccount u").getSingleResult();
@@ -92,7 +91,12 @@ public class UserAccountBsn {
     public UserAccount findUserAccount(String id) {
         return em.find(UserAccount.class, id);
     }
-
+    
+    /**
+     * Check if the username has authentication data related to it. If there is
+     * no authentication data, then the user is considered as non-existing, even
+     * if an user account exists.
+     */
     public UserAccount findUserAccountByUsername(String username) {
         try {
             return (UserAccount) em.createQuery("select a.userAccount from Authentication a where a.username = :username")
@@ -173,6 +177,22 @@ public class UserAccountBsn {
                  .setParameter("type", DeactivationType.UNREGISTERED)
                  .getResultList();
     }
+    
+    /**
+     * Find a user account that was previously deactivated or not activated yet.
+     * @param email The email address of the user.
+     * @return the user account of an unregistered user.
+     */
+    public UserAccount findDeactivatedUserAccount(String email) {
+        try {
+            return (UserAccount) em.createQuery("select ua from UserAccount ua where ua.email = :email and ua.deactivationType is not null")
+                                   .setParameter("email", email)
+                                   .getSingleResult();
+        }
+        catch(NoResultException nre) {
+            return null;
+        }
+    }
 
     /** 
      * Returns all users related to the informed city, independent of their 
@@ -225,29 +245,110 @@ public class UserAccountBsn {
      * container.</p>
      * <p>When there is no user, the first registration creates a super user
      * with administrative rights.</p> */
-    public void register(UserAccount userAccount, Authentication authentication, City newCity, String serverAddress) {
+    public void register(UserAccount newUserAccount, Authentication authentication, City newCity) {
+                
+        // true if there is no account registered so far.
         boolean noAccount = noAccount();
-
+                
+        /* In case there is at least one account, it checks if the current 
+         * registration has a corresponding account that was deactivated before.
+         * If there is then the current registration updates the existing
+         * account. Otherwise, a new account is created. */
+        UserAccount userAccount = null;
+        boolean existingAccount = false;
+        if(!noAccount) {
+            userAccount = findDeactivatedUserAccount(newUserAccount.getEmail());
+            if(userAccount != null) {
+                existingAccount = true;
+                userAccount.setEmail(newUserAccount.getEmail());
+                userAccount.setFirstName(newUserAccount.getFirstName());
+                userAccount.setLastName(newUserAccount.getLastName());
+                userAccount.setGender(newUserAccount.getGender());
+                userAccount.setBirthDate(newUserAccount.getBirthDate());
+                userAccount.setWebsite(newUserAccount.getWebsite());
+                userAccount.setTwitter(newUserAccount.getTwitter());
+                userAccount.setPostalCode(newUserAccount.getPostalCode());
+                userAccount.setMailingList(newUserAccount.getMailingList());
+                userAccount.setPublicProfile(newUserAccount.getPublicProfile());
+                userAccount.setEvent(newUserAccount.getEvent());
+                userAccount.setNews(newUserAccount.getNews());
+                userAccount.setGeneralOffer(newUserAccount.getGeneralOffer());
+                userAccount.setJobOffer(newUserAccount.getJobOffer());
+                userAccount.setSponsor(newUserAccount.getSponsor());
+                userAccount.setSpeaker(newUserAccount.getSpeaker());
+                userAccount.setDeactivated(false);
+                userAccount.setDeactivationDate(null);
+                userAccount.setDeactivationReason(null);
+                userAccount.setDeactivationType(null);
+                userAccount.setVerified(false);
+                
+                Country country = newUserAccount.getCountry();
+                country = em.merge(country);
+                userAccount.setCountry(country);
+                
+                Province province = newUserAccount.getProvince();
+                if(province != null) {
+                    province = em.merge(province);
+                }
+                userAccount.setProvince(province);
+                
+                City city = newUserAccount.getCity();
+                if(city != null) {
+                    city = em.merge(city);
+                }
+                userAccount.setCity(city);
+            }
+        }
+        
+        if(userAccount == null)
+            userAccount = newUserAccount;
+        
+        ApplicationProperty timeZone = applicationPropertyBsn.findApplicationProperty(Properties.TIMEZONE);
+        
         // A potential new city was informed.
         if(newCity != null) {
             // Check if the informed city already exists.
             City existingCity = locationBsn.findCityByName(newCity.getName());
-            
+                        
             // If the city exists it simply set the property of the user account.
-            if(existingCity != null)
+            if(existingCity != null) {
                 userAccount.setCity(existingCity);
+                if(existingCity.getTimeZone() != null)
+                    userAccount.setTimeZone(existingCity.getTimeZone());
+                else
+                    userAccount.setTimeZone(timeZone.getPropertyValue());
+            }
             else { // If the city does not exist it is created and used to set the property of the user account.
+                newCity.setTimeZone(timeZone.getPropertyValue());
+                newCity.setCountry(userAccount.getCountry());
+                newCity.setProvince(userAccount.getProvince());
                 locationBsn.saveCity(newCity);
+                
                 userAccount.setCity(newCity);
+                userAccount.setTimeZone(newCity.getTimeZone());
             }
         }
-
+        /* If no new city was informed, it just takes the selected one to set
+         * timezone of the user account. */
+        else {
+            if(userAccount.getCity().getTimeZone() != null)
+                userAccount.setTimeZone(userAccount.getCity().getTimeZone());
+            else
+                userAccount.setTimeZone(timeZone.getPropertyValue());
+        }
+        
         userAccount.setConfirmationCode(generateConfirmationCode());
         userAccount.setRegistrationDate(Calendar.getInstance().getTime());
-        userAccount.setId(EntitySupport.generateEntityId());
-        em.persist(userAccount);
+        
+        if(!existingAccount) {
+            userAccount.setId(EntitySupport.generateEntityId());
+            em.persist(userAccount);
+        }
+            
+        authentication.setUserAccount(userAccount);
         em.persist(authentication);
 
+        // In case there is no account, the user is added to the administrative group.
         if(noAccount) {
             userAccount.setConfirmationCode(null);            
             AccessGroup adminGroup = accessGroupBsn.findAdministrativeGroup();
@@ -256,8 +357,10 @@ public class UserAccountBsn {
         }
         else {
             ApplicationProperty appProp = applicationPropertyBsn.findApplicationProperty(Properties.SEND_EMAILS);
-            if(appProp.sendEmailsEnabled())
-                messengerBsn.sendEmailConfirmationRequest(userAccount, serverAddress);
+            if(appProp.sendEmailsEnabled()) {
+                ApplicationProperty url = applicationPropertyBsn.findApplicationProperty(Properties.URL);
+                messengerBsn.sendEmailConfirmationRequest(userAccount, url.getPropertyValue());
+            }
         }
     }
 

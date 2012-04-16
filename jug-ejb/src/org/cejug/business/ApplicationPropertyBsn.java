@@ -28,6 +28,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import org.cejug.entity.ApplicationProperty;
 import org.cejug.entity.Properties;
+import org.cejug.exception.BusinessLogicException;
 
 /**
  * @author Hildeberto Mendonca
@@ -98,6 +99,9 @@ public class ApplicationPropertyBsn {
             Map<String, String> applicationProperties = findApplicationProperties();
             String key = properties.getKey();
             applicationProperty = new ApplicationProperty(key, (String)applicationProperties.get(key));
+        }
+        catch(Exception e) {
+            throw new BusinessLogicException(e.getMessage());
         }
         return applicationProperty;
     }

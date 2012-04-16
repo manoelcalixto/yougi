@@ -193,9 +193,6 @@ public class UserAccountBean implements Serializable {
         if(context.isValidationFailed())
             return "registration";
 
-        ApplicationProperty url = applicationPropertyBsn.findApplicationProperty(Properties.URL);
-        String serverAddress = url.getPropertyValue();
-
         this.userAccount.setCountry(this.locationBean.getCountry());
     	this.userAccount.setProvince(this.locationBean.getProvince());
     	this.userAccount.setCity(this.locationBean.getCity());
@@ -207,7 +204,7 @@ public class UserAccountBean implements Serializable {
             authentication.setUserAccount(this.userAccount);
             authentication.setUsername(userAccount.getEmail());
             authentication.setPassword(this.password);
-            userAccountBsn.register(userAccount, authentication, newCity, serverAddress);
+            userAccountBsn.register(userAccount, authentication, newCity);
         }
         catch(Exception e) {
             context.addMessage(userId, new FacesMessage(e.getCause().getMessage()));

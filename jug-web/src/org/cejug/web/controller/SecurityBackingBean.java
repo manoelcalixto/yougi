@@ -71,6 +71,11 @@ public class SecurityBackingBean {
             return "login?faces-redirect=true";
     }
 
+    /**
+     * Performe the logout of the user by removing the user from the session and
+     * distroying the session.
+     * @return The next step in the navigation flow.
+     */
     public String logout() {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
@@ -81,7 +86,7 @@ public class SecurityBackingBean {
         catch(ServletException se) {
             return "/index?faces-redirect=true";
         }
-        return "/login?faces-redirect=true";
+        return "/index?faces-redirect=true";
     }
 
     public Boolean getIsUserLeader() {

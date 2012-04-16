@@ -7,20 +7,25 @@ create table mailing_list_message (
     mailing_list  char(32)     not null,
     subject       varchar(255) not null,
     body          text         not null,
-    sender        varchar(100) not null,
-    when_received datetime     not null,
+    sender        char(32)     null,
+    date_received datetime     not null,
     reply_to      char(32)         null,
     message_type  char(2)          null, # q - question, a - answer, i - info, ri - request_more_info, ir - info_requested, s - solution
-    answer_score  int(5)           null,
+    topics        varchar(255)     null,
     published     tinyint(1)       null
 ) engine = innodb;
 
 alter table mailing_list_message add constraint pk_mailing_list_message primary key (id);
 alter table mailing_list_message add constraint fk_mailing_list_message foreign key (mailing_list) references mailing_list(id) on delete cascade;
+alter table mailing_list_message add constraint fk_mailing_list_sender foreign key (sender) references mailing_list_subscription (id) on delete set null;
 alter table mailing_list_message add constraint fk_message_reply_to foreign key (reply_to) references mailing_list_message(id) on delete set null;
 
 insert into user_account (id, email, first_name, last_name, gender, deactivated, deactivation_type) 
 select id, email_address, '', '', 1, true, 2 from mailing_list_subscription where email_address not in (select email from user_account);
+
+update mailing_list_subscription, user_account 
+   set mailing_list_subscription.user_account = user_account.id
+ where user_account.id = mailing_list_subscription.id;
 
 ###############################################################################
 insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 
