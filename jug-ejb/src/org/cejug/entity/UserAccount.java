@@ -23,6 +23,7 @@ package org.cejug.entity;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 import javax.persistence.*;
 import org.cejug.util.TextUtils;
 
@@ -37,12 +38,7 @@ public class UserAccount implements Serializable {
 
     @Id
     private String id;
-    
-    private String email;
-    
-    @Transient
-    private String confirmEmail;
-    
+        
     @Column(name="first_name", nullable=false)
     private String firstName;
 
@@ -51,6 +47,14 @@ public class UserAccount implements Serializable {
 
     @Column(nullable=false)
     private Integer gender;
+    
+    private String email;
+    
+    @Transient
+    private String emailConfirmation;
+    
+    @Column(name="unverified_email")
+    private String unverifiedEmail;
     
     @Temporal(javax.persistence.TemporalType.DATE)
     @Column(name="birth_date",nullable=false)
@@ -173,6 +177,13 @@ public class UserAccount implements Serializable {
     public Integer getGender() {
         return gender;
     }
+    
+    public String getStrGender() {
+        if(gender == 1)
+            return "male";
+        else
+            return "female";
+    }
 
     public void setGender(Integer gender) {
         this.gender = gender;
@@ -186,6 +197,10 @@ public class UserAccount implements Serializable {
         this.birthDate = birthDate;
     }
 
+    /**
+     * @return the age of the user based on the informed date of birth. The value
+     * is calculated in runtime.
+     */
     public int getAge() {
         if(this.birthDate != null) {
             Date today = Calendar.getInstance().getTime();
@@ -194,15 +209,47 @@ public class UserAccount implements Serializable {
         return 0;
     }
 
+    /**
+     * @return the email address of the user. Despite its validity, do not use
+     * the returned value to send email messages to the user. Use getPostingEmail() instead.
+     * @see #getPostingEmail()
+     */
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
-        email = email.toLowerCase();
-        this.email = email;
+        this.email = email.toLowerCase();
+    }
+
+    /**
+     * @return the unverifiedEmail is not null when the user's email is not
+     * confirmed yet. Once the email is confirmed this method returns null.
+     */
+    public String getUnverifiedEmail() {
+        return unverifiedEmail;
+    }
+
+    public void setUnverifiedEmail(String unverifiedEmail) {
+        this.unverifiedEmail = unverifiedEmail.toLowerCase();
     }
     
+    /**
+     * @return Independent of the verification of the email, this method returns
+     * the available email address for posting email messages.
+     */
+    public String getPostingEmail() {
+        // In case there is an unverified email, it has the priority to be in
+        // the message recipient.
+        if(this.unverifiedEmail != null && !this.unverifiedEmail.isEmpty()) {
+            return this.unverifiedEmail;
+        }
+        // If unverified email is null it means that the email is valid and it
+        // can be used in the message recipient.
+        else
+            return this.email;
+    }
+
     public Date getRegistrationDate() {
         return registrationDate;
     }
@@ -386,25 +433,33 @@ public class UserAccount implements Serializable {
         this.sponsor = sponsor;
     }
 
-    public String getConfirmEmail() {
-        return confirmEmail;
+    public String getEmailConfirmation() {
+        return emailConfirmation;
     }
 
-    public void setConfirmEmail(String confirmEmail) {
-        confirmEmail = confirmEmail.toLowerCase();
-        this.confirmEmail = confirmEmail;
+    public void setEmailConfirmation(String emailConfirmation) {
+        emailConfirmation = emailConfirmation.toLowerCase();
+        this.emailConfirmation = emailConfirmation;
     }
 
     public Boolean isEmailConfirmed() {
-        return confirmEmail.equals(email);
+        if(this.unverifiedEmail != null)
+            return emailConfirmation.equals(unverifiedEmail);
+        else
+            return emailConfirmation.equals(email);
     }
 
     public String getConfirmationCode() {
         return confirmationCode;
     }
-
-    public void setConfirmationCode(String confirmationCode) {
-        this.confirmationCode = confirmationCode;
+    
+    public void defineNewConfirmationCode() {
+        UUID uuid = UUID.randomUUID();
+        this.confirmationCode = uuid.toString().replaceAll("-", "");
+    }
+    
+    public void resetConfirmationCode() {
+        this.confirmationCode = null;
     }
 
     public boolean getConfirmed() {
@@ -412,6 +467,11 @@ public class UserAccount implements Serializable {
             return false;
         else
             return true;
+    }
+    
+    private String generateConfirmationCode() {
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString().replaceAll("-", "");
     }
 
     @Override

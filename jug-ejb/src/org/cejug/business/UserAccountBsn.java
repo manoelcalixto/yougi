@@ -25,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.*;
@@ -35,6 +34,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import org.cejug.entity.*;
 import org.cejug.exception.BusinessLogicException;
+import org.cejug.knowledge.business.SubscriptionBsn;
 import org.cejug.util.EntitySupport;
 
 /**
@@ -58,6 +58,9 @@ public class UserAccountBsn {
 
     @EJB
     private ApplicationPropertyBsn applicationPropertyBsn;
+    
+    @EJB
+    private SubscriptionBsn subscriptionBsn;
     
     @PersistenceContext
     private EntityManager em;
@@ -257,10 +260,10 @@ public class UserAccountBsn {
         UserAccount userAccount = null;
         boolean existingAccount = false;
         if(!noAccount) {
-            userAccount = findDeactivatedUserAccount(newUserAccount.getEmail());
+            userAccount = findDeactivatedUserAccount(newUserAccount.getUnverifiedEmail());
             if(userAccount != null) {
                 existingAccount = true;
-                userAccount.setEmail(newUserAccount.getEmail());
+                userAccount.setUnverifiedEmail(newUserAccount.getUnverifiedEmail());
                 userAccount.setFirstName(newUserAccount.getFirstName());
                 userAccount.setLastName(newUserAccount.getLastName());
                 userAccount.setGender(newUserAccount.getGender());
@@ -337,20 +340,20 @@ public class UserAccountBsn {
                 userAccount.setTimeZone(timeZone.getPropertyValue());
         }
         
-        userAccount.setConfirmationCode(generateConfirmationCode());
+        userAccount.defineNewConfirmationCode();
         userAccount.setRegistrationDate(Calendar.getInstance().getTime());
         
         if(!existingAccount) {
             userAccount.setId(EntitySupport.generateEntityId());
             em.persist(userAccount);
         }
-            
+        
         authentication.setUserAccount(userAccount);
         em.persist(authentication);
 
         // In case there is no account, the user is added to the administrative group.
         if(noAccount) {
-            userAccount.setConfirmationCode(null);            
+            userAccount.resetConfirmationCode();            
             AccessGroup adminGroup = accessGroupBsn.findAdministrativeGroup();
             UserGroup userGroup = new UserGroup(adminGroup, authentication);
             userGroupBsn.add(userGroup);
@@ -365,10 +368,10 @@ public class UserAccountBsn {
     }
 
     /**
-     * This method finds the user account using the confirmation code, adds 
-     * this user account in the default group and sends a welcome message to 
-     * the user and a notification message to the leaders. The user has access 
-     * to the application when he/she is added to the default group.
+     * Finds the user account using the confirmation code, adds this user 
+     * account in the default group, sends a welcome message to the user and a 
+     * notification message to the leaders. The user has access to the 
+     * application when he/she is added to the default group.
      * */
     public void confirmUser(String confirmationCode) {
     	if(confirmationCode == null || confirmationCode.isEmpty())
@@ -379,7 +382,9 @@ public class UserAccountBsn {
                                                      .setParameter("code", confirmationCode)
                                                      .getSingleResult();
             if(userAccount != null) {
-            	userAccount.setConfirmationCode(null);
+            	userAccount.resetConfirmationCode();
+                userAccount.setEmail(userAccount.getUnverifiedEmail());
+                userAccount.setUnverifiedEmail(null);
             	userAccount.setRegistrationDate(Calendar.getInstance().getTime());
             
                 // This step effectively allows the user to access the application.
@@ -427,6 +432,7 @@ public class UserAccountBsn {
         if(!existingUserAccount.getDeactivationReason().trim().isEmpty() && appProp.sendEmailsEnabled()) {
             messengerBsn.sendDeactivationReason(existingUserAccount);
         }
+        
         AccessGroup administrativeGroup = accessGroupBsn.findAdministrativeGroup();
         List<UserAccount> leaders = userGroupBsn.findUsersGroup(administrativeGroup);
 
@@ -440,18 +446,13 @@ public class UserAccountBsn {
                 .executeUpdate();
     }
 
-    private String generateConfirmationCode() {
-        UUID uuid = UUID.randomUUID();
-        return uuid.toString().replaceAll("-", "");
-    }
-
     public void requestConfirmationPasswordChange(String username, String serverAddress) {
         UserAccount userAccount = findUserAccountByUsername(username);
 
         ApplicationProperty appProp = applicationPropertyBsn.findApplicationProperty(Properties.SEND_EMAILS);
 
         if(userAccount != null) {
-            userAccount.setConfirmationCode(generateConfirmationCode());
+            userAccount.defineNewConfirmationCode();
             if(appProp.sendEmailsEnabled())
                 messengerBsn.sendConfirmationCode(userAccount, serverAddress);
         }
@@ -493,7 +494,7 @@ public class UserAccountBsn {
                                             .getSingleResult();
             if(authentication != null) {
                 authentication.setPassword(newPassword);
-                userAccount.setConfirmationCode(null);
+                userAccount.resetConfirmationCode();
                 save(userAccount);
             }
         }
@@ -501,7 +502,47 @@ public class UserAccountBsn {
             throw new BusinessLogicException("User account not found. It is not possible to change the password.");
         }
     }
+    
+    /**
+     * Changes the email address of the user without having to repeat the
+     * registration process.
+     * @param userAccount the user account that intends to change its email address.
+     * @param newEmail the new email address of the user account.
+     * @exception BusinessLogicException in case the newEmail is already registered.
+     */
+    public void changeEmail(UserAccount userAccount, String newEmail) {
+        // Check if the new email already exists in the UserAccounts
+        UserAccount existingUserAccount = findUserAccountByEmail(newEmail);
 
+        if(existingUserAccount != null)
+            throw new BusinessLogicException("errorCode0001");
+
+        // Change the email address in the UserAccount
+        userAccount.setUnverifiedEmail(newEmail);
+        em.merge(userAccount);
+
+        // Since the email address is also the username, change the username in the Authentication and in the UserGroup
+        userGroupBsn.changeUsername(userAccount, newEmail);
+
+        // In the MailingListSubscription, we close the subscription of the previous email address and subscribe the new one, linked to the same user account.
+        subscriptionBsn.changeEmailAddress(userAccount);
+        
+        // Send an email to the user to confirm the new email address
+        ApplicationProperty url = applicationPropertyBsn.findApplicationProperty(Properties.URL);    
+        messengerBsn.sendEmailVerificationRequest(userAccount, url.getPropertyValue());
+    }
+    
+    
+    public void confirmEmailChange(UserAccount userAccount) {
+        if(userAccount.getUnverifiedEmail() == null)
+            throw new BusinessLogicException("errorCode0002");
+        
+        userAccount.resetConfirmationCode();
+        userAccount.setEmail(userAccount.getUnverifiedEmail());
+        userAccount.setUnverifiedEmail(null);
+        save(userAccount);
+    }
+    
     @Schedules({ @Schedule(hour="*/12") })
     public void removeNonConfirmedAccounts(Timer timer) {
         logger.log(Level.INFO, "Timer to remove non confirmed accounts started.");
