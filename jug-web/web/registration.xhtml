@@ -22,12 +22,12 @@
                             <h:inputText id="lastName" label="#{bundle.lastName}" required="true" size="40" maxlength="50" value="#{userAccountBean.userAccount.lastName}"/>
 
                             <h:outputLabel for="email" value="#{bundle.email} *" styleClass="fieldLabel"/>
-                            <h:outputLabel for="confirmEmail" value="#{bundle.confirmEmail} *" styleClass="fieldLabel"/>
+                            <h:outputLabel for="emailConfirmation" value="#{bundle.confirmEmail} *" styleClass="fieldLabel"/>
 
-                            <h:inputText id="email" label="#{bundle.email}" required="true" size="40" maxlength="100" value="#{userAccountBean.userAccount.email}" onchange="formatEmail(this)">
+                            <h:inputText id="email" label="#{bundle.email}" required="true" size="40" maxlength="100" value="#{userAccountBean.userAccount.unverifiedEmail}" onchange="formatEmail(this)">
                                 <f:validateRegex pattern="^[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$"/>
                             </h:inputText>
-                            <h:inputText id="confirmEmail" label="#{bundle.confirmEmail}" required="true" size="40" maxlength="100" value="#{userAccountBean.userAccount.confirmEmail}" onchange="formatEmail(this)">
+                            <h:inputText id="mailConfirmation" label="#{bundle.confirmEmail}" required="true" size="40" maxlength="100" value="#{userAccountBean.userAccount.emailConfirmation}" onchange="formatEmail(this)">
                                 <f:validateRegex pattern="^[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$"/>
                             </h:inputText>
 

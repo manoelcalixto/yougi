@@ -33,9 +33,11 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
+import org.cejug.business.MessengerBsn;
 import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.Authentication;
 import org.cejug.entity.DeactivationType;
+import org.cejug.entity.HistoricalMessage;
 import org.cejug.entity.UserAccount;
 import org.cejug.event.business.AttendeeBsn;
 import org.cejug.event.entity.Event;
@@ -60,6 +62,9 @@ public class MemberBean implements Serializable {
     private MailingListBsn mailingListBsn;
     
     @EJB
+    private MessengerBsn messengerBsn;
+    
+    @EJB
     private SubscriptionBsn subscriptionBsn;
 
     @EJB
@@ -73,6 +78,8 @@ public class MemberBean implements Serializable {
     private List<UserAccount> deactivatedUsers;
 
     private List<MailingList> mailingLists;
+    
+    private List<HistoricalMessage> historicMessages;
     
     private List<Event> attendedEvents;
 
@@ -186,6 +193,20 @@ public class MemberBean implements Serializable {
         this.selectedMailingLists = selectedMailingLists;
     }
 
+    /**
+     * @return the messageHistoryItens
+     */
+    public List<HistoricalMessage> getHistoricMessages() {
+        return historicMessages;
+    }
+
+    /**
+     * @param messageHistoryItens the messageHistoryItens to set
+     */
+    public void setHistoricMessages(List<HistoricalMessage> historicMessages) {
+        this.historicMessages = historicMessages;
+    }
+
     public String getEmailCriteria() {
         return emailCriteria;
     }
@@ -226,6 +247,7 @@ public class MemberBean implements Serializable {
         this.userAccount = userAccountBsn.findUserAccount(this.userId);
         this.authentication = userAccountBsn.findAuthenticationUser(this.userAccount);
         this.mailingLists = mailingListBsn.findMailingLists();
+        this.historicMessages = messengerBsn.findHistoricalMessageByRecipient(this.userAccount);
         this.attendedEvents = attendeeBsn.findAttendeedEvents(this.userAccount);
 
         locationBean.initialize();

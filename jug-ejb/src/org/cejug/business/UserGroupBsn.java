@@ -43,7 +43,7 @@ public class UserGroupBsn {
 
     @EJB
     AccessGroupBsn accessGroupBsn;
-
+    
     @SuppressWarnings("unchecked")
     public List<UserAccount> findUsersGroup(AccessGroup accessGroup) {
         return em.createQuery("select ug.userAccount from UserGroup ug where ug.accessGroup = :accessGroup order by ug.userAccount.firstName")
@@ -55,6 +55,16 @@ public class UserGroupBsn {
     public List<UserGroup> findUsersGroups(AccessGroup accessGroup) {
         return em.createQuery("select ug from UserGroup ug where ug.accessGroup = :accessGroup")
                  .setParameter("accessGroup", accessGroup)
+                 .getResultList();
+    }
+    
+    /**
+     * @param userAccount the user account that is member of one or more groups.
+     * @return the list of groups registrations of the informed user account.
+     */
+    public List<UserGroup> findUsersGroups(UserAccount userAccount) {
+        return em.createQuery("select ug from UserGroup ug where ug.userAccount = :userAccount")
+                 .setParameter("userAccount", userAccount)
                  .getResultList();
     }
 
@@ -96,5 +106,17 @@ public class UserGroupBsn {
 
     public void add(UserGroup userGroup) {
         em.persist(userGroup);
+    }
+    
+    /**
+     * Change the username of the user in all groups that it is part of.
+     * @param userAccount the user account whose username is going to change.
+     * @param newUsername the new username of the user account.
+     */
+    public void changeUsername(UserAccount userAccount, String newUsername) {
+        List<UserGroup> usersGroups = findUsersGroups(userAccount);
+        for(UserGroup userGroup: usersGroups) {
+            userGroup.setUsername(newUsername);
+        }
     }
 }

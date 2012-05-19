@@ -56,6 +56,7 @@
                         <p:submenu label="#{bundle.myAccount}">
                             <p:menuitem value="#{bundle.profile}" url="/profile/profile.xhtml"/>
                             <p:menuitem value="#{bundle.changePassword}" url="/profile/change_password.xhtml"/>
+                            <p:menuitem value="#{bundle.changeEmail}" url="/profile/change_email.xhtml"/>
                         </p:submenu>
                         <p:submenu label="#{bundle.administration}" rendered="#{securityBackingBean.isUserLeader}">
                             <p:menuitem value="#{bundle.users}" url="/admin/users.xhtml"/>

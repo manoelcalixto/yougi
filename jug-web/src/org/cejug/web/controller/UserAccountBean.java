@@ -35,7 +35,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.cejug.business.ApplicationPropertyBsn;
 import org.cejug.business.UserAccountBsn;
-import org.cejug.entity.*;
+import org.cejug.entity.Authentication;
+import org.cejug.entity.City;
+import org.cejug.entity.DeactivationType;
+import org.cejug.entity.UserAccount;
 import org.cejug.web.util.ResourceBundleHelper;
 
 /**
@@ -168,7 +171,7 @@ public class UserAccountBean implements Serializable {
             context.validationFailed();
         }
 
-        if(userAccountBsn.existingAccount(this.userAccount.getEmail())) {
+        if(userAccountBsn.existingAccount(this.userAccount.getUnverifiedEmail())) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorMessageExistingAccount"),""));
             context.validationFailed();
         }
@@ -202,7 +205,7 @@ public class UserAccountBean implements Serializable {
         Authentication authentication = new Authentication();
         try {
             authentication.setUserAccount(this.userAccount);
-            authentication.setUsername(userAccount.getEmail());
+            authentication.setUsername(userAccount.getUnverifiedEmail());
             authentication.setPassword(this.password);
             userAccountBsn.register(userAccount, authentication, newCity);
         }

@@ -2,15 +2,22 @@
 alter table user_account add language varchar(5) null;
 alter table user_account add constraint fk_language_user foreign key (language) references language(acronym) on delete set null;
 
+###############################################################################
+insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 
+   ('1.8',
+    '1.08',
+    'The table mailing_list_message stores messages sent to the mainling lists. The table message_history store all messages that the system sends to users.',
+    'Using icons to represent the gender of the users. Listing the messages sent to the user in the user profile.');
+
 create table mailing_list_message (
     id            char(32)     not null,
     mailing_list  char(32)     not null,
     subject       varchar(255) not null,
     body          text         not null,
-    sender        char(32)     null,
+    sender        char(32)         null,
     date_received datetime     not null,
     reply_to      char(32)         null,
-    message_type  char(2)          null, # q - question, a - answer, i - info, ri - request_more_info, ir - info_requested, s - solution
+    message_type  tinyint(2)       null,
     topics        varchar(255)     null,
     published     tinyint(1)       null
 ) engine = innodb;
@@ -20,19 +27,29 @@ alter table mailing_list_message add constraint fk_mailing_list_message foreign 
 alter table mailing_list_message add constraint fk_mailing_list_sender foreign key (sender) references mailing_list_subscription (id) on delete set null;
 alter table mailing_list_message add constraint fk_message_reply_to foreign key (reply_to) references mailing_list_message(id) on delete set null;
 
-insert into user_account (id, email, first_name, last_name, gender, deactivated, deactivation_type) 
-select id, email_address, '', '', 1, true, 2 from mailing_list_subscription where email_address not in (select email from user_account);
+create table historical_message (
+    id           char(32)     not null,
+    subject      varchar(255) not null,
+    body         text         not null,
+    recipient    char(32)     not null,
+    message_sent tinyint(1)       null,
+    date_sent    datetime         null
+) engine = innodb;
 
-update mailing_list_subscription, user_account 
-   set mailing_list_subscription.user_account = user_account.id
- where user_account.id = mailing_list_subscription.id;
+alter table historical_message add constraint pk_historical_message primary key (id);
+alter table historical_message add constraint fk_message_recipient foreign key (recipient) references user_account(id) on delete cascade;
+
+alter table user_account add unverified_email varchar(100) null;
+alter table user_account modify email varchar(100) null;
+
+insert into message_template (id, title, body) values ('KJZISKQBE45945D29109A8D6C92IZJ89', '[UG] Request for Email Change', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you requested to change your email address from <i>#{userAccount.email}</i> to <i>#{userAccount.unverifiedEmail}</i>. The authorization code to perform this operation is:</p><p>#{userAccount.confirmationCode}</p><p>Inform this code in the form that you saw right after changing the email address or just follow the link below:</p><p><a href=''http://#{serverAddress}/change_email_confirmation.xhtml?cc=#{userAccount.confirmationCode}''>http://#{serverAddress}/change_email_confirmation.xhtml?cc=#{userAccount.confirmationCode}</a></p><p>Thank you!<br/>\r\n\r\n<b>UG Leadership Team</b></p>');
 
 ###############################################################################
 insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 
    ('1.7',
     '1.07',
     'Separation of authentication data from the user_account table. The password is retrieved only for authentication purpose and when changing the password.',
-    'Implementation of the separation of authentication data from the UserAccount. Several small fixes in the application.');
+    'Implementation of the separation of authentication data from the UserAccount. Allowing the reactivation of deactivated members account in case they want to come back to the user group. Fix of the city auto-complete in the registration form. Addition of the DeactivationType Unregistered for those who are in the mailing list, but not registered in the application yet. Repositioning the legent of the cumulative chart.');
 
 create table authentication (
     username            varchar(100) not null,
@@ -47,6 +64,13 @@ insert into authentication (username, password, user_account) select username, p
 
 alter table user_account drop column username;
 alter table user_account drop column password;
+
+insert into user_account (id, email, first_name, last_name, gender, deactivated, deactivation_type) 
+select id, email_address, '', '', 1, true, 2 from mailing_list_subscription where email_address not in (select email from user_account);
+
+update mailing_list_subscription, user_account 
+   set mailing_list_subscription.user_account = user_account.id
+ where user_account.id = mailing_list_subscription.id;
 
 ###############################################################################
 insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 

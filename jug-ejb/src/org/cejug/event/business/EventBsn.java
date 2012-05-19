@@ -83,7 +83,7 @@ public class EventBsn {
     }
 
     public void remove(String id) {
-        Event event = em.find(Event.class, id);
+        Event event = findEvent(id);
         if(event != null)
             em.remove(event);
     }
