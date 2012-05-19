@@ -23,15 +23,7 @@ package org.cejug.knowledge.entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 /**
  * @author Hildeberto Mendonca
@@ -44,34 +36,37 @@ public class MailingListMessage implements Serializable, Cloneable {
 
     @Id
     private String id;
-    private String subject;
-    private String body;
-
-    @Column(name="sender")
-    private String sender;
-
-    @Column(name = "when_received", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date whenReceived;
-
-    @Column(name = "message_type")
-    private String messageType;
-
-    @Column(name = "answer_score")
-    private Integer answerScore;
-
-    private Boolean published;
-
-    @OneToMany(mappedBy = "replyTo")
-    private List<MailingListMessage> repliesFrom;
-
-    @ManyToOne
-    @JoinColumn(name = "reply_to")
-    private MailingListMessage replyTo;
-
+    
     @ManyToOne(optional = false)
     @JoinColumn(name = "mailing_list", nullable = false)
     private MailingList mailingList;
+    
+    private String subject;
+    
+    private String body;
+
+    @ManyToOne
+    @JoinColumn(name="sender")
+    private MailingListSubscription sender;
+
+    @Column(name = "date_received", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateReceived;
+    
+    @ManyToOne
+    @JoinColumn(name = "reply_to")
+    private MailingListMessage replyTo;
+    
+    @OneToMany(mappedBy = "replyTo")
+    private List<MailingListMessage> repliesFrom;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "message_type")
+    private MessageType messageType;
+    
+    private String topics;
+
+    private Boolean published;
 
     public MailingListMessage() {
     }
@@ -80,11 +75,11 @@ public class MailingListMessage implements Serializable, Cloneable {
         this.id = id;
     }
 
-    public MailingListMessage(String id, String subject, String body, Date whenReceived) {
+    public MailingListMessage(String id, String subject, String body, Date dateReceived) {
         this.id = id;
         this.subject = subject;
         this.body = body;
-        this.whenReceived = whenReceived;
+        this.dateReceived = dateReceived;
     }
 
     public String getId() {
@@ -111,36 +106,28 @@ public class MailingListMessage implements Serializable, Cloneable {
         this.body = body;
     }
 
-    public String getSender() {
+    public MailingListSubscription getSender() {
         return sender;
     }
 
-    public void setSender(String sender) {
+    public void setSender(MailingListSubscription sender) {
         this.sender = sender;
     }
 
-    public Date getWhenReceived() {
-        return whenReceived;
+    public Date getDateReceived() {
+        return dateReceived;
     }
 
-    public void setWhenReceived(Date whenReceived) {
-        this.whenReceived = whenReceived;
+    public void setDateReceived(Date dateReceived) {
+        this.dateReceived = dateReceived;
     }
 
-    public String getMessageType() {
+    public MessageType getMessageType() {
         return messageType;
     }
 
-    public void setMessageType(String messageType) {
+    public void setMessageType(MessageType messageType) {
         this.messageType = messageType;
-    }
-
-    public Integer getAnswerScore() {
-        return answerScore;
-    }
-
-    public void setAnswerScore(Integer answerScore) {
-        this.answerScore = answerScore;
     }
 
     public Boolean getPublished() {
@@ -184,7 +171,6 @@ public class MailingListMessage implements Serializable, Cloneable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof MailingListMessage)) {
             return false;
         }
@@ -193,23 +179,6 @@ public class MailingListMessage implements Serializable, Cloneable {
             return false;
         }
         return true;
-    }
-
-    @Override
-    public Object clone() {
-        MailingListMessage mailingListMessage = new MailingListMessage();
-        mailingListMessage.setId(this.id);
-        mailingListMessage.setSubject(this.subject);
-        mailingListMessage.setBody(this.body);
-        mailingListMessage.setWhenReceived(this.whenReceived);
-        mailingListMessage.setAnswerScore(this.answerScore);
-        mailingListMessage.setMailingList(this.mailingList);
-        mailingListMessage.setMessageType(this.messageType);
-        mailingListMessage.setPublished(this.published);
-        mailingListMessage.setRepliesFrom(this.repliesFrom);
-        mailingListMessage.setReplyTo(this.replyTo);
-        mailingListMessage.setSender(this.sender);
-        return mailingListMessage;
     }
 
     @Override

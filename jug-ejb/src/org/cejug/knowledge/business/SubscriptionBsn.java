@@ -67,12 +67,18 @@ public class SubscriptionBsn {
             return true;
         }
     }
-    
-    public MailingListSubscription findMailingListSubscription(MailingList mailingList, UserAccount userAccount) {
+
+    /**
+     * @param mailingList the mailing list where the subscriber might be found.
+     * @param email the email address of the possible subscriber.
+     * @return The found mailing list subscription or null if the email address
+     * is not subscribed in the list.
+     */
+    public MailingListSubscription findMailingListSubscription(MailingList mailingList, String email) {
         try {
             return (MailingListSubscription) em.createQuery("select mls from MailingListSubscription mls where mls.mailingList = :mailingList and mls.emailAddress = :email and mls.unsubscriptionDate is null")
                                    .setParameter("mailingList", mailingList)
-                                   .setParameter("email", userAccount.getEmail())
+                                   .setParameter("email", email)
                                    .getSingleResult();
         }
         catch(NoResultException nre) {
@@ -98,6 +104,17 @@ public class SubscriptionBsn {
     public List<MailingListSubscription> findMailingListSubscriptions(MailingList mailingList) {
         return em.createQuery("select mls from MailingListSubscription mls where mls.mailingList = :mailingList order by mls.subscriptionDate desc")
                  .setParameter("mailingList", mailingList)
+                 .getResultList();
+    }
+    
+    /** 
+     * Returns a list of mailing lists associated with the user account.
+     * @param userAccount the user account that might be subscribed in a mailing list.
+     * @return a list of mailing lists that the user is registered.
+     */
+    public List<MailingList> findSubscribedMailingLists(UserAccount userAccount) {
+        return em.createQuery("select mls.mailingList from MailingListSubscription mls where mls.userAccount = :userAccount")
+                 .setParameter("userAccount", userAccount)
                  .getResultList();
     }
     
@@ -157,12 +174,15 @@ public class SubscriptionBsn {
         }
     }
 
-    /** Subscribes the user in the informed mailing list. */
+    /** Subscribes the user in the informed mailing list.
+     * @param mailingList the mailing list where the user will be subscribed.
+     * @param userAccount the user who will be subscribed.
+     * @param when the date when the user is subscribed.
+     */
     public void subscribe(MailingList mailingList, UserAccount userAccount, Date when) {
         if(mailingList == null || userAccount == null)
             return;
         
-        // Reactivates an ancient subscription or creates a new one.
         MailingListSubscription mailingListSubscription = new MailingListSubscription();
         mailingListSubscription.setId(EntitySupport.generateEntityId());
         mailingListSubscription.setMailingList(mailingList);
@@ -172,6 +192,24 @@ public class SubscriptionBsn {
         em.persist(mailingListSubscription);
     }
 
+    /** Unsubscribes the user from the informed mailing list. */
+    public void unsubscribe(MailingList mailingList, UserAccount userAccount) {
+        MailingListSubscription mailingListSubscription = findMailingListSubscription(mailingList, userAccount.getEmail());
+        if(mailingListSubscription != null) {
+            Calendar today = Calendar.getInstance();
+            mailingListSubscription.setUnsubscriptionDate(today.getTime());
+        }
+    }
+    
+    /**
+     * Unsubscribe the user from a limited list of mailingLists.
+     */
+    public void unsubscribe(List<MailingList> mailingLists, UserAccount userAccount) {
+        for(MailingList mailingList: mailingLists) {
+            unsubscribe(mailingList, userAccount);
+        }
+    }
+    
     /** Unsubscribes the user from all mailing lists. */
     public void unsubscribeAll(UserAccount userAccount) {
         List<MailingListSubscription> mailingListSubscriptions = findMailingListSubscriptions(userAccount);
@@ -181,15 +219,6 @@ public class SubscriptionBsn {
                 mailingListSubscription.setUnsubscriptionDate(today.getTime());
                 em.merge(mailingListSubscription);
             }
-        }
-    }
-
-    /** Unsubscribes the user from the informed mailing list. */
-    public void unsubscribe(MailingList mailingList, UserAccount userAccount) {
-        MailingListSubscription mailingListSubscription = findMailingListSubscription(mailingList, userAccount);
-        if(mailingListSubscription != null) {
-            Calendar today = Calendar.getInstance();
-            mailingListSubscription.setUnsubscriptionDate(today.getTime());
         }
     }
     
@@ -203,6 +232,20 @@ public class SubscriptionBsn {
             return;
         
         mailingListSubscription.setUnsubscriptionDate(subscription.getUnsubscriptionDate());
+    }
+    
+    /**
+     * Unsubscribes the user account from his/er current mailing lists and 
+     * subscribes again, updating the email addresses.
+     */
+    public void changeEmailAddress(UserAccount userAccount) {
+        List<MailingList> subscribedMailingLists = findSubscribedMailingLists(userAccount);
+        
+        // Close the subscription of the previous email address
+        unsubscribe(subscribedMailingLists, userAccount);
+        
+        // Subscribe the new email address linked to the same user account.
+        subscribe(subscribedMailingLists, userAccount);
     }
     
     /**
