@@ -21,26 +21,34 @@
 package org.cejug.entity;
 
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.persistence.*;
 
 /**
  * Message template with variables to be fulfilled with object attributes.
+ *
  * @author Hildeberto Mendonca
  */
 @Entity
-@Table(name="message_template")
+@Table(name = "message_template")
 public class MessageTemplate implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
-	private String id;
+    
+    private static final String VAR_PATTERN = "\\#\\{([a-z][a-zA-Z_0-9]*(\\.)?)+\\}";
+
+    private static final long serialVersionUID = 1L;
+
+    private String id;
+
     private String title;
+
     private String body;
 
-    public MessageTemplate() {}
+    public MessageTemplate() {
+    }
 
     public MessageTemplate(String id) {
         this.id = id;
@@ -55,7 +63,7 @@ public class MessageTemplate implements Serializable {
         this.id = id;
     }
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     public String getTitle() {
         return title;
     }
@@ -64,7 +72,7 @@ public class MessageTemplate implements Serializable {
         this.title = title;
     }
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     public String getBody() {
         return body;
     }
@@ -80,6 +88,27 @@ public class MessageTemplate implements Serializable {
         } else {
             return this.body.substring(0, 200);
         }
+    }
+    
+    public void replaceVariablesByValues(Map<String, Object> values) {
+        Pattern pattern = Pattern.compile(VAR_PATTERN);
+        List<String> variables = findVariables(pattern, this.getBody());
+        Object value;
+        for(String variable: variables) {
+            variable = variable.substring(2, variable.length() - 1);
+            value = values.get(variable);
+            if(value != null)
+                this.body = this.body.replace("#{" + variable + "}", values.get(variable).toString());
+        }
+    }
+    
+    private List<String> findVariables(Pattern pattern, CharSequence charSequence) {
+        Matcher m = pattern.matcher(charSequence);
+        List<String> matches = new ArrayList<String>();
+        while (m.find()) {
+            matches.add(m.group());
+        }
+        return matches;
     }
 
     @Override

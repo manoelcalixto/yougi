@@ -34,96 +34,39 @@ import javax.mail.internet.MimeMessage;
  * UserAccount as a usual recipient.
  * @author Hildeberto Mendonca
  */
-public class EmailMessage extends Message {
+public class EmailMessage {
 
-    private UserAccount[] recipientsTo;
-    private UserAccount[] recipientsCopyTo;
-    private UserAccount[] recipientsBlindCopyTo;
+    private UserAccount[] recipients;
     private String subject;
+    private String body;
 
-    public UserAccount[] getRecipientsTo() {
-        return recipientsTo;
+    public UserAccount[] getRecipients() {
+        return recipients;
     }
 
-    public UserAccount getRecipientTo() {
-        if(recipientsTo != null)
-            return recipientsTo[0];
+    public UserAccount getRecipient() {
+        if(recipients != null)
+            return recipients[0];
         
         return null;
     }
 
-    public void setRecipientsTo(List<UserAccount> recipientsTo) {
-        if(recipientsTo == null)
+    public void setRecipients(List<UserAccount> recipients) {
+        if(recipients == null)
             return;
 
-        this.recipientsTo = new UserAccount[recipientsTo.size()];
+        this.recipients = new UserAccount[recipients.size()];
         int i = 0;
-        for(UserAccount recipient: recipientsTo) {
-            this.recipientsTo[i++] = recipient;
+        for(UserAccount recipient: recipients) {
+            this.recipients[i++] = recipient;
         }
     }
 
-    public void setRecipientTo(UserAccount recipientTo) {
-        if(recipientsTo == null) {
-            recipientsTo = new UserAccount[1];
+    public void setRecipient(UserAccount recipientTo) {
+        if(recipients == null) {
+            recipients = new UserAccount[1];
         }
-        recipientsTo[0] = recipientTo;
-    }
-
-    public UserAccount[] getRecipientsCopyTo() {
-        return recipientsCopyTo;
-    }
-
-    public UserAccount getRecipientCopyTo() {
-        if(recipientsCopyTo != null)
-            return recipientsCopyTo[0];
-
-        return null;
-    }
-
-    public void setRecipientsCopyTo(List<UserAccount> recipientsCopyTo) {
-        if(recipientsCopyTo == null)
-            return;
-
-        this.recipientsCopyTo = new UserAccount[recipientsCopyTo.size()];
-        int i = 0;
-        for(UserAccount recipient: recipientsCopyTo) {
-            this.recipientsCopyTo[i++] = recipient;
-        }
-    }
-
-    public void setRecipientCopyTo(UserAccount recipientCopyTo) {
-        if(recipientsCopyTo == null)
-            recipientsCopyTo = new UserAccount[1];
-        recipientsCopyTo[0] = recipientCopyTo;
-    }
-
-    public UserAccount[] getRecipientsBlindCopyTo() {
-        return recipientsBlindCopyTo;
-    }
-
-    public UserAccount getRecipientBlindCopyTo() {
-        if(recipientsBlindCopyTo != null)
-            return recipientsBlindCopyTo[0];
-
-        return null;
-    }
-
-    public void setRecipientsBlindCopyTo(List<UserAccount> recipientsBlindCopyTo) {
-        if(recipientsBlindCopyTo == null)
-            return;
-
-        this.recipientsBlindCopyTo = new UserAccount[recipientsBlindCopyTo.size()];
-        int i = 0;
-        for(UserAccount recipient: recipientsBlindCopyTo) {
-            this.recipientsBlindCopyTo[i++] = recipient;
-        }
-    }
-
-    public void setRecipientBlindCopyTo(UserAccount recipientBlindCopyTo) {
-        if(recipientsBlindCopyTo == null)
-            recipientsBlindCopyTo = new UserAccount[1];
-        this.recipientsBlindCopyTo[0] = recipientBlindCopyTo;
+        recipients[0] = recipientTo;
     }
 
     public String getSubject() {
@@ -133,11 +76,19 @@ public class EmailMessage extends Message {
     public void setSubject(String subject) {
         this.subject = subject;
     }
+    
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
 
     public MimeMessage createMimeMessage(Session mailSession, UserAccount sender) {
         MimeMessage mimeMessage = createMimeMessage(mailSession);
         try {
-            Address sndr = new InternetAddress(sender.getEmail(), sender.getFullName());
+            Address sndr = new InternetAddress(sender.getPostingEmail(), sender.getFullName());
             mimeMessage.setSender(sndr);
         } catch (MessagingException me) {
             throw new RuntimeException("Error when sending the mail confirmation. The registration was not finalized.",me);
@@ -151,30 +102,14 @@ public class EmailMessage extends Message {
         try {
             MimeMessage msg = new MimeMessage(mailSession);
             msg.setSubject(this.getSubject(), "UTF-8");
-            Address[] recipients;
+            Address[] jRecipients; // JavaMail recipients.
 
-            if(recipientsTo != null) {
-                recipients = new Address[recipientsTo.length];
-                for(int i = 0;i < recipientsTo.length;i++) {
-                    recipients[i] = new InternetAddress(recipientsTo[i].getEmail(), recipientsTo[i].getFullName());
+            if(recipients != null) {
+                jRecipients = new Address[recipients.length];
+                for(int i = 0;i < recipients.length;i++) {
+                    jRecipients[i] = new InternetAddress(recipients[i].getPostingEmail(), recipients[i].getFullName());
                 }
-                msg.setRecipients(RecipientType.TO, recipients);
-            }
-
-            if(recipientsCopyTo != null) {
-                recipients = new Address[recipientsCopyTo.length];
-                for(int i = 0;i < recipientsCopyTo.length;i++) {
-                    recipients[i] = new InternetAddress(recipientsCopyTo[i].getEmail(), recipientsCopyTo[i].getFullName());
-                }
-                msg.setRecipients(RecipientType.CC, recipients);
-            }
-
-            if(recipientsBlindCopyTo != null) {
-                recipients = new Address[recipientsBlindCopyTo.length];
-                for(int i = 0;i < recipientsBlindCopyTo.length;i++) {
-                    recipients[i] = new InternetAddress(recipientsBlindCopyTo[i].getEmail(), recipientsBlindCopyTo[i].getFullName());
-                }
-                msg.setRecipients(RecipientType.BCC, recipients);
+                msg.setRecipients(RecipientType.TO, jRecipients);
             }
 
             msg.setText(getBody(), "UTF-8");
