@@ -54,10 +54,14 @@
                                         <h:commandLink value="#{member.firstName} #{member.lastName}" action="#{memberBean.load(member.id)}"/>
                                     </p:column>
                                     <p:column>
-                                        <f:facet name="header"><h:outputText value="#{bundle.gender}"/></f:facet>
+                                        
                                         <h:outputText value="#{member.gender}">
                                             <f:converter converterId="GenderNumberToString"/>
                                         </h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: center;">
+                                        <f:facet name="header"><h:outputText value="#{bundle.gender}"/></f:facet>
+                                        <h:graphicImage url="/images/#{member.strGender}.png"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header"><h:outputText value="#{bundle.email}"/></f:facet>
