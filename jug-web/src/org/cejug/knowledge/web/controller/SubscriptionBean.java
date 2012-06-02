@@ -220,7 +220,7 @@ public class SubscriptionBean {
         ResourceBundleHelper bundle = new ResourceBundleHelper();
         
         if(this.subscriptionDate == null) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorMessageSubscriptionDate"),""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorCode0008"),""));
             context.validationFailed();
         }
         else
@@ -245,7 +245,7 @@ public class SubscriptionBean {
         ResourceBundleHelper bundle = new ResourceBundleHelper();
         
         if(this.unsubscriptionDate == null) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorMessageUnsubscriptionDate"),""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorCode0009"),""));
             context.validationFailed();
         }
         else

@@ -167,29 +167,29 @@ public class UserAccountBean implements Serializable {
         ResourceBundleHelper bundle = new ResourceBundleHelper();
         
         if(!userAccount.isEmailConfirmed()) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorMessageEmailConfirmation"),""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorCode0003"),""));
             context.validationFailed();
         }
 
         if(userAccountBsn.existingAccount(this.userAccount.getUnverifiedEmail())) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorMessageExistingAccount"),""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorCode0004"),""));
             context.validationFailed();
         }
 
         if(!isPasswordConfirmed()) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorMessagePasswordNotConfirmed"),""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorCode0005"),""));
             context.validationFailed();
         }
         
         boolean isFirstUser = userAccountBsn.noAccount(); 
         
         if(!isFirstUser && this.locationBean.getCity() == null && (this.locationBean.getCityNotListed() == null || this.locationBean.getCityNotListed().isEmpty())) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getMessage("errorMessageCityNotInformed"),""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getMessage("errorCode0006"),""));
             context.validationFailed();
         }
 
         if(!isFirstUser && !isPrivacyValid(userAccount)) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getMessage("errorMessagePrivacyInvalid"),""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getMessage("errorCode0007"),""));
             context.validationFailed();
         }
         

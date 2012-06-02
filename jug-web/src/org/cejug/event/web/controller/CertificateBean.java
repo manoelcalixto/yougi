@@ -64,10 +64,10 @@ public class CertificateBean {
         boolean verified = attendeeBsn.verifyAuthenticityCertificate(this.certificate);
         ResourceBundleHelper bundle = new ResourceBundleHelper();
         if(verified) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getMessage("infoMessageCertificateValidated"), ""));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getMessage("infoCode0001"), ""));
         }
         else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, bundle.getMessage("warnMessageCertificateNotValidated"), bundle.getMessage("warnMessageCertificateNotValidatedDetail")));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, bundle.getMessage("warnCode0001"), bundle.getMessage("warnCode0002")));
         }
         return "certificate_validation";
     }
