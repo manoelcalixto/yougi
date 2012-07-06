@@ -372,10 +372,11 @@ public class UserAccountBsn {
      * account in the default group, sends a welcome message to the user and a 
      * notification message to the leaders. The user has access to the 
      * application when he/she is added to the default group.
+     * @return The confirmed user account.
      * */
-    public void confirmUser(String confirmationCode) {
+    public UserAccount confirmUser(String confirmationCode) {
     	if(confirmationCode == null || confirmationCode.isEmpty())
-            return;
+            return null;
     	
         try {
             UserAccount userAccount = (UserAccount)em.createQuery("select ua from UserAccount ua where ua.confirmationCode = :code")
@@ -402,9 +403,11 @@ public class UserAccountBsn {
                     messengerBsn.sendNewMemberAlertMessage(userAccount, leaders);
                 }
             }
+            
+            return userAccount;
         }
         catch(NoResultException nre) {
-            throw new IllegalArgumentException("Confirmation code "+ confirmationCode +" does not match any existing pendent account.", nre.getCause());
+            return null;
         }
     }
     

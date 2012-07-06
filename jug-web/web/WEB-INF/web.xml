@@ -22,18 +22,9 @@
     <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
-  <servlet>
-    <servlet-name>EmailConfirmation Servlet</servlet-name>
-    <servlet-class>org.cejug.web.controller.EmailConfirmationServlet</servlet-class>
-    <load-on-startup>3</load-on-startup>
-  </servlet>
   <servlet-mapping>
     <servlet-name>Faces Servlet</servlet-name>
     <url-pattern>*.xhtml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>EmailConfirmation Servlet</servlet-name>
-    <url-pattern>/EmailConfirmation</url-pattern>
   </servlet-mapping>
   <filter>
     <filter-name>PrimeFaces FileUpload Filter</filter-name>
