@@ -11,7 +11,7 @@
             <ui:define name="content">
                 <div class="content">
                     <h1>#{bundle.user}</h1>
-                    <h2><h:outputText value="#{memberBean.userAccount.fullName}"/> (<h:outputText value="#{memberBean.userAccount.email}"/>)</h2>
+                    <h2><h:outputText value="#{memberBean.userAccount.fullName}"/> (<h:outputText value="#{memberBean.userAccount.postingEmail}"/>)</h2>
                     <h:form>
                         <p:tabView dynamic="false" cache="true">
                             <p:tab title="#{bundle.profile}">
@@ -26,8 +26,8 @@
                                     <h:outputText value="#{bundle.email} *" styleClass="fieldLabel"/>
                                     <h:outputText value="#{bundle.username} *" styleClass="fieldLabel"/>
 
-                                    <h:outputLink value="mailto:#{memberBean.userAccount.email}">
-                                        <f:verbatim>#{memberBean.userAccount.email}</f:verbatim>
+                                    <h:outputLink value="mailto:#{memberBean.userAccount.postingEmail}">
+                                        <f:verbatim>#{memberBean.userAccount.postingEmail}</f:verbatim>
                                     </h:outputLink>
                                     <h:outputText value="#{memberBean.authentication.username}"/>
 
@@ -197,7 +197,8 @@
                                 </h:panelGrid>
 
                                 <h:inputHidden id="id" value="#{memberBean.userAccount.id}"/>
-                                <h:inputHidden id="idContact" value="#{memberBean.userAccount.id}"/>
+                                <h:inputHidden id="email" value="#{memberBean.userAccount.email}"/>
+                                <h:inputHidden id="unverifiedEmail" value="#{memberBean.userAccount.unverifiedEmail}"/>
                             </p:tab>
                             <p:tab title="#{bundle.messages}">
                                 <p:dataTable var="historicMessage" value="#{memberBean.historicMessages}">

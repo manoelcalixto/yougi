@@ -98,7 +98,7 @@ public class MessageTemplate implements Serializable {
             variable = variable.substring(2, variable.length() - 1);
             value = values.get(variable);
             if(value != null)
-                this.body = this.body.replace("#{" + variable + "}", values.get(variable).toString());
+                this.body = body.replace("#{" + variable + "}", values.get(variable).toString());
         }
     }
     

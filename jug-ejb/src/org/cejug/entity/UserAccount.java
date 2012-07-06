@@ -231,7 +231,10 @@ public class UserAccount implements Serializable {
     }
 
     public void setUnverifiedEmail(String unverifiedEmail) {
-        this.unverifiedEmail = unverifiedEmail.toLowerCase();
+        if(unverifiedEmail != null)
+            this.unverifiedEmail = unverifiedEmail.toLowerCase();
+        else
+            this.unverifiedEmail = null;
     }
     
     /**
