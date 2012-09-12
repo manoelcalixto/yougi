@@ -126,7 +126,7 @@ public class SubscriptionBsn {
     public List<MailingListSubscription> findMailingListSubscriptions(MailingList mailingList, String email) {
         return em.createQuery("select mls from MailingListSubscription mls where mls.mailingList = :mailingList and mls.emailAddress = :email order by mls.subscriptionDate desc")
                  .setParameter("mailingList", mailingList)
-                 .setParameter("email", email)
+                 .setParameter("email", email.trim())
                  .getResultList();
     }
 

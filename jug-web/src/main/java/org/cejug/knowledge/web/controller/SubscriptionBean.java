@@ -159,8 +159,9 @@ public class SubscriptionBean {
     }
     
     public List<MailingList> getMailingLists() {
-        if(this.mailingLists == null)
+        if(this.mailingLists == null) {
             this.mailingLists = mailingListBsn.findMailingLists();
+        }
         return this.mailingLists;
     }
     
@@ -172,8 +173,9 @@ public class SubscriptionBean {
     }
     
     public Boolean getIsSubscribed() {
-        if(isSubscribed == null)
+        if(isSubscribed == null) {
             isSubscribed = subscriptionBsn.isSubscribed(this.subscription.getEmailAddress());
+        }
         return isSubscribed;
     }
     
