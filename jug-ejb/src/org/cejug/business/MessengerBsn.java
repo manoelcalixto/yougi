@@ -60,7 +60,7 @@ public class MessengerBsn {
     @EJB
     private ApplicationPropertyBsn applicationPropertyBsn;
     
-    static final Logger logger = Logger.getLogger("org.cejug.business.MessengerBsn");
+    static final Logger logger = Logger.getLogger(MessengerBsn.class.getName());
     
     public HistoricalMessage findHistoricalMessage(String id) {
         if(id != null)
