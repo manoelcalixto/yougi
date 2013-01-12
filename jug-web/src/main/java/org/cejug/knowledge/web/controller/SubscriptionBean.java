@@ -40,7 +40,7 @@ import org.cejug.web.util.ResourceBundleHelper;
 
 /**
  *
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @ManagedBean
 @RequestScoped

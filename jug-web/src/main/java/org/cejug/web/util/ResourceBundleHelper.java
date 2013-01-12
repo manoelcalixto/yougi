@@ -29,7 +29,7 @@ import javax.faces.context.FacesContext;
  * Encapsulates the complexity of getting the resource bundle from the context.
  * Actually, this is so complex that a better approach should be investigated, or
  * a solution presented to spec leaders.
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 public class ResourceBundleHelper {
     

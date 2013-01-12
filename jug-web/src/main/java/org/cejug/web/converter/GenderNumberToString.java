@@ -27,7 +27,7 @@ import javax.faces.convert.FacesConverter;
 import org.cejug.web.util.ResourceBundleHelper;
 
 /**
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @FacesConverter(value="GenderNumberToString")
 public class GenderNumberToString implements Converter {

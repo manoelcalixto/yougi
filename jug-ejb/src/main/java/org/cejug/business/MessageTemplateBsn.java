@@ -30,7 +30,7 @@ import org.cejug.util.EntitySupport;
 
 /**
  * Business logic related to MessageTemplate entity class.
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Stateless
 @LocalBean

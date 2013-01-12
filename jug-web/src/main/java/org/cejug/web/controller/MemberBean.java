@@ -47,7 +47,7 @@ import org.cejug.knowledge.entity.MailingList;
 import org.cejug.knowledge.entity.MailingListSubscription;
 
 /**
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @ManagedBean
 @SessionScoped

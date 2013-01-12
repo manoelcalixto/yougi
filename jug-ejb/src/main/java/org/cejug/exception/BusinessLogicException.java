@@ -22,7 +22,7 @@ package org.cejug.exception;
 
 /**
  *
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 public class BusinessLogicException extends RuntimeException {
 

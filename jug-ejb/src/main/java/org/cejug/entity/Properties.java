@@ -21,7 +21,7 @@
 package org.cejug.entity;
 
 /**
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 public enum Properties {
     FILE_REPOSITORY_PATH("fileRepositoryPath", ""),

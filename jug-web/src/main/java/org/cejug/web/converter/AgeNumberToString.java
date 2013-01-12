@@ -26,7 +26,7 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
 /**
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @FacesConverter(value="AgeNumberToString")
 public class AgeNumberToString implements Converter {

@@ -26,7 +26,7 @@ import java.util.List;
 import javax.persistence.*;
 
 /**
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Entity
 @Table(name = "mailing_list_message")

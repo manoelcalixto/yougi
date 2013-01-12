@@ -30,7 +30,7 @@ import javax.persistence.*;
  * added this way should pass through a validation process before being
  * considered as a city covered by the JUG.
  *
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Entity
 @Table(name = "city")

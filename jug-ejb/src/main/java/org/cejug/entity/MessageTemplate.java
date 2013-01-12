@@ -31,7 +31,7 @@ import javax.persistence.*;
 /**
  * Message template with variables to be fulfilled with object attributes.
  *
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Entity
 @Table(name = "message_template")

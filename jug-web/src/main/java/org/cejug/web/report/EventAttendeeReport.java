@@ -28,7 +28,7 @@ import org.cejug.event.entity.Attendee;
 
 /**
  *
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 public class EventAttendeeReport {
 

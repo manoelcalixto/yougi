@@ -37,7 +37,7 @@ import org.cejug.util.EntitySupport;
 
 /**
  * Implements the business logic related to the management of mailing lists.
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Stateless
 @LocalBean

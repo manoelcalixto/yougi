@@ -29,7 +29,7 @@ import org.cejug.util.TextUtils;
 
 /**
  * Represents the user account of jug members.
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Entity
 @Table(name="user_account")

@@ -38,7 +38,7 @@ import org.cejug.knowledge.business.SubscriptionBsn;
 import org.cejug.util.EntitySupport;
 
 /**
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Stateless
 @LocalBean

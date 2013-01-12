@@ -34,7 +34,7 @@ import org.cejug.util.EntitySupport;
 /**
  * This class implements the business logic of events' sponsors.
  *
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Stateless
 @LocalBean

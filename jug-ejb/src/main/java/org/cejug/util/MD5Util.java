@@ -26,7 +26,7 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  *
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 public class MD5Util {
     public static String hex(byte[] array) {

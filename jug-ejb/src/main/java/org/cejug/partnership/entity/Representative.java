@@ -31,7 +31,7 @@ import javax.persistence.Table;
 import org.cejug.entity.UserAccount;
 
 /**
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Entity
 @Table(name = "representative")

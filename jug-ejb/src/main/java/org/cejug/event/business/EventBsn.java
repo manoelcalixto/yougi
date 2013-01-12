@@ -33,7 +33,7 @@ import org.cejug.util.EntitySupport;
 
 /**
  * Manages events organized by the user group.
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Stateless
 @LocalBean

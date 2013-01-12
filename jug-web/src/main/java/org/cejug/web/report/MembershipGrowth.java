@@ -37,7 +37,7 @@ import org.primefaces.model.chart.ChartSeries;
 /**
  * This class feeds the bar chart that shows the growth of the user group in a
  * monthly basis.
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @ManagedBean
 @RequestScoped
@@ -108,8 +108,9 @@ public class MembershipGrowth {
         for(UserAccount userAccount: userAccounts) {
             registrationDate = Calendar.getInstance();
             registrationDate.setTime(userAccount.getRegistrationDate());
-            if(currentYear == 0)
+            if(currentYear == 0) {
                 currentYear = registrationDate.get(Calendar.YEAR);
+            }
             
             year = registrationDate.get(Calendar.YEAR) - currentYear;
             month = registrationDate.get(Calendar.MONTH);

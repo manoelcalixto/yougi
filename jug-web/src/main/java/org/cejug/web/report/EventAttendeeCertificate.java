@@ -28,7 +28,7 @@ import org.cejug.util.TextUtils;
 
 /**
  *
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 public class EventAttendeeCertificate extends PdfPageEventHelper {
 

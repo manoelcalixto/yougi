@@ -42,7 +42,7 @@ import org.cejug.util.TextUtils;
  * Centralizes the posting of all email messages sent by the system and manage
  * the history of those messages. Each kind of message has a method, which can 
  * be involked from different parts of the business logic.
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Stateless
 @LocalBean

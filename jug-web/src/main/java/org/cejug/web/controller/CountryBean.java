@@ -30,7 +30,7 @@ import org.cejug.business.LocationBsn;
 import org.cejug.entity.Country;
 
 /**
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @ManagedBean
 @RequestScoped

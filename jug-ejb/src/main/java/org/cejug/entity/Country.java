@@ -27,7 +27,7 @@ import javax.persistence.Table;
 
 /**
  * Represents a country covered by the Java User Group.
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Entity
 @Table(name = "country")
