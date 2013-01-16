@@ -8,6 +8,7 @@ Contact
 
            Project Leader: Hildeberto Mendonca
             Personal Blog: http://www.hildeberto.com
+                Member of: CEJUG (Ceara Java User Group) http://www.cejug.org
             Email Address: me at hildeberto.com
    
           Project Website: https://github.com/htmfilho/jug
