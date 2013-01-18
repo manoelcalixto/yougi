@@ -8,7 +8,7 @@ create web_source (
     id          char(32)     not null,
     title       varchar(100) not null,
     feed        varchar(255) not null,
-    provided_by char(32)         null
+    provider    char(32)         null
 ) engine innodb;
 
 alter table web_source add constraint pk_web_source primary key (id);
@@ -20,10 +20,10 @@ create table article (
     author           char(32)     not null,
     web_source       char(32)     not null,
     content          text         not null,
-    abstract         text             null,
-    source_link      varchar(255)     null,
+    summary          text             null,
+    perm_link        varchar(255)     null,
     topics           varchar(255)     null,
-    date_publication date             null
+    publication      date             null
 ) engine innodb;
 
 alter table article add constraint pk_article primary key (id);
