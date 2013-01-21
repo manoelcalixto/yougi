@@ -30,7 +30,7 @@ import org.cejug.knowledge.business.MailingListBsn;
 import org.cejug.knowledge.entity.MailingList;
 
 /**
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @ManagedBean
 @RequestScoped

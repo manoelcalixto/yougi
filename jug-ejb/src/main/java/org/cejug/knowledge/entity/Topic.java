@@ -27,7 +27,7 @@ import javax.persistence.Table;
 import org.cejug.exception.BusinessLogicException;
 
 /**
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Entity
 @Table(name = "topic")

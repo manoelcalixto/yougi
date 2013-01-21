@@ -25,7 +25,7 @@ import javax.persistence.*;
 
 /**
  * Represents the allocation of users in groups.
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Entity
 @Table(name = "user_group")

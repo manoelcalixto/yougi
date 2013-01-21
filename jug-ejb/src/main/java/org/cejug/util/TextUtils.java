@@ -27,7 +27,7 @@ import java.util.TimeZone;
 /**
  * This class groups a set of methods to deal with special text requirements
  * that are not already covered by the Java API.
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 public class TextUtils {
 

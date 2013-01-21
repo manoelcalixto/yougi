@@ -33,7 +33,7 @@ import org.cejug.event.entity.Event;
 import org.cejug.event.entity.EventSession;
 
 /**
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @ManagedBean
 @RequestScoped

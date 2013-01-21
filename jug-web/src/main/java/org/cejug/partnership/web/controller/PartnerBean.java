@@ -39,7 +39,7 @@ import org.cejug.web.controller.LocationBean;
 import org.primefaces.model.DualListModel;
 
 /**
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @ManagedBean
 @RequestScoped

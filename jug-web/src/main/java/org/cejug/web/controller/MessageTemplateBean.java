@@ -30,7 +30,7 @@ import org.cejug.business.MessageTemplateBsn;
 import org.cejug.entity.MessageTemplate;
 
 /**
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @ManagedBean
 @RequestScoped

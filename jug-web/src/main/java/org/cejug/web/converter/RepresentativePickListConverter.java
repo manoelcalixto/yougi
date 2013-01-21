@@ -27,7 +27,7 @@ import javax.faces.convert.FacesConverter;
 import org.cejug.entity.UserAccount;
 
 /**
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @FacesConverter(value="RepresentativePickListConverter")
 public class RepresentativePickListConverter implements Converter {

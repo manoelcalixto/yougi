@@ -26,7 +26,7 @@ import javax.persistence.Embeddable;
 
 /**
  *
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Embeddable
 public class UpdateHistoryPK implements Serializable {

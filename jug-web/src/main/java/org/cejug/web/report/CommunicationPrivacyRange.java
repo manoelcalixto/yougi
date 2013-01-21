@@ -35,7 +35,7 @@ import org.primefaces.model.chart.ChartSeries;
 /**
  * This class feeds a column chart that shows members' preferences in terms of
  * privacy.
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @ManagedBean
 @RequestScoped

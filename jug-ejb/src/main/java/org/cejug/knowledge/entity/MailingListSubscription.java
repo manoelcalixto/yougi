@@ -26,7 +26,7 @@ import javax.persistence.*;
 import org.cejug.entity.UserAccount;
 
 /**
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Entity
 @Table(name = "mailing_list_subscription")

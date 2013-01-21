@@ -32,7 +32,7 @@ import javax.persistence.Table;
 import org.cejug.partnership.entity.Partner;
 
 /**
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Entity
 @Table(name="event_sponsor")

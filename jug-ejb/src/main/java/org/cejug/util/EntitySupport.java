@@ -23,7 +23,7 @@ package org.cejug.util;
 import java.util.UUID;
 
 /**
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 public class EntitySupport {
     

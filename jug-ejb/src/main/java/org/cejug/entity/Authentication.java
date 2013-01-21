@@ -29,7 +29,7 @@ import org.cejug.util.Base64Encoder;
 
 /**
  * Represents the authentication credentials of the user.
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Entity
 @Table(name="authentication")

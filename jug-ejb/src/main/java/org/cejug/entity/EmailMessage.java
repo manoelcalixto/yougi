@@ -32,7 +32,7 @@ import javax.mail.internet.MimeMessage;
 /**
  * Adapts a mime email message to the application domain, considering a
  * UserAccount as a usual recipient.
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 public class EmailMessage {
 

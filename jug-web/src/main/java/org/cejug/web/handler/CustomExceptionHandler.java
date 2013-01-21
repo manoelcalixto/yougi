@@ -21,7 +21,6 @@
 package org.cejug.web.handler;
 
 import java.util.Iterator;
-
 import javax.faces.FacesException;
 import javax.faces.application.NavigationHandler;
 import javax.faces.application.ViewExpiredException;

@@ -37,7 +37,7 @@ import org.cejug.entity.Properties;
 import org.cejug.entity.UserAccount;
 
 /**
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @ManagedBean
 @SessionScoped
@@ -101,6 +101,7 @@ public class UserProfileBean {
      * running.
      */
     public String getTimeZone() {
+        // It gives priority to the user preference.
         UserAccount userAcc = getUserAccount();
         if(userAcc != null && userAcc.getTimeZone() != null && !userAcc.getTimeZone().isEmpty()) {
             return userAcc.getTimeZone();

@@ -29,7 +29,7 @@ import javax.persistence.Transient;
 
 /**
  * Represents a group of users.
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Entity
 @Table(name="access_group")

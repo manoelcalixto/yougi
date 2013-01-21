@@ -32,7 +32,7 @@ import org.cejug.entity.UserGroup;
 
 /**
  * Business logic to manage the relationship between users and access groups.
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Stateless
 @LocalBean

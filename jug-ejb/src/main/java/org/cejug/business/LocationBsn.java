@@ -36,7 +36,7 @@ import org.cejug.util.EntitySupport;
  * Manages data of countries, states or provinces and cities because these
  * three entities are strongly related and because they are too simple to
  * have an exclusive business class.
- * @author Hildeberto Mendonca
+ * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Stateless
 @LocalBean
