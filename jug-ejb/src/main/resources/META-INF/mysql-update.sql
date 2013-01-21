@@ -1,9 +1,40 @@
+insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values
+   ('1.9',
+    '1.09',
+    'New tables to store agregated content from other web sources.',
+    'Agregated content from other web sources.');
+
+create web_source (
+    id          char(32)     not null,
+    title       varchar(100) not null,
+    feed        varchar(255) not null,
+    provider    char(32)         null
+) engine innodb;
+
+alter table web_source add constraint pk_web_source primary key (id);
+alter table web_source add constraint fk_provider_web_source foreign key (provided_by) references user_account (id) on delete set null;
+
+create table article (
+    id               char(32)     not null,
+    title            varchar(255) not null,
+    author           char(32)     not null,
+    web_source       char(32)     not null,
+    content          text         not null,
+    summary          text             null,
+    perm_link        varchar(255)     null,
+    topics           varchar(255)     null,
+    publication      date             null
+) engine innodb;
+
+alter table article add constraint pk_article primary key (id);
+alter table article add constraint fk_author_article foreign key (author) references user_account (id) on delete cascade;
+alter table article add constraint fk_source_article foreign key (web_source) references web_source (id) on delete cascade;
 
 alter table user_account add language varchar(5) null;
 alter table user_account add constraint fk_language_user foreign key (language) references language(acronym) on delete set null;
 
 ###############################################################################
-insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 
+insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values
    ('1.8',
     '1.08',
     'The table mailing_list_message stores messages sent to the mainling lists. The table message_history store all messages that the system sends to users.',
@@ -45,7 +76,7 @@ alter table user_account modify email varchar(100) null;
 insert into message_template (id, title, body) values ('KJZISKQBE45945D29109A8D6C92IZJ89', '[UG] Request for Email Change', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you requested to change your email address from <i>#{userAccount.email}</i> to <i>#{userAccount.unverifiedEmail}</i>. The authorization code to perform this operation is:</p><p>#{userAccount.confirmationCode}</p><p>Inform this code in the form that you saw right after changing the email address or just follow the link below:</p><p><a href=''http://#{serverAddress}/change_email_confirmation.xhtml?cc=#{userAccount.confirmationCode}''>http://#{serverAddress}/change_email_confirmation.xhtml?cc=#{userAccount.confirmationCode}</a></p><p>Thank you!<br/>\r\n\r\n<b>UG Leadership Team</b></p>');
 
 ###############################################################################
-insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 
+insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values
    ('1.7',
     '1.07',
     'Separation of authentication data from the user_account table. The password is retrieved only for authentication purpose and when changing the password.',
@@ -65,15 +96,15 @@ insert into authentication (username, password, user_account) select username, p
 alter table user_account drop column username;
 alter table user_account drop column password;
 
-insert into user_account (id, email, first_name, last_name, gender, deactivated, deactivation_type) 
+insert into user_account (id, email, first_name, last_name, gender, deactivated, deactivation_type)
 select id, email_address, '', '', 1, true, 2 from mailing_list_subscription where email_address not in (select email from user_account);
 
-update mailing_list_subscription, user_account 
+update mailing_list_subscription, user_account
    set mailing_list_subscription.user_account = user_account.id
  where user_account.id = mailing_list_subscription.id;
 
 ###############################################################################
-insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 
+insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values
    ('1.4',
     '1.06',
     'Adding properties for the certificate in the table attendee and event.',
@@ -89,7 +120,7 @@ alter table event add certificate_template varchar(100) null;
 update event set certificate_template = 'default_certificate.pdf';
 
 ###############################################################################
-insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 
+insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values
    ('1.3',
     '1.05',
     'Changing tables city and user_account to support timezone.',
@@ -102,7 +133,7 @@ alter table user_account add timezone varchar(20) null;
 update user_account set timezone = 'UTC -3:00' where country = 'BRA';
 
 ###############################################################################
-insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 
+insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values
    ('1.2',
     '1.04',
     'Creation of the tables to store event sessions and session speakers. Recreation of the table Topic. Every user that confirmed interest in participating in a event will be checked in the privacy as interested in events.',
@@ -152,7 +183,7 @@ drop table version_database;
 update user_account set event = true where id in (select attendee from attendee) and event = false;
 
 ###############################################################################
-insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 
+insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values
    ('1.1',
     '1.03',
     'Database fix on the table -partner- to support a name with 100 characteres.',
@@ -171,7 +202,7 @@ create table update_history (
 
 alter table update_history add constraint pk_version_database primary key (db_version, app_version);
 
-insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values 
+insert into update_history (db_version, app_version, db_release_notes, app_release_notes) values
    ('1.0',
     '1.02',
     'Fixes a typo in one of the columns in the mailing_list table. A standard subscription data was set to all mailing list subscribers who registered before the system went into production.',
@@ -182,7 +213,7 @@ alter table mailing_list change unsubcription unsubscription varchar(100) null;
 update mailing_list_subscription set subscription_date = '2010-12-31' where subscription_date is null;
 
 ###############################################################################
-# Indicates which partners are sponsors of an event, keeps the history of 
+# Indicates which partners are sponsors of an event, keeps the history of
 # database updates and store the list of supported languages.
 # 08/12/2011
 # Hildeberto Mendonca
@@ -203,7 +234,7 @@ create table version_database (
     version      varchar(10) not null,
     app_version  varchar(10) not null,
     date_release timestamp   not null default CURRENT_TIMESTAMP,
-    description  text            null    
+    description  text            null
 ) engine = innodb;
 
 alter table version_database add constraint pk_version_database primary key (version);
@@ -226,8 +257,8 @@ create table topic (
 alter table topic add constraint pk_topic primary key (name);
 
 insert into version_database (version, app_version, description) values (
-   '0.7', 
-   '0.28', 
+   '0.7',
+   '0.28',
    'Indicates which partners are sponsors of an event, keeps the history of database updates, stores the list of supported languages and stores the list of topics allowed in the user group.');
 
 ###############################################################################
@@ -256,7 +287,7 @@ alter table user_account add constraint fk_country_user foreign key (country) re
 alter table user_account add constraint fk_province_user foreign key (province) references province(id) on delete set null;
 alter table user_account add constraint fk_city_user foreign key (city) references city(id) on delete set null;
 
-update user_account, contact 
+update user_account, contact
    set user_account.website = contact.website,
        user_account.twitter = contact.twitter,
        user_account.country = contact.country,
@@ -265,7 +296,7 @@ update user_account, contact
        user_account.postal_code = contact.postal_code
 where user_account.id = contact.user;
 
-update user_account, communication_privacy 
+update user_account, communication_privacy
    set user_account.public_profile = communication_privacy.public_profile,
        user_account.mailing_list = communication_privacy.mailing_list,
        user_account.news = communication_privacy.news,
