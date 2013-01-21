@@ -73,8 +73,8 @@ public class SecurityBackingBean {
     }
 
     /**
-     * Performe the logout of the user by removing the user from the session and
-     * distroying the session.
+     * Perform the logout of the user by removing the user from the session and
+     * destroying the session.
      * @return The next step in the navigation flow.
      */
     public String logout() {

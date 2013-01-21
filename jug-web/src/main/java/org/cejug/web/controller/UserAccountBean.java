@@ -123,8 +123,9 @@ public class UserAccountBean implements Serializable {
     }
 
     public boolean isConfirmed() {
-        if(userAccount.getConfirmationCode() == null || userAccount.getConfirmationCode().isEmpty())
+        if(userAccount.getConfirmationCode() == null || userAccount.getConfirmationCode().isEmpty()) {
             return true;
+        }
         return false;
     }
 

@@ -137,12 +137,19 @@ public class UserAccountBsn {
     }
 
     /**
-     * Returns all activated user accounts ordered by name.
+     * @return All activated user accounts ordered by name.
      */
-    @SuppressWarnings("unchecked")
     public List<UserAccount> findUserAccounts() {
         return em.createQuery("select ua from UserAccount ua where ua.deactivated = :deactivated and ua.confirmationCode is null order by ua.firstName")
                  .setParameter("deactivated", Boolean.FALSE)
+                 .getResultList();
+    }
+
+    /**
+     * @return All users that informed their websites.
+     */
+    public List<UserAccount> findUserAccountsWithWebsite() {
+        return em.createQuery("select ua from UserAccount ua where ua.deactivated = false and ua.confirmationCode is null and ua.website is not null order by ua.firstName")
                  .getResultList();
     }
 

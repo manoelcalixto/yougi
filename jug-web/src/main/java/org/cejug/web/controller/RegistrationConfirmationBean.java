@@ -119,15 +119,18 @@ public class RegistrationConfirmationBean {
     public String confirmUser() {
         if(this.informedCode != null && !this.informedCode.isEmpty()) {
             this.userAccount = userAccountBsn.confirmUser(this.informedCode);
-            if(this.userAccount != null)
+            if(this.userAccount != null) {
                 this.validated = Boolean.TRUE;
-            else
+            }
+            else {
                 this.validated = Boolean.FALSE;
+            }
 
             FacesContext context = FacesContext.getCurrentInstance();
             ResourceBundleHelper bundle = new ResourceBundleHelper();
-            if(!this.validated)
+            if(!this.validated) {
                 context.addMessage(this.informedCode, new FacesMessage(FacesMessage.SEVERITY_WARN, bundle.getMessage("warnCode0003"), ""));
+            }
         }
         return "registration_confirmation";
     }

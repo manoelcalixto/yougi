@@ -244,7 +244,7 @@ alter table mailing_list_message add constraint fk_mailing_list_message foreign 
 alter table mailing_list_message add constraint fk_mailing_list_sender foreign key (sender) references mailing_list_subscription (id) on delete set null;
 alter table mailing_list_message add constraint fk_message_reply_to foreign key (reply_to) references mailing_list_message(id) on delete set null;
 
-create web_source (
+create table web_source (
     id          char(32)     not null,
     title       varchar(100) not null,
     feed        varchar(255) not null,
@@ -252,12 +252,12 @@ create web_source (
 ) engine innodb;
 
 alter table web_source add constraint pk_web_source primary key (id);
-alter table web_source add constraint fk_provider_web_source foreign key (provided_by) references user_account (id) on delete set null;
+alter table web_source add constraint fk_provider_web_source foreign key (provider) references user_account (id) on delete set null;
 
 create table article (
     id               char(32)     not null,
     title            varchar(255) not null,
-    author           char(32)     not null,
+    author           varchar(100) not null,
     web_source       char(32)     not null,
     content          text         not null,
     summary          text             null,
@@ -267,7 +267,6 @@ create table article (
 ) engine innodb;
 
 alter table article add constraint pk_article primary key (id);
-alter table article add constraint fk_author_article foreign key (author) references user_account (id) on delete cascade;
 alter table article add constraint fk_source_article foreign key (web_source) references web_source (id) on delete cascade;
 
 ###############################################################################
