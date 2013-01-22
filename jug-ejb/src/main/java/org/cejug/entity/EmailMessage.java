@@ -45,15 +45,16 @@ public class EmailMessage {
     }
 
     public UserAccount getRecipient() {
-        if(recipients != null)
+        if(recipients != null) {
             return recipients[0];
-        
+        }
         return null;
     }
 
     public void setRecipients(List<UserAccount> recipients) {
-        if(recipients == null)
+        if(recipients == null) {
             return;
+        }
 
         this.recipients = new UserAccount[recipients.size()];
         int i = 0;

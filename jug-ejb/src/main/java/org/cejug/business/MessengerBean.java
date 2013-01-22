@@ -32,10 +32,9 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.cejug.entity.Properties;
 import org.cejug.entity.*;
+import org.cejug.entity.Properties;
 import org.cejug.event.entity.Event;
-import org.cejug.util.EntitySupport;
 import org.cejug.util.TextUtils;
 
 /**
@@ -46,7 +45,7 @@ import org.cejug.util.TextUtils;
  */
 @Stateless
 @LocalBean
-public class MessengerBsn {
+public class MessengerBean {
     
     @PersistenceContext
     private EntityManager em;
@@ -60,85 +59,11 @@ public class MessengerBsn {
     @EJB
     private ApplicationPropertyBsn applicationPropertyBsn;
     
-    static final Logger logger = Logger.getLogger(MessengerBsn.class.getName());
+    @EJB
+    private MessageHistoryBean messageHistoryBean;
     
-    public HistoricalMessage findHistoricalMessage(String id) {
-        if(id != null)
-            return em.find(HistoricalMessage.class, id);
-        else
-            return null;
-    }
-    
-    public List<HistoricalMessage> findHistoricalMessageByRecipient(UserAccount recipient) {
-    	List<HistoricalMessage> messages = em.createQuery("select hm from HistoricalMessage hm where hm.recipient = :userAccount order by hm.dateSent desc")
-                                          .setParameter("userAccount", recipient)
-                                          .getResultList();
-        return messages;
-    }
-    
-    public HistoricalMessage saveHistoricalMessage(HistoricalMessage message) {
-    	if(message.getId() == null || message.getId().isEmpty()) {
-            message.setId(EntitySupport.generateEntityId());
-            em.persist(message);
-            return message;
-        }
-        else {
-            return em.merge(message);
-        }
-    }
-
-    public void removeHistoricalMessage(String id) {
-        HistoricalMessage messageHistory = findHistoricalMessage(id);
-        if(messageHistory != null)
-            em.remove(messageHistory);
-    }
-    
-    /**
-     * If the application is configured to send emails, it creates a email message
-     * based on the message template. The message is saved in the history and an
-     * attempt to send the message is done. If successful the historical message
-     * is set as sent, otherwise the message is set as not sent and new attempts
-     * will be carried out later until the sessage is successfully sent.
-     * @param recipients The list of users for who the message will be sent.
-     * @param messageTemplate The template of the message to be sent.
-     */
-    public void sendEmailMessage(List<UserAccount> recipients, MessageTemplate messageTemplate) throws MessagingException {
-        ApplicationProperty appProp = applicationPropertyBsn.findApplicationProperty(Properties.SEND_EMAILS);
-        if(appProp.sendEmailsEnabled()) {
-            EmailMessage emailMessage;
-            HistoricalMessage historicalMessage;
-            MessagingException messagingException = null;
-            for(UserAccount recipient: recipients) {
-                emailMessage = new EmailMessage();
-                emailMessage.setRecipient(recipient);
-                emailMessage.setSubject(messageTemplate.getTitle());
-                emailMessage.setBody(messageTemplate.getBody());
-                
-                historicalMessage = new HistoricalMessage(emailMessage);
-                historicalMessage = saveHistoricalMessage(historicalMessage);
-                
-                try {
-                    Transport.send(emailMessage.createMimeMessage(mailSession));
-                    historicalMessage.setMessageSent(Boolean.TRUE);
-                    historicalMessage.setDateSent(Calendar.getInstance().getTime());
-                }
-                catch(MessagingException me) {
-                    historicalMessage.setMessageSent(Boolean.FALSE);
-                    messagingException = me;
-                }
-            }
-            
-            if(messagingException != null)
-                throw messagingException;
-        }
-    }
-    
-    public void sendEmailMessage(UserAccount recipient, MessageTemplate messageTemplate) throws MessagingException {
-        List<UserAccount> recipients = new ArrayList<UserAccount>();
-        recipients.add(recipient);
-        sendEmailMessage(recipients, messageTemplate);
-    }
-    
+    static final Logger logger = Logger.getLogger(MessengerBean.class.getName());
+        
     public void sendEmailConfirmationRequest(UserAccount userAccount, String serverAddress) {
         MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("E3F122DCC87D42248872878412B34CEE");
         em.detach(messageTemplate);
@@ -304,6 +229,53 @@ public class MessengerBsn {
         }
         catch(MessagingException me) {
             logger.log(Level.WARNING, "Error when sending the confirmation of event attendance to user "+ userAccount.getPostingEmail(), me);
+        }
+    }
+    
+    public void sendEmailMessage(UserAccount recipient, MessageTemplate messageTemplate) throws MessagingException {
+        List<UserAccount> recipients = new ArrayList<UserAccount>();
+        recipients.add(recipient);
+        sendEmailMessage(recipients, messageTemplate);
+    }
+    
+    /**
+     * If the application is configured to send emails, it creates a email message
+     * based on the message template. The message is saved in the history and an
+     * attempt to send the message is done. If successful the historical message
+     * is set as sent, otherwise the message is set as not sent and new attempts
+     * will be carried out later until the sessage is successfully sent.
+     * @param recipients The list of users for who the message will be sent.
+     * @param messageTemplate The template of the message to be sent.
+     */
+    public void sendEmailMessage(List<UserAccount> recipients, MessageTemplate messageTemplate) throws MessagingException {
+        ApplicationProperty appProp = applicationPropertyBsn.findApplicationProperty(Properties.SEND_EMAILS);
+        if(appProp.sendEmailsEnabled()) {
+            EmailMessage emailMessage;
+            MessageHistory messageHistory;
+            MessagingException messagingException = null;
+            for(UserAccount recipient: recipients) {
+                emailMessage = new EmailMessage();
+                emailMessage.setRecipient(recipient);
+                emailMessage.setSubject(messageTemplate.getTitle());
+                emailMessage.setBody(messageTemplate.getBody());
+                
+                messageHistory = MessageHistory.createHistoricMessage(emailMessage);
+                messageHistory = messageHistoryBean.saveHistoricalMessage(messageHistory);
+                
+                try {
+                    Transport.send(emailMessage.createMimeMessage(mailSession));
+                    messageHistory.setMessageSent(Boolean.TRUE);
+                    messageHistory.setDateSent(Calendar.getInstance().getTime());
+                }
+                catch(MessagingException me) {
+                    messageHistory.setMessageSent(Boolean.FALSE);
+                    messagingException = me;
+                }
+            }
+            
+            if(messagingException != null) {
+                throw messagingException;
+            }
         }
     }
 }

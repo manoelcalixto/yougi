@@ -54,7 +54,7 @@ public class UserAccountBsn {
     private LocationBsn locationBsn;
 
     @EJB
-    private MessengerBsn messengerBsn;
+    private MessengerBean messengerBean;
 
     @EJB
     private ApplicationPropertyBsn applicationPropertyBsn;
@@ -362,7 +362,7 @@ public class UserAccountBsn {
             ApplicationProperty appProp = applicationPropertyBsn.findApplicationProperty(Properties.SEND_EMAILS);
             if(appProp.sendEmailsEnabled()) {
                 ApplicationProperty url = applicationPropertyBsn.findApplicationProperty(Properties.URL);
-                messengerBsn.sendEmailConfirmationRequest(userAccount, url.getPropertyValue());
+                messengerBean.sendEmailConfirmationRequest(userAccount, url.getPropertyValue());
             }
         }
     }
@@ -396,11 +396,11 @@ public class UserAccountBsn {
 
                 ApplicationProperty appProp = applicationPropertyBsn.findApplicationProperty(Properties.SEND_EMAILS);
                 if(appProp.sendEmailsEnabled()) {
-                    messengerBsn.sendWelcomeMessage(userAccount);
+                    messengerBean.sendWelcomeMessage(userAccount);
 
                     AccessGroup administrativeGroup = accessGroupBsn.findAdministrativeGroup();
                     List<UserAccount> leaders = userGroupBsn.findUsersGroup(administrativeGroup);
-                    messengerBsn.sendNewMemberAlertMessage(userAccount, leaders);
+                    messengerBean.sendNewMemberAlertMessage(userAccount, leaders);
                 }
             }
             
@@ -433,14 +433,14 @@ public class UserAccountBsn {
         ApplicationProperty appProp = applicationPropertyBsn.findApplicationProperty(Properties.SEND_EMAILS);
 
         if(!existingUserAccount.getDeactivationReason().trim().isEmpty() && appProp.sendEmailsEnabled()) {
-            messengerBsn.sendDeactivationReason(existingUserAccount);
+            messengerBean.sendDeactivationReason(existingUserAccount);
         }
         
         AccessGroup administrativeGroup = accessGroupBsn.findAdministrativeGroup();
         List<UserAccount> leaders = userGroupBsn.findUsersGroup(administrativeGroup);
 
         if(appProp.sendEmailsEnabled())
-            messengerBsn.sendDeactivationAlertMessage(existingUserAccount, leaders);
+            messengerBean.sendDeactivationAlertMessage(existingUserAccount, leaders);
     }
     
     public void removeUserAuthentication(UserAccount userAccount) {
@@ -457,7 +457,7 @@ public class UserAccountBsn {
         if(userAccount != null) {
             userAccount.defineNewConfirmationCode();
             if(appProp.sendEmailsEnabled())
-                messengerBsn.sendConfirmationCode(userAccount, serverAddress);
+                messengerBean.sendConfirmationCode(userAccount, serverAddress);
         }
         else
             throw new PersistenceException("Usuário inexistente:"+ username);
@@ -532,7 +532,7 @@ public class UserAccountBsn {
         
         // Send an email to the user to confirm the new email address
         ApplicationProperty url = applicationPropertyBsn.findApplicationProperty(Properties.URL);    
-        messengerBsn.sendEmailVerificationRequest(userAccount, url.getPropertyValue());
+        messengerBean.sendEmailVerificationRequest(userAccount, url.getPropertyValue());
     }
     
     

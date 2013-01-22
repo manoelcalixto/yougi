@@ -33,11 +33,11 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
-import org.cejug.business.MessengerBsn;
+import org.cejug.business.MessageHistoryBean;
 import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.Authentication;
 import org.cejug.entity.DeactivationType;
-import org.cejug.entity.HistoricalMessage;
+import org.cejug.entity.MessageHistory;
 import org.cejug.entity.UserAccount;
 import org.cejug.event.business.AttendeeBsn;
 import org.cejug.event.entity.Event;
@@ -62,7 +62,7 @@ public class MemberBean implements Serializable {
     private MailingListBsn mailingListBsn;
     
     @EJB
-    private MessengerBsn messengerBsn;
+    private MessageHistoryBean messageHistoryBean;
     
     @EJB
     private SubscriptionBsn subscriptionBsn;
@@ -79,7 +79,7 @@ public class MemberBean implements Serializable {
 
     private List<MailingList> mailingLists;
     
-    private List<HistoricalMessage> historicMessages;
+    private List<MessageHistory> historicMessages;
     
     private List<Event> attendedEvents;
 
@@ -153,8 +153,9 @@ public class MemberBean implements Serializable {
     }
 
     public List<UserAccount> getDeactivatedUserAccounts() {
-        if(deactivatedUsers == null)
+        if(deactivatedUsers == null) {
             deactivatedUsers = userAccountBsn.findDeactivatedUserAccounts();
+        }
         return deactivatedUsers;
     }
 
@@ -196,14 +197,14 @@ public class MemberBean implements Serializable {
     /**
      * @return the messageHistoryItens
      */
-    public List<HistoricalMessage> getHistoricMessages() {
+    public List<MessageHistory> getHistoricMessages() {
         return historicMessages;
     }
 
     /**
      * @param messageHistoryItens the messageHistoryItens to set
      */
-    public void setHistoricMessages(List<HistoricalMessage> historicMessages) {
+    public void setHistoricMessages(List<MessageHistory> historicMessages) {
         this.historicMessages = historicMessages;
     }
 
@@ -247,7 +248,7 @@ public class MemberBean implements Serializable {
         this.userAccount = userAccountBsn.findUserAccount(this.userId);
         this.authentication = userAccountBsn.findAuthenticationUser(this.userAccount);
         this.mailingLists = mailingListBsn.findMailingLists();
-        this.historicMessages = messengerBsn.findHistoricalMessageByRecipient(this.userAccount);
+        this.historicMessages = messageHistoryBean.findHistoricalMessageByRecipient(this.userAccount);
         this.attendedEvents = attendeeBsn.findAttendeedEvents(this.userAccount);
 
         locationBean.initialize();

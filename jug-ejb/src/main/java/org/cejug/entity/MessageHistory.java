@@ -32,7 +32,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "historical_message")
-public class HistoricalMessage implements Serializable {
+public class MessageHistory implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
@@ -56,30 +56,42 @@ public class HistoricalMessage implements Serializable {
     @Column(name="message_sent")
     private Boolean messageSent;
 
-    public HistoricalMessage () {}
+    public MessageHistory () {}
     
-    public HistoricalMessage(EmailMessage emailMessage) {
-        this.setSubject(emailMessage.getSubject());
-        this.setBody(emailMessage.getBody());
-        this.setRecipient(emailMessage.getRecipient());
+    /**
+     * A factory that creates a historical message based on an email message. In
+     * this case the factory considers the email message has only one recipient.
+     * All other recipients are ignored. If all recipients needs to be considered
+     * then use the factory createHistoricMessages(EmailMessage emailMessage).
+     * @return historical message from a single recipient.
+     * @see org.cejug.entity.MessageHistory#createHistoricMessages(EmailMessage emailMessage)
+     */
+    public static MessageHistory createHistoricMessage(EmailMessage emailMessage) {
+        MessageHistory messageHistory = new MessageHistory();
+        messageHistory.setSubject(emailMessage.getSubject());
+        messageHistory.setBody(emailMessage.getBody());
+        messageHistory.setRecipient(emailMessage.getRecipient());
+        return messageHistory;
     }
         
     /** 
+     * A factory that creates a historical message for each recipient of the
+     * email message.
      * @return A list of historical messages, one for each recipient of the message.
      */
-    public static List<HistoricalMessage> createHistoricMessages(EmailMessage emailMessage) {
-        List<HistoricalMessage> historicMessages = new ArrayList<HistoricalMessage>();
-        HistoricalMessage historicMessage;
+    public static List<MessageHistory> createHistoricMessages(EmailMessage emailMessage) {
+        List<MessageHistory> messageHistories = new ArrayList<MessageHistory>();
+        MessageHistory messageHistory;
         
         for(UserAccount userAccount: emailMessage.getRecipients()) {
-            historicMessage = new HistoricalMessage();
-            historicMessage.setRecipient(userAccount);
-            historicMessage.setSubject(emailMessage.getSubject());
-            historicMessage.setBody(emailMessage.getBody());
-            historicMessages.add(historicMessage);
+            messageHistory = new MessageHistory();
+            messageHistory.setRecipient(userAccount);
+            messageHistory.setSubject(emailMessage.getSubject());
+            messageHistory.setBody(emailMessage.getBody());
+            messageHistories.add(messageHistory);
         }
         
-        return historicMessages;
+        return messageHistories;
     }
 
     public String getId() {
@@ -154,10 +166,10 @@ public class HistoricalMessage implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof HistoricalMessage)) {
+        if (!(object instanceof MessageHistory)) {
             return false;
         }
-        HistoricalMessage other = (HistoricalMessage) object;
+        MessageHistory other = (MessageHistory) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }

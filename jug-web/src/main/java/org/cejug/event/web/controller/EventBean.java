@@ -41,7 +41,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.cejug.business.ApplicationPropertyBsn;
-import org.cejug.business.MessengerBsn;
+import org.cejug.business.MessengerBean;
 import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.ApplicationProperty;
 import org.cejug.entity.Properties;
@@ -81,7 +81,7 @@ public class EventBean {
     private UserAccountBsn userAccountBsn;
 
     @EJB
-    private MessengerBsn messengerBsn;
+    private MessengerBean messengerBean;
     
     @EJB
     private ApplicationPropertyBsn applicationPropertyBsn;
@@ -350,7 +350,7 @@ public class EventBean {
         newAttendee.setRegistrationDate(Calendar.getInstance().getTime());
         attendeeBsn.save(newAttendee);
         ResourceBundleHelper rb = new ResourceBundleHelper();
-        messengerBsn.sendConfirmationEventAttendance(newAttendee.getAttendee(),
+        messengerBean.sendConfirmationEventAttendance(newAttendee.getAttendee(),
                 newAttendee.getEvent(),
                 rb.getMessage("formatDate"),
                 rb.getMessage("formatTime"),
