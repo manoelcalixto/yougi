@@ -36,57 +36,47 @@
                     <h:panelGrid columns="2" columnClasses="panelGridColumn,panelGridColumn" cellpadding="0" cellspacing="0">
                         <h:panelGrid>
                             <p:panel rendered="#{! empty eventBean.commingEvents}">
-		                        <c:forEach items="#{eventBean.commingEvents}" var="event">
-		                            <h:panelGrid>
-		                                <h:link value="#{event.name}" outcome="event" style="font-size: 18px; font-weight: bold;">
-		                                    <f:param name="id" value="#{event.id}"/>
-		                                </h:link>
-		                                <h:outputText value="#{event.shortDescription}"/>
-		                                <h:panelGrid columns="2">
-		                                   <h:outputText value="#{bundle.venue}: "/>
-		                                   <h:outputText value="#{event.venue}"/>
-		                                </h:panelGrid>
-		                                <h:outputFormat value="#{bundle.eventAppointmentShort}">
-		                                    <f:param value="#{eventBean.getFormattedStartDate(event.startDate)}"/>
-		                                    <f:param value="#{eventBean.getFormattedStartTime(event.startTime)}"/>
-		                                    <f:param value="#{eventBean.getFormattedEndTime(event.endTime)}"/>
-		                                </h:outputFormat>
-                                                <h:panelGrid columns="3">
-                                                    <h:link value="#{bundle.moreInformation}" outcome="event">
-                                                        <f:param name="id" value="#{event.id}"/>
-                                                    </h:link>
-                                                    <h:outputText value=" | " rendered="#{!event.external}"/>
-                                                    <h:link value="#{bundle.attend}" outcome="event/attendee" rendered="#{!event.external}">
-                                                        <f:param name="id" value="#{event.id}"/>
-                                                    </h:link>
-                                                </h:panelGrid>
-		                            </h:panelGrid>
-		                        </c:forEach>
-		                    </p:panel>
-		                    <p:panel>
-	                            <p:gmap center="-15.707663, -51.240234" 
-	                                zoom="4" type="hybrid" 
-	                                style="width:640px;height:500px" 
-	                                model="#{membersMapDistribution.simpleModel}"/>
-	                        </p:panel>
+                                <c:forEach items="#{eventBean.commingEvents}" var="event">
+                                    <h:panelGrid>
+                                        <h:link value="#{event.name}" outcome="event" style="font-size: 18px; font-weight: bold;">
+                                            <f:param name="id" value="#{event.id}"/>
+                                        </h:link>
+                                        <h:outputText value="#{event.shortDescription}"/>
+                                        <h:panelGrid columns="2">
+                                           <h:outputText value="#{bundle.venue}: "/>
+                                           <h:outputText value="#{event.venue}"/>
+                                        </h:panelGrid>
+                                        <h:outputFormat value="#{bundle.eventAppointmentShort}">
+                                            <f:param value="#{eventBean.getFormattedStartDate(event.startDate)}"/>
+                                            <f:param value="#{eventBean.getFormattedStartTime(event.startTime)}"/>
+                                            <f:param value="#{eventBean.getFormattedEndTime(event.endTime)}"/>
+                                        </h:outputFormat>
+                                        <h:panelGrid columns="3">
+                                            <h:link value="#{bundle.moreInformation}" outcome="event">
+                                                <f:param name="id" value="#{event.id}"/>
+                                            </h:link>
+                                            <h:outputText value=" | " rendered="#{!event.external}"/>
+                                            <h:link value="#{bundle.attend}" outcome="event/attendee" rendered="#{!event.external}">
+                                                <f:param name="id" value="#{event.id}"/>
+                                            </h:link>
+                                        </h:panelGrid>
+                                    </h:panelGrid>
+                                </c:forEach>
+                            </p:panel>
+                            <p:panel>
+                                <p:gmap center="-15.707663, -51.240234"
+                                    zoom="4" type="hybrid"
+                                    style="width:640px;height:500px"
+                                    model="#{membersMapDistribution.simpleModel}"/>
+                            </p:panel>
+                            <p:panel>
+                                <iframe id="forum_embed" src="javascript:void(0)" scrolling="no" frameborder="0" width="640" height="600"></iframe>
+                                <script type="text/javascript">
+                                  document.getElementById("forum_embed").src = "https://groups.google.com/forum/embed/?place=forum/cejug&amp;parenturl=" + encodeURIComponent(window.location.href);
+                                </script>
+                            </p:panel>
                         </h:panelGrid>
-                        
-                        <h:panelGrid>
-	                        <iframe id="forum_embed"
-							  src="javascript:void(0)"
-							  scrolling="no"
-							  frameborder="0"
-							  width="900"
-							  height="700">
-							</iframe>
-							<script type="text/javascript">
-							  document.getElementById('forum_embed').src =
-							     'https://groups.google.com/forum/embed/?place=forum/cejug'
-							     + '&showsearch=true&showpopout=true&showtabs=false'
-							     + '&parenturl=' + encodeURIComponent(window.location.href);
-							</script>
-                        </h:panelGrid>
-                        
+
                         <h:panelGrid>
                             <div class="g-plus" data-href="https://plus.google.com/101596388471980915399" data-size="badge"></div>
                             <p/>
