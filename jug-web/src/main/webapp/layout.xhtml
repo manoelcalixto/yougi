@@ -43,7 +43,8 @@
             <c:if test="#{! empty request.remoteUser}">
                 <h:form>
                     <p:menubar>
-                        <p:submenu label="#{bundle.knowledge}">
+                        <p:submenu label="#{bundle.knowledge}" rendered="#{securityBackingBean.isUserLeader}">
+                            <p:menuitem value="#{bundle.websites}" url="/knowledge/websites.xhtml"/>
                             <p:menuitem value="#{bundle.topics}" url="/knowledge/topics.xhtml"/>
                             <p:menuitem value="#{bundle.mailingList}" url="/knowledge/mailing_lists.xhtml"/>
                         </p:submenu>

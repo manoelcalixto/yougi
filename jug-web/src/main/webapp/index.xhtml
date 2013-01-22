@@ -72,6 +72,22 @@
                         </h:panelGrid>
                         
                         <h:panelGrid>
+	                        <iframe id="forum_embed"
+							  src="javascript:void(0)"
+							  scrolling="no"
+							  frameborder="0"
+							  width="900"
+							  height="700">
+							</iframe>
+							<script type="text/javascript">
+							  document.getElementById('forum_embed').src =
+							     'https://groups.google.com/forum/embed/?place=forum/cejug'
+							     + '&showsearch=true&showpopout=true&showtabs=false'
+							     + '&parenturl=' + encodeURIComponent(window.location.href);
+							</script>
+                        </h:panelGrid>
+                        
+                        <h:panelGrid>
                             <div class="g-plus" data-href="https://plus.google.com/101596388471980915399" data-size="badge"></div>
                             <p/>
                             <div class="fb-like-box" data-href="https://www.facebook.com/pages/Cejug/312719028740499" data-width="300" data-show-faces="true" data-stream="true" data-header="true"></div>

@@ -351,46 +351,29 @@ The database connection pool is managed by the AS, thus it is configured in the 
    \end{enumerate}
 \item Click on \textit{Finish} to save the new connection pool.
 \item Go to the list of connection pools again and select the new one that was just created.
-\item Click on \textit{Ping} to check if the connection was correctly configured. The message "Ping Succeeded" means that the connection is working fine.
+\item Click on \textit{Ping} to check if the connection was correctly configured. The message "Ping Succeeded" means that the connection is working fine and ready for use.
 \end{enumerate}
 
 \section{Creating a Data Source for the Connection Pool}
 \label{sec:creating-data-source-connection-pool}
 
-To be able to use this connection pool in JEE applications, we have to create a JNDI name for it. This configuration is also done in the administrative console, at \textit{Resources/JDBC/JDBC Resources}.
-
-Click on \textit{New} to start the creation of the data source. Set the field \textit{JNDI Name} to \textit{jdbc/jug}, select the connection pool \textit{jugPool} (see section \ref{sec:creating-database-connection-pool}) and click \textit{Ok} to finish. This JNDI name will be used by the application to access MySQL database.
-
-\section{Creating a Security Realm}
-
-As the connection pool and the JavaMail session, the security realm is also a configuration entirely made in the application server. Users' data are stored in the database, thus this is a JDBC Realm, which uses the data source created in section \ref{sec:creating-data-source-connection-pool}. Follow the steps below to configure the JDBC Realm: 
+In order to make this connection pool available for JavaEE applications, we have to create a JNDI name for it. This configuration is also done in the administrative console, at \textit{Resources/JDBC/JDBC Resources}.
 
 \begin{enumerate}
-\item enter in the administrative console (http://[server-name]:4848).
-\item Go to “Configuration / Security / Realms”, press "New..." and inform the following values:
-   \begin{enumerate}
-   \item Name: jug-realm
-   \item Class Name: com.sun.enterprise.security.auth.realm.jdbc.JDBCRealm
-   \item JAAS Context: jdbcRealm
-   \item JNDI: jdbc/jug - the data source JNDI name pointing to the connection pool where user data are available
-   \item User Table: user\_account
-   \item User Name Column: username
-   \item Password Column: password
-   \item Group Table: user\_group
-   \item Group Name Column: group\_name
-   \item Digest Algorithm: MD5
-   \item Encoding: Base64
-   \end{enumerate}
-\item Restart the application server to activate the realm.
+\item Click on \textit{New} to start the creation of the data source.
+\item Set the field \textit{JNDI Name} to \textit{jdbc/jug}.
+\item Select the connection pool \textit{jugPool} (see section \ref{sec:creating-database-connection-pool}).
+\item Click \textit{Ok} to finish.
 \end{enumerate}
+This JNDI name is used by the application to access the Jug database created on MySQL.
 
 \section{Creating a JavaMail Session}
 
-Besides managing the connections to the email server, the JavaMail session also stores security parameters, such as user name and password, besides other details such as SSL and the kind of server available. These parameters are defined in a case by case basis, thus the JavaMail service provided by the application server is essential for the distribution of this application. To configure JavaMail, follow the steps below:
+Besides managing the connections to the email server, the JavaMail session stores security parameters, such as user name, password, SSL, the kind of server available and so on. These parameters are defined in a case by case basis, thus the JavaMail service provided by the application server is essential for the distribution of this application. To configure JavaMail, follow the steps below:
 
 \begin{enumerate}
-\item enter in the administrative console (http://[server-name]:4848/).
-\item go to \textit{Resources / JavaMail Sessions}.
+\item Enter in the administrative console (http://[server-name]:4848/).
+\item Go to \textit{Resources / JavaMail Sessions}.
 \item create a new JavaMail session and set the following properties:
    \begin{enumerate}
    \item JNDI Name: mail/jug
@@ -413,7 +396,31 @@ If the server doesn't request secure authentication, then the three steps above 
    \item mail.smtp.auth: true
    \item mail.smtp.password: [password]
    \end{enumerate}
-\item Click on “Save” to create the JavaMail session.
+\item Click on \textit{Save} to create the JavaMail session.
+\end{enumerate}
+
+\section{Creating a Security Realm}
+
+As the connection pool and the JavaMail session, the security realm is also a configuration entirely made in the application server. Users' data are stored in the database, thus this is a JDBC Realm, which uses the data source created in section \ref{sec:creating-data-source-connection-pool}. Follow the steps below to configure the JDBC Realm: 
+
+\begin{enumerate}
+\item Enter in the administrative console (http://[server-name]:4848).
+\item Go to \textit{Configuration / server-config / Security / Realms}, press \textit{New...} and inform the following values:
+   \begin{enumerate}
+   \item Name: jug-realm
+   \item Class Name: com.sun.enterprise.security.auth.realm.jdbc.JDBCRealm
+   \item JAAS Context: jdbcRealm
+   \item JNDI: jdbc/jug - the data source JNDI name pointing to the connection pool where user data are available
+   \item User Table: user\_account
+   \item User Name Column: username
+   \item Password Column: password
+   \item Group Table: user\_group
+   \item Group Table User Name Column: username
+   \item Group Name Column: group\_name
+   \item Digest Algorithm: MD5
+   \item Encoding: Base64
+   \end{enumerate}
+\item Restart the application server to activate the realm.
 \end{enumerate}
 
 \section{Deploying the Application Package}
@@ -449,15 +456,6 @@ Before using the application, the database should be initialized with some initi
 \item definition of the UG location and geographic coverage: because country and city are mandatory fields in the registration form for all other users, the administrator should define them as soon as he/she have access to the application. The administrator should register at least a country to allow the registration of members, but it is expected from him/her that the location of the UG and its coverage are also registered. It means that the administrator should register all countries, provinces and cities where the UG has influence.
 \item definition of application properties: at last, but not least, the administrator should review and modify, if needed, the default value of application properties. This properties are initialized in a way that allows the application run normally. However, some properties are missing by default and others might be different from what is expected.
 \end{enumerate}
-
-\section{Application Update}
-
-\begin{figure}
-\centering
-\includegraphics[width=15cm]{figures/software-release-process}
-\caption{Release process}
-\label{fig:1}
-\end{figure}
 
 \chapter{Development}
 

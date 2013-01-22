@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <body>
+        <ui:composition template="../layout.xhtml">
+            <ui:define name="title">#{bundle.website}</ui:define>
+            <ui:define name="content">
+                <div class="content">
+                    <h1>#{bundle.website}</h1>
+                    <h:form>
+                        <h:messages styleClass="alertMessage"/>
+                        <h:panelGrid columns="5" cellpadding="4">
+                            <h:outputText value="#{bundle.member}" styleClass="fieldLabel"/>
+                            <h:outputText value="#{bundle.website}" styleClass="fieldLabel"/>
+                            <h:outputText value="#{bundle.title}" styleClass="fieldLabel"/>
+                            <h:outputText value="#{bundle.feed}" styleClass="fieldLabel"/>
+                            <h:outputText/>
+
+                            <h:outputText value="#{webSourceMBean.webSource.provider.fullName}"/>
+                            <h:outputText value="#{webSourceMBean.webSource.provider.website}"/>
+                            <h:outputText value="#{webSourceMBean.webSource.title}"/>
+                            <h:outputLink value="#{webSourceMBean.webSource.feed}" target="_blank">#{webSourceMBean.webSource.feed}</h:outputLink>
+                            <h:commandButton value="#{bundle.reference}" action="#{webSourceMBean.reference}" rendered="#{empty webSourceMBean.webSource.id}">
+                                <f:param name="user" value="#{webSourceMBean.webSource.provider.id}"/>
+                            </h:commandButton>
+                            <h:commandButton value="#{bundle.undoReference}" action="#{webSourceMBean.undoReference}" rendered="#{! empty webSourceMBean.webSource.id}">
+                                <f:param name="user" value="#{webSourceMBean.webSource.provider.id}"/>
+                            </h:commandButton>
+                        </h:panelGrid>
+
+                        <h2>#{bundle.content}</h2>
+                        <p:accordionPanel id="articles" value="#{webSourceMBean.articles}" var="article">
+                            <p:tab title="#{article.title}">
+                                <h:outputText value="#{article.text}" escape="false"/>
+                            </p:tab>
+                        </p:accordionPanel>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

@@ -1,21 +1,21 @@
-/* Jug Management is a web application conceived to manage user groups or 
- * communities focused on a certain domain of knowledge, whose members are 
- * constantly sharing information and participating in social and educational 
+/* Jug Management is a web application conceived to manage user groups or
+ * communities focused on a certain domain of knowledge, whose members are
+ * constantly sharing information and participating in social and educational
  * events. Copyright (C) 2011 Ceara Java User Group - CEJUG.
- * 
- * This application is free software; you can redistribute it and/or modify it 
- * under the terms of the GNU Lesser General Public License as published by the 
- * Free Software Foundation; either version 2.1 of the License, or (at your 
+ *
+ * This application is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
- * 
- * This application is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public 
+ *
+ * This application is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
  * License for more details.
- * 
- * There is a full copy of the GNU Lesser General Public License along with 
+ *
+ * There is a full copy of the GNU Lesser General Public License along with
  * this library. Look for the file license.txt at the root level. If you do not
- * find it, write to the Free Software Foundation, Inc., 59 Temple Place, 
+ * find it, write to the Free Software Foundation, Inc., 59 Temple Place,
  * Suite 330, Boston, MA 02111-1307 USA.
  * */
 package org.cejug.web.controller;
@@ -55,7 +55,7 @@ public class UserAccountBean implements Serializable {
 
     @EJB
     private ApplicationPropertyBsn applicationPropertyBsn;
-    
+
     @ManagedProperty(value="#{locationBean}")
     private LocationBean locationBean;
 
@@ -64,7 +64,7 @@ public class UserAccountBean implements Serializable {
 
     private String password;
     private String passwordConfirmation;
-    
+
     public UserAccountBean() {
     }
 
@@ -109,7 +109,7 @@ public class UserAccountBean implements Serializable {
     public void setPasswordConfirmation(String passwordConfirmation) {
         this.passwordConfirmation = passwordConfirmation;
     }
-    
+
     public LocationBean getLocationBean() {
         return locationBean;
     }
@@ -119,12 +119,13 @@ public class UserAccountBean implements Serializable {
     }
 
     public Boolean getNoAccount() {
-        return userAccountBsn.noAccount();
+        return userAccountBsn.thereIsNoAccount();
     }
 
     public boolean isConfirmed() {
-        if(userAccount.getConfirmationCode() == null || userAccount.getConfirmationCode().isEmpty())
+        if(userAccount.getConfirmationCode() == null || userAccount.getConfirmationCode().isEmpty()) {
             return true;
+        }
         return false;
     }
 
@@ -141,21 +142,27 @@ public class UserAccountBean implements Serializable {
         String username = request.getRemoteUser();
         if(username != null) {
             this.userAccount = userAccountBsn.findUserAccountByUsername(username);
-                        	
-            if(this.userAccount.getCountry() != null)
+
+            if(this.userAccount.getCountry() != null) {
                 locationBean.setSelectedCountry(this.userAccount.getCountry().getAcronym());
-            else
+            }
+            else {
                 locationBean.setSelectedCountry(null);
+            }
 
-            if(this.userAccount.getProvince() != null)
+            if(this.userAccount.getProvince() != null) {
                 locationBean.setSelectedProvince(this.userAccount.getProvince().getId());
-            else
+            }
+            else {
                 locationBean.setSelectedProvince(null);
+            }
 
-            if(this.userAccount.getCity() != null)
+            if(this.userAccount.getCity() != null) {
                 locationBean.setSelectedCity(this.userAccount.getCity().getId());
-            else
+            }
+            else {
                 locationBean.setSelectedCity(null);
+            }
         }
         else {
             this.userAccount = new UserAccount();
@@ -165,7 +172,7 @@ public class UserAccountBean implements Serializable {
     public String register() {
         FacesContext context = FacesContext.getCurrentInstance();
         ResourceBundleHelper bundle = new ResourceBundleHelper();
-        
+
         if(!userAccount.isEmailConfirmed()) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorCode0003"),""));
             context.validationFailed();
@@ -180,9 +187,9 @@ public class UserAccountBean implements Serializable {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,bundle.getMessage("errorCode0005"),""));
             context.validationFailed();
         }
-        
-        boolean isFirstUser = userAccountBsn.noAccount(); 
-        
+
+        boolean isFirstUser = userAccountBsn.thereIsNoAccount();
+
         if(!isFirstUser && this.locationBean.getCity() == null && (this.locationBean.getCityNotListed() == null || this.locationBean.getCityNotListed().isEmpty())) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getMessage("errorCode0006"),""));
             context.validationFailed();
@@ -192,14 +199,15 @@ public class UserAccountBean implements Serializable {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getMessage("errorCode0007"),""));
             context.validationFailed();
         }
-        
-        if(context.isValidationFailed())
+
+        if(context.isValidationFailed()) {
             return "registration";
+        }
 
         this.userAccount.setCountry(this.locationBean.getCountry());
     	this.userAccount.setProvince(this.locationBean.getProvince());
     	this.userAccount.setCity(this.locationBean.getCity());
-        
+
         City newCity = locationBean.getNotListedCity();
 
         Authentication authentication = new Authentication();
@@ -213,15 +221,17 @@ public class UserAccountBean implements Serializable {
             context.addMessage(userId, new FacesMessage(e.getCause().getMessage()));
             return "registration";
         }
-        
-        if(isFirstUser)
+
+        if(isFirstUser) {
             context.addMessage(userId, new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getMessage("infoSuccessfulRegistration"), ""));
-        else
+            return "login";
+        }
+        else {
             context.addMessage(userId, new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getMessage("infoRegistrationConfirmationRequest"), ""));
-        
-        return "registration_confirmation";
+            return "registration_confirmation";
+        }
     }
-    
+
     /**
      * Compares the informed password with its respective confirmation.
      * @return true if the password matches with its confirmation.
@@ -233,17 +243,17 @@ public class UserAccountBean implements Serializable {
     public String savePersonalData() {
         if(userAccount != null) {
             UserAccount existingUserAccount = userAccountBsn.findUserAccount(userAccount.getId());
-            
+
             existingUserAccount.setCountry(this.locationBean.getCountry());
             existingUserAccount.setProvince(this.locationBean.getProvince());
             existingUserAccount.setCity(this.locationBean.getCity());
-            
+
             existingUserAccount.setFirstName(userAccount.getFirstName());
             existingUserAccount.setLastName(userAccount.getLastName());
             existingUserAccount.setGender(userAccount.getGender());
             existingUserAccount.setBirthDate(userAccount.getBirthDate());
             userAccountBsn.save(existingUserAccount);
-        
+
             FacesContext context = FacesContext.getCurrentInstance();
             context.getExternalContext().getSessionMap().remove("locationBean");
         }
@@ -281,13 +291,13 @@ public class UserAccountBean implements Serializable {
             session.invalidate();
         }
         catch(ServletException se) {}
-        
+
         return "/index?faces-redirect=true";
     }
 
     /** Check whether at least one of the privacy options was checked. */
     private boolean isPrivacyValid(UserAccount userAccount) {
-        if(userAccount.getPublicProfile() || 
+        if(userAccount.getPublicProfile() ||
              userAccount.getMailingList() ||
              userAccount.getEvent() ||
              userAccount.getNews() ||

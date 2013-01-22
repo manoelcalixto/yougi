@@ -47,16 +47,16 @@ insert into message_template (id, title, body) values
     ('KJDIEJKHFHSDJDUWJHAJSNFNFJHDJSLE', '[UG] Event Attendance', '<p>Hi <b>#{userAccount.firstName}</b>,</p><p>you have confirmed your attendance in the event <b>#{event.name}</b> that will take place at <b>#{event.venue}</b>, on <b>#{event.startDate}</b>, from <b>#{event.startTime}</b> to <b>#{event.endTime}</b>.</p><p>We are looking forward to see you there!</p><p>Best Regards,</p><p><b>UG Leadership Team</b></p>');
 
 insert into message_template (id, title, body) values
-    ('03BD6F3ACE4C48BD8660411FC8673DB4', '[CEJUG] Cancelamento de Registro', '<p>Caro(a) <b>#{userAccount.firstName}</b>,</p>\r\n<p>sentimos muito em informar que não poderemos manter o seu registro como membro do CEJUG.</p>\r\n<p>Motivo: <i>#{userAccount.deactivationReason}</i></p>\r\n<p>Pedimos desculpas pelo transtorno e contamos com a vossa compreensão.</p>\r\n<p>Atenciosamente,</p>\r\n<p><b>Coordenação do CEJUG</b></p>'),
-    ('0D6F96382D91454F8155A720F3326F1B', '[CEJUG Admin] Um novo membro cadastrou-se no grupo', '<p>Caro Coordenador do CEJUG,</p>\r\n<p><b>#{newMember.fullName}</b> registrou-se como novo membro do CEJUG em #{newMember.registrationDate}.</p>\r\n<p>Atenciosamente,</p>\r\n<p><b>Sistema de Administração do CEJUG</b></p>'),
-    ('47DEE5C2E0E14F8BA4605F3126FBFAF4', '[CEJUG] Bem vindo ao CEJUG', '<p>Oi <b>#{userAccount.firstName}</b>,</p>\r\n<p>seu registro foi confirmado com sucesso. Seja bem vindo ao <b><a href=''http://www.cejug.org''>CEJUG</a></b>!</p>\r\n<p>Para tratar de assuntos administrativos, como se registrar ou sair das listas de discussão, patrocinar o grupo ou compartilhar notícias, favor entrar em contato através do email admin@cejug.org.</p>\r\n<p>Atenciosamente,</p>\r\n<p><b>Coordenação do CEJUG</b></p>'),
-    ('67BE6BEBE45945D29109A8D6CD878344', '[CEJUG] Mudança de Senha', '<p>Oi <b>#{userAccount.firstName}</b>,</p>\r\n<p>você solicitou a mudança da sua senha do CEJUG. O código de autorização para mudar sua senha é:</p>\r\n<p>#{userAccount.confirmationCode}</p>\r\n<p>Informe este código no formulário de mudança de senha ou siga o endereço abaixo para preencher o campo automaticamente:</p>\r\n<p><a href=''http://#{serverAddress}/change_password.xhtml?cc=#{userAccount.confirmationCode}''>http://#{serverAddress}/change_password.xhtml?cc=#{userAccount.confirmationCode}</a></p>\r\n<p>Atenciosamente,<br/>\r\n<b>Coordenação do CEJUG</b></p>'),
-    ('KJZISKQBE45945D29109A8D6C92IZJ89', '[CEJUG] Solicitação de mudança de email', '<p>Oi <b>#{userAccount.firstName}</b>,</p><p>você solicitou a mudança do seu endereço de email de <i>#{userAccount.email}</i> para <i>#{userAccount.unverifiedEmail}</i>. O código de autorização para realizar esta operação é:</p><p>#{userAccount.confirmationCode}</p><p>Informe este código no campo que apareceu logo após a mudança de email ou apenas siga o link abaixo:</p><p><a href=''http://#{serverAddress}/change_email_confirmation.xhtml?cc=#{userAccount.confirmationCode}''>http://#{serverAddress}/change_email_confirmation.xhtml?cc=#{userAccount.confirmationCode}</a></p><p>Obrigado!<br/>\r\n\r\n<b>Coordenação do CEJUG</b></p>'),
-    ('E3F122DCC87D42248872878412B34CEE', '[CEJUG] Confirmação de Email', '<p>Oi <b>#{userAccount.firstName}</b>,</p>\r\n<p>você parece ter se registrado como membro no CEJUG. Nós gostariamos de confirmar o seu endereço de email para podermos entrar em contato sempre que necessário. Você só precisa clicar no link abaixo para confirmar o seu registro no CEJUG:</p>\r\n<p><a href=''http://#{serverAddress}/EmailConfirmation?code=#{userAccount.confirmationCode}''>http://#{serverAddress}/EmailConfirmation?code=#{userAccount.confirmationCode}</a></p>\r\n<p>Se o endereço acima não aparecer como link no seu cliente de email, selecione, copie e cole o endereço no seu navegador web. Se você não se registrou no CEJUG e acredita se tratar de um engano, por favor ignore esta mensagem e aceite nossas desculpas.</p>\r\n<p>Atenciosamente,</p>\r\n<p><b>Coordenação do CEJUG</b></p>'),
-    ('IKWMAJSNDOE3F122DCC87D4224887287', '[CEJUG] Afiliação ao CEJUG Desativada', '<p>Oi <b>#{userAccount.firstName}</b>,</p>\r\n<p>nós acabamos de saber que você vai nos deixar :( Muito obrigado por todas as contribuições que você fez ao CEJUG. Crescemos juntos durante o período em que você esteve conosco.</p>\r\n<p>Desejamos o melhor,</p>\r\n<p><b>Coordenação do CEJUG</b></p>'),
-    ('0D6F96382IKEJSUIWOK5A720F3326F1B', '[CEJUG Admin] Um Membro foi Desativado', '<p>Caro JUG Leader,</p>\r\n<p><b>#{userAccount.fullName}</b> foi desativado do grupo devido a seguinte razão:</p>\r\n<p><i>#{userAccount.deactivationReason}</i></p>\r\n<p>Atenciosamente,</p>\r\n<p><b>Sistema de Administração do CEJUG</b></p>'),
-    ('09JDIIE82O39IDIDOSJCHXUDJJXHCKP0', '[CEJUG Admin] Você foi adicionado a um grupo do CEJUG', '<p>Oi <b>#{userAccount.firstName}</b>,</p><p>Você foi adicionado ao grupo <b>#{accessGroup.name}</b>. Mudanças nas suas permissões de acesso devem ocorrer.</p><p>Atenciosamente,</p><p><b>Sistema de Administração do CEJUG</b></p>'),
-    ('KJDIEJKHFHSDJDUWJHAJSNFNFJHDJSLE', '[CEJUG] Confirmação de Comparecimento ao Evento', '<p>Oi <b>#{userAccount.firstName}</b>,</p><p>esta mensagem é só para informá-lo(a) que você acabou de confirmar seu comparecimento ao evento <b>#{event.name}</b>, que vai acontecer no(a) <b>#{event.venue}</b>, no dia <b>#{event.startDate}</b>, das <b>#{event.startTime}</b> até as <b>#{event.endTime}</b>.</p><p>Esperamos você lá!</p><p>Atenciosamente,</p><p><b>Coordenação do CEJUG</b></p>');
+    ('03BD6F3ACE4C48BR8660411FC8673DB4', '[CEJUG] Cancelamento de Registro', '<p>Caro(a) <b>#{userAccount.firstName}</b>,</p>\r\n<p>sentimos muito em informar que não poderemos manter o seu registro como membro do CEJUG.</p>\r\n<p>Motivo: <i>#{userAccount.deactivationReason}</i></p>\r\n<p>Pedimos desculpas pelo transtorno e contamos com a vossa compreensão.</p>\r\n<p>Atenciosamente,</p>\r\n<p><b>Coordenação do CEJUG</b></p>'),
+    ('0D6F96382D91454H8155A720F3326F1B', '[CEJUG Admin] Um novo membro cadastrou-se no grupo', '<p>Caro Coordenador do CEJUG,</p>\r\n<p><b>#{newMember.fullName}</b> registrou-se como novo membro do CEJUG em #{newMember.registrationDate}.</p>\r\n<p>Atenciosamente,</p>\r\n<p><b>Sistema de Administração do CEJUG</b></p>'),
+    ('47DEE5C2E0E14F8WA4605F3126FBFAF4', '[CEJUG] Bem vindo ao CEJUG', '<p>Oi <b>#{userAccount.firstName}</b>,</p>\r\n<p>seu registro foi confirmado com sucesso. Seja bem vindo ao <b><a href=''http://www.cejug.org''>CEJUG</a></b>!</p>\r\n<p>Para tratar de assuntos administrativos, como se registrar ou sair das listas de discussão, patrocinar o grupo ou compartilhar notícias, favor entrar em contato através do email admin@cejug.org.</p>\r\n<p>Atenciosamente,</p>\r\n<p><b>Coordenação do CEJUG</b></p>'),
+    ('67BE6BEBE45945DF9109A8D6CD878344', '[CEJUG] Mudança de Senha', '<p>Oi <b>#{userAccount.firstName}</b>,</p>\r\n<p>você solicitou a mudança da sua senha do CEJUG. O código de autorização para mudar sua senha é:</p>\r\n<p>#{userAccount.confirmationCode}</p>\r\n<p>Informe este código no formulário de mudança de senha ou siga o endereço abaixo para preencher o campo automaticamente:</p>\r\n<p><a href=''http://#{serverAddress}/change_password.xhtml?cc=#{userAccount.confirmationCode}''>http://#{serverAddress}/change_password.xhtml?cc=#{userAccount.confirmationCode}</a></p>\r\n<p>Atenciosamente,<br/>\r\n<b>Coordenação do CEJUG</b></p>'),
+    ('KJZISKQBE45945D291H9A8D6C92IZJ89', '[CEJUG] Solicitação de mudança de email', '<p>Oi <b>#{userAccount.firstName}</b>,</p><p>você solicitou a mudança do seu endereço de email de <i>#{userAccount.email}</i> para <i>#{userAccount.unverifiedEmail}</i>. O código de autorização para realizar esta operação é:</p><p>#{userAccount.confirmationCode}</p><p>Informe este código no campo que apareceu logo após a mudança de email ou apenas siga o link abaixo:</p><p><a href=''http://#{serverAddress}/change_email_confirmation.xhtml?cc=#{userAccount.confirmationCode}''>http://#{serverAddress}/change_email_confirmation.xhtml?cc=#{userAccount.confirmationCode}</a></p><p>Obrigado!<br/>\r\n\r\n<b>Coordenação do CEJUG</b></p>'),
+    ('E3F122DCC87D422488M2878412B34CEE', '[CEJUG] Confirmação de Email', '<p>Oi <b>#{userAccount.firstName}</b>,</p>\r\n<p>você parece ter se registrado como membro no CEJUG. Nós gostariamos de confirmar o seu endereço de email para podermos entrar em contato sempre que necessário. Você só precisa clicar no link abaixo para confirmar o seu registro no CEJUG:</p>\r\n<p><a href=''http://#{serverAddress}/EmailConfirmation?code=#{userAccount.confirmationCode}''>http://#{serverAddress}/EmailConfirmation?code=#{userAccount.confirmationCode}</a></p>\r\n<p>Se o endereço acima não aparecer como link no seu cliente de email, selecione, copie e cole o endereço no seu navegador web. Se você não se registrou no CEJUG e acredita se tratar de um engano, por favor ignore esta mensagem e aceite nossas desculpas.</p>\r\n<p>Atenciosamente,</p>\r\n<p><b>Coordenação do CEJUG</b></p>'),
+    ('IKWMAJSNDOE3F122DCA87D4224887287', '[CEJUG] Afiliação ao CEJUG Desativada', '<p>Oi <b>#{userAccount.firstName}</b>,</p>\r\n<p>nós acabamos de saber que você vai nos deixar :( Muito obrigado por todas as contribuições que você fez ao CEJUG. Crescemos juntos durante o período em que você esteve conosco.</p>\r\n<p>Desejamos o melhor,</p>\r\n<p><b>Coordenação do CEJUG</b></p>'),
+    ('0D6F96382IKEJSUIWO25A720F3326F1B', '[CEJUG Admin] Um Membro foi Desativado', '<p>Caro JUG Leader,</p>\r\n<p><b>#{userAccount.fullName}</b> foi desativado do grupo devido a seguinte razão:</p>\r\n<p><i>#{userAccount.deactivationReason}</i></p>\r\n<p>Atenciosamente,</p>\r\n<p><b>Sistema de Administração do CEJUG</b></p>'),
+    ('09JDIIE82O39IDIDOS5CHXUDJJXHCKP0', '[CEJUG Admin] Você foi adicionado a um grupo do CEJUG', '<p>Oi <b>#{userAccount.firstName}</b>,</p><p>Você foi adicionado ao grupo <b>#{accessGroup.name}</b>. Mudanças nas suas permissões de acesso devem ocorrer.</p><p>Atenciosamente,</p><p><b>Sistema de Administração do CEJUG</b></p>'),
+    ('KJDIEJKHFHSDJDUWJH7JSNFNFJHDJSLE', '[CEJUG] Confirmação de Comparecimento ao Evento', '<p>Oi <b>#{userAccount.firstName}</b>,</p><p>esta mensagem é só para informá-lo(a) que você acabou de confirmar seu comparecimento ao evento <b>#{event.name}</b>, que vai acontecer no(a) <b>#{event.venue}</b>, no dia <b>#{event.startDate}</b>, das <b>#{event.startTime}</b> até as <b>#{event.endTime}</b>.</p><p>Esperamos você lá!</p><p>Atenciosamente,</p><p><b>Coordenação do CEJUG</b></p>');
 
 
 create table language (
@@ -135,7 +135,6 @@ create table user_account (
 
 alter table user_account add constraint pk_user_account primary key (id);
 create unique index idx_unique_user_email on user_account (email);
-create unique index idx_unique_username on user_account (username);
 alter table user_account add constraint fk_country_user foreign key (country) references country(acronym) on delete set null;
 alter table user_account add constraint fk_province_user foreign key (province) references province(id) on delete set null;
 alter table user_account add constraint fk_city_user foreign key (city) references city(id) on delete set null;
@@ -245,7 +244,7 @@ alter table mailing_list_message add constraint fk_mailing_list_message foreign 
 alter table mailing_list_message add constraint fk_mailing_list_sender foreign key (sender) references mailing_list_subscription (id) on delete set null;
 alter table mailing_list_message add constraint fk_message_reply_to foreign key (reply_to) references mailing_list_message(id) on delete set null;
 
-create web_source (
+create table web_source (
     id          char(32)     not null,
     title       varchar(100) not null,
     feed        varchar(255) not null,
@@ -253,12 +252,12 @@ create web_source (
 ) engine innodb;
 
 alter table web_source add constraint pk_web_source primary key (id);
-alter table web_source add constraint fk_provider_web_source foreign key (provided_by) references user_account (id) on delete set null;
+alter table web_source add constraint fk_provider_web_source foreign key (provider) references user_account (id) on delete set null;
 
 create table article (
     id               char(32)     not null,
     title            varchar(255) not null,
-    author           char(32)     not null,
+    author           varchar(100) not null,
     web_source       char(32)     not null,
     content          text         not null,
     summary          text             null,
@@ -268,7 +267,6 @@ create table article (
 ) engine innodb;
 
 alter table article add constraint pk_article primary key (id);
-alter table article add constraint fk_author_article foreign key (author) references user_account (id) on delete cascade;
 alter table article add constraint fk_source_article foreign key (web_source) references web_source (id) on delete cascade;
 
 ###############################################################################

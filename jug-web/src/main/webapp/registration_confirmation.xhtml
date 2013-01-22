@@ -15,12 +15,9 @@
                             <h:panelGrid rendered="#{registrationConfirmationBean.validated}">
                                 <h:outputText value="#{bundle.infoCode0002}" styleClass="infoMessage"/>
                             </h:panelGrid>
-                            
-                            <h:panelGrid rendered="#{! registrationConfirmationBean.validated}">
-                                <h:outputText value="#{bundle.warnCode0003}" styleClass="warnMessage"/>
-                            </h:panelGrid>
-                        
-                            <h:panelGrid rendered="#{! registrationConfirmationBean.validated}">
+
+                            <p><h:outputText value="#{bundle.warnCode0003}" styleClass="warnMessage" rendered="#{!registrationConfirmationBean.validated}"/></p>
+                            <h:panelGrid rendered="#{!registrationConfirmationBean.validated}">
                                 <h:outputLabel for="informedCode" value="#{bundle.informConfirmationCode}"/>
                                 <h:inputText id="informedCode" value="#{registrationConfirmationBean.informedCode}" maxlength="32" size="40" required="true"/>
                                 <h:commandButton value="#{bundle.confirm}" action="#{registrationConfirmationBean.confirmUser}"/>

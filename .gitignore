@@ -1,3 +1,11 @@
 /jug-ejb/target/
 /jug-web/target/
 /jug-ear/target/
+docs/jug-management-doc.aux
+docs/jug-management-doc.idx
+docs/jug-management-doc.lof
+docs/jug-management-doc.log
+docs/jug-management-doc.lot
+docs/jug-management-doc.out
+docs/jug-management-doc.synctex.gz
+docs/jug-management-doc.toc
