@@ -22,7 +22,6 @@ package org.cejug.business;
 
 import java.util.*;
 import java.util.logging.Logger;
-import javax.ejb.Asynchronous;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -40,7 +39,7 @@ public class MessageHistoryBean {
     @PersistenceContext
     private EntityManager em;
     
-    static final Logger logger = Logger.getLogger(MessengerBean.class.getName());
+    static final Logger logger = Logger.getLogger(MessageHistoryBean.class.getName());
     
     public MessageHistory findHistoricalMessage(String id) {
         if(id != null) {

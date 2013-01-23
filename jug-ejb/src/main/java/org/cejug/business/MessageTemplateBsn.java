@@ -58,9 +58,10 @@ public class MessageTemplateBsn {
         }
     }
 
-    public void remove(String userId) {
-        MessageTemplate messageTemplate = em.find(MessageTemplate.class, userId);
-        if(messageTemplate != null)
+    public void remove(String id) {
+        MessageTemplate messageTemplate = em.find(MessageTemplate.class, id);
+        if(messageTemplate != null) {
             em.remove(messageTemplate);
+        }
     }
 }
