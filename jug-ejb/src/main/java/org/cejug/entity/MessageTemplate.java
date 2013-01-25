@@ -90,16 +90,35 @@ public class MessageTemplate implements Serializable {
         }
     }
     
-    public void replaceVariablesByValues(Map<String, Object> values) {
+    public EmailMessage replaceVariablesByValues(Map<String, Object> values) {
+        EmailMessage emailMessage = new EmailMessage();
+        String subject = this.title;
+        String message = this.body;
+        
         Pattern pattern = Pattern.compile(VAR_PATTERN);
-        List<String> variables = findVariables(pattern, this.getBody());
+        
+        List<String> variables = findVariables(pattern, this.getTitle());
         Object value;
         for(String variable: variables) {
             variable = variable.substring(2, variable.length() - 1);
             value = values.get(variable);
-            if(value != null)
-                this.body = body.replace("#{" + variable + "}", values.get(variable).toString());
+            if(value != null) {
+                subject = subject.replace("#{" + variable + "}", values.get(variable).toString());
+            }
         }
+        emailMessage.setSubject(subject);
+        
+        variables = findVariables(pattern, this.getBody());
+        for(String variable: variables) {
+            variable = variable.substring(2, variable.length() - 1);
+            value = values.get(variable);
+            if(value != null) {
+                message = message.replace("#{" + variable + "}", values.get(variable).toString());
+            }
+        }
+        emailMessage.setSubject(message);
+        
+        return emailMessage;
     }
     
     private List<String> findVariables(Pattern pattern, CharSequence charSequence) {

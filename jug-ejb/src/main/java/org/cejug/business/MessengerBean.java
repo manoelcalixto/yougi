@@ -66,15 +66,16 @@ public class MessengerBean {
         
     public void sendEmailConfirmationRequest(UserAccount userAccount, String serverAddress) {
         MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("E3F122DCC87D42248872878412B34CEE");
-        em.detach(messageTemplate);
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("serverAddress", serverAddress);
         values.put("userAccount.firstName", userAccount.getFirstName());
         values.put("userAccount.confirmationCode", userAccount.getConfirmationCode());
-        messageTemplate.replaceVariablesByValues(values);
+        
+        EmailMessage emailMessage = messageTemplate.replaceVariablesByValues(values);
+        emailMessage.setRecipient(userAccount);
         
         try {
-            sendEmailMessage(userAccount, messageTemplate);
+            sendEmailMessage(emailMessage);
         }
         catch(MessagingException me) {
             logger.log(Level.WARNING, "Error when sending the mail confirmation. The registration was not finalized.", me);
@@ -83,13 +84,13 @@ public class MessengerBean {
 
     public void sendWelcomeMessage(UserAccount userAccount) {
         MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("47DEE5C2E0E14F8BA4605F3126FBFAF4");
-        em.detach(messageTemplate);
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("userAccount.firstName", userAccount.getFirstName());
-        messageTemplate.replaceVariablesByValues(values);
+        EmailMessage emailMessage = messageTemplate.replaceVariablesByValues(values);
+        emailMessage.setRecipient(userAccount);
         
         try {
-            sendEmailMessage(userAccount, messageTemplate);
+            sendEmailMessage(emailMessage);
         }
         catch(MessagingException me) {
             logger.log(Level.WARNING, "Error when sending the deactivation reason to user "+ userAccount.getPostingEmail(), me);
@@ -98,14 +99,14 @@ public class MessengerBean {
 
     public void sendNewMemberAlertMessage(UserAccount userAccount, List<UserAccount> leaders) {
         MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("0D6F96382D91454F8155A720F3326F1B");
-        em.detach(messageTemplate);
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("userAccount.fullName", userAccount.getFullName());
         values.put("userAccount.registrationDate", userAccount.getRegistrationDate());
-        messageTemplate.replaceVariablesByValues(values);
+        EmailMessage emailMessage = messageTemplate.replaceVariablesByValues(values);
+        emailMessage.setRecipient(userAccount);
         
         try {
-            sendEmailMessage(leaders, messageTemplate);
+            sendEmailMessage(emailMessage);
         }
         catch(MessagingException me) {
             logger.log(Level.WARNING, "Error when sending alert to administrators about the registration of "+ userAccount.getPostingEmail(), me);
@@ -124,10 +125,11 @@ public class MessengerBean {
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("userAccount.firstName", userAccount.getFirstName());
         values.put("userAccount.deactivationReason", userAccount.getDeactivationReason());
-        messageTemplate.replaceVariablesByValues(values);
+        EmailMessage emailMessage = messageTemplate.replaceVariablesByValues(values);
+        emailMessage.setRecipient(userAccount);
 
         try {
-            sendEmailMessage(userAccount, messageTemplate);
+            sendEmailMessage(emailMessage);
         }
         catch(MessagingException me) {
             logger.log(Level.WARNING, "Error when sending the deactivation reason to user "+ userAccount.getPostingEmail(), me);
@@ -136,14 +138,14 @@ public class MessengerBean {
 
     public void sendDeactivationAlertMessage(UserAccount userAccount, List<UserAccount> leaders) {
         MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("0D6F96382IKEJSUIWOK5A720F3326F1B");
-        em.detach(messageTemplate);
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("userAccount.fullName", userAccount.getFullName());
         values.put("userAccount.deactivationReason", userAccount.getDeactivationReason());
-        messageTemplate.replaceVariablesByValues(values);
+        EmailMessage emailMessage = messageTemplate.replaceVariablesByValues(values);
+        emailMessage.setRecipient(userAccount);
         
         try {
-            sendEmailMessage(leaders, messageTemplate);
+            sendEmailMessage(emailMessage);
         }
         catch(MessagingException me) {
             logger.log(Level.WARNING, "Error when sending the deactivation reason from "+ userAccount.getPostingEmail() +" to leaders.", me);
@@ -152,15 +154,15 @@ public class MessengerBean {
 
     public void sendConfirmationCode(UserAccount userAccount, String serverAddress) {
         MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("67BE6BEBE45945D29109A8D6CD878344");
-        em.detach(messageTemplate);
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("serverAddress", serverAddress);
         values.put("userAccount.firstName", userAccount.getFirstName());
         values.put("userAccount.confirmationCode", userAccount.getConfirmationCode());
-        messageTemplate.replaceVariablesByValues(values);
+        EmailMessage emailMessage = messageTemplate.replaceVariablesByValues(values);
+        emailMessage.setRecipient(userAccount);
         
         try {
-            sendEmailMessage(userAccount, messageTemplate);
+            sendEmailMessage(emailMessage);
         }
         catch(MessagingException me) {
             logger.log(Level.WARNING, "Error when sending the mail confirmation. The registration was not finalized.", me);
@@ -179,17 +181,17 @@ public class MessengerBean {
      */
     public void sendEmailVerificationRequest(UserAccount userAccount, String serverAddress) {
         MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("KJZISKQBE45945D29109A8D6C92IZJ89");
-        em.detach(messageTemplate);
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("serverAddress", serverAddress);
         values.put("userAccount.firstName", userAccount.getFirstName());
         values.put("userAccount.email", userAccount.getEmail());
         values.put("userAccount.unverifiedEmail", userAccount.getUnverifiedEmail());
         values.put("userAccount.confirmationCode", userAccount.getConfirmationCode());
-        messageTemplate.replaceVariablesByValues(values);
+        EmailMessage emailMessage = messageTemplate.replaceVariablesByValues(values);
+        emailMessage.setRecipient(userAccount);
         
         try {
-            sendEmailMessage(userAccount, messageTemplate);
+            sendEmailMessage(emailMessage);
         }
         catch(MessagingException me) {
             logger.log(Level.WARNING, "Error when sending the mail confirmation. The registration was not finalized.", me);
@@ -198,14 +200,14 @@ public class MessengerBean {
 
     public void sendGroupAssignmentAlert(UserAccount userAccount, AccessGroup accessGroup) {
         MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("09JDIIE82O39IDIDOSJCHXUDJJXHCKP0");
-        em.detach(messageTemplate);
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("userAccount.firstName", userAccount.getFirstName());
         values.put("accessGroup.name", accessGroup.getName());
-        messageTemplate.replaceVariablesByValues(values);
+        EmailMessage emailMessage = messageTemplate.replaceVariablesByValues(values);
+        emailMessage.setRecipient(userAccount);
         
         try {
-            sendEmailMessage(userAccount, messageTemplate);
+            sendEmailMessage(emailMessage);
         }
         catch(MessagingException me) {
             logger.log(Level.WARNING, "Error when sending the group assignment alert to "+ userAccount.getFullName(), me);
@@ -214,7 +216,6 @@ public class MessengerBean {
     
     public void sendConfirmationEventAttendance(UserAccount userAccount, Event event, String dateFormat, String timeFormat, String timezone) {
         MessageTemplate messageTemplate = messageTemplateBsn.findMessageTemplate("KJDIEJKHFHSDJDUWJHAJSNFNFJHDJSLE");
-        em.detach(messageTemplate);
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("userAccount.firstName", userAccount.getFirstName());
         values.put("event.name", event.getName());
@@ -222,60 +223,54 @@ public class MessengerBean {
         values.put("event.startDate", TextUtils.getFormattedDate(event.getStartDate(), dateFormat));
         values.put("event.startTime", TextUtils.getFormattedTime(event.getStartTime(), timeFormat, timezone));
         values.put("event.endTime", TextUtils.getFormattedTime(event.getEndTime(), timeFormat, timezone));
-        messageTemplate.replaceVariablesByValues(values);
-
+        EmailMessage emailMessage = messageTemplate.replaceVariablesByValues(values);
+        emailMessage.setRecipient(userAccount);
+        
         try {
-            sendEmailMessage(userAccount, messageTemplate);
+            sendEmailMessage(emailMessage);
         }
         catch(MessagingException me) {
             logger.log(Level.WARNING, "Error when sending the confirmation of event attendance to user "+ userAccount.getPostingEmail(), me);
         }
     }
     
-    public void sendEmailMessage(UserAccount recipient, MessageTemplate messageTemplate) throws MessagingException {
-        List<UserAccount> recipients = new ArrayList<UserAccount>();
-        recipients.add(recipient);
-        sendEmailMessage(recipients, messageTemplate);
-    }
-    
     /**
-     * If the application is configured to send emails, it creates a email message
+     * If the application is configured to send emails, it sends the email message
      * based on the message template. The message is saved in the history and an
      * attempt to send the message is done. If successful the historical message
      * is set as sent, otherwise the message is set as not sent and new attempts
-     * will be carried out later until the sessage is successfully sent.
-     * @param recipients The list of users for who the message will be sent.
-     * @param messageTemplate The template of the message to be sent.
+     * will be carried out later until the message is successfully sent.
+     * @param emailMessage The message to be sent.
      */
-    public void sendEmailMessage(List<UserAccount> recipients, MessageTemplate messageTemplate) throws MessagingException {
+    public void sendEmailMessage(EmailMessage emailMessage) throws MessagingException {
         ApplicationProperty appProp = applicationPropertyBsn.findApplicationProperty(Properties.SEND_EMAILS);
-        if(appProp.sendEmailsEnabled()) {
-            EmailMessage emailMessage;
-            MessageHistory messageHistory;
-            MessagingException messagingException = null;
-            for(UserAccount recipient: recipients) {
-                emailMessage = new EmailMessage();
-                emailMessage.setRecipient(recipient);
-                emailMessage.setSubject(messageTemplate.getTitle());
-                emailMessage.setBody(messageTemplate.getBody());
-                
-                messageHistory = MessageHistory.createHistoricMessage(emailMessage);
-                messageHistory = messageHistoryBean.saveHistoricalMessage(messageHistory);
-                
-                try {
-                    Transport.send(emailMessage.createMimeMessage(mailSession));
-                    messageHistory.setMessageSent(Boolean.TRUE);
-                    messageHistory.setDateSent(Calendar.getInstance().getTime());
-                }
-                catch(MessagingException me) {
-                    messageHistory.setMessageSent(Boolean.FALSE);
-                    messagingException = me;
-                }
+        if(!appProp.sendEmailsEnabled()) {
+            return;
+        }
+        
+        MessagingException messagingException = null;
+        
+        try {
+            Transport.send(emailMessage.createMimeMessage(mailSession));
+        }
+        catch (MessagingException me) {
+            messagingException = me;
+        }
+        
+        List<MessageHistory> messagesHistory = MessageHistory.createHistoricMessages(emailMessage);
+        for(MessageHistory messageHistory: messagesHistory) {
+            if(messagingException == null) {
+                messageHistory.setMessageSent(Boolean.TRUE);
+                messageHistory.setDateSent(Calendar.getInstance().getTime());
             }
-            
-            if(messagingException != null) {
-                throw messagingException;
+            else {
+                messageHistory.setMessageSent(Boolean.FALSE);
             }
+            messageHistoryBean.saveHistoricalMessage(messageHistory);
+        }
+        
+        if(messagingException != null) {
+            throw messagingException;
         }
     }
 }
