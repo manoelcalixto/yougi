@@ -86,19 +86,6 @@ public class EmailMessage {
         this.body = body;
     }
 
-    public MimeMessage createMimeMessage(Session mailSession, UserAccount sender) {
-        MimeMessage mimeMessage = createMimeMessage(mailSession);
-        try {
-            Address sndr = new InternetAddress(sender.getPostingEmail(), sender.getFullName());
-            mimeMessage.setSender(sndr);
-        } catch (MessagingException me) {
-            throw new RuntimeException("Error when sending the mail confirmation. The registration was not finalized.",me);
-        } catch(UnsupportedEncodingException uee) {
-            throw new RuntimeException("Error when sending the mail confirmation. The registration was not finalized.", uee);
-        }
-        return mimeMessage;
-    }
-
     public MimeMessage createMimeMessage(Session mailSession) {
         try {
             MimeMessage msg = new MimeMessage(mailSession);
@@ -118,9 +105,9 @@ public class EmailMessage {
 
             return msg;
         } catch (MessagingException me) {
-            throw new RuntimeException("Error when sending the mail confirmation. The registration was not finalized.",me);
+            throw new RuntimeException("Error when sending the mail confirmation.",me);
         } catch(UnsupportedEncodingException uee) {
-            throw new RuntimeException("Error when sending the mail confirmation. The registration was not finalized.", uee);
+            throw new RuntimeException("Error when sending the mail confirmation.", uee);
         }
     }
 }
