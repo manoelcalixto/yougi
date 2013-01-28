@@ -1,21 +1,21 @@
-/* Jug Management is a web application conceived to manage user groups or 
- * communities focused on a certain domain of knowledge, whose members are 
- * constantly sharing information and participating in social and educational 
+/* Jug Management is a web application conceived to manage user groups or
+ * communities focused on a certain domain of knowledge, whose members are
+ * constantly sharing information and participating in social and educational
  * events. Copyright (C) 2011 Ceara Java User Group - CEJUG.
- * 
- * This application is free software; you can redistribute it and/or modify it 
- * under the terms of the GNU Lesser General Public License as published by the 
- * Free Software Foundation; either version 2.1 of the License, or (at your 
+ *
+ * This application is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation; either version 2.1 of the License, or (at your
  * option) any later version.
- * 
- * This application is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public 
+ *
+ * This application is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
  * License for more details.
- * 
- * There is a full copy of the GNU Lesser General Public License along with 
+ *
+ * There is a full copy of the GNU Lesser General Public License along with
  * this library. Look for the file license.txt at the root level. If you do not
- * find it, write to the Free Software Foundation, Inc., 59 Temple Place, 
+ * find it, write to the Free Software Foundation, Inc., 59 Temple Place,
  * Suite 330, Boston, MA 02111-1307 USA.
  * */
 package org.cejug.knowledge.business;
@@ -33,7 +33,7 @@ import org.cejug.knowledge.entity.Topic;
  */
 @Stateless
 @LocalBean
-public class TopicBsn {
+public class TopicBean {
 
     @PersistenceContext
     private EntityManager em;
@@ -41,10 +41,13 @@ public class TopicBsn {
     public Topic findTopic(String name) {
         return em.find(Topic.class, name);
     }
-    
-    @SuppressWarnings("unchecked")
+
     public List<Topic> findTopics() {
         return em.createQuery("select t from Topic t order by t.name asc").getResultList();
+    }
+
+    public List<Topic> findTopics(String query) {
+        return em.createQuery("select t from Topic t where t.name like '"+ query +"%' order by t.name asc").getResultList();
     }
 
     public void save(Topic topic) {
@@ -52,12 +55,13 @@ public class TopicBsn {
         if(existing == null) {
             em.persist(topic);
         }
-        else
+        else {
             em.merge(topic);
+        }
     }
-    
-    /** 
-     * Receive a list of topics separated by comma and verify if they already 
+
+    /**
+     * Receive a list of topics separated by comma and verify if they already
      * exist. Topics are created with default values if they don't exist yet.
      */
     public void consolidateTopics(String topics) {
@@ -79,11 +83,13 @@ public class TopicBsn {
     }
 
     public void remove(String name) {
-        if(name == null || name.isEmpty())
+        if(name == null || name.isEmpty()) {
             return;
-        
+        }
+
         Topic topic = em.find(Topic.class, name);
-        if(topic != null)
+        if(topic != null) {
             em.remove(topic);
+        }
     }
 }

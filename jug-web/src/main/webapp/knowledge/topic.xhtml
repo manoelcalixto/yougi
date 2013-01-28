@@ -13,22 +13,22 @@
                         <h:messages styleClass="alertMessage"/>
                         <h:panelGrid columns="1">
                             <h:outputLabel for="name" value="#{bundle.name} *" styleClass="fieldLabel"/>
-                            <h:inputText id="name" label="#{bundle.name}" required="true" size="20" maxlength="20" value="#{topicBean.topic.name}"/>
-                            
+                            <h:inputText id="name" label="#{bundle.name}" required="true" size="20" maxlength="20" value="#{topicMBean.topic.name}"/>
+
                             <h:outputLabel for="label" value="#{bundle.label} *" styleClass="fieldLabel"/>
-                            <h:inputText id="label" label="#{bundle.label}" required="true" size="20" maxlength="20" value="#{topicBean.topic.label}"/>
+                            <h:inputText id="label" label="#{bundle.label}" required="true" size="20" maxlength="20" value="#{topicMBean.topic.label}"/>
 
                             <h:panelGrid columns="2">
-                                <h:selectBooleanCheckbox id="valid" label="#{bundle.valid}" value="#{topicBean.topic.valid}"/>
+                                <h:selectBooleanCheckbox id="valid" label="#{bundle.valid}" value="#{topicMBean.topic.valid}"/>
                                 <h:outputLabel for="valid" value="#{bundle.valid}"/>
                             </h:panelGrid>
-                            
+
                             <h:outputLabel for="description" value="#{bundle.description}" styleClass="fieldLabel"/>
-                            <h:inputTextarea id="description" label="#{bundle.description}" cols="60" rows="5" value="#{topicBean.topic.description}"/>
+                            <h:inputTextarea id="description" label="#{bundle.description}" cols="60" rows="5" value="#{topicMBean.topic.description}"/>
                         </h:panelGrid>
                         <h:panelGrid columns="3">
-                            <h:commandButton value="#{bundle.save}" action="#{topicBean.save}" rendered="#{securityBackingBean.isUserLeader}"/>
-                            <h:commandButton value="#{bundle.remove}" action="#{topicBean.remove}" rendered="#{securityBackingBean.isUserLeader}"/>
+                            <h:commandButton value="#{bundle.save}" action="#{topicMBean.save}" rendered="#{securityBackingBean.isUserLeader}"/>
+                            <h:commandButton value="#{bundle.remove}" action="#{topicMBean.remove}" rendered="#{securityBackingBean.isUserLeader}"/>
                             <h:button value="#{bundle.cancel}" outcome="topics"/>
                         </h:panelGrid>
                     </h:form>

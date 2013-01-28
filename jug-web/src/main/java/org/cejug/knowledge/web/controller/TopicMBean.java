@@ -26,7 +26,7 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
-import org.cejug.knowledge.business.TopicBsn;
+import org.cejug.knowledge.business.TopicBean;
 import org.cejug.knowledge.entity.Topic;
 
 /**
@@ -34,10 +34,10 @@ import org.cejug.knowledge.entity.Topic;
  */
 @ManagedBean
 @RequestScoped
-public class TopicBean {
+public class TopicMBean {
 
     @EJB
-    private TopicBsn topicBsn;
+    private TopicBean topicBean;
 
     private Topic topic;
 
@@ -46,7 +46,7 @@ public class TopicBean {
     @ManagedProperty(value="#{param.topic}")
     private String topicName;
 
-    public TopicBean() {
+    public TopicMBean() {
         this.topic = new Topic();
     }
 
@@ -68,7 +68,7 @@ public class TopicBean {
 
     public List<Topic> getTopics() {
         if(this.topics == null) {
-            this.topics = topicBsn.findTopics();
+            this.topics = topicBean.findTopics();
         }
         return this.topics;
     }
@@ -76,17 +76,17 @@ public class TopicBean {
     @PostConstruct
     public void load() {
         if(this.topicName != null && !this.topicName.isEmpty()) {
-            this.topic = topicBsn.findTopic(topicName);
+            this.topic = topicBean.findTopic(topicName);
         }
     }
 
     public String save() {
-        topicBsn.save(this.topic);
+        topicBean.save(this.topic);
         return "topics?faces-redirect=true";
     }
 
     public String remove() {
-        topicBsn.remove(this.topic.getName());
+        topicBean.remove(this.topic.getName());
         return "topics?faces-redirect=true";
     }
 }
