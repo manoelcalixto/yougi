@@ -23,7 +23,8 @@ create table article (
     summary          text             null,
     perm_link        varchar(255)     null,
     topics           varchar(255)     null,
-    publication      date             null
+    publication      date             null,
+    published        tinyint(1)       null
 ) engine innodb;
 
 alter table article add constraint pk_article primary key (id);

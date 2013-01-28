@@ -31,7 +31,7 @@ import javax.persistence.Temporal;
 
 /**
  * Entity class representing an extracted article from a web source, making it
- * permanentely available for publication.
+ * permanently available for publication.
  * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Entity
@@ -57,6 +57,8 @@ public class Article implements Serializable {
 
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date publication;
+
+    private Boolean published;
 
     public String getId() {
         return id;
@@ -137,6 +139,14 @@ public class Article implements Serializable {
 
     public void setPublication(Date publication) {
         this.publication = publication;
+    }
+
+    public Boolean getPublished() {
+        return published;
+    }
+
+    public void setPublished(Boolean published) {
+        this.published = published;
     }
 
     @Override
