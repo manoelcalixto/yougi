@@ -7,7 +7,7 @@
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <link href="#{request.contextPath}/resources/css/default_theme.css" rel="stylesheet" type="text/css" />
+        <h:outputStylesheet library="theme" name="css/default_theme.css"/>
         <link rel="icon" href="#{request.contextPath}/images/favicon.png" />
         <link href="https://plus.google.com/101596388471980915399" rel="publisher" />
         <title>#{bundle.applicationName} - <ui:insert name="title">Title</ui:insert></title>
