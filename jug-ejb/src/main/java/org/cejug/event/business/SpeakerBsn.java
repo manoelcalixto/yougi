@@ -42,8 +42,9 @@ public class SpeakerBsn {
     private EntityManager em;
     
     public Speaker findSpeaker(String id) {
-        if (id != null)
+        if (id != null) {
             return em.find(Speaker.class, id);
+        }
         return null;
     }
     
@@ -60,8 +61,8 @@ public class SpeakerBsn {
     }
     
     public void save(Speaker speaker) {
-        if (speaker != null && speaker.getId() == null || speaker.getId().isEmpty()) {
-            speaker.setId(EntitySupport.generateEntityId());
+        if (EntitySupport.INSTANCE.isIdNotValid(speaker)) {
+            speaker.setId(EntitySupport.INSTANCE.generateEntityId());
             em.persist(speaker);
         } else {
             em.merge(speaker);

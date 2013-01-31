@@ -59,8 +59,8 @@ public class EventSessionBsn {
     }
 
     public void save(EventSession eventSession) {
-        if (eventSession != null && eventSession.getId() == null || eventSession.getId().isEmpty()) {
-            eventSession.setId(EntitySupport.generateEntityId());
+        if (EntitySupport.INSTANCE.isIdNotValid(eventSession)) {
+            eventSession.setId(EntitySupport.INSTANCE.generateEntityId());
             em.persist(eventSession);
         } else {
             em.merge(eventSession);

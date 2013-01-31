@@ -42,7 +42,7 @@ public class ApplicationPropertyBsn {
 
     @SuppressWarnings("unchecked")
     public Map<String, String> findApplicationProperties() {
-        Map<String, String> propertiesMap = new HashMap<String, String>();
+        Map<String, String> propertiesMap = new HashMap<>();
         List<ApplicationProperty> properties = em.createQuery("select ap from ApplicationProperty ap").getResultList();
         for(ApplicationProperty property: properties) {
             propertiesMap.put(property.getPropertyKey(), property.getPropertyValue());
@@ -75,8 +75,9 @@ public class ApplicationPropertyBsn {
             while(iProps.hasNext()) {
                 entry = iProps.next();
                 for(int i = 0; i < props.length; i++) {
-                    if(!entry.getKey().equals(props[i].getKey()))
+                    if(!entry.getKey().equals(props[i].getKey())) {
                         remove(entry.getKey());
+                    }
                 }
             }
         }

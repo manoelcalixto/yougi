@@ -33,11 +33,16 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "province")
-public class Province implements Serializable {
+public class Province implements Serializable, Identified {
     private static final long serialVersionUID = 1L;
     
+    @Id
     private String id;
+    
     private String name;
+    
+    @JoinColumn(name = "country")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Country country;
 
     public Province() {
@@ -51,12 +56,13 @@ public class Province implements Serializable {
         this.id = id;
         this.name = name;
     }
-
-    @Id
+    
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }
@@ -69,8 +75,6 @@ public class Province implements Serializable {
         this.name = name;
     }
 
-    @JoinColumn(name = "country")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     public Country getCountry() {
         return country;
     }

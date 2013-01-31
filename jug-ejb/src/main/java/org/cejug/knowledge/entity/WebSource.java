@@ -26,6 +26,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.cejug.entity.Identified;
 import org.cejug.entity.UserAccount;
 
 /**
@@ -35,7 +36,7 @@ import org.cejug.entity.UserAccount;
  */
 @Entity
 @Table(name = "web_source")
-public class WebSource implements Serializable {
+public class WebSource implements Serializable, Identified {
     
     private static final long serialVersionUID = 1L;
     
@@ -48,10 +49,12 @@ public class WebSource implements Serializable {
     @JoinColumn(name="provider")
     private UserAccount provider;
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }

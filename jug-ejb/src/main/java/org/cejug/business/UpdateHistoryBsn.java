@@ -41,8 +41,9 @@ public class UpdateHistoryBsn {
     private EntityManager em;
     
     public UpdateHistory findUpdateHistory(UpdateHistoryPK id) {
-        if (id != null)
+        if (id != null) {
             return em.find(UpdateHistory.class, id);
+        }
         return null;
     }
     
@@ -52,8 +53,9 @@ public class UpdateHistoryBsn {
     }
     
     public void save(UpdateHistory updateHistory) {
-        if(updateHistory == null)
+        if(updateHistory == null) {
             throw new IllegalArgumentException();
+        }
         
         if (updateHistory.getUpdateHistoryPK() == null || !updateHistory.getUpdateHistoryPK().isValid()) {
             throw new BusinessLogicException("Update history not saved. Its id is invalid.");

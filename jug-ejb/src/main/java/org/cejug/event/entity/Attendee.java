@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 import javax.persistence.*;
+import org.cejug.entity.Identified;
 import org.cejug.entity.UserAccount;
 
 /**
@@ -31,7 +32,7 @@ import org.cejug.entity.UserAccount;
  */
 @Entity
 @Table(name = "attendee")
-public class Attendee implements Serializable {
+public class Attendee implements Serializable, Identified {
 
     private static final long serialVersionUID = 1L;
 
@@ -68,10 +69,12 @@ public class Attendee implements Serializable {
     @Column(name="certificate_code")
     private String certificateCode;
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }

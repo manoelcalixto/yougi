@@ -34,7 +34,11 @@ import javax.persistence.Table;
 public class ApplicationProperty implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @Column(name="property_key", nullable=false)
     private String propertyKey;
+    
+    @Column(name="property_value")
     private String propertyValue;
 
     public ApplicationProperty() {}
@@ -44,8 +48,6 @@ public class ApplicationProperty implements Serializable {
         this.propertyValue = propertyValue;
     }
 
-    @Id
-    @Column(name="property_key", nullable=false)
     public String getPropertyKey() {
         return propertyKey;
     }
@@ -54,7 +56,6 @@ public class ApplicationProperty implements Serializable {
         this.propertyKey = propertyKey;
     }
 
-    @Column(name="property_value")
     public String getPropertyValue() {
         return propertyValue;
     }
@@ -64,10 +65,12 @@ public class ApplicationProperty implements Serializable {
     }
 
     public boolean sendEmailsEnabled() {
-        if(propertyKey.equals(Properties.SEND_EMAILS.getKey()))
+        if(propertyKey.equals(Properties.SEND_EMAILS.getKey())) {
             return Boolean.valueOf(propertyValue);
-        else
+        }
+        else {
             return false;
+        }
     }
 
     @Override

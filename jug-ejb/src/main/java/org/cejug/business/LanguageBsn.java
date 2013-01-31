@@ -59,7 +59,8 @@ public class LanguageBsn {
 
     public void remove(String acronym) {
         Language language = em.find(Language.class, acronym);
-        if(language != null)
+        if(language != null) {
             em.remove(language);
+        }
     }
 }

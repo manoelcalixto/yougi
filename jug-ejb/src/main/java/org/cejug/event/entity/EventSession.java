@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
+import org.cejug.entity.Identified;
 
 /**
  *
@@ -31,7 +32,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "event_session")
-public class EventSession implements Serializable {
+public class EventSession implements Serializable, Identified {
 
     private static final long serialVersionUID = 1L;
 
@@ -74,10 +75,12 @@ public class EventSession implements Serializable {
         this.id = id;
     }
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }
@@ -155,8 +158,9 @@ public class EventSession implements Serializable {
     }
     
     public String getSpeakersName() {
-        if(speakers == null || speakers.isEmpty())
+        if(speakers == null || speakers.isEmpty()) {
             return "";
+        }
         
         StringBuilder speakersName = new StringBuilder();
         String separator = "";

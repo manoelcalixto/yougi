@@ -43,10 +43,12 @@ public class EventBsn {
     private EntityManager em;
 
     public Event findEvent(String id) {
-        if(id != null)
+        if(id != null) {
             return em.find(Event.class, id);
-        else
+        }
+        else {
             return null;
+        }
     }
     
     @SuppressWarnings("unchecked")
@@ -66,15 +68,16 @@ public class EventBsn {
     }
     
     public void consolidateEventPeriod(Event event, Date date, Date startDate, Date endDate) {
-        if(event == null)
+        if(event == null) {
             return;
+        }
         
         Query query = em.createQuery("");
     }
 
     public void save(Event event) {
-    	if(event.getId() == null || event.getId().isEmpty()) {
-            event.setId(EntitySupport.generateEntityId());
+    	if(EntitySupport.INSTANCE.isIdNotValid(event)) {
+            event.setId(EntitySupport.INSTANCE.generateEntityId());
             em.persist(event);
         }
         else {
@@ -84,7 +87,8 @@ public class EventBsn {
 
     public void remove(String id) {
         Event event = findEvent(id);
-        if(event != null)
+        if(event != null) {
             em.remove(event);
+        }
     }
 }

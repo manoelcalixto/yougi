@@ -90,8 +90,9 @@ public class UserGroup implements Serializable {
     public void setAuthentication(Authentication authentication) {
         this.userAccount = authentication.getUserAccount();
 
-        if(this.id == null)
+        if(this.id == null) {
             this.id = new UserGroupId();
+        }
         this.id.setUserId(this.userAccount.getId());
         this.username = authentication.getUsername();
     }
@@ -103,8 +104,9 @@ public class UserGroup implements Serializable {
     public void setAccessGroup(AccessGroup accessGroup) {
         this.accessGroup = accessGroup;
 
-        if(this.id == null)
+        if(this.id == null) {
             this.id = new UserGroupId();
+        }
         this.id.setGroupId(accessGroup.getId());
         this.groupName = accessGroup.getName();
     }

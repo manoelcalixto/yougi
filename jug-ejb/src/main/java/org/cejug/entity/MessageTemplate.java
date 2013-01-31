@@ -35,16 +35,19 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "message_template")
-public class MessageTemplate implements Serializable {
+public class MessageTemplate implements Serializable, Identified {
     
     private static final String VAR_PATTERN = "\\#\\{([a-z][a-zA-Z_0-9]*(\\.)?)+\\}";
 
     private static final long serialVersionUID = 1L;
 
+    @Id
     private String id;
 
+    @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private String body;
 
     public MessageTemplate() {
@@ -54,16 +57,16 @@ public class MessageTemplate implements Serializable {
         this.id = id;
     }
 
-    @Id
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }
 
-    @Column(nullable = false)
     public String getTitle() {
         return title;
     }
@@ -72,7 +75,6 @@ public class MessageTemplate implements Serializable {
         this.title = title;
     }
 
-    @Column(nullable = false)
     public String getBody() {
         return body;
     }
@@ -81,7 +83,6 @@ public class MessageTemplate implements Serializable {
         this.body = body;
     }
 
-    @Transient
     public String getTruncatedBody() {
         if (this.body.length() < 200) {
             return this.body;
@@ -123,7 +124,7 @@ public class MessageTemplate implements Serializable {
     
     private List<String> findVariables(Pattern pattern, CharSequence charSequence) {
         Matcher m = pattern.matcher(charSequence);
-        List<String> matches = new ArrayList<String>();
+        List<String> matches = new ArrayList<>();
         while (m.find()) {
             matches.add(m.group());
         }

@@ -24,6 +24,7 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.cejug.entity.Identified;
 
 /**
  * An entity class that represents a mailing list of the user group.
@@ -31,7 +32,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "mailing_list")
-public class MailingList implements Serializable {
+public class MailingList implements Serializable, Identified {
 
     private static final long serialVersionUID = 1L;
 
@@ -55,10 +56,12 @@ public class MailingList implements Serializable {
         this.name = name;
     }
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }

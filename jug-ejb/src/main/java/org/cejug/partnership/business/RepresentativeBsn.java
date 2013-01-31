@@ -22,14 +22,12 @@ package org.cejug.partnership.business;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-
 import org.cejug.entity.UserAccount;
 import org.cejug.partnership.entity.Partner;
 import org.cejug.partnership.entity.Representative;
@@ -50,10 +48,12 @@ public class RepresentativeBsn {
     private PartnerBsn partnerBsn;
 
     public Representative findRepresentative(String id) {
-        if(id != null)
+        if(id != null) {
             return em.find(Representative.class, id);
-        else
+        }
+        else {
             return null;
+        }
     }
     
     public Representative findRepresentative(UserAccount person) {
@@ -82,8 +82,8 @@ public class RepresentativeBsn {
     }
     
     public void save(Representative representative) {
-    	if(representative.getId() == null || representative.getId().isEmpty()) {
-    		representative.setId(EntitySupport.generateEntityId());
+    	if(EntitySupport.INSTANCE.isIdNotValid(representative)) {
+            representative.setId(EntitySupport.INSTANCE.generateEntityId());
             em.persist(representative);
         }
         else {
@@ -99,15 +99,16 @@ public class RepresentativeBsn {
     	
     	partnerBsn.save(partner);
     	
-    	if(persons == null)
-    		return;
+    	if(persons == null) {
+            return;
+        }
     	
     	// Create new representatives using the received parameters.
-        List<Representative> representatives = new ArrayList<Representative>();
+        List<Representative> representatives = new ArrayList<>();
         Representative representative;
         for(UserAccount person: persons) {
         	representative = new Representative(partner, person);
-        	representative.setId(EntitySupport.generateEntityId());
+        	representative.setId(EntitySupport.INSTANCE.generateEntityId());
             representatives.add(representative);
         }
         
@@ -138,7 +139,8 @@ public class RepresentativeBsn {
 
     public void remove(String id) {
         Representative representative = em.find(Representative.class, id);
-        if(representative != null)
+        if(representative != null) {
             em.remove(representative);
+        }
     }
 }

@@ -62,8 +62,8 @@ public class EventSponsorBsn {
     }
 
     public void save(EventSponsor eventSponsor) {
-        if (eventSponsor.getId() == null || eventSponsor.getId().isEmpty()) {
-            eventSponsor.setId(EntitySupport.generateEntityId());
+        if (EntitySupport.INSTANCE.isIdNotValid(eventSponsor)) {
+            eventSponsor.setId(EntitySupport.INSTANCE.generateEntityId());
             em.persist(eventSponsor);
         } else {
             em.merge(eventSponsor);

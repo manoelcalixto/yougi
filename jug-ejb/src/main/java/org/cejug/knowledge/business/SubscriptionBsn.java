@@ -133,8 +133,9 @@ public class SubscriptionBsn {
     /** Subscribes the user in several mailing lists. */
     public void subscribe(List<MailingList> mailingLists, UserAccount userAccount) {
         // Nothing to do if the user is not informed.
-        if(userAccount == null)
+        if(userAccount == null) {
             return;
+        }
         
         // If the user account is informed and the mailing list is empty, this is
         // the case in which the user must not be associated with a mailing list,
@@ -180,11 +181,12 @@ public class SubscriptionBsn {
      * @param when the date when the user is subscribed.
      */
     public void subscribe(MailingList mailingList, UserAccount userAccount, Date when) {
-        if(mailingList == null || userAccount == null)
+        if(mailingList == null || userAccount == null) {
             return;
+        }
         
         MailingListSubscription mailingListSubscription = new MailingListSubscription();
-        mailingListSubscription.setId(EntitySupport.generateEntityId());
+        mailingListSubscription.setId(EntitySupport.INSTANCE.generateEntityId());
         mailingListSubscription.setMailingList(mailingList);
         mailingListSubscription.setUserAccount(userAccount);
         mailingListSubscription.setEmailAddress(userAccount.getEmail());
@@ -228,8 +230,9 @@ public class SubscriptionBsn {
      */
     public void unsubscribe(MailingListSubscription subscription) {
         MailingListSubscription mailingListSubscription = findMailingListSubscription(subscription.getId());
-        if(mailingListSubscription == null)
+        if(mailingListSubscription == null) {
             return;
+        }
         
         mailingListSubscription.setUnsubscriptionDate(subscription.getUnsubscriptionDate());
     }
@@ -252,8 +255,8 @@ public class SubscriptionBsn {
      * Save the mailing list subscription in the database.
      */
     public void save(MailingListSubscription subscription) {
-        if(subscription.getId() == null || subscription.getId().isEmpty()) {
-            subscription.setId(EntitySupport.generateEntityId());
+        if(EntitySupport.INSTANCE.isIdNotValid(subscription)) {
+            subscription.setId(EntitySupport.INSTANCE.generateEntityId());
             em.persist(subscription);
         }
         else {

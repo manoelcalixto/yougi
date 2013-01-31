@@ -33,7 +33,7 @@ import org.cejug.util.TextUtils;
  */
 @Entity
 @Table(name="user_account")
-public class UserAccount implements Serializable {
+public class UserAccount implements Serializable, Identified {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -140,10 +140,12 @@ public class UserAccount implements Serializable {
         this.email = email;
     }
 
+    @Override
     public String getId() {
         return this.id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }

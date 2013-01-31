@@ -21,114 +21,118 @@
 package org.cejug.partnership.entity;
 
 import java.io.Serializable;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
+import org.cejug.entity.Identified;
 import org.cejug.entity.UserAccount;
 
 /**
- * @author Hildeberto Mendonca  - http://www.hildeberto.com
+ * @author Hildeberto Mendonca - http://www.hildeberto.com
  */
 @Entity
 @Table(name = "representative")
-public class Representative implements Serializable {
+public class Representative implements Serializable, Identified {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    @Id
+    private String id;
+    @ManyToOne
+    @JoinColumn(name = "person")
+    private UserAccount person;
+    @ManyToOne
+    @JoinColumn(name = "partner")
+    private Partner partner;
+    private String phone;
+    private String position;
 
-	@Id
-	private String id;
-	
-	@ManyToOne
-	@JoinColumn(name="person")
-	private UserAccount person;
-	
-	@ManyToOne
-	@JoinColumn(name="partner")
-	private Partner partner;
-	
-	private String phone;
-	
-	private String position;
+    public Representative() {
+    }
 
-	public Representative() {}
-	
-	public Representative(Partner partner, UserAccount person) {
-		this.partner = partner;
-		this.person = person;
-	}
-	
-	public String getId() {
-		return id;
-	}
+    public Representative(Partner partner, UserAccount person) {
+        this.partner = partner;
+        this.person = person;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    @Override
+    public String getId() {
+        return id;
+    }
 
-	public UserAccount getPerson() {
-		return person;
-	}
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setPerson(UserAccount person) {
-		this.person = person;
-	}
+    public UserAccount getPerson() {
+        return person;
+    }
 
-	public Partner getPartner() {
-		return this.partner;
-	}
+    public void setPerson(UserAccount person) {
+        this.person = person;
+    }
 
-	public void setPartner(Partner partner) {
-		this.partner = partner;
-	}
+    public Partner getPartner() {
+        return this.partner;
+    }
 
-	public String getPhone() {
-		return phone;
-	}
+    public void setPartner(Partner partner) {
+        this.partner = partner;
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+    public String getPhone() {
+        return phone;
+    }
 
-	public String getPosition() {
-		return position;
-	}
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-	public void setPosition(String position) {
-		this.position = position;
-	}
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((partner == null) ? 0 : partner.hashCode());
-		result = prime * result + ((person == null) ? 0 : person.hashCode());
-		return result;
-	}
+    public String getPosition() {
+        return position;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Representative other = (Representative) obj;
-		if (partner == null) {
-			if (other.partner != null)
-				return false;
-		} else if (!partner.equals(other.partner))
-			return false;
-		if (person == null) {
-			if (other.person != null)
-				return false;
-		} else if (!person.equals(other.person))
-			return false;
-		return true;
-	}
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((partner == null) ? 0 : partner.hashCode());
+        result = prime * result + ((person == null) ? 0 : person.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Representative other = (Representative) obj;
+        if (partner == null) {
+            if (other.partner != null) {
+                return false;
+            }
+        } else if (!partner.equals(other.partner)) {
+            return false;
+        }
+        if (person == null) {
+            if (other.person != null) {
+                return false;
+            }
+        } else if (!person.equals(other.person)) {
+            return false;
+        }
+        return true;
+    }
 }

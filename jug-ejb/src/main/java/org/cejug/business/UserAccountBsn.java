@@ -359,7 +359,7 @@ public class UserAccountBsn {
         userAccount.setRegistrationDate(Calendar.getInstance().getTime());
 
         if(!existingAccount) {
-            userAccount.setId(EntitySupport.generateEntityId());
+            userAccount.setId(EntitySupport.INSTANCE.generateEntityId());
             em.persist(userAccount);
         }
 
