@@ -29,9 +29,7 @@ import com.sun.syndication.io.XmlReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -46,8 +44,10 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.UserAccount;
+import org.cejug.knowledge.business.TopicBean;
 import org.cejug.knowledge.business.WebSourceBean;
 import org.cejug.knowledge.entity.Article;
+import org.cejug.knowledge.entity.Topic;
 import org.cejug.knowledge.entity.WebSource;
 
 /**
@@ -65,11 +65,15 @@ public class WebSourceMBean {
     @EJB
     private WebSourceBean webSourceBean;
 
+    @EJB
+    private TopicBean topicBean;
+
     private UserAccount provider;
     private WebSource webSource;
 
     private List<UserAccount> usersWithWebsite;
     private List<Article> articles;
+    private List<String> selectedTopics;
 
     @ManagedProperty(value="#{param.user}")
     private String userId;
@@ -99,6 +103,25 @@ public class WebSourceMBean {
 
     public List<Article> getArticles() {
         return this.articles;
+    }
+
+    public List<String> getSelectedTopics() {
+        return selectedTopics;
+    }
+
+    public void setSelectedTopics(List<String> selectedTopics) {
+        this.selectedTopics = selectedTopics;
+    }
+
+    public List<String> completeTopics(String query) {
+        List<Topic> topics = topicBean.findTopics(query);
+
+        List<String> results = new ArrayList<>();
+        for(Topic topic: topics) {
+            results.add(topic.getName());
+        }
+
+        return results;
     }
 
     @PostConstruct
