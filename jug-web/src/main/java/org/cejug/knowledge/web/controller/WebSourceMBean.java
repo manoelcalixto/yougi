@@ -29,9 +29,7 @@ import com.sun.syndication.io.XmlReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -46,8 +44,10 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.UserAccount;
+import org.cejug.knowledge.business.TopicBean;
 import org.cejug.knowledge.business.WebSourceBean;
 import org.cejug.knowledge.entity.Article;
+import org.cejug.knowledge.entity.Topic;
 import org.cejug.knowledge.entity.WebSource;
 
 /**
@@ -69,10 +69,12 @@ public class WebSourceMBean {
     private WebSource webSource;
 
     private List<UserAccount> usersWithWebsite;
-    private List<Article> articles;
 
     @ManagedProperty(value="#{param.user}")
     private String userId;
+
+    @ManagedProperty(value="#{unpublishedContentMBean}")
+    private UnpublishedContentMBean unpublishedContentMBean;
 
     public UserAccount getProvider() {
         return this.provider;
@@ -97,8 +99,16 @@ public class WebSourceMBean {
         return this.usersWithWebsite;
     }
 
+    public UnpublishedContentMBean getUnpublishedContentMBean() {
+        return unpublishedContentMBean;
+    }
+
+    public void setUnpublishedContentMBean(UnpublishedContentMBean unpublishedContentMBean) {
+        this.unpublishedContentMBean = unpublishedContentMBean;
+    }
+
     public List<Article> getArticles() {
-        return this.articles;
+        return this.unpublishedContentMBean.getArticles();
     }
 
     @PostConstruct
@@ -128,7 +138,7 @@ public class WebSourceMBean {
 
     public void showFeedArticles() {
         try {
-            this.articles = loadFeedArticles();
+            this.unpublishedContentMBean.setArticles(loadFeedArticles());
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
         }

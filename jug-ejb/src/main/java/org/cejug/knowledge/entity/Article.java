@@ -108,6 +108,10 @@ public class Article implements Serializable {
         this.summary = summary;
     }
 
+    /**
+     * @return Returns the content if it exists or the summary if the content
+     * doesn't exist.
+     */
     public String getText() {
         if(this.content == null || this.content.isEmpty()) {
             return this.summary;
