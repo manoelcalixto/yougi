@@ -103,7 +103,7 @@ public class AttendeeBsn {
     }
 
     public void save(Attendee attendee) {
-        attendee.setId(EntitySupport.generateEntityId());
+        attendee.setId(EntitySupport.INSTANCE.generateEntityId());
         em.persist(attendee);
     }
 

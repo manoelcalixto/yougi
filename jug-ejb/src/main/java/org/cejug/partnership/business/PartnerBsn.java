@@ -40,10 +40,12 @@ public class PartnerBsn {
     private EntityManager em;
 
     public Partner findPartner(String id) {
-        if(id != null)
+        if(id != null) {
             return em.find(Partner.class, id);
-        else
+        }
+        else {
             return null;
+        }
     }
     
     @SuppressWarnings("unchecked")
@@ -53,8 +55,8 @@ public class PartnerBsn {
     }
 
     public void save(Partner partner) {
-    	if(partner.getId() == null || partner.getId().isEmpty()) {
-            partner.setId(EntitySupport.generateEntityId());
+    	if(EntitySupport.INSTANCE.isIdNotValid(partner)) {
+            partner.setId(EntitySupport.INSTANCE.generateEntityId());
             em.persist(partner);
         }
         else {
@@ -64,7 +66,8 @@ public class PartnerBsn {
 
     public void remove(String id) {
         Partner partner = em.find(Partner.class, id);
-        if(partner != null)
+        if(partner != null) {
             em.remove(partner);
+        }
     }
 }

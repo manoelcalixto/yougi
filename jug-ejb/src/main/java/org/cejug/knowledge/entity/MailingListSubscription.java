@@ -23,6 +23,7 @@ package org.cejug.knowledge.entity;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
+import org.cejug.entity.Identified;
 import org.cejug.entity.UserAccount;
 
 /**
@@ -30,7 +31,7 @@ import org.cejug.entity.UserAccount;
  */
 @Entity
 @Table(name = "mailing_list_subscription")
-public class MailingListSubscription implements Serializable {
+public class MailingListSubscription implements Serializable, Identified {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -67,10 +68,12 @@ public class MailingListSubscription implements Serializable {
         this.emailAddress = emailAddress;
     }
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }

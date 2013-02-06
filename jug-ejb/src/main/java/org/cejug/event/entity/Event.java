@@ -26,6 +26,7 @@ import java.util.List;
 import javax.persistence.*;
 import org.cejug.entity.City;
 import org.cejug.entity.Country;
+import org.cejug.entity.Identified;
 import org.cejug.entity.Province;
 import org.cejug.partnership.entity.Partner;
 
@@ -34,7 +35,7 @@ import org.cejug.partnership.entity.Partner;
  */
 @Entity
 @Table(name = "event")
-public class Event implements Serializable {
+public class Event implements Serializable, Identified {
 
     private static final long serialVersionUID = 1L;
 
@@ -97,10 +98,12 @@ public class Event implements Serializable {
     @OneToMany(mappedBy="event")
     private List<EventSession> eventSessions;
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }

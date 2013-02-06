@@ -60,8 +60,9 @@ public class Topic implements Serializable {
     }
 
     public void setName(String name) {
-        if(name == null)
+        if(name == null) {
             throw new BusinessLogicException("Name not informed.");
+        }
         
         this.name = name.trim().toUpperCase();
     }

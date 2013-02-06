@@ -66,7 +66,7 @@ import org.primefaces.model.chart.PieChartModel;
 @RequestScoped
 public class EventBean {
 
-    static final Logger logger = Logger.getLogger("org.cejug.event.web.controller.EventBean");
+    static final Logger logger = Logger.getLogger(EventBean.class.getName());
 
     @EJB
     private EventBsn eventBsn;
@@ -186,8 +186,9 @@ public class EventBean {
         TimeZone tz = TimeZone.getTimeZone(userProfileBean.getTimeZone());
         Calendar today = Calendar.getInstance(tz);
         
-        if(this.event.getStartDate().before(today.getTime()))
+        if(this.event.getStartDate().before(today.getTime())) {
             return true;
+        }
         
         return false;
     }
@@ -372,8 +373,9 @@ public class EventBean {
     }
     
     public void getCertificate() {
-        if(!this.attendee.getAttended())
+        if(!this.attendee.getAttended()) {
             return;
+        }
         
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletResponse response = (HttpServletResponse)context.getExternalContext().getResponse();
@@ -405,10 +407,8 @@ public class EventBean {
             response.getOutputStream().flush();
             response.getOutputStream().close();
             context.responseComplete();
-        } catch (IOException e) {
+        } catch (IOException | DocumentException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
-        } catch (DocumentException de) {
-            logger.log(Level.SEVERE, de.getMessage(), de);
         }
     }
 

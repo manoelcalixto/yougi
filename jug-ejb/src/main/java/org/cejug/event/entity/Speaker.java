@@ -22,6 +22,7 @@ package org.cejug.event.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import org.cejug.entity.Identified;
 import org.cejug.entity.UserAccount;
 
 /**
@@ -32,7 +33,7 @@ import org.cejug.entity.UserAccount;
  */
 @Entity
 @Table(name = "speaker")
-public class Speaker implements Serializable {
+public class Speaker implements Serializable, Identified {
 
     private static final long serialVersionUID = 1L;
 
@@ -61,10 +62,12 @@ public class Speaker implements Serializable {
         this.id = id;
     }
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }

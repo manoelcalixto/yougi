@@ -67,7 +67,7 @@ public class AccessGroupBsn {
         }
         catch(NoResultException nre) {
             defaultUserGroup = new AccessGroup(DEFAULT_GROUP,"Default Members Group");
-            defaultUserGroup.setId(EntitySupport.generateEntityId());
+            defaultUserGroup.setId(EntitySupport.INSTANCE.generateEntityId());
             defaultUserGroup.setUserDefault(Boolean.TRUE);
             em.persist(defaultUserGroup);
         }
@@ -85,7 +85,7 @@ public class AccessGroupBsn {
         }
         catch(Exception nre) {
             group = new AccessGroup(ADMIN_GROUP,"JUG Leaders Group");
-            group.setId(EntitySupport.generateEntityId());
+            group.setId(EntitySupport.INSTANCE.generateEntityId());
             em.persist(group);
         }
         return group;
@@ -115,20 +115,22 @@ public class AccessGroupBsn {
         if(accessGroup.getId() == null || accessGroup.getId().isEmpty()) {
             try {
                 AccessGroup group = findAccessGroupByName(accessGroup.getName());
-                if(group != null)
-                	throw new PersistenceException("A group named '"+ accessGroup.getName() +"' already exists.");
+                if(group != null) {
+                    throw new PersistenceException("A group named '"+ accessGroup.getName() +"' already exists.");
+                }
             }
             catch(NoResultException nre) {
-                accessGroup.setId(EntitySupport.generateEntityId());
+                accessGroup.setId(EntitySupport.INSTANCE.generateEntityId());
                 em.persist(accessGroup);
             }
         }
-        else
+        else {
             em.merge(accessGroup);
+        }
 
         if(members != null) {
             Authentication auth;
-            List<UserGroup> usersGroup = new ArrayList<UserGroup>();
+            List<UserGroup> usersGroup = new ArrayList<>();
             for(UserAccount member: members) {
                 auth = userAccountBsn.findAuthenticationUser(member.getId());
                 usersGroup.add(new UserGroup(accessGroup, auth));

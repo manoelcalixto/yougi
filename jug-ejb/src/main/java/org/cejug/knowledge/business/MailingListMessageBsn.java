@@ -29,7 +29,6 @@ import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
-import javax.ejb.Schedule;
 import javax.ejb.Stateless;
 import javax.mail.*;
 import javax.persistence.EntityManager;
@@ -87,21 +86,23 @@ public class MailingListMessageBsn {
                 /* Stores in the database only those messages that were sent to
                  * a registered mailing list. */
                 mailingLists = figureOutMailingLists(message[i].getAllRecipients());
-                if(mailingLists == null || mailingLists.isEmpty())
+                if(mailingLists == null || mailingLists.isEmpty()) {
                     continue;
+                }
 
                 /* For each mailing list in the recipient of the message a new
                    message is created and saved. */
                 for(MailingList mailingList: mailingLists) {
                     mailingListMessage = new MailingListMessage();
-                    mailingListMessage.setId(EntitySupport.generateEntityId());
+                    mailingListMessage.setId(EntitySupport.INSTANCE.generateEntityId());
                     mailingListMessage.setMailingList(mailingList);
                     mailingListMessage.setSubject(message[i].getSubject());
                     
                     /* Get the email address of the 'from' field and set the sender. */
                     from = message[i].getFrom()[0].toString();
-                    if(from.indexOf("<") >= 0)
+                    if(from.indexOf("<") >= 0) {
                         from = from.substring(from.indexOf("<") + 1, from.indexOf(">"));
+                    }
                     from = from.toLowerCase();
                     MailingListSubscription mailingListSubscription = subscriptionBsn.findMailingListSubscription(mailingList, from);
                     mailingListMessage.setSender(mailingListSubscription);
@@ -154,16 +155,18 @@ public class MailingListMessageBsn {
      * of the message. */
     private List<MailingList> figureOutMailingLists(Address[] extendedListAddresses) {
         String listAddress;
-        List<MailingList> mailingLists = new ArrayList<MailingList>();
+        List<MailingList> mailingLists = new ArrayList<>();
         MailingList mailingList;
         for(int i = 0;i < extendedListAddresses.length;i++) {
             listAddress = extendedListAddresses[i].toString();
-            if(listAddress.indexOf("<") >= 0)
+            if(listAddress.indexOf("<") >= 0) {
                 listAddress = listAddress.substring(listAddress.indexOf("<") + 1, listAddress.indexOf(">"));
+            }
             listAddress = listAddress.toLowerCase();
             mailingList = mailingListBsn.findMailingListByEmail(listAddress);
-            if(mailingList != null)
+            if(mailingList != null) {
                 mailingLists.add(mailingList);
+            }
         }
         return mailingLists;
     }

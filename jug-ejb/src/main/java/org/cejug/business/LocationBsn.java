@@ -48,10 +48,12 @@ public class LocationBsn {
     private UserAccountBsn userAccountBsn;
 
     public Country findCountry(String acronym) {
-        if(acronym != null)
+        if(acronym != null) {
             return em.find(Country.class, acronym);
-        else
+        }
+        else {
             return null;
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -146,8 +148,8 @@ public class LocationBsn {
         if(candidates != null && candidates.size() == 1) {
             return candidates.get(0);
         }
-        else
-            return null;
+        
+        return null;
     }
 
     /**
@@ -157,35 +159,41 @@ public class LocationBsn {
         String prefix = "UTC";
         String signal = " ";
         String minutes = ":00";
-        List<String> timeZones = new ArrayList<String>();
+        List<String> timeZones = new ArrayList<>();
         for(int i = -12;i <= 14;i++) {
-            if(i > 0)
+            if(i > 0) {
                 signal = " +";
-            if(i != 0)
+            }
+            if(i != 0) {
                 timeZones.add(prefix + signal + i + minutes);
-            else
+            }
+            else {
                 timeZones.add(prefix);
+            }
         }
         return timeZones;
     }
 
     public void saveCountry(Country country) {
         Country existing = em.find(Country.class, country.getAcronym());
-        if(existing == null)
+        if(existing == null) {
             em.persist(country);
-        else
+        }
+        else {
             em.merge(country);
+        }
     }
 
     public void removeCountry(String id) {
         Country country = em.find(Country.class, id);
-        if(country != null)
+        if(country != null) {
             em.remove(country);
+        }
     }
 
     public void saveProvince(Province province) {
-        if(province.getId() == null || province.getId().isEmpty()) {
-            province.setId(EntitySupport.generateEntityId());
+        if(EntitySupport.INSTANCE.isIdNotValid(province)) {
+            province.setId(EntitySupport.INSTANCE.generateEntityId());
             em.persist(province);
         }
         else {
@@ -195,13 +203,14 @@ public class LocationBsn {
 
     public void removeProvince(String id) {
         Province province = em.find(Province.class, id);
-        if(province != null)
+        if(province != null) {
             em.remove(province);
+        }
     }
 
     public void saveCity(City city) {
-        if(city.getId() == null || city.getId().isEmpty()) {
-            city.setId(EntitySupport.generateEntityId());
+        if(EntitySupport.INSTANCE.isIdNotValid(city)) {
+            city.setId(EntitySupport.INSTANCE.generateEntityId());
             em.persist(city);
         }
         else {
@@ -213,7 +222,8 @@ public class LocationBsn {
 
     public void removeCity(String id) {
         City city = em.find(City.class, id);
-        if(city != null)
+        if(city != null) {
             em.remove(city);
+        }
     }
 }

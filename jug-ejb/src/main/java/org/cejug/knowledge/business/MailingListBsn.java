@@ -65,8 +65,8 @@ public class MailingListBsn {
 
     /** Save the mailing list in the database. */
     public void save(MailingList mailingList) {
-        if(mailingList.getId() == null || mailingList.getId().isEmpty()) {
-            mailingList.setId(EntitySupport.generateEntityId());
+        if(EntitySupport.INSTANCE.isIdNotValid(mailingList)) {
+            mailingList.setId(EntitySupport.INSTANCE.generateEntityId());
             em.persist(mailingList);
         }
         else {
@@ -76,7 +76,8 @@ public class MailingListBsn {
 
     public void remove(String id) {
         MailingList mailingList = em.find(MailingList.class, id);
-        if(mailingList != null)
+        if(mailingList != null) {
             em.remove(mailingList);
+        }
     }
 }

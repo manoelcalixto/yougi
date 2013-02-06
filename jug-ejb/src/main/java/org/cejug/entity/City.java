@@ -34,7 +34,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "city")
-public class City implements Serializable {
+public class City implements Serializable, Identified {
 
     private static final long serialVersionUID = 1L;
 
@@ -72,10 +72,12 @@ public class City implements Serializable {
         this.name = name;
     }
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }

@@ -25,7 +25,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  * Represents a group of users.
@@ -33,12 +32,15 @@ import javax.persistence.Transient;
  */
 @Entity
 @Table(name="access_group")
-public class AccessGroup implements Serializable {
+public class AccessGroup implements Serializable, Identified {
     private static final long serialVersionUID = 1L;
 
+    @Id
     private String id;
     private String name;
     private String description;
+    
+    @Column(name="user_default")
     private Boolean userDefault = false;
 
     public AccessGroup() {}
@@ -47,12 +49,13 @@ public class AccessGroup implements Serializable {
         this.name = name;
         this.description = description;
     }
-
-    @Id
+    
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }
@@ -73,7 +76,6 @@ public class AccessGroup implements Serializable {
         this.description = description;
     }
 
-    @Column(name="user_default")
     public Boolean getUserDefault() {
         return userDefault;
     }
@@ -82,12 +84,13 @@ public class AccessGroup implements Serializable {
         this.userDefault = userDefault;
     }
 
-    @Transient
     public boolean getDefault() {
-        if(userDefault == null)
+        if(userDefault == null) {
             return false;
-        else
+        }
+        else {
             return userDefault.booleanValue();
+        }
     }
 
     @Override

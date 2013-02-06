@@ -22,7 +22,6 @@ package org.cejug.entity;
 
 import java.io.Serializable;
 import java.util.Locale;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -32,72 +31,75 @@ import javax.persistence.Table;
 @Table(name = "language")
 public class Language implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    public static final String DEFAULT_LANGUAGE = "en";
+    @Id
+    @Column(name = "acronym", nullable = false)
+    private String acronym;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-	public static final String DEFAULT_LANGUAGE = "en";
+    public Language() {
+        this.acronym = DEFAULT_LANGUAGE;
+    }
 
-	@Id
-	@Column(name = "acronym", nullable = false)
-	private String acronym;
+    public Language(String acronym) {
+        this.acronym = acronym;
+    }
 
-	@Column(name = "name", nullable = false)
-	private String name;
+    public String getName() {
+        return name;
+    }
 
-	public Language() {
-		this.acronym = DEFAULT_LANGUAGE;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Language(String acronym) {
-		this.acronym = acronym;
-	}
+    public String getAcronym() {
+        return acronym;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setAcronym(String acronym) {
+        this.acronym = acronym;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public Locale getLocale() {
+        Locale locale = new Locale(this.getAcronym());
+        return locale;
+    }
 
-	public String getAcronym() {
-		return acronym;
-	}
+    @Override
+    public String toString() {
+        return this.name;
+    }
 
-	public void setAcronym(String acronym) {
-		this.acronym = acronym;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((acronym == null) ? 0 : acronym.hashCode());
+        return result;
+    }
 
-	public Locale getLocale() {
-		Locale locale = new Locale(this.getAcronym());
-		return locale;
-	}
-
-	public String toString() {
-		return this.name;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((acronym == null) ? 0 : acronym.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof Language))
-			return false;
-		Language other = (Language) obj;
-		if (acronym == null) {
-			if (other.acronym != null)
-				return false;
-		} else if (!acronym.equals(other.acronym))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Language)) {
+            return false;
+        }
+        Language other = (Language) obj;
+        if (acronym == null) {
+            if (other.acronym != null) {
+                return false;
+            }
+        } else if (!acronym.equals(other.acronym)) {
+            return false;
+        }
+        return true;
+    }
 }

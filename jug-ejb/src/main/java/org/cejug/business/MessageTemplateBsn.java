@@ -49,8 +49,8 @@ public class MessageTemplateBsn {
     }
 
     public void save(MessageTemplate messageTemplate) {
-        if(messageTemplate.getId() == null || messageTemplate.getId().isEmpty()) {
-            messageTemplate.setId(EntitySupport.generateEntityId());
+        if(EntitySupport.INSTANCE.isIdNotValid(messageTemplate)) {
+            messageTemplate.setId(EntitySupport.INSTANCE.generateEntityId());
             em.persist(messageTemplate);
         }
         else {

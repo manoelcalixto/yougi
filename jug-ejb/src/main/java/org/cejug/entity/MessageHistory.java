@@ -32,7 +32,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "historical_message")
-public class MessageHistory implements Serializable {
+public class MessageHistory implements Serializable, Identified {
 
     private static final long serialVersionUID = 1L;
     
@@ -73,14 +73,14 @@ public class MessageHistory implements Serializable {
         messageHistory.setRecipient(emailMessage.getRecipient());
         return messageHistory;
     }
-        
+            
     /** 
      * A factory that creates a historical message for each recipient of the
      * email message.
      * @return A list of historical messages, one for each recipient of the message.
      */
     public static List<MessageHistory> createHistoricMessages(EmailMessage emailMessage) {
-        List<MessageHistory> messageHistories = new ArrayList<MessageHistory>();
+        List<MessageHistory> messageHistories = new ArrayList<>();
         MessageHistory messageHistory;
         
         for(UserAccount userAccount: emailMessage.getRecipients()) {
@@ -94,10 +94,12 @@ public class MessageHistory implements Serializable {
         return messageHistories;
     }
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }

@@ -104,10 +104,8 @@ public class EmailMessage {
             msg.setHeader("Content-Type", "text/html;charset=UTF-8");
 
             return msg;
-        } catch (MessagingException me) {
+        } catch (MessagingException | UnsupportedEncodingException me) {
             throw new RuntimeException("Error when sending the mail confirmation.",me);
-        } catch(UnsupportedEncodingException uee) {
-            throw new RuntimeException("Error when sending the mail confirmation.", uee);
         }
     }
 }

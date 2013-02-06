@@ -24,13 +24,14 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
+import org.cejug.entity.Identified;
 
 /**
  * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Entity
 @Table(name = "mailing_list_message")
-public class MailingListMessage implements Serializable, Cloneable {
+public class MailingListMessage implements Serializable, Cloneable, Identified {
 
     private static final long serialVersionUID = 1L;
 
@@ -82,10 +83,12 @@ public class MailingListMessage implements Serializable, Cloneable {
         this.dateReceived = dateReceived;
     }
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }

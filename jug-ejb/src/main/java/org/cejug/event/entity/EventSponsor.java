@@ -22,80 +22,77 @@ package org.cejug.event.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
+import org.cejug.entity.Identified;
 import org.cejug.partnership.entity.Partner;
 
 /**
- * @author Hildeberto Mendonca  - http://www.hildeberto.com
+ * @author Hildeberto Mendonca - http://www.hildeberto.com
  */
 @Entity
-@Table(name="event_sponsor")
-public class EventSponsor implements Serializable {
+@Table(name = "event_sponsor")
+public class EventSponsor implements Serializable, Identified {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    @Id
+    private String id;
+    @ManyToOne
+    @JoinColumn(name = "event", nullable = false)
+    private Event event;
+    @ManyToOne
+    @JoinColumn(name = "partner", nullable = false)
+    private Partner partner;
+    private BigDecimal amount;
+    private String description;
 
-	@Id
-	private String id;
-	
-	@ManyToOne
-	@JoinColumn(name="event", nullable=false)
-	private Event event;
-	
-	@ManyToOne
-	@JoinColumn(name="partner", nullable=false)
-	private Partner partner;
-	
-	private BigDecimal amount;
-	
-	private String description;
+    @Override
+    public String getId() {
+        return id;
+    }
 
-	public String getId() {
-		return id;
-	}
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public Event getEvent() {
+        return event;
+    }
 
-	public Event getEvent() {
-		return event;
-	}
+    public void setEvent(Event event) {
+        this.event = event;
+    }
 
-	public void setEvent(Event event) {
-		this.event = event;
-	}
+    public Partner getPartner() {
+        return partner;
+    }
 
-	public Partner getPartner() {
-		return partner;
-	}
+    public void setPartner(Partner partner) {
+        this.partner = partner;
+    }
 
-	public void setPartner(Partner partner) {
-		this.partner = partner;
-	}
+    public BigDecimal getAmount() {
+        return amount;
+    }
 
-	public BigDecimal getAmount() {
-		return amount;
-	}
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
 
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
-	public String toString() {
-		return this.partner.getName();
-	}
+    @Override
+    public String toString() {
+        return this.partner.getName();
+    }
 }
