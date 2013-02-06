@@ -11,18 +11,18 @@
             <ui:define name="content">
                 <div class="content">
                     <h1>#{bundle.attendees}</h1>
-                    <h:outputText value="#{attendeeBean.event.name}" style="font-size: 18px; font-weight: bold;"/>
+                    <h:outputText value="#{attendeeMBean.event.name}" style="font-size: 18px; font-weight: bold;"/>
                     <h:form>
                         <p><h:outputFormat value="#{bundle.numberPeopleAttendingEvent}" style="font-weight: bold; color: blue;">
-                            <f:param value="#{attendeeBean.numberPeopleAttending}"/>
-                            <f:param value="#{attendeeBean.numberPeopleAttended}"/>
+                            <f:param value="#{attendeeMBean.numberPeopleAttending}"/>
+                            <f:param value="#{attendeeMBean.numberPeopleAttended}"/>
                         </h:outputFormat></p>
                         <p>
                             <h:panelGrid width="100%" columnClasses="alignColumnRight">
-                                <h:commandButton value="#{bundle.print}" action="#{attendeeBean.print}"/>
+                                <h:commandButton value="#{bundle.print}" action="#{attendeeMBean.print}"/>
                             </h:panelGrid>
                         </p>
-                        <p:dataTable value="#{attendeeBean.attendees}" var="attendee" selection="#{attendeeBean.selectedAttendees}" rowKey="#{attendee.id}">
+                        <p:dataTable value="#{attendeeMBean.attendees}" var="attendee" selection="#{attendeeMBean.selectedAttendees}" rowKey="#{attendee.id}">
                             <p:column>
                                 <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>
                                 <h:outputText value="#{attendee.attendee.firstName}"/>
@@ -50,7 +50,7 @@
                             <p:column selectionMode="multiple"/>
                         </p:dataTable>
                         <p/>
-                        <h:commandButton value="#{bundle.save}" action="#{attendeeBean.confirmMembersAttended}"/>
+                        <h:commandButton value="#{bundle.save}" action="#{attendeeMBean.confirmMembersAttended}"/>
                         <h:button value="#{bundle.back}" outcome="events"/>
                     </h:form>
                 </div>

@@ -14,40 +14,40 @@
                         <h:messages styleClass="alertMessage"/>
                         <h:panelGrid>
                             <h:outputLabel for="event" value="#{bundle.event} *" styleClass="fieldLabel"/>
-                            <h:selectOneMenu id="event" label="#{bundle.event}" value="#{speakerBean.selectedEvent}">
+                            <h:selectOneMenu id="event" label="#{bundle.event}" value="#{speakerMBean.selectedEvent}">
                                 <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
-                                <f:selectItems value="#{speakerBean.events}" var="event" itemLabel="#{event.name}" itemValue="#{event.id}"/>
+                                <f:selectItems value="#{speakerMBean.events}" var="event" itemLabel="#{event.name}" itemValue="#{event.id}"/>
                             </h:selectOneMenu>
                             
                             <h:outputLabel for="eventSession" value="#{bundle.session}" styleClass="fieldLabel"/>
-                            <h:selectOneMenu id="eventSession" label="#{bundle.session}" value="#{speakerBean.selectedEventSession}">
+                            <h:selectOneMenu id="eventSession" label="#{bundle.session}" value="#{speakerMBean.selectedEventSession}">
                                 <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
-                                <f:selectItems value="#{speakerBean.eventSessions}" var="ses" itemLabel="#{ses.title}" itemValue="#{ses.id}"/>
+                                <f:selectItems value="#{speakerMBean.eventSessions}" var="ses" itemLabel="#{ses.title}" itemValue="#{ses.id}"/>
                             </h:selectOneMenu>
                             
                             <h:outputLabel for="userAccount" value="#{bundle.user}" styleClass="fieldLabel"/>
-                            <h:selectOneMenu id="userAccount" label="#{bundle.user}" value="#{speakerBean.selectedUserAccount}">
+                            <h:selectOneMenu id="userAccount" label="#{bundle.user}" value="#{speakerMBean.selectedUserAccount}">
                                 <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
-                                <f:selectItems value="#{speakerBean.userAccounts}" var="usr" itemLabel="#{usr.fullName}" itemValue="#{usr.id}"/>
+                                <f:selectItems value="#{speakerMBean.userAccounts}" var="usr" itemLabel="#{usr.fullName}" itemValue="#{usr.id}"/>
                             </h:selectOneMenu>
                             
                             <h:outputLabel for="shortCv" value="#{bundle.shortCv}" styleClass="fieldLabel"/>
-                            <h:inputTextarea id="shortCv" label="#{bundle.shortCv}" required="false" cols="60" rows="4" value="#{speakerBean.speaker.shortCv}"/>
+                            <h:inputTextarea id="shortCv" label="#{bundle.shortCv}" required="false" cols="60" rows="4" value="#{speakerMBean.speaker.shortCv}"/>
                         </h:panelGrid>
 
-                        <h:inputHidden id="id" value="#{speakerBean.speaker.id}"/>
+                        <h:inputHidden id="id" value="#{speakerMBean.speaker.id}"/>
                         
                         <h:panelGrid columns="3">
-                            <h:commandButton value="#{bundle.save}" action="#{speakerBean.save}">
-                                <f:param name="eventId" value="#{speakerBean.speaker.event.id}"/>
-                                <f:param name="id" value="#{speakerBean.speaker.id}"/>
+                            <h:commandButton value="#{bundle.save}" action="#{speakerMBean.save}">
+                                <f:param name="eventId" value="#{speakerMBean.speaker.event.id}"/>
+                                <f:param name="id" value="#{speakerMBean.speaker.id}"/>
                             </h:commandButton>
-                            <h:commandButton value="#{bundle.remove}" action="#{speakerBean.remove}" rendered="#{! empty speakerBean.id}">
-                                <f:param name="eventId" value="#{speakerBean.speaker.event.id}"/>
-                                <f:param name="id" value="#{speakerBean.speaker.id}"/>
+                            <h:commandButton value="#{bundle.remove}" action="#{speakerMBean.remove}" rendered="#{! empty speakerMBean.id}">
+                                <f:param name="eventId" value="#{speakerMBean.speaker.event.id}"/>
+                                <f:param name="id" value="#{speakerMBean.speaker.id}"/>
                             </h:commandButton>
                             <h:button value="#{bundle.cancel}" outcome="speakers">
-                                <f:param name="eventId" value="#{speakerBean.speaker.event.id}"/>
+                                <f:param name="eventId" value="#{speakerMBean.speaker.event.id}"/>
                             </h:button>
                         </h:panelGrid>
                     </h:form>

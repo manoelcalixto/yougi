@@ -14,42 +14,42 @@
                         <h:messages styleClass="alertMessage"/>
                         <h:panelGrid>
                             <h:outputLabel for="event" value="#{bundle.event} *" styleClass="fieldLabel"/>
-                            <h:selectOneMenu id="event" label="#{bundle.event}" value="#{eventSponsorBean.selectedEvent}">
+                            <h:selectOneMenu id="event" label="#{bundle.event}" value="#{eventSponsorMBean.selectedEvent}">
                                 <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
-                                <f:selectItems value="#{eventSponsorBean.events}" var="event" itemLabel="#{event.name}" itemValue="#{event.id}"/>
+                                <f:selectItems value="#{eventSponsorMBean.events}" var="event" itemLabel="#{event.name}" itemValue="#{event.id}"/>
                             </h:selectOneMenu>
                             
                             <h:outputLabel for="sponsor" value="#{bundle.sponsor}" styleClass="fieldLabel"/>
-                            <h:selectOneMenu id="sponsor" label="#{bundle.sponsor}" value="#{eventSponsorBean.selectedSponsor}">
+                            <h:selectOneMenu id="sponsor" label="#{bundle.sponsor}" value="#{eventSponsorMBean.selectedSponsor}">
                                 <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
-                                <f:selectItems value="#{eventSponsorBean.partners}" var="partner" itemLabel="#{partner.name}" itemValue="#{partner.id}"/>
+                                <f:selectItems value="#{eventSponsorMBean.partners}" var="partner" itemLabel="#{partner.name}" itemValue="#{partner.id}"/>
                             </h:selectOneMenu>
                             
                             <h:outputLabel for="amount" value="#{bundle.amount}" styleClass="fieldLabel"/>
                             <h:panelGrid columns="2">
-                                <h:inputText id="amount" label="#{bundle.amount}" size="10" maxlength="13" value="#{eventSponsorBean.eventSponsor.amount}">
+                                <h:inputText id="amount" label="#{bundle.amount}" size="10" maxlength="13" value="#{eventSponsorMBean.eventSponsor.amount}">
 	                                <f:convertNumber maxFractionDigits="2" minFractionDigits="2"/>
 	                            </h:inputText>
 	                            <h:outputText value="#{bundle.currencyFormat}" styleClass="fieldFormat"/>
                             </h:panelGrid>
                             
                             <h:outputLabel for="description" value="#{bundle.description}" styleClass="fieldLabel"/>
-                            <h:inputTextarea id="description" label="#{bundle.description}" required="false" cols="60" rows="4" value="#{eventSponsorBean.eventSponsor.description}"/>
+                            <h:inputTextarea id="description" label="#{bundle.description}" required="false" cols="60" rows="4" value="#{eventSponsorMBean.eventSponsor.description}"/>
                         </h:panelGrid>
 
-                        <h:inputHidden id="id" value="#{eventSponsorBean.eventSponsor.id}"/>
+                        <h:inputHidden id="id" value="#{eventSponsorMBean.eventSponsor.id}"/>
                         
                         <h:panelGrid columns="3">
-                            <h:commandButton value="#{bundle.save}" action="#{eventSponsorBean.save}">
-                                <f:param name="eventId" value="#{eventSponsorBean.eventSponsor.event.id}"/>
-                                <f:param name="id" value="#{eventSponsorBean.eventSponsor.id}"/>
+                            <h:commandButton value="#{bundle.save}" action="#{eventSponsorMBean.save}">
+                                <f:param name="eventId" value="#{eventSponsorMBean.eventSponsor.event.id}"/>
+                                <f:param name="id" value="#{eventSponsorMBean.eventSponsor.id}"/>
                             </h:commandButton>
-                            <h:commandButton value="#{bundle.remove}" action="#{eventSponsorBean.remove}" rendered="#{! empty eventSponsorBean.id}">
-                                <f:param name="eventId" value="#{eventSponsorBean.eventSponsor.event.id}"/>
-                                <f:param name="id" value="#{eventSponsorBean.eventSponsor.id}"/>
+                            <h:commandButton value="#{bundle.remove}" action="#{eventSponsorMBean.remove}" rendered="#{! empty eventSponsorMBean.id}">
+                                <f:param name="eventId" value="#{eventSponsorMBean.eventSponsor.event.id}"/>
+                                <f:param name="id" value="#{eventSponsorMBean.eventSponsor.id}"/>
                             </h:commandButton>
                             <h:button value="#{bundle.cancel}" outcome="sponsors">
-                                <f:param name="eventId" value="#{eventSponsorBean.eventSponsor.event.id}"/>
+                                <f:param name="eventId" value="#{eventSponsorMBean.eventSponsor.event.id}"/>
                             </h:button>
                         </h:panelGrid>
                     </h:form>

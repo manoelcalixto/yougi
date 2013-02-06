@@ -13,7 +13,7 @@
                     <h1>#{bundle.events}</h1>
                     <p><h:link outcome="event" value="#{bundle.newEvent}" rendered="#{securityBackingBean.isUserLeader}"/></p>
                     <h:form>
-	                    <p:dataGrid var="event" value="#{eventBean.events}" columns="1" rows="3" paginator="true">
+	                    <p:dataGrid var="event" value="#{eventMBean.events}" columns="1" rows="3" paginator="true">
 	                        <p:column>
 	                            <p:panel>
 	                                <h:panelGrid>
@@ -26,9 +26,9 @@
 	                                       <h:outputText value="#{event.venue}"/>
 	                                    </h:panelGrid>
 	                                    <h:outputFormat value="#{bundle.eventAppointmentShort}">
-	                                        <f:param value="#{eventBean.getFormattedStartDate(event.startDate)}"/>
-	                                        <f:param value="#{eventBean.getFormattedStartTime(event.startTime)}"/>
-	                                        <f:param value="#{eventBean.getFormattedEndTime(event.endTime)}"/>
+	                                        <f:param value="#{eventMBean.getFormattedStartDate(event.startDate)}"/>
+	                                        <f:param value="#{eventMBean.getFormattedStartTime(event.startTime)}"/>
+	                                        <f:param value="#{eventMBean.getFormattedEndTime(event.endTime)}"/>
 	                                    </h:outputFormat>
 	                                    <h:panelGrid columns="9">
 		                                <h:link value="#{bundle.edit}" outcome="event" rendered="#{securityBackingBean.isUserLeader}">
@@ -43,7 +43,7 @@
                                                     <f:param name="eventId" value="#{event.id}"/>
                                                 </h:link>
                                                 <h:outputText value=" | " rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
-                                                <h:commandLink value="#{bundle.attendees}" action="#{attendeeBean.load(event.id)}" rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
+                                                <h:commandLink value="#{bundle.attendees}" action="#{attendeeMBean.load(event.id)}" rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
                                                 <h:outputText value=" | " rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
                                                 <h:link value="#{bundle.sponsors}" outcome="sponsors" rendered="#{securityBackingBean.isUserLeader and !event.external}">
                                                     <f:param name="eventId" value="#{event.id}"/>

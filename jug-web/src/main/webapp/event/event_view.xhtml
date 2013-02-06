@@ -13,25 +13,25 @@
                 <div class="content">
                     <h1>#{bundle.event}</h1>
                     <h:form>
-                        <p><h:outputText value="#{eventBean.event.name}" style="font-size: 24px; font-weight: bold;"/></p>
+                        <p><h:outputText value="#{eventMBean.event.name}" style="font-size: 24px; font-weight: bold;"/></p>
                         <p:tabView>
                             <p:tab title="#{bundle.details}">
                                 <h:panelGrid cellpadding="3">
                                     <h:outputFormat value="#{bundle.eventAppointment}" escape="false">
-                                        <f:param value="#{eventBean.event.venue}"/>
-                                        <f:param value="#{eventBean.formattedStartDate}"/>
-                                        <f:param value="#{eventBean.formattedStartTime}"/>
-                                        <f:param value="#{eventBean.formattedEndTime}"/>
+                                        <f:param value="#{eventMBean.event.venue}"/>
+                                        <f:param value="#{eventMBean.formattedStartDate}"/>
+                                        <f:param value="#{eventMBean.formattedStartTime}"/>
+                                        <f:param value="#{eventMBean.formattedEndTime}"/>
                                     </h:outputFormat>
 
                                     <h:outputFormat value="#{bundle.numberPeopleAttendingEvent}" style="font-weight: bold; color: blue;" rendered="#{securityBackingBean.isUserLeader}">
-                                        <f:param value="#{eventBean.numberPeopleAttending}"/>
-                                        <f:param value="#{eventBean.numberPeopleAttended}"/>
+                                        <f:param value="#{eventMBean.numberPeopleAttending}"/>
+                                        <f:param value="#{eventMBean.numberPeopleAttended}"/>
                                     </h:outputFormat>
 
-                                    <h:outputText value="#{eventBean.formattedEventDescription}" escape="false" style="font-size: 14px;"/>
+                                    <h:outputText value="#{eventMBean.formattedEventDescription}" escape="false" style="font-size: 14px;"/>
 
-                                    <p:dataList value="#{eventBean.event.eventSessions}" var="ses" type="definition" style="border-color: white">
+                                    <p:dataList value="#{eventMBean.event.eventSessions}" var="ses" type="definition" style="border-color: white">
                                         <b> <h:outputText value="#{ses.startTime}">
                                                 <f:convertDateTime pattern="#{bundle.formatTime}" timeZone="#{userProfileBean.timeZone}"/>
                                             </h:outputText>: 
@@ -43,26 +43,26 @@
                                         </f:facet>
                                     </p:dataList>
 
-                                    <h:outputFormat value="#{bundle.iWillAttend}" style="font-weight: bold; color: blue;" rendered="#{eventBean.isAttending}">
-                                        <f:param value="#{eventBean.formattedRegistrationDate}"/>
+                                    <h:outputFormat value="#{bundle.iWillAttend}" style="font-weight: bold; color: blue;" rendered="#{eventMBean.isAttending}">
+                                        <f:param value="#{eventMBean.formattedRegistrationDate}"/>
                                     </h:outputFormat>
                                 </h:panelGrid>
                                 <p/>
-                                <c:if test="#{!eventBean.event.external}">
-                                    <h:button value="#{bundle.attend}" outcome="attendee" rendered="#{! eventBean.isAttending and ! eventBean.happened}">
-                                        <f:param name="id" value="#{eventBean.event.id}"/>
+                                <c:if test="#{!eventMBean.event.external}">
+                                    <h:button value="#{bundle.attend}" outcome="attendee" rendered="#{! eventMBean.isAttending and ! eventMBean.happened}">
+                                        <f:param name="id" value="#{eventMBean.event.id}"/>
                                     </h:button>
-                                    <h:button value="#{bundle.notAttending}" outcome="attendee_cancel" rendered="#{eventBean.isAttending and ! eventBean.happened}">
-                                        <f:param name="id" value="#{eventBean.event.id}"/>
+                                    <h:button value="#{bundle.notAttending}" outcome="attendee_cancel" rendered="#{eventMBean.isAttending and ! eventMBean.happened}">
+                                        <f:param name="id" value="#{eventMBean.event.id}"/>
                                     </h:button>
-                                    <h:commandButton value="#{bundle.getCertificate}" action="#{eventBean.getCertificate}" rendered="#{eventBean.attended and eventBean.happened}">
-                                        <f:param name="id" value="#{eventBean.event.id}"/>
+                                    <h:commandButton value="#{bundle.getCertificate}" action="#{eventMBean.getCertificate}" rendered="#{eventMBean.attended and eventMBean.happened}">
+                                        <f:param name="id" value="#{eventMBean.event.id}"/>
                                     </h:commandButton>
                                 </c:if>
                             </p:tab>
                             <p:tab title="#{bundle.statistics}" rendered="#{securityBackingBean.isUserLeader}">
                                 <h:panelGrid>
-                                    <p:pieChart value="#{eventBean.attendanceRateChartModel}" title="#{bundle.attendanceRate}" legendPosition="e" showDataLabels="true"/>
+                                    <p:pieChart value="#{eventMBean.attendanceRateChartModel}" title="#{bundle.attendanceRate}" legendPosition="e" showDataLabels="true"/>
                                 </h:panelGrid>
                             </p:tab>
                         </p:tabView>

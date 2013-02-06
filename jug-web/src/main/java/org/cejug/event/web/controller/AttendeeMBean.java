@@ -45,7 +45,7 @@ import org.cejug.web.report.EventAttendeeReport;
  */
 @ManagedBean
 @SessionScoped
-public class AttendeeBean implements Serializable {
+public class AttendeeMBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
@@ -67,7 +67,7 @@ public class AttendeeBean implements Serializable {
 
     private Long numberPeopleAttended;
 
-    public AttendeeBean() {
+    public AttendeeMBean() {
     }
 
     public Event getEvent() {

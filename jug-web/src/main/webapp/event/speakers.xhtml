@@ -11,12 +11,12 @@
             <ui:define name="content">
                 <div class="content">
                     <h1>#{bundle.speakers}</h1>
-                    <h:outputText value="#{speakerBean.event.name}" style="font-size: 18px; font-weight: bold;"/>
+                    <h:outputText value="#{speakerMBean.event.name}" style="font-size: 18px; font-weight: bold;"/>
                     <p><h:link outcome="speaker" value="#{bundle.newSpeaker}" rendered="#{securityBackingBean.isUserLeader}">
-                           <f:param name="eventId" value="#{speakerBean.event.id}"/>
+                           <f:param name="eventId" value="#{speakerMBean.event.id}"/>
                        </h:link></p>
                     <h:form>
-                        <p:dataTable value="#{speakerBean.speakers}" var="speaker">
+                        <p:dataTable value="#{speakerMBean.speakers}" var="speaker">
                             <p:column>
                                 <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>
                                 <h:link outcome="speaker" value="#{speaker}">

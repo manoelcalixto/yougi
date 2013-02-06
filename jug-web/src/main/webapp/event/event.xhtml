@@ -20,50 +20,50 @@
                                     <h:outputText/>
                                     <h:outputText/>
                                     
-                                    <h:inputText id="name" label="#{bundle.name}" required="true" size="40" maxlength="100" value="#{eventBean.event.name}"/>
-                                    <h:selectBooleanCheckbox id="external" label="#{bundle.external}" value="#{eventBean.event.external}"/>
+                                    <h:inputText id="name" label="#{bundle.name}" required="true" size="40" maxlength="100" value="#{eventMBean.event.name}"/>
+                                    <h:selectBooleanCheckbox id="external" label="#{bundle.external}" value="#{eventMBean.event.external}"/>
                                     <h:outputLabel for="external" value="#{bundle.external}"/>
                                 </h:panelGrid>
                                 
                                 <h:outputLabel for="venue" value="#{bundle.venue} *" styleClass="fieldLabel"/>
-                                <h:selectOneMenu id="venue" label="#{bundle.venue}" required="true" value="#{eventBean.selectedVenue}">
+                                <h:selectOneMenu id="venue" label="#{bundle.venue}" required="true" value="#{eventMBean.selectedVenue}">
                                     <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
-                                    <f:selectItems value="#{eventBean.venues}" var="venue" itemLabel="#{venue.name}" itemValue="#{venue.id}"/>
+                                    <f:selectItems value="#{eventMBean.venues}" var="venue" itemLabel="#{venue.name}" itemValue="#{venue.id}"/>
                                     <f:ajax render="address country province city"/>
                                 </h:selectOneMenu>
                                 
                                 <h:outputLabel for="address" value="#{bundle.address}" styleClass="fieldLabel"/>
-                                <h:inputText id="address" label="#{bundle.address}" required="false" size="50" maxlength="255" value="#{eventBean.event.address}"/>
+                                <h:inputText id="address" label="#{bundle.address}" required="false" size="50" maxlength="255" value="#{eventMBean.event.address}"/>
 
                                 <h:panelGrid columns="2">
                                     <h:outputLabel for="country" value="#{bundle.country}" styleClass="fieldLabel"/>
                                     <h:outputLabel for="province" value="#{bundle.province}" styleClass="fieldLabel"/>
 
-                                    <h:selectOneMenu id="country" label="#{bundle.country}" value="#{locationBean.selectedCountry}">
+                                    <h:selectOneMenu id="country" label="#{bundle.country}" value="#{locationMBean.selectedCountry}">
                                         <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
-                                        <f:selectItems value="#{locationBean.countries}" var="country" itemLabel="#{country.name}" itemValue="#{country.acronym}"/>
+                                        <f:selectItems value="#{locationMBean.countries}" var="country" itemLabel="#{country.name}" itemValue="#{country.acronym}"/>
                                         <f:ajax render="province city"/>
                                     </h:selectOneMenu>
-                                    <h:selectOneMenu id="province" label="#{bundle.province}" value="#{locationBean.selectedProvince}">
+                                    <h:selectOneMenu id="province" label="#{bundle.province}" value="#{locationMBean.selectedProvince}">
                                         <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
-                                        <f:selectItems value="#{locationBean.provinces}" var="province" itemLabel="#{province.name}" itemValue="#{province.id}"/>
+                                        <f:selectItems value="#{locationMBean.provinces}" var="province" itemLabel="#{province.name}" itemValue="#{province.id}"/>
                                         <f:ajax render="city"/>
                                     </h:selectOneMenu>
 
                                     <h:outputLabel for="city" value="#{bundle.city}" styleClass="fieldLabel"/>
                                     <h:outputText/>
 
-                                    <h:selectOneMenu id="city" label="#{bundle.city}" value="#{locationBean.selectedCity}">
+                                    <h:selectOneMenu id="city" label="#{bundle.city}" value="#{locationMBean.selectedCity}">
                                         <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
-                                        <f:selectItems value="#{locationBean.cities}" var="city" itemLabel="#{city.name}" itemValue="#{city.id}"/>
+                                        <f:selectItems value="#{locationMBean.cities}" var="city" itemLabel="#{city.name}" itemValue="#{city.id}"/>
                                     </h:selectOneMenu>
                                     <h:outputText/>
 
                                     <h:outputLabel for="latitude" value="#{bundle.latitude}" styleClass="fieldLabel"/>
                                     <h:outputLabel for="longitude" value="#{bundle.longitude}" styleClass="fieldLabel"/>
 
-                                    <h:inputText id="latitude" label="#{bundle.latitude}" size="15" maxlength="15" value="#{eventBean.event.latitude}"/>
-                                    <h:inputText id="longitude" label="#{bundle.longitude}" size="15" maxlength="15" value="#{eventBean.event.longitude}"/>
+                                    <h:inputText id="latitude" label="#{bundle.latitude}" size="15" maxlength="15" value="#{eventMBean.event.latitude}"/>
+                                    <h:inputText id="longitude" label="#{bundle.longitude}" size="15" maxlength="15" value="#{eventMBean.event.longitude}"/>
                                 </h:panelGrid>
 
                                 <h:panelGrid columns="4">
@@ -72,12 +72,12 @@
                                     <h:outputLabel for="endDate" value="#{bundle.end} *" styleClass="fieldLabel"/>
                                     <h:outputText/>
 
-                                    <p:calendar value="#{eventBean.event.startDate}" id="startDate" pattern="#{bundle.formatDate}" size="10" timeZone="#{userProfileBean.timeZone}"/>
-                                    <p:inputMask value="#{eventBean.event.startTime}" mask="99:99" size="5">
+                                    <p:calendar value="#{eventMBean.event.startDate}" id="startDate" pattern="#{bundle.formatDate}" size="10" timeZone="#{userProfileBean.timeZone}"/>
+                                    <p:inputMask value="#{eventMBean.event.startTime}" mask="99:99" size="5">
                                         <f:convertDateTime pattern="#{bundle.formatTime}" timeZone="#{userProfileBean.timeZone}"/>
                                     </p:inputMask>
-                                    <p:calendar value="#{eventBean.event.endDate}" id="endDate" pattern="#{bundle.formatDate}" size="10" timeZone="#{userProfileBean.timeZone}"/>
-                                    <p:inputMask value="#{eventBean.event.endTime}" mask="99:99" size="5">
+                                    <p:calendar value="#{eventMBean.event.endDate}" id="endDate" pattern="#{bundle.formatDate}" size="10" timeZone="#{userProfileBean.timeZone}"/>
+                                    <p:inputMask value="#{eventMBean.event.endTime}" mask="99:99" size="5">
                                        <f:convertDateTime pattern="#{bundle.formatTime}" timeZone="#{userProfileBean.timeZone}"/>
                                     </p:inputMask>
 
@@ -92,16 +92,16 @@
                                 <h:inputTextarea id="shortDescription" label="#{bundle.shortDescription}" required="false" cols="60" rows="4" value="#{eventBean.event.shortDescription}"/>
 
                                 <h:outputLabel for="description" value="#{bundle.description}" styleClass="fieldLabel"/>
-                                <p:editor id="description" required="false" width="500" height="200" value="#{eventBean.event.description}"/>
+                                <p:editor id="description" required="false" width="500" height="200" value="#{eventMBean.event.description}"/>
                             </h:panelGrid>
                         </h:panelGrid>
                         
-                        <h:inputHidden id="id" value="#{eventBean.event.id}"/>
-                        <h:inputHidden id="certificateTemplate" value="#{eventBean.event.certificateTemplate}"/>
+                        <h:inputHidden id="id" value="#{eventMBean.event.id}"/>
+                        <h:inputHidden id="certificateTemplate" value="#{eventMBean.event.certificateTemplate}"/>
 
                         <h:panelGrid columns="3">
-                            <h:commandButton value="#{bundle.save}" action="#{eventBean.save}"/>
-                            <h:commandButton value="#{bundle.remove}" action="#{eventBean.remove}"/>
+                            <h:commandButton value="#{bundle.save}" action="#{eventMBean.save}"/>
+                            <h:commandButton value="#{bundle.remove}" action="#{eventMBean.remove}"/>
                             <h:button outcome="events" value="#{bundle.cancel}"/>
                         </h:panelGrid>
                     </h:form>

@@ -12,23 +12,23 @@
                     <h1>#{bundle.event}</h1>
                     <h:form>
 	                    <h:panelGrid>
-	                         <h:outputText value="#{eventBean.event.name}" style="font-size: 24px; font-weight: bold;"/>
-	                         <h:outputText value="#{eventBean.event.shortDescription}"/>
+	                         <h:outputText value="#{eventMBean.event.name}" style="font-size: 24px; font-weight: bold;"/>
+	                         <h:outputText value="#{eventMBean.event.shortDescription}"/>
 	                         <h:panelGrid columns="2">
 	                            <h:outputText value="#{bundle.venue}: "/>
-	                            <h:outputText value="#{eventBean.event.venue}"/>
+	                            <h:outputText value="#{eventMBean.event.venue}"/>
 	                         </h:panelGrid>
 	                         <h:outputFormat value="#{bundle.eventAppointmentShort}">
-	                             <f:param value="#{eventBean.formattedStartDate}"/>
-	                             <f:param value="#{eventBean.formattedStartTime}"/>
-	                             <f:param value="#{eventBean.formattedEndTime}"/>
+	                             <f:param value="#{eventMBean.formattedStartDate}"/>
+	                             <f:param value="#{eventMBean.formattedStartTime}"/>
+	                             <f:param value="#{eventMBean.formattedEndTime}"/>
 	                         </h:outputFormat>
 	                     </h:panelGrid>
 	                     <p></p>
-	                     <h:inputHidden id="id" value="#{eventBean.event.id}"/>
-                         <h:commandButton value="#{bundle.confirmNotAttending}" action="#{eventBean.cancelAttendance}"/>
+	                     <h:inputHidden id="id" value="#{eventMBean.event.id}"/>
+                         <h:commandButton value="#{bundle.confirmNotAttending}" action="#{eventMBean.cancelAttendance}"/>
                          <h:button value="#{bundle.cancel}" outcome="event_view">
-                           <f:param name="id" value="#{eventBean.event.id}"/>
+                           <f:param name="id" value="#{eventMBean.event.id}"/>
                          </h:button>
                      </h:form>
                 </div>

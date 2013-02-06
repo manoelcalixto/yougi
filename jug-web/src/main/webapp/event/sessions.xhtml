@@ -11,12 +11,12 @@
             <ui:define name="content">
                 <div class="content">
                     <h1>#{bundle.sessions}</h1>
-                    <h:outputText value="#{eventSessionBean.event.name}" style="font-size: 18px; font-weight: bold;"/>
+                    <h:outputText value="#{eventSessionMBean.event.name}" style="font-size: 18px; font-weight: bold;"/>
                     <p><h:link outcome="session" value="#{bundle.newSession}" rendered="#{securityBackingBean.isUserLeader}">
-                           <f:param name="eventId" value="#{eventSessionBean.event.id}"/>
+                           <f:param name="eventId" value="#{eventSessionMBean.event.id}"/>
                        </h:link></p>
                     <h:form>
-                        <p:dataTable value="#{eventSessionBean.eventSessions}" var="sess">
+                        <p:dataTable value="#{eventSessionMBean.eventSessions}" var="sess">
                             <p:column>
                                 <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>
                                 <h:link outcome="session" value="#{sess}">

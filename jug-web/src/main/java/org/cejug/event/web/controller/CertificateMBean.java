@@ -36,7 +36,7 @@ import org.cejug.web.util.ResourceBundleHelper;
  */
 @ManagedBean
 @RequestScoped
-public class CertificateBean {
+public class CertificateMBean {
 
     static final Logger logger = Logger.getLogger("org.cejug.event.web.controller.EventBean");
 
@@ -48,7 +48,7 @@ public class CertificateBean {
 
     private Certificate certificate;
 
-    public CertificateBean() {
+    public CertificateMBean() {
         certificate = new Certificate();
     }
 

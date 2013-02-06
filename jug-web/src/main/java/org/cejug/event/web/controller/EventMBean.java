@@ -64,9 +64,9 @@ import org.primefaces.model.chart.PieChartModel;
  */
 @ManagedBean
 @RequestScoped
-public class EventBean {
+public class EventMBean {
 
-    static final Logger logger = Logger.getLogger(EventBean.class.getName());
+    static final Logger logger = Logger.getLogger(EventMBean.class.getName());
 
     @EJB
     private EventBsn eventBsn;
@@ -113,7 +113,7 @@ public class EventBean {
 
     private String selectedVenue;
 
-    public EventBean() {
+    public EventMBean() {
     }
 
     public String getId() {

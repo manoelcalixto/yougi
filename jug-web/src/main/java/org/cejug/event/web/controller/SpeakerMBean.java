@@ -41,7 +41,7 @@ import org.cejug.event.entity.Speaker;
  */
 @ManagedBean
 @RequestScoped
-public class SpeakerBean implements Serializable {
+public class SpeakerMBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -81,7 +81,7 @@ public class SpeakerBean implements Serializable {
     
     private String selectedUserAccount;
 
-    public SpeakerBean() {
+    public SpeakerMBean() {
         this.speaker = new Speaker();
     }
 

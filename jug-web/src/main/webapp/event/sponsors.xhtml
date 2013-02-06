@@ -11,12 +11,12 @@
             <ui:define name="content">
                 <div class="content">
                     <h1>#{bundle.sponsors}</h1>
-                    <h:outputText value="#{eventSponsorBean.event.name}" style="font-size: 18px; font-weight: bold;"/>
+                    <h:outputText value="#{eventSponsorMBean.event.name}" style="font-size: 18px; font-weight: bold;"/>
                     <p><h:link outcome="sponsor" value="#{bundle.newSponsor}" rendered="#{securityBackingBean.isUserLeader}">
-                           <f:param name="eventId" value="#{eventSponsorBean.event.id}"/>
+                           <f:param name="eventId" value="#{eventSponsorMBean.event.id}"/>
                        </h:link></p>
                     <h:form>
-                        <p:dataTable value="#{eventSponsorBean.eventSponsors}" var="sponsor">
+                        <p:dataTable value="#{eventSponsorMBean.eventSponsors}" var="sponsor">
                             <p:column>
                                 <f:facet name="header"><h:outputText value="#{bundle.name}"/></f:facet>
                                 <h:link outcome="sponsor" value="#{sponsor}">
@@ -32,7 +32,7 @@
                                 </h:outputText>
                                 <f:facet name="footer">
                                     <h:outputText value="#{bundle.total}" styleClass="fieldLabel"/>: 
-                                    <h:outputText value="#{eventSponsorBean.sumAmounts}" styleClass="fieldLabel">
+                                    <h:outputText value="#{eventSponsorMBean.sumAmounts}" styleClass="fieldLabel">
                                         <f:convertNumber maxFractionDigits="2" minFractionDigits="2"/>
                                     </h:outputText>
                                 </f:facet>
