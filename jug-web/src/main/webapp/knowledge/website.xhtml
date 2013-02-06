@@ -33,11 +33,28 @@
                         </h:panelGrid>
 
                         <h2>#{bundle.content}</h2>
-                        <p:accordionPanel id="articles" value="#{webSourceMBean.articles}" var="article">
-                            <p:tab title="#{article.title}">
-                                <h:outputText value="#{article.text}" escape="false"/>
-                            </p:tab>
-                        </p:accordionPanel>
+                        <p:dataTable id="articles" value="#{webSourceMBean.articles}" var="article">
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="#{bundle.title}"/></f:facet>
+                                <h:link outcome="article" value="#{article.title}" rendered="#{! empty webSourceMBean.webSource.id}">
+                                    <f:param name="pl" value="#{article.permanentLink}"/>
+                                </h:link>
+                                <h:outputText value="#{article.title}" rendered="#{empty webSourceMBean.webSource.id}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="#{bundle.author}"/></f:facet>
+                                <h:outputText value="#{article.author}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header"><h:outputText value="#{bundle.publication}"/></f:facet>
+                                <h:outputText value="#{article.publication}">
+                                    <f:convertDateTime pattern="#{bundle.formatDateAndTime}" timeZone="#{userProfileBean.timeZone}"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column>
+                                <h:outputLink value="#{article.permanentLink}" target="_blank"><h:graphicImage url="/images/external_link.png"/></h:outputLink>
+                            </p:column>
+                        </p:dataTable>
                     </h:form>
                 </div>
             </ui:define>

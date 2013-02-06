@@ -65,18 +65,16 @@ public class WebSourceMBean {
     @EJB
     private WebSourceBean webSourceBean;
 
-    @EJB
-    private TopicBean topicBean;
-
     private UserAccount provider;
     private WebSource webSource;
 
     private List<UserAccount> usersWithWebsite;
-    private List<Article> articles;
-    private List<String> selectedTopics;
 
     @ManagedProperty(value="#{param.user}")
     private String userId;
+
+    @ManagedProperty(value="#{unpublishedContentMBean}")
+    private UnpublishedContentMBean unpublishedContentMBean;
 
     public UserAccount getProvider() {
         return this.provider;
@@ -101,27 +99,16 @@ public class WebSourceMBean {
         return this.usersWithWebsite;
     }
 
+    public UnpublishedContentMBean getUnpublishedContentMBean() {
+        return unpublishedContentMBean;
+    }
+
+    public void setUnpublishedContentMBean(UnpublishedContentMBean unpublishedContentMBean) {
+        this.unpublishedContentMBean = unpublishedContentMBean;
+    }
+
     public List<Article> getArticles() {
-        return this.articles;
-    }
-
-    public List<String> getSelectedTopics() {
-        return selectedTopics;
-    }
-
-    public void setSelectedTopics(List<String> selectedTopics) {
-        this.selectedTopics = selectedTopics;
-    }
-
-    public List<String> completeTopics(String query) {
-        List<Topic> topics = topicBean.findTopics(query);
-
-        List<String> results = new ArrayList<>();
-        for(Topic topic: topics) {
-            results.add(topic.getName());
-        }
-
-        return results;
+        return this.unpublishedContentMBean.getArticles();
     }
 
     @PostConstruct
@@ -151,7 +138,7 @@ public class WebSourceMBean {
 
     public void showFeedArticles() {
         try {
-            this.articles = loadFeedArticles();
+            this.unpublishedContentMBean.setArticles(loadFeedArticles());
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
         }
