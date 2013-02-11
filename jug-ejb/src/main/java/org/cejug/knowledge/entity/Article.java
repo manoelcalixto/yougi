@@ -28,6 +28,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
+import org.cejug.entity.Identified;
 
 /**
  * Entity class representing an extracted article from a web source, making it
@@ -35,7 +36,7 @@ import javax.persistence.Temporal;
  * @author Hildeberto Mendonca  - http://www.hildeberto.com
  */
 @Entity
-public class Article implements Serializable {
+public class Article implements Serializable, Identified {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -60,10 +61,12 @@ public class Article implements Serializable {
 
     private Boolean published;
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }

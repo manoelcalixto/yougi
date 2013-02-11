@@ -51,8 +51,8 @@ public class ArticleBean {
     }
 
     public void save(Article article) {
-        if(article.getId() == null || article.getId().isEmpty()) {
-            article.setId(EntitySupport.generateEntityId());
+        if(EntitySupport.INSTANCE.isIdNotValid(article)) {
+            article.setId(EntitySupport.INSTANCE.generateEntityId());
             em.persist(article);
         }
         else {
