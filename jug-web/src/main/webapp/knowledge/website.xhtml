@@ -32,7 +32,12 @@
                             </h:commandButton>
                         </h:panelGrid>
 
-                        <h2>#{bundle.content}</h2>
+                        <h:panelGrid columns="2" width="100%" columnClasses="panelGridColumn, panelGridColumnAlignRight">
+                            <h2>#{bundle.unpublishedContent}</h2>
+                            <h:commandButton value="#{bundle.refresh}" action="#{webSourceMBean.refreshUnpublishedContent}">
+                                <f:param name="user" value="#{webSourceMBean.webSource.provider.id}"/>
+                            </h:commandButton>
+                        </h:panelGrid>
                         <p:dataTable id="articles" value="#{webSourceMBean.articles}" var="article">
                             <p:column>
                                 <f:facet name="header"><h:outputText value="#{bundle.title}"/></f:facet>
@@ -55,6 +60,8 @@
                                 <h:outputLink value="#{article.permanentLink}" target="_blank"><h:graphicImage url="/images/external_link.png"/></h:outputLink>
                             </p:column>
                         </p:dataTable>
+
+
                     </h:form>
                 </div>
             </ui:define>

@@ -120,8 +120,9 @@ public class WebSourceMBean {
                 this.webSource = new WebSource();
                 this.webSource.setProvider(this.provider);
             }
-
-            showFeedArticles();
+            else {
+                showFeedArticles();
+            }
         }
     }
 
@@ -136,9 +137,21 @@ public class WebSourceMBean {
         return "website";
     }
 
+    public String refreshUnpublishedContent() {
+        try {
+            this.unpublishedContentMBean.refreshArticles(loadFeedArticles());
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
+        }
+        return "website";
+    }
+
     public void showFeedArticles() {
         try {
-            this.unpublishedContentMBean.setArticles(loadFeedArticles());
+            this.unpublishedContentMBean.setWebSource(this.webSource);
+            if(this.unpublishedContentMBean.getArticles() == null) {
+                this.unpublishedContentMBean.setArticles(loadFeedArticles());
+            }
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
         }

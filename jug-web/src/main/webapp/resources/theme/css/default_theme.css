@@ -72,7 +72,7 @@ body {
     margin-bottom: 15px;
     -moz-border-radius: 10px;
     border-radius: 10px;
-    
+
 }
 
 .dataTable {
@@ -197,6 +197,12 @@ h2 {
 
 .panelGridColumn {
     vertical-align: top;
+}
+
+.panelGridColumnAlignRight {
+    text-align: right;
+    vertical-align: top;
+    padding-top: 6px;
 }
 
 #right {

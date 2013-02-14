@@ -24,6 +24,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import org.cejug.knowledge.entity.Article;
+import org.cejug.knowledge.entity.WebSource;
 
 /**
  * @author Hildeberto Mendonca - http://www.hildeberto.com
@@ -32,7 +33,19 @@ import org.cejug.knowledge.entity.Article;
 @SessionScoped
 public class UnpublishedContentMBean {
 
+    private WebSource webSource;
     private List<Article> articles;
+
+    public WebSource getWebSource() {
+        return webSource;
+    }
+
+    public void setWebSource(WebSource webSource) {
+        if(this.webSource == null || !this.webSource.equals(webSource)) {
+            articles = null;
+        }
+        this.webSource = webSource;
+    }
 
     public List<Article> getArticles() {
         return articles;
@@ -55,6 +68,12 @@ public class UnpublishedContentMBean {
     }
 
     public void setArticles(List<Article> articles) {
+        if(this.articles == null) {
+            this.articles = articles;
+        }
+    }
+
+    public void refreshArticles(List<Article> articles) {
         this.articles = articles;
     }
 }
