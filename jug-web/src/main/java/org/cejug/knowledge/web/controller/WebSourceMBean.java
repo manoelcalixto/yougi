@@ -20,23 +20,8 @@
  * */
 package org.cejug.knowledge.web.controller;
 
-import com.sun.syndication.feed.synd.SyndContent;
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.io.FeedException;
-import com.sun.syndication.io.SyndFeedInput;
-import com.sun.syndication.io.XmlReader;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -44,10 +29,8 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.UserAccount;
-import org.cejug.knowledge.business.TopicBean;
 import org.cejug.knowledge.business.WebSourceBean;
 import org.cejug.knowledge.entity.Article;
-import org.cejug.knowledge.entity.Topic;
 import org.cejug.knowledge.entity.WebSource;
 
 /**
@@ -138,121 +121,12 @@ public class WebSourceMBean {
     }
 
     public String refreshUnpublishedContent() {
-        try {
-            this.unpublishedContentMBean.refreshArticles(loadFeedArticles());
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
-        }
+        this.unpublishedContentMBean.refreshArticles();
         return "website";
     }
 
     public void showFeedArticles() {
-        try {
-            this.unpublishedContentMBean.setWebSource(this.webSource);
-            if(this.unpublishedContentMBean.getArticles() == null) {
-                this.unpublishedContentMBean.setArticles(loadFeedArticles());
-            }
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
-        }
-    }
-
-    private List<Article> loadFeedArticles() throws IOException {
-        List<Article> loadedArticles = null;
-
-        String feedUrl = findWebsiteFeedURL();
-        URL url  = new URL(feedUrl);
-
-        try (XmlReader reader = new XmlReader(url)) {
-            SyndFeed feed = new SyndFeedInput().build(reader);
-            if(this.webSource != null) {
-                this.webSource.setTitle(feed.getTitle());
-            }
-            loadedArticles = new ArrayList<>();
-            Article article;
-            for (Iterator i = feed.getEntries().iterator(); i.hasNext();) {
-                SyndEntry entry = (SyndEntry) i.next();
-
-                article = new Article();
-                article.setTitle(entry.getTitle());
-                article.setPermanentLink(entry.getLink());
-                article.setAuthor(entry.getAuthor());
-                article.setPublication(entry.getPublishedDate());
-                article.setWebSource(this.webSource);
-                if(entry.getDescription() != null) {
-                    article.setSummary(entry.getDescription().getValue());
-                }
-                SyndContent syndContent;
-                StringBuilder content = new StringBuilder();
-                for(int j = 0;j < entry.getContents().size();j++) {
-                    syndContent = (SyndContent) entry.getContents().get(j);
-                    content.append(syndContent.getValue());
-                }
-                article.setContent(content.toString());
-
-                loadedArticles.add(article);
-            }
-        } catch (IllegalArgumentException | FeedException ex) {
-            LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
-        }
-
-        return loadedArticles;
-    }
-
-    private String findWebsiteFeedURL() {
-        String feedUrl = null;
-        String websiteContent = retrieveWebsiteContent();
-
-        if(websiteContent == null) {
-            return null;
-        }
-
-        Pattern urlPattern = Pattern.compile("https?://(www)?(\\.?\\w+)+(/\\w+)*");
-        Matcher matcher = urlPattern.matcher(websiteContent);
-
-        while (matcher.find()) {
-            feedUrl = matcher.group();
-            if(isFeedURL(feedUrl)) {
-                if(this.webSource != null) {
-                    this.webSource.setFeed(feedUrl);
-                    LOGGER.log(Level.INFO, "Feed: {0}", feedUrl);
-                }
-                break;
-            }
-        }
-
-        return feedUrl;
-    }
-
-    private boolean isFeedURL(String url) {
-        if(url.contains("feed")) {
-            return true;
-        }
-        return false;
-    }
-
-    private String retrieveWebsiteContent() {
-        StringBuilder content = null;
-        String urlWebsite = this.provider.getWebsite();
-
-        if(!urlWebsite.contains("http")) {
-            urlWebsite = "http://" + urlWebsite;
-        }
-
-        if(urlWebsite != null) {
-            try {
-                URL url = new URL(urlWebsite);
-                BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-                String line = "";
-                content = new StringBuilder();
-                while(null != (line = br.readLine())) {
-                    content.append(line);
-                }
-            }
-            catch (IOException ex) {
-                LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
-            }
-        }
-        return content != null ? content.toString() : null;
+        this.unpublishedContentMBean.setWebSource(this.webSource);
+        this.unpublishedContentMBean.loadArticles();
     }
 }

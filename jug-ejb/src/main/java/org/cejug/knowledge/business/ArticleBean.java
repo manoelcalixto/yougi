@@ -20,7 +20,23 @@
  * */
 package org.cejug.knowledge.business;
 
+import com.sun.syndication.feed.synd.SyndContent;
+import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.io.FeedException;
+import com.sun.syndication.io.SyndFeedInput;
+import com.sun.syndication.io.XmlReader;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -36,6 +52,8 @@ import org.cejug.util.EntitySupport;
 @Stateless
 @LocalBean
 public class ArticleBean {
+
+    private static final Logger LOGGER = Logger.getLogger(ArticleBean.class.getName());
 
     @PersistenceContext
     private EntityManager em;
@@ -65,5 +83,105 @@ public class ArticleBean {
         if(article != null) {
             em.remove(article);
         }
+    }
+
+    public List<Article> loadFeedArticles(WebSource webSource) {
+        List<Article> loadedArticles = null;
+
+        String feedUrl = findWebsiteFeedURL(webSource);
+
+        try {
+            URL url  = new URL(feedUrl);
+            XmlReader reader = new XmlReader(url);
+            SyndFeed feed = new SyndFeedInput().build(reader);
+            if(webSource != null) {
+                webSource.setTitle(feed.getTitle());
+            }
+            loadedArticles = new ArrayList<>();
+            Article article;
+            for (Iterator i = feed.getEntries().iterator(); i.hasNext();) {
+                SyndEntry entry = (SyndEntry) i.next();
+
+                article = new Article();
+                article.setTitle(entry.getTitle());
+                article.setPermanentLink(entry.getLink());
+                article.setAuthor(entry.getAuthor());
+                article.setPublication(entry.getPublishedDate());
+                article.setWebSource(webSource);
+                if(entry.getDescription() != null) {
+                    article.setSummary(entry.getDescription().getValue());
+                }
+                SyndContent syndContent;
+                StringBuilder content = new StringBuilder();
+                for(int j = 0;j < entry.getContents().size();j++) {
+                    syndContent = (SyndContent) entry.getContents().get(j);
+                    content.append(syndContent.getValue());
+                }
+                article.setContent(content.toString());
+
+                loadedArticles.add(article);
+            }
+        } catch (IllegalArgumentException | FeedException | IOException ex) {
+            LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
+        }
+
+        return loadedArticles;
+    }
+
+    private String findWebsiteFeedURL(WebSource webSource) {
+        String feedUrl = null;
+        String websiteContent = retrieveWebsiteContent(webSource);
+
+        if(websiteContent == null) {
+            return null;
+        }
+
+        Pattern urlPattern = Pattern.compile("https?://(www)?(\\.?\\w+)+(/\\w+)*");
+        Matcher matcher = urlPattern.matcher(websiteContent);
+
+        while (matcher.find()) {
+            feedUrl = matcher.group();
+            if(isFeedURL(feedUrl)) {
+                if(webSource != null) {
+                    webSource.setFeed(feedUrl);
+                    LOGGER.log(Level.INFO, "Feed: {0}", feedUrl);
+                }
+                break;
+            }
+        }
+
+        return feedUrl;
+    }
+
+    private boolean isFeedURL(String url) {
+        if(url.contains("feed")) {
+            return true;
+        }
+        return false;
+    }
+
+    private String retrieveWebsiteContent(WebSource webSource) {
+        StringBuilder content = null;
+        String urlWebsite = webSource.getProvider().getWebsite();
+
+        if(!urlWebsite.contains("http")) {
+            urlWebsite = "http://" + urlWebsite;
+        }
+
+        if(urlWebsite != null) {
+            try {
+                URL url = new URL(urlWebsite);
+                BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+                String line = "";
+                content = new StringBuilder();
+                while(null != (line = br.readLine())) {
+                    content.append(line);
+                }
+            }
+            catch (IOException ex) {
+                LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
+            }
+        }
+        return content != null ? content.toString() : null;
     }
 }

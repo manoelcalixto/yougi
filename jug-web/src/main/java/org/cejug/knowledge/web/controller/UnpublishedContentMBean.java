@@ -23,6 +23,7 @@ package org.cejug.knowledge.web.controller;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import org.cejug.knowledge.business.ArticleBean;
 import org.cejug.knowledge.entity.Article;
 import org.cejug.knowledge.entity.WebSource;
 
@@ -35,6 +36,8 @@ public class UnpublishedContentMBean {
 
     private WebSource webSource;
     private List<Article> articles;
+
+    private ArticleBean articleBean;
 
     public WebSource getWebSource() {
         return webSource;
@@ -67,13 +70,13 @@ public class UnpublishedContentMBean {
         return article;
     }
 
-    public void setArticles(List<Article> articles) {
+    public void loadArticles() {
         if(this.articles == null) {
-            this.articles = articles;
+            this.articles = articleBean.loadFeedArticles(this.webSource);
         }
     }
 
-    public void refreshArticles(List<Article> articles) {
-        this.articles = articles;
+    public void refreshArticles() {
+        this.articles = articleBean.loadFeedArticles(this.webSource);
     }
 }
