@@ -32,36 +32,57 @@
                             </h:commandButton>
                         </h:panelGrid>
 
-                        <h:panelGrid columns="2" width="100%" columnClasses="panelGridColumn, panelGridColumnAlignRight">
-                            <h2>#{bundle.unpublishedContent}</h2>
-                            <h:commandButton value="#{bundle.refresh}" action="#{webSourceMBean.refreshUnpublishedContent}">
-                                <f:param name="user" value="#{webSourceMBean.webSource.provider.id}"/>
-                            </h:commandButton>
-                        </h:panelGrid>
-                        <p:dataTable id="articles" value="#{webSourceMBean.articles}" var="article">
-                            <p:column>
-                                <f:facet name="header"><h:outputText value="#{bundle.title}"/></f:facet>
-                                <h:link outcome="article" value="#{article.title}" rendered="#{! empty webSourceMBean.webSource.id}">
-                                    <f:param name="pl" value="#{article.permanentLink}"/>
-                                </h:link>
-                                <h:outputText value="#{article.title}" rendered="#{empty webSourceMBean.webSource.id}"/>
-                            </p:column>
-                            <p:column>
-                                <f:facet name="header"><h:outputText value="#{bundle.author}"/></f:facet>
-                                <h:outputText value="#{article.author}"/>
-                            </p:column>
-                            <p:column>
-                                <f:facet name="header"><h:outputText value="#{bundle.publication}"/></f:facet>
-                                <h:outputText value="#{article.publication}">
-                                    <f:convertDateTime pattern="#{bundle.formatDateAndTime}" timeZone="#{userProfileBean.timeZone}"/>
-                                </h:outputText>
-                            </p:column>
-                            <p:column>
-                                <h:outputLink value="#{article.permanentLink}" target="_blank"><h:graphicImage url="/images/external_link.png"/></h:outputLink>
-                            </p:column>
-                        </p:dataTable>
-
-
+                        <p:tabView id="content">
+                            <p:tab id="tabUnpublishedArticles" title="#{bundle.unpublishedContent}">
+                                <h:commandButton value="#{bundle.refresh}" action="#{webSourceMBean.refreshUnpublishedContent}">
+                                    <f:param name="user" value="#{webSourceMBean.webSource.provider.id}"/>
+                                </h:commandButton>
+                                <p/>
+                                <p:dataTable id="unpublishedArticles" value="#{webSourceMBean.unpublishedArticles}" var="article">
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.title}"/></f:facet>
+                                        <h:link outcome="article" value="#{article.title}" rendered="#{! empty webSourceMBean.webSource.id}">
+                                            <f:param name="pl" value="#{article.permanentLink}"/>
+                                        </h:link>
+                                        <h:outputText value="#{article.title}" rendered="#{empty webSourceMBean.webSource.id}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.author}"/></f:facet>
+                                        <h:outputText value="#{article.author}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.publication}"/></f:facet>
+                                        <h:outputText value="#{article.publication}">
+                                            <f:convertDateTime pattern="#{bundle.formatDateAndTime}" timeZone="#{userProfileBean.timeZone}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputLink value="#{article.permanentLink}" target="_blank"><h:graphicImage url="/images/external_link.png"/></h:outputLink>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:tab>
+                            <p:tab id="tabPublishedArticles" title="#{bundle.publishedContent}">
+                                <p:dataTable id="publishedArticles" value="#{webSourceMBean.publishedArticles}" var="article">
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.title}"/></f:facet>
+                                        <h:link outcome="article" value="#{article.title}" rendered="#{! empty webSourceMBean.webSource.id}">
+                                            <f:param name="pl" value="#{article.permanentLink}"/>
+                                        </h:link>
+                                        <h:outputText value="#{article.title}" rendered="#{empty webSourceMBean.webSource.id}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.author}"/></f:facet>
+                                        <h:outputText value="#{article.author}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header"><h:outputText value="#{bundle.publication}"/></f:facet>
+                                        <h:outputText value="#{article.publication}">
+                                            <f:convertDateTime pattern="#{bundle.formatDateAndTime}" timeZone="#{userProfileBean.timeZone}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:tab>
+                        </p:tabView>
                     </h:form>
                 </div>
             </ui:define>

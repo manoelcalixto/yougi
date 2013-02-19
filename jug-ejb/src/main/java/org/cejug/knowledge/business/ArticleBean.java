@@ -85,8 +85,8 @@ public class ArticleBean {
         }
     }
 
-    public List<Article> loadFeedArticles(WebSource webSource) {
-        List<Article> loadedArticles = null;
+    public List<Article> findUnpublishedArticles(WebSource webSource) {
+        List<Article> unpublishedArticles = null;
 
         String feedUrl = findWebsiteFeedURL(webSource);
 
@@ -97,7 +97,7 @@ public class ArticleBean {
             if(webSource != null) {
                 webSource.setTitle(feed.getTitle());
             }
-            loadedArticles = new ArrayList<>();
+            unpublishedArticles = new ArrayList<>();
             Article article;
             for (Iterator i = feed.getEntries().iterator(); i.hasNext();) {
                 SyndEntry entry = (SyndEntry) i.next();
@@ -119,13 +119,19 @@ public class ArticleBean {
                 }
                 article.setContent(content.toString());
 
-                loadedArticles.add(article);
+                unpublishedArticles.add(article);
             }
         } catch (IllegalArgumentException | FeedException | IOException ex) {
             LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
         }
 
-        return loadedArticles;
+        // Remove from the list of unpublished articles the ones that are already published.
+        List<Article> publishedArticles = findPublishedArticles(webSource);
+        for(Article publishedArticle: publishedArticles) {
+            unpublishedArticles.remove(publishedArticle);
+        }
+
+        return unpublishedArticles;
     }
 
     private String findWebsiteFeedURL(WebSource webSource) {

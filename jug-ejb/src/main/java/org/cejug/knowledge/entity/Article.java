@@ -61,6 +61,17 @@ public class Article implements Serializable, Identified {
 
     private Boolean published;
 
+    public Article() {}
+
+    public Article(String id) {
+        this.id = id;
+    }
+
+    public Article(String id, String permanentLink) {
+        this.id = id;
+        this.permanentLink = permanentLink;
+    }
+
     @Override
     public String getId() {
         return id;
@@ -169,10 +180,16 @@ public class Article implements Serializable, Identified {
             return false;
         }
         Article other = (Article) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+
+        if(this.id != null) {
+            return this.id.equals(other.id);
+        }
+        else if(this.permanentLink != null) {
+            return this.permanentLink.equals(other.permanentLink);
+        }
+        else {
             return false;
         }
-        return true;
     }
 
     @Override

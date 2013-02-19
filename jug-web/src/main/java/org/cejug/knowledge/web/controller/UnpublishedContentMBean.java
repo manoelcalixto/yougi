@@ -21,6 +21,7 @@
 package org.cejug.knowledge.web.controller;
 
 import java.util.List;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import org.cejug.knowledge.business.ArticleBean;
@@ -37,6 +38,7 @@ public class UnpublishedContentMBean {
     private WebSource webSource;
     private List<Article> articles;
 
+    @EJB
     private ArticleBean articleBean;
 
     public WebSource getWebSource() {
@@ -45,7 +47,7 @@ public class UnpublishedContentMBean {
 
     public void setWebSource(WebSource webSource) {
         if(this.webSource == null || !this.webSource.equals(webSource)) {
-            articles = null;
+            this.articles = null;
         }
         this.webSource = webSource;
     }
@@ -59,9 +61,9 @@ public class UnpublishedContentMBean {
             return null;
         }
 
-        Article article = null;
+        Article article = new Article(null, permanentLink);
         for(Article art: articles) {
-            if(art.getPermanentLink() != null && art.getPermanentLink().equals(permanentLink)) {
+            if(art.equals(article)) {
                 article = art;
                 break;
             }
@@ -72,11 +74,11 @@ public class UnpublishedContentMBean {
 
     public void loadArticles() {
         if(this.articles == null) {
-            this.articles = articleBean.loadFeedArticles(this.webSource);
+            this.articles = articleBean.findUnpublishedArticles(this.webSource);
         }
     }
 
     public void refreshArticles() {
-        this.articles = articleBean.loadFeedArticles(this.webSource);
+        this.articles = articleBean.findUnpublishedArticles(this.webSource);
     }
 }

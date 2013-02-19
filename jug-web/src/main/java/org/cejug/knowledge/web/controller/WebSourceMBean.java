@@ -29,6 +29,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import org.cejug.business.UserAccountBsn;
 import org.cejug.entity.UserAccount;
+import org.cejug.knowledge.business.ArticleBean;
 import org.cejug.knowledge.business.WebSourceBean;
 import org.cejug.knowledge.entity.Article;
 import org.cejug.knowledge.entity.WebSource;
@@ -48,10 +49,14 @@ public class WebSourceMBean {
     @EJB
     private WebSourceBean webSourceBean;
 
+    @EJB
+    private ArticleBean articleBean;
+
     private UserAccount provider;
     private WebSource webSource;
 
     private List<UserAccount> usersWithWebsite;
+    private List<Article> publishedArticles;
 
     @ManagedProperty(value="#{param.user}")
     private String userId;
@@ -90,8 +95,15 @@ public class WebSourceMBean {
         this.unpublishedContentMBean = unpublishedContentMBean;
     }
 
-    public List<Article> getArticles() {
+    public List<Article> getUnpublishedArticles() {
         return this.unpublishedContentMBean.getArticles();
+    }
+
+    public List<Article> getPublishedArticles() {
+        if(publishedArticles == null) {
+            this.publishedArticles = articleBean.findPublishedArticles(this.webSource);
+        }
+        return this.publishedArticles;
     }
 
     @PostConstruct
@@ -103,9 +115,7 @@ public class WebSourceMBean {
                 this.webSource = new WebSource();
                 this.webSource.setProvider(this.provider);
             }
-            else {
-                showFeedArticles();
-            }
+            showFeedArticles();
         }
     }
 
