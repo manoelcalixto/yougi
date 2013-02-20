@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet library="theme" name="css/default_theme.css"/>
+        <link rel="icon" href="#{request.contextPath}/images/favicon.png" />
+        <link href="https://plus.google.com/101596388471980915399" rel="publisher" />
+        <title>#{bundle.applicationName} - <ui:insert name="title">Title</ui:insert></title>
+        <script src="#{request.contextPath}/scripts/main.js" type="text/javascript"></script>
+    </h:head>
+
+    <h:body>
+        <div id="top">
+            <table width="100%">
+                <tr>
+                    <td align="left">
+                        <div class="title"><h:link outcome="/index"><p:graphicImage value="/images/logo.png" style="border: 0px"/></h:link></div>
+                    </td>
+                    <td align="right">
+                        <div class="identification">
+                            <c:if test="#{empty request.remoteUser}">
+                                <h:form><h:commandLink action="#{securityBackingBean.login}" value="#{bundle.signIn}"/> |
+                                <h:link outcome="registration">#{bundle.register}</h:link></h:form>
+                            </c:if>
+                            <c:if test="#{! empty request.remoteUser}">
+                                <h:form>
+                                    <h:outputText value="#{bundle.hello} "/>
+                                    <h:outputText value="#{userProfileBean.userAccount.firstName} !"/>
+                                    <h:commandLink action="#{securityBackingBean.logout}" value="#{bundle.signOut}"/>
+                                </h:form>
+                            </c:if>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="top_menu">
+            <c:if test="#{! empty request.remoteUser}">
+                <h:form>
+                    <p:menubar>
+                        <p:submenu label="#{bundle.knowledge}" rendered="#{securityBackingBean.isUserLeader}">
+                            <p:menuitem value="#{bundle.websites}" url="/knowledge/websites.xhtml"/>
+                            <p:menuitem value="#{bundle.topics}" url="/knowledge/topics.xhtml"/>
+                            <p:menuitem value="#{bundle.mailingList}" url="/knowledge/mailing_lists.xhtml"/>
+                        </p:submenu>
+                        <p:submenu label="#{bundle.events}">
+                            <p:menuitem value="#{bundle.events}" url="/event/events.xhtml"/>
+                        </p:submenu>
+                        <p:submenu label="#{bundle.partnership}">
+                            <p:menuitem value="#{bundle.partners}" url="/partnership/partners.xhtml"/>
+                        </p:submenu>
+                        <p:submenu label="#{bundle.myAccount}">
+                            <p:menuitem value="#{bundle.profile}" url="/profile/profile.xhtml"/>
+                            <p:menuitem value="#{bundle.changePassword}" url="/profile/change_password.xhtml"/>
+                            <p:menuitem value="#{bundle.changeEmail}" url="/profile/change_email.xhtml"/>
+                        </p:submenu>
+                        <p:submenu label="#{bundle.administration}" rendered="#{securityBackingBean.isUserLeader}">
+                            <p:menuitem value="#{bundle.users}" url="/admin/users.xhtml"/>
+                            <p:menuitem value="#{bundle.groups}" url="/admin/groups.xhtml"/>
+                            <p:submenu label="#{bundle.location}">
+                                <p:menuitem value="#{bundle.countries}" url="/admin/countries.xhtml"/>
+                                <p:menuitem value="#{bundle.provinces}" url="/admin/provinces.xhtml"/>
+                                <p:menuitem value="#{bundle.cities}" url="/admin/cities.xhtml"/>
+                            </p:submenu>
+                            <p:menuitem value="#{bundle.languages}" url="/admin/languages.xhtml"/>
+                            <p:menuitem value="#{bundle.messageTemplates}" url="/admin/message_templates.xhtml"/>
+                            <p:menuitem value="#{bundle.properties}" url="/admin/properties.xhtml"/>
+                            <p:separator/>
+                            <p:menuitem value="#{bundle.about}" url="/about.xhtml"/>
+                        </p:submenu>
+                    </p:menubar>
+                </h:form>
+            </c:if>
+        </div>
+        <div id="content_area">
+            <ui:insert name="content">Content</ui:insert>
+        </div>
+        <div id="bottom">
+            <div class="footer">
+                <p>Created and maintained by the <a href="http://www.cejug.org" target="_blank">CEJUG</a> Community! - <b><h:link outcome="/about" value="#{bundle.versionNumber}"/></b> -
+                You can also contribute to this project at GitHub. <a href="https://github.com/htmfilho/jug" target="_blank">Fork it now!</a>!
+                <script type="text/javascript" src="http://www.ohloh.net/p/487784/widgets/project_thin_badge.js"></script></p>
+            </div>
+        </div>
+    </h:body>
+</html>

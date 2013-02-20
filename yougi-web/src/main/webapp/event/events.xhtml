@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:body>
+        <ui:composition template="../layout.xhtml">
+            <ui:define name="title">#{bundle.events}</ui:define>
+            <ui:define name="content">
+                <div class="content">
+                    <h1>#{bundle.events}</h1>
+                    <p><h:link outcome="event" value="#{bundle.newEvent}" rendered="#{securityBackingBean.isUserLeader}"/></p>
+                    <h:form>
+	                    <p:dataGrid var="event" value="#{eventMBean.events}" columns="1" rows="3" paginator="true">
+	                        <p:column>
+	                            <p:panel>
+	                                <h:panelGrid>
+	                                    <h:link value="#{event.name}" outcome="event_view" style="font-size: 18px; font-weight: bold;">
+                                            <f:param name="id" value="#{event.id}"/>
+                                        </h:link>
+	                                    <h:outputText value="#{event.shortDescription}"/>
+	                                    <h:panelGrid columns="2">
+	                                       <h:outputText value="#{bundle.venue}: "/>
+	                                       <h:outputText value="#{event.venue}"/>
+	                                    </h:panelGrid>
+	                                    <h:outputFormat value="#{bundle.eventAppointmentShort}">
+	                                        <f:param value="#{eventMBean.getFormattedStartDate(event.startDate)}"/>
+	                                        <f:param value="#{eventMBean.getFormattedStartTime(event.startTime)}"/>
+	                                        <f:param value="#{eventMBean.getFormattedEndTime(event.endTime)}"/>
+	                                    </h:outputFormat>
+	                                    <h:panelGrid columns="9">
+		                                <h:link value="#{bundle.edit}" outcome="event" rendered="#{securityBackingBean.isUserLeader}">
+	                                            <f:param name="id" value="#{event.id}"/>
+	                                        </h:link>
+                                                <h:outputText value=" | " rendered="#{securityBackingBean.isUserLeader}"/>
+                                                <h:link value="#{bundle.sessions}" outcome="sessions" rendered="#{securityBackingBean.isUserLeader}">
+                                                    <f:param name="eventId" value="#{event.id}"/>
+                                                </h:link>
+                                                <h:outputText value=" | " rendered="#{securityBackingBean.isUserLeader}"/>
+                                                <h:link value="#{bundle.speakers}" outcome="speakers" rendered="#{securityBackingBean.isUserLeader}">
+                                                    <f:param name="eventId" value="#{event.id}"/>
+                                                </h:link>
+                                                <h:outputText value=" | " rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
+                                                <h:commandLink value="#{bundle.attendees}" action="#{attendeeMBean.load(event.id)}" rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
+                                                <h:outputText value=" | " rendered="#{securityBackingBean.isUserLeader and !event.external}"/>
+                                                <h:link value="#{bundle.sponsors}" outcome="sponsors" rendered="#{securityBackingBean.isUserLeader and !event.external}">
+                                                    <f:param name="eventId" value="#{event.id}"/>
+                                                </h:link>
+                                            </h:panelGrid>
+	                                </h:panelGrid>
+	                            </p:panel>
+	                        </p:column>
+	                    </p:dataGrid>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

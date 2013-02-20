@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <body>
+        <ui:composition template="/layout.xhtml">
+            <ui:define name="title">#{bundle.authorization}</ui:define>
+            <ui:define name="content">
+                <div class="content">
+                    <h1>#{bundle.registration}</h1>
+                    <h:panelGrid cellpadding="5">
+                        <h:messages styleClass="alertMessage" infoClass="infoMessage"/>
+                        <h:form>
+                            <h:panelGrid rendered="#{registrationConfirmationBean.validated}">
+                                <h:outputText value="#{bundle.infoCode0002}" styleClass="infoMessage"/>
+                            </h:panelGrid>
+
+                            <p><h:outputText value="#{bundle.warnCode0003}" styleClass="warnMessage" rendered="#{!registrationConfirmationBean.validated}"/></p>
+                            <h:panelGrid rendered="#{!registrationConfirmationBean.validated}">
+                                <h:outputLabel for="informedCode" value="#{bundle.informConfirmationCode}"/>
+                                <h:inputText id="informedCode" value="#{registrationConfirmationBean.informedCode}" maxlength="32" size="40" required="true"/>
+                                <h:commandButton value="#{bundle.confirm}" action="#{registrationConfirmationBean.confirmUser}"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </h:panelGrid>
+                    <h:panelGrid columns="2" cellpadding="5">
+                        <h:link outcome="index" value="#{bundle.goBackHome}"/>
+                        <h:link outcome="login" value="#{bundle.signInGotoAction}"/>
+                    </h:panelGrid>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <ui:composition template="../layout.xhtml">
+            <ui:define name="title">#{bundle.profile}</ui:define>
+            <ui:define name="content">
+                <div class="content">
+                    <h1>#{bundle.profile}</h1>
+                    <h:form>
+                        <p:tabView dynamic="false" cache="true" activeIndex="#{param.tab}">
+                            <p:tab title="#{bundle.personalData}">
+                                <h:messages styleClass="alertMessage"/>
+                                <h:panelGrid columns="2" cellpadding="3">
+                                    <h:outputText value="#{bundle.firstName}" styleClass="fieldLabel"/>
+                                    <h:outputText value="#{bundle.lastName}" styleClass="fieldLabel"/>
+
+                                    <h:outputText value="#{userAccountBean.userAccount.firstName}"/>
+                                    <h:outputText value="#{userAccountBean.userAccount.lastName}"/>
+
+                                    <h:outputText value="#{bundle.gender}" styleClass="fieldLabel"/>
+                                    <h:outputText value="#{bundle.birthDate}" styleClass="fieldLabel"/>
+
+                                    <h:outputText value="#{userAccountBean.userAccount.gender}">
+                                        <f:converter converterId="GenderNumberToString"/>
+                                    </h:outputText>
+                                    <h:outputText value="#{userAccountBean.userAccount.birthDate}">
+                                        <f:convertDateTime pattern="#{bundle.formatDate}" timeZone="#{userProfileBean.timeZone}"/>
+                                    </h:outputText>
+
+                                    <h:outputText value="#{bundle.email}" styleClass="fieldLabel"/>
+                                    <h:outputText value="#{bundle.age}" styleClass="fieldLabel"/>
+
+                                    <h:outputText value="#{userAccountBean.userAccount.email}"/>
+                                    <h:outputText value="#{userAccountBean.userAccount.age}"/>
+
+                                    <h:outputText value="#{bundle.website}" styleClass="fieldLabel"/>
+                                    <h:outputText value="#{bundle.twitter}" styleClass="fieldLabel"/>
+
+                                    <h:outputLink value="http://#{userAccountBean.userAccount.website}" target="_blank">#{userAccountBean.userAccount.website}</h:outputLink>
+                                    <h:outputLink value="http://twitter.com/#{userAccountBean.userAccount.twitter}" target="_blank">#{userAccountBean.userAccount.twitter}</h:outputLink>
+
+                                    <h:outputText value="#{bundle.country}" styleClass="fieldLabel"/>
+                                    <h:outputText value="#{bundle.province}" styleClass="fieldLabel"/>
+
+                                    <h:outputText value="#{userAccountBean.userAccount.country}"/>
+                                    <h:outputText value="#{userAccountBean.userAccount.province}"/>
+
+                                    <h:outputText value="#{bundle.city}" styleClass="fieldLabel"/>
+                                    <h:outputText value="#{bundle.postalCode}" styleClass="fieldLabel"/>
+
+                                    <h:outputText value="#{userAccountBean.userAccount.city}"/>
+                                    <h:outputText value="#{userAccountBean.userAccount.postalCode}"/>
+                                </h:panelGrid>
+                                <p></p>
+                                <h:panelGrid columns="2">
+                                    <h:button outcome="member.xhtml" value="#{bundle.update}"/>
+                                    <h:button outcome="member_deactivation.xhtml" value="#{bundle.deactivateMembership}"/>
+                                </h:panelGrid>
+                            </p:tab>
+                            <p:tab title="#{bundle.privacy}">
+                                <h:panelGrid columns="2" width="700">
+                                    <h:graphicImage rendered="#{userAccountBean.userAccount.publicProfile}" url="/images/success-icon.png"/>
+                                    <h:outputText rendered="#{userAccountBean.userAccount.publicProfile}" value="#{bundle.publicProfileMessage}"/>
+
+                                    <h:graphicImage rendered="#{userAccountBean.userAccount.mailingList}" url="/images/success-icon.png"/>
+                                    <h:outputText rendered="#{userAccountBean.userAccount.mailingList}" value="#{bundle.mailingListMessage}"/>
+
+                                    <h:graphicImage rendered="#{userAccountBean.userAccount.event}" url="/images/success-icon.png"/>
+                                    <h:outputText rendered="#{userAccountBean.userAccount.event}" value="#{bundle.eventMessage}"/>
+
+                                    <h:graphicImage rendered="#{userAccountBean.userAccount.news}" url="/images/success-icon.png"/>
+                                    <h:outputText rendered="#{userAccountBean.userAccount.news}" value="#{bundle.newsMessage}"/>
+
+                                    <h:graphicImage rendered="#{userAccountBean.userAccount.generalOffer}" url="/images/success-icon.png"/>
+                                    <h:outputText rendered="#{userAccountBean.userAccount.generalOffer}" value="#{bundle.generalOfferMessage}"/>
+
+                                    <h:graphicImage rendered="#{userAccountBean.userAccount.jobOffer}" url="/images/success-icon.png"/>
+                                    <h:outputText rendered="#{userAccountBean.userAccount.jobOffer}" value="#{bundle.jobOfferMessage}"/>
+
+                                    <h:graphicImage rendered="#{userAccountBean.userAccount.sponsor}" url="/images/success-icon.png"/>
+                                    <h:outputText rendered="#{userAccountBean.userAccount.sponsor}" value="#{bundle.sponsorMessage}"/>
+                                    
+                                    <h:graphicImage rendered="#{userAccountBean.userAccount.speaker}" url="/images/success-icon.png"/>
+                                    <h:outputText rendered="#{userAccountBean.userAccount.speaker}" value="#{bundle.speakerMessage}"/>
+                                </h:panelGrid>
+                                <p></p>
+                                <h:button outcome="privacy.xhtml" value="#{bundle.update}"/>
+                            </p:tab>
+                            <p:tab title="#{bundle.partnership}" rendered="#{securityBackingBean.isUserPartner}">
+                                <h:panelGrid columns="1" cellpadding="3" rendered="#{partnershipBean.representativeExists}">
+                                    <p:graphicImage value="#{partnershipBean.logoImage}" rendered="#{! empty partnershipBean.logoImage}" />
+                                    
+                                    <h:outputText value="#{partnershipBean.representative.partner.name}" styleClass="header3"/>
+                                    
+                                    <h:outputText value="#{partnershipBean.formattedPartnerDescription}" escape="false"/>
+
+                                    <h:outputLink value="#{partnershipBean.representative.partner.url}" target="_blank">#{partnershipBean.representative.partner.url}</h:outputLink>
+                                    
+                                    <h:outputText value="#{partnershipBean.formattedPartnerAddress}"/>
+                                    
+                                    <h:panelGrid columns="3" cellpadding="5">
+                                        <h:outputText value="#{bundle.representative}" styleClass="fieldLabel"/>
+                                        <h:outputText value="#{bundle.position}" styleClass="fieldLabel"/>
+                                        <h:outputText value="#{bundle.phone}" styleClass="fieldLabel"/>
+                                        
+                                        <h:outputText value="#{partnershipBean.representative.person}"/>
+                                        <h:outputText value="#{partnershipBean.representative.position}"/>
+                                        <h:outputText value="#{partnershipBean.representative.phone}"/>
+                                    </h:panelGrid>                                   
+                                    <h:panelGrid columns="2">
+                                        <h:button outcome="partnership.xhtml" value="#{bundle.update}"/>    
+                                        <h:button outcome="partnership_logo.xhtml" value="#{bundle.changeLogo}"/>
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                                <h:button outcome="partnership.xhtml" value="#{bundle.becomePartner}" rendered="#{!partnershipBean.representativeExists}"/>
+                            </p:tab>
+                        </p:tabView>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

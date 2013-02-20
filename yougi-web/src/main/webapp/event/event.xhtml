@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <ui:composition template="../layout.xhtml">
+            <ui:define name="title">#{bundle.event}</ui:define>
+            <ui:define name="content">
+                <div class="content">
+                    <h1>#{bundle.event}</h1>
+                    <h:form rendered="#{securityBackingBean.isUserLeader}">
+                        <h:messages styleClass="alertMessage"/>
+                        <h:panelGrid columns="2" columnClasses="panelGridColumn, panelGridColumn">
+                            <h:panelGrid columns="1">
+                                <h:panelGrid columns="3">
+                                    <h:outputLabel for="name" value="#{bundle.name} *" styleClass="fieldLabel"/>
+                                    <h:outputText/>
+                                    <h:outputText/>
+                                    
+                                    <h:inputText id="name" label="#{bundle.name}" required="true" size="40" maxlength="100" value="#{eventMBean.event.name}"/>
+                                    <h:selectBooleanCheckbox id="external" label="#{bundle.external}" value="#{eventMBean.event.external}"/>
+                                    <h:outputLabel for="external" value="#{bundle.external}"/>
+                                </h:panelGrid>
+                                
+                                <h:outputLabel for="venue" value="#{bundle.venue} *" styleClass="fieldLabel"/>
+                                <h:selectOneMenu id="venue" label="#{bundle.venue}" required="true" value="#{eventMBean.selectedVenue}">
+                                    <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
+                                    <f:selectItems value="#{eventMBean.venues}" var="venue" itemLabel="#{venue.name}" itemValue="#{venue.id}"/>
+                                    <f:ajax render="address country province city"/>
+                                </h:selectOneMenu>
+                                
+                                <h:outputLabel for="address" value="#{bundle.address}" styleClass="fieldLabel"/>
+                                <h:inputText id="address" label="#{bundle.address}" required="false" size="50" maxlength="255" value="#{eventMBean.event.address}"/>
+
+                                <h:panelGrid columns="2">
+                                    <h:outputLabel for="country" value="#{bundle.country}" styleClass="fieldLabel"/>
+                                    <h:outputLabel for="province" value="#{bundle.province}" styleClass="fieldLabel"/>
+
+                                    <h:selectOneMenu id="country" label="#{bundle.country}" value="#{locationMBean.selectedCountry}">
+                                        <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
+                                        <f:selectItems value="#{locationMBean.countries}" var="country" itemLabel="#{country.name}" itemValue="#{country.acronym}"/>
+                                        <f:ajax render="province city"/>
+                                    </h:selectOneMenu>
+                                    <h:selectOneMenu id="province" label="#{bundle.province}" value="#{locationMBean.selectedProvince}">
+                                        <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
+                                        <f:selectItems value="#{locationMBean.provinces}" var="province" itemLabel="#{province.name}" itemValue="#{province.id}"/>
+                                        <f:ajax render="city"/>
+                                    </h:selectOneMenu>
+
+                                    <h:outputLabel for="city" value="#{bundle.city}" styleClass="fieldLabel"/>
+                                    <h:outputText/>
+
+                                    <h:selectOneMenu id="city" label="#{bundle.city}" value="#{locationMBean.selectedCity}">
+                                        <f:selectItem itemLabel="#{bundle.select}" itemValue="" />
+                                        <f:selectItems value="#{locationMBean.cities}" var="city" itemLabel="#{city.name}" itemValue="#{city.id}"/>
+                                    </h:selectOneMenu>
+                                    <h:outputText/>
+
+                                    <h:outputLabel for="latitude" value="#{bundle.latitude}" styleClass="fieldLabel"/>
+                                    <h:outputLabel for="longitude" value="#{bundle.longitude}" styleClass="fieldLabel"/>
+
+                                    <h:inputText id="latitude" label="#{bundle.latitude}" size="15" maxlength="15" value="#{eventMBean.event.latitude}"/>
+                                    <h:inputText id="longitude" label="#{bundle.longitude}" size="15" maxlength="15" value="#{eventMBean.event.longitude}"/>
+                                </h:panelGrid>
+
+                                <h:panelGrid columns="4">
+                                    <h:outputLabel for="startDate" value="#{bundle.start} *" styleClass="fieldLabel"/>
+                                    <h:outputText/>
+                                    <h:outputLabel for="endDate" value="#{bundle.end} *" styleClass="fieldLabel"/>
+                                    <h:outputText/>
+
+                                    <p:calendar value="#{eventMBean.event.startDate}" id="startDate" pattern="#{bundle.formatDate}" size="10" timeZone="#{userProfileBean.timeZone}"/>
+                                    <p:inputMask value="#{eventMBean.event.startTime}" mask="99:99" size="5">
+                                        <f:convertDateTime pattern="#{bundle.formatTime}" timeZone="#{userProfileBean.timeZone}"/>
+                                    </p:inputMask>
+                                    <p:calendar value="#{eventMBean.event.endDate}" id="endDate" pattern="#{bundle.formatDate}" size="10" timeZone="#{userProfileBean.timeZone}"/>
+                                    <p:inputMask value="#{eventMBean.event.endTime}" mask="99:99" size="5">
+                                       <f:convertDateTime pattern="#{bundle.formatTime}" timeZone="#{userProfileBean.timeZone}"/>
+                                    </p:inputMask>
+
+                                    <h:outputText value="#{bundle.formatDateLabel}" styleClass="fieldFormat"/>
+                                    <h:outputText value="#{bundle.formatTimeLabel}" styleClass="fieldFormat"/>
+                                    <h:outputText value="#{bundle.formatDateLabel}" styleClass="fieldFormat"/>
+                                    <h:outputText value="#{bundle.formatTimeLabel}" styleClass="fieldFormat"/>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                            <h:panelGrid columns="1">
+                                <h:outputLabel for="shortDescription" value="#{bundle.shortDescription}" styleClass="fieldLabel"/>
+                                <h:inputTextarea id="shortDescription" label="#{bundle.shortDescription}" required="false" cols="60" rows="4" value="#{eventBean.event.shortDescription}"/>
+
+                                <h:outputLabel for="description" value="#{bundle.description}" styleClass="fieldLabel"/>
+                                <p:editor id="description" required="false" width="500" height="200" value="#{eventMBean.event.description}"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                        
+                        <h:inputHidden id="id" value="#{eventMBean.event.id}"/>
+                        <h:inputHidden id="certificateTemplate" value="#{eventMBean.event.certificateTemplate}"/>
+
+                        <h:panelGrid columns="3">
+                            <h:commandButton value="#{bundle.save}" action="#{eventMBean.save}"/>
+                            <h:commandButton value="#{bundle.remove}" action="#{eventMBean.remove}"/>
+                            <h:button outcome="events" value="#{bundle.cancel}"/>
+                        </h:panelGrid>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
