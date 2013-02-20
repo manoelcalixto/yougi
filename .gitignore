@@ -9,3 +9,6 @@ docs/jug-management-doc.lot
 docs/jug-management-doc.out
 docs/jug-management-doc.synctex.gz
 docs/jug-management-doc.toc
+/yougi-ear/target/
+/yougi-ejb/target/
+/yougi-web/target/

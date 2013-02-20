@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.cejug</groupId>
-    <artifactId>jug</artifactId>
+    <groupId>org.cejug.yougi</groupId>
+    <artifactId>yougi</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>jug</name>
+    <name>yougi</name>
     <modules>
-        <module>jug-ear</module>
-        <module>jug-web</module>
-        <module>jug-ejb</module>
+        <module>yougi-ear</module>
+        <module>yougi-web</module>
+        <module>yougi-ejb</module>
     </modules>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <netbeans.hint.deploy.server>gfv3ee6</netbeans.hint.deploy.server>
+        <netbeans.hint.j2eeVersion>1.6</netbeans.hint.j2eeVersion>
+    </properties>
 </project>
