@@ -7,14 +7,15 @@
 \usepackage[bottom]{footmisc}
 \usepackage{hyperref}
 \usepackage{color}
+\usepackage{float}
 
 \hypersetup{colorlinks=true, linkcolor=black, citecolor=black, urlcolor=black}
 
 \makeindex
 
-\author{Hildeberto Mendonca}
-\title{UGM - User Group Management}
-\subtitle{An Open Source Application that Implements the User Group Domain}
+\author{Hildeberto Mendon\c{c}a}
+\title{Yougi}
+\subtitle{The Rock Solid User Group Application}
 
 \begin{document}
 
@@ -42,7 +43,7 @@ Notice: copies of this document may be made for your own use and for distributio
 
 \section{Case Study}
 
-The chosen case study is based on the personal experience of the team who is developing UGM. Most of contributions come from the Cear\'{a} Java User Group, which is a technical user group located in the Northeast cost of Brazil. Despite being part of a specific domain, we believe that the proposed model is generic enough to cover the management's needs of most user groups out there.
+The chosen case study is based on the personal experience of the team who is developing You. Most of contributions come from the Cear\'{a} Java User Group, which is a technical user group located in the Northeast cost of Brazil. Despite being part of a specific domain, we believe that the proposed model is generic enough to cover the management's needs of most user groups out there.
 
 \subsection{The Java User Group Scenario}
 
@@ -52,11 +53,13 @@ Their independence from the industry is particularly interesting because, in gen
 
 \subsection{JUGs Around the World}
 
-\subsection{Starting a New JUG}
-
 \subsection{The Need for a Mature User Group Management}
 
-\section{UGM Vision and Mission}
+\section{Yougi Mission and Vision}
+
+Yougi is developed by passionate people that are used to do, in a daily basis for several years, what the application does today and what it is planned to do tomorrow for online communities out there. After two years of continuos development, Yougi has consolidated its mission of managing, promoting and spreading knowledge produced by a community of members sharing the same interests and passions.
+
+The project goes beyond services for communities and extends its impact to other areas such as education, economical competitivity and generation of opportunities. Since the application is made available as free and open software, several technical questions from CEJUG's mailing list are actually addressed by examples extracted from Yougi's source code. Beginners and professionals learn how to program and use the platform by studing how the application was developed.
 
 \section{Overview}
 
@@ -147,22 +150,22 @@ When the event has passed, no information about the event can be changed anymore
 
 \section{Mailing Lists Management}
 
-\part{Development Guide}
+\part{Technical Guide}
 
 \chapter{Architecture}
 
-UGM should be deployed in an Application Server (AS). This platform is responsible for the system execution, the connectivity to several resources available in the environment and the availability for several users and systems. For the moment, Glassfish 3.0.1 is the standard AS for this application. This JEE Server has gained lots of attention for constantly run towards the state-of-the-art of the Java server side technology. It has an aggressive roadmap, being always the first product on the market to fully implement the last version of the JEE specification.
+Yougi should be deployed in an Application Server (AS). This platform is responsible for the system execution, the connectivity to several resources available in the environment and the availability for several users and systems. For the moment, Glassfish 3.0.1 is the standard AS for this application. This JEE Server has gained lots of attention for constantly run towards the state-of-the-art of the Java server side technology. It has an aggressive roadmap, being always the first product on the market to fully implement the last version of the JEE specification.
 
 One of the main advantages of using an application server like Glassfish is to keep the application free of complex code, such as a) manual control of database transactions; b) database access configuration; c) security authentication and authorization; e) sending and receiving e-mail messages, among many other complexities that are non-functional requirements, consuming the time we would be spending on functional requirements.
 
-No test was performed in other AS up to now, mainly because when the project started Glassfish was the only AS implementing the JEE 6 specification (JPA2, EJB 3.1, JSF 2.0, etc.). The AS should have access and provide the following resources:
+No test was performed in other AS up to now, mainly because when the project started Glassfish was the only AS implementing the JEE 6 specification (JPA, EJB, JSF, etc.). The AS should have access and provide the following resources:
 
 \begin{itemize}
-\item \textit{Security Realm}: is a provider of authentication and authorization data to identify users who want to access the application and verify whether they have rights to access protected resources.  The application's database, besides storing UG's data, also stores users and their roles, which makes it the realm provider, referenced by Glassfish in the realm configuration.
-
 \item \textit{Database Server}: a database driver allows connections to a relational database and a connection pool manages several simultaneous connections to this database, allowing scalability and performance. MySQL is the database system chosen to organize and protect UG's data.
 
 \item \textit{Email Server}: A JavaMail service connects to an email server and provide sessions to the application, allowing it to send and receive email messages without any special configuration on the implementation side.
+
+\item \textit{Security Realm}: is a provider of authentication and authorization data to identify users who want to access the application and verify whether they have rights to access protected resources.  The application's database, besides storing UG's data, also stores users and their roles, which makes it the realm provider, referenced by Glassfish in the realm configuration.
 
 \item \textit{File System}: the application should be able to save and access files in a specific directory of the file system. Unfortunately, the AS does not manage access to the file system. The application is responsible for managing all uploaded files.
 \end{itemize}
@@ -193,11 +196,11 @@ Table \ref{tab:chosen-technologies} lists the technologies adopted by the develo
 \hline\noalign{\smallskip}
 Logical Layer & Technology & Version \\
 \noalign{\smallskip}\hline\noalign{\smallskip}
-View & JSF Facelets & 2.0 \\
- & Primefaces UI Library & 2.1.1 \\
+View & JSF Facelets & 2.1 \\
+ & Primefaces UI Library & 2.4.2 \\
 \noalign{\smallskip}
 Controller & Primefaces & 2.1.1 \\
- & JSF Managed Beans & 2.0 \\
+ & JSF Managed Beans & 2.1 \\
 \noalign{\smallskip}
 Business & EJB Session Beans & 3.1 \\
  & EJB Timer & 3.1 \\
@@ -214,7 +217,7 @@ These technologies were selected based on the current needs, resources and knowl
 Going into details about the chosen technologies, we describe each one of them, completing the description of Figure 1:
 
 \begin{itemize}
-\item \textbf{JSF 2.0}: The Java Server Faces technology is the standard technology for developing web-based applications in the JEE platform.
+\item \textbf{JSF 2.1}: The Java Server Faces technology is the standard technology for developing web-based applications in the JEE platform.
    \begin{itemize}
    \item \textit{Primefaces}: extensive library of UI Widgets 
    available for the JSF technology.
@@ -265,11 +268,11 @@ Going into details about the chosen technologies, we describe each one of them, 
 
 \chapter{Installation}
 
-To install UGM we need:
+To install Yougi we need:
 
 \begin{itemize}
-\item Java Standard Edition JDK 6;
-\item Glassfish 3.0.1 Server or superior;
+\item Java Standard Edition JDK 7;
+\item Glassfish 3.1.2 Server or superior;
 \item MySQL 5 or superior;
 \item MySQL ConnectorJ JDBC Driver;
 \item Access to a SMTP and POP 3 server to send and receive email messages.
@@ -290,7 +293,7 @@ The initial installation takes some time, but it will guarantee easy updates whe
 
 \section{Creating the MySQL Database}
 
-UGM has access to only one database. This database is created using the administrative console and a SQL script. As mentioned before, this instructions consider that the MySQL database, version 5.0 or superior, is already installed and configured. In terms of configuration, we also consider that the path of the operating system is pointing to the folder where all MySQL commands are located.
+Yougi has access to only one database. This database is created using the administrative console and a SQL script. As mentioned before, this instructions consider that the MySQL database, version 5.0 or superior, is already installed and configured. In terms of configuration, we also consider that the path of the operating system is pointing to the folder where all MySQL commands are located.
 
 The procedure starts executing the administrative console, using the following command:
 
@@ -301,10 +304,10 @@ The procedure starts executing the administrative console, using the following c
 Usually, an administrative user is needed to create a new database. The user \textit{root} is the one with privileges to perform this operation. It will create a client authenticated session to access MySQL. \textit{-u} means that the subsequent value is the user of the session and \textit{-p} means that the password should be prompted right after executing the command. Once authenticated, the user \textit{root} will allow the execution of the command below, which creates the database and a dedicated user for it:
 
 \begin{verbatim}
-mysql> create database jug;
-mysql> create user jug\_user identified by '[password]';
-mysql> use jug;
-mysql> grant all privileges on jug.* to jug\_user@'%';
+mysql> create database ug;
+mysql> create user ug_user identified by '[password]';
+mysql> use ug;
+mysql> grant all privileges on ug.* to ug_user@'%';
 mysql> flush privileges;
 \end{verbatim}
 
@@ -319,53 +322,82 @@ Check if the database \textit{jug} is in the list. Then we have to sign out from
 \begin{verbatim}
 mysql> quit;
 
-# mysql -u jug_user -p
+# mysql -u ug_user -p
 
-mysql> use jug;
+mysql> use ug;
 mysql> source [path of the database script]/mysql_create.sql;
 mysql> quit;
 \end{verbatim}
 
-The user \textit{jug\_user} and its password should be used in the configuration of the connection pool. Do not use the \textit{root} user for application purposes.
+The user \textit{ug\_user} and its password should be used in the configuration of the connection pool. Do not use the \textit{root} user for application purposes.
+
+The file \textit{mysql\_create.sql} is available within the source code. It is located in the folder /yougi-ejb/src/main/resources/META-INF/. To get the source code, follow the instructions described in the section \ref{ssec:obtaining-source-code} or get it from the web at: https://github.com/htmfilho/yougi.
 
 \section{Installing the JDBC Driver on Glassfish}
 
-The driver installation consists on saving the driver file in a specific AS lib directory. For this step instructions consider that Glassfish AS, version 3.0 or superior, is already installed and configured. The driver is available to download at MySQL's website (http://www.mysql.com). The downloaded file contains the driver and its documentation. Copy only the driver file, mysql-connector-java-[version]-bin.jar, to the diretory [glassfish\_home]/glassfish/domains/domain1/lib/. Restart the AS to make the driver available.
+The driver installation consists on saving the driver file in a specific AS lib directory. For this step instructions consider that Glassfish AS, version 3.1 or superior, is already installed and configured. The driver is available to download at MySQL's website (http://www.mysql.com). The downloaded file contains the driver and its documentation. Copy only the driver file, mysql-connector-java-[version]-bin.jar, to the diretory [glassfish\_home]/glassfish/domains/domain1/lib/. Restart the AS to make the driver available.
 
 \section{Creating a Database Connection Pool}
 \label{sec:creating-database-connection-pool}
 
-The database connection pool is managed by the AS, thus it is configured in the administrative console. The necessary steps are:
+The database connection pool is managed by the AS. There are many ways to create a connection pool. We are going to show two possibilities: changing configuration files directly and using the administrative console.
+
+To create the database connection pool through the configuration file, open the file [glassfish\_home]/glassfish/domains/domain1/config/domain.xml. Go to the element \textless resources\textgreater \ and add the following connection pool and jdbc resource under the last closing \textless /jdbc-connection-pool\textgreater \ element.
+
+\begin{verbatim}
+<resources>
+   ...
+   </jdbc-connection-pool>
+   <jdbc-connection-pool driver-classname="" datasource-classname=
+       "com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource"
+       res-type="javax.sql.ConnectionPoolDataSource" description="" 
+       name="UGPool" ping="true">
+         <property name="User" value="ug_user"></property>
+         <property name="DatabaseName" value="ug"></property>
+         <property name="Password" value="password_here"></property>
+         <property name="ServerName" value="localhost"></property>
+         <property name="PortNumber" value="3306"></property>
+   </jdbc-connection-pool>
+   <jdbc-resource pool-name="UGPool" description="" 
+                  jndi-name="jdbc/ug"></jdbc-resource>
+</resources>
+\end{verbatim}
+
+Now, find the element \textless server name=''server'' config-ref=''server-config''\textgreater \ and put inside the following line after the latest \textless /resource-ref\textgreater element:
+
+\begin{verbatim}
+<resource-ref ref="jdbc/ug"></resource-ref>
+\end{verbatim}
+
+If you prefer to do it in the administrative console, you can go through the following steps:
 
 \begin{enumerate}
 \item  Enter in the administrative console at http://[servername]:4848/ and navigate to Resources / JDBC / Connection Pools.
 \item Create a new connection pool with the name jugPool, select the resource type javax.sql.ConnectionPoolDataSource, select the database vendor MySQL and click next.
 \item Select the datasource classname \\ \textit{com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource} and inform the following additional properties:
    \begin{enumerate}
-   \item DatabaseName=jug
-   \item User=jug\_user
-   \item Password=[password]
+   \item DatabaseName=ug
+   \item User=ug\_user
+   \item Password=put\_the\_password\_here
    \item PortNumber=3306 (this is the default port but make sure
    that you are using the correct one)
-   \item ServerName=[server-name or ip]
+   \item ServerName=[server-name or ip address]
    \end{enumerate}
 \item Click on \textit{Finish} to save the new connection pool.
 \item Go to the list of connection pools again and select the new one that was just created.
 \item Click on \textit{Ping} to check if the connection was correctly configured. The message "Ping Succeeded" means that the connection is working fine and ready for use.
 \end{enumerate}
 
-\section{Creating a Data Source for the Connection Pool}
-\label{sec:creating-data-source-connection-pool}
-
-In order to make this connection pool available for JavaEE applications, we have to create a JNDI name for it. This configuration is also done in the administrative console, at \textit{Resources/JDBC/JDBC Resources}.
+Now, we create a JNDI name for it at \textit{Resources/JDBC/JDBC Resources}.
 
 \begin{enumerate}
 \item Click on \textit{New} to start the creation of the data source.
-\item Set the field \textit{JNDI Name} to \textit{jdbc/jug}.
-\item Select the connection pool \textit{jugPool} (see section \ref{sec:creating-database-connection-pool}).
+\item Set the field \textit{JNDI Name} to \textit{jdbc/ug}.
+\item Select the connection pool \textit{UGPool} (see section \ref{sec:creating-database-connection-pool}).
 \item Click \textit{Ok} to finish.
 \end{enumerate}
-This JNDI name is used by the application to access the Jug database created on MySQL.
+
+The only information the application knows about the database is the jdbc resource jndi name, which is ''jdbc/ug''. This is important because the application should not contain any security related data, such as database's username and password. We should let the server administrator define these configuration on the server, according to his security principles.
 
 \section{Creating a JavaMail Session}
 
@@ -376,7 +408,7 @@ Besides managing the connections to the email server, the JavaMail session store
 \item Go to \textit{Resources / JavaMail Sessions}.
 \item create a new JavaMail session and set the following properties:
    \begin{enumerate}
-   \item JNDI Name: mail/jug
+   \item JNDI Name: mail/ug
    \item Mail Host: [smtp-server-address]
    \item Default User: the username to authenticate on the smtp
     server
@@ -399,18 +431,22 @@ If the server doesn't request secure authentication, then the three steps above 
 \item Click on \textit{Save} to create the JavaMail session.
 \end{enumerate}
 
+More supported JavaMail properties can be found on Table \ref{tab:javamail-properties} in the Appendix.
+
 \section{Creating a Security Realm}
 
-As the connection pool and the JavaMail session, the security realm is also a configuration entirely made in the application server. Users' data are stored in the database, thus this is a JDBC Realm, which uses the data source created in section \ref{sec:creating-data-source-connection-pool}. Follow the steps below to configure the JDBC Realm: 
+A realm is a security policy domain available on Glassfish to provide authentication and authorization services for web applications. A realm contains a collection of users and their assignements to groups and roles.
+
+As the connection pool and the JavaMail session, the security realm is also a configuration entirely made in the application server. Since Yougi's users are stored in the database, we have to use a realm based on JDBC. The JDBC Realm uses the data source created in section \ref{sec:creating-database-connection-pool} to access users' data on Yougi's database. Follow the steps below to configure the JDBC Realm:
 
 \begin{enumerate}
 \item Enter in the administrative console (http://[server-name]:4848).
-\item Go to \textit{Configuration / server-config / Security / Realms}, press \textit{New...} and inform the following values:
+\item Go to \textit{Configuration/server-config/Security/Realms}, press \textit{New...} and inform the following values:
    \begin{enumerate}
-   \item Name: jug-realm
+   \item Name: ug-realm
    \item Class Name: com.sun.enterprise.security.auth.realm.jdbc.JDBCRealm
    \item JAAS Context: jdbcRealm
-   \item JNDI: jdbc/jug - the data source JNDI name pointing to the connection pool where user data are available
+   \item JNDI: jdbc/ug - the data source JNDI name pointing to the connection pool where user data are available
    \item User Table: user\_account
    \item User Name Column: username
    \item Password Column: password
@@ -436,7 +472,7 @@ The installation process takes some time, but all these steps are executed only 
 \item Check if everything went well accessing http://localhost:8080/jug if deploying on your own computer or http://[servername]:8080/jug if deploying on the server.
 \end{enumerate}
 
-UGM will appear in the list of applications. In case of updating an application already deployed, the process is very simplified because of the initial configuration:
+Yougi will appear in the list of applications. In case of updating an application already deployed, the process is very simplified because of the initial configuration:
 
 \begin{enumerate}
 \item enter in the administrative console (http://[server-name]:4848).
@@ -447,7 +483,7 @@ UGM will appear in the list of applications. In case of updating an application 
 \item Check if everything went well accessing http://[server-name]:8080/jug.
 \end{enumerate}
 
-\section{Configuring the Application According to the UG's Specific Needs}
+\section{Configuring the Application}
 
 Before using the application, the database should be initialized with some initial data that are specific for each UG. The following steps are necessary:
 
@@ -461,17 +497,20 @@ Before using the application, the database should be initialized with some initi
 
 \section{Preparing the Development Environment}
 
-Git is the version control system (VCS) used to control UGM source code. For being a distributed VCS, Git is not trivial. Its foundations are a bit different from traditional VCSs, such as CVS and SVN. There is a master repository located at http://cejug.java.net, where the main trunk (master) is centralized, but every client is also a full featured VCS, where is possible perform commits off line, create branches and merge with other clients without acknowledging the master.
+\subsection{Obtaining the Source Code}
+\label{ssec:obtaining-source-code}
 
-To install and use UGM is not necessary to start from the source code. The binary package is available at http://cejug.java.net. Just follow the instructions described in chapter 7. On the other hand, if the intention is to contribute to the project, the use of Git to retrieve the source code is necessary. The potential contributor should:
+Git is the version control system (VCS) used to control Yougi source code. For being a distributed VCS, Git is not trivial. Its foundations are a bit different from traditional VCSs, such as CVS and SVN. There is a master repository located at http://cejug.java.net, where the main trunk (master) is centralized, but every client is also a full featured VCS, where is possible perform commits off line, create branches and merge with other clients without acknowledging the master.
+
+To install and use Yougi is not necessary to start from the source code. The binary package is available at http://cejug.java.net. Just follow the instructions described in chapter 7. On the other hand, if the intention is to contribute to the project, the use of Git to retrieve the source code is necessary. The potential contributor should:
 
 \begin{enumerate}
 \item install Git in the development machine: the installation is dependent of platform, thus the instructions for the target platform are only available on the Git website: http://git-scm.com.
-\item configure Git to access the master repository: UGM's Git accepts only secure SSH (Security Shell protocol) connection, making the initial steps more complicated than expected. After this initial configuration, the access to the master becomes transparent and secure.
+\item configure Git to access the master repository: Yougi's Git accepts only secure SSH (Security Shell protocol) connection, making the initial steps more complicated than expected. After this initial configuration, the access to the master becomes transparent and secure.
 \item register at java.net:
 \item copy and paste the public key in the java.net personal profile:
 \item register yourself in CEJUG's project at java.net. You will have access to the repository only if you are a member of the project.
-\item When you login on Java.net and go to the source code section, you will be able to see the checkout URI of UGM's repository. The address contains your username. Example: ssh://[user-name]@git.java.net/cejug~jug-management.
+\item When you login on Java.net and go to the source code section, you will be able to see the checkout URI of Yougi's repository. The address contains your username. Example: ssh://[user-name]@git.java.net/cejug~jug-management.
 \item Copy the URI above and go to the command line and type the following command to checkout the code: git clone ssh://[user-name]@git.java.net/cejug~jug-management. It will create a folder "cejug-jug-management" in the directory you ran the command and the full source code will be available there.
 \end{enumerate}
 
@@ -506,6 +545,33 @@ To push local commit to the server, use:
 \begin{verbatim}
 #git push origin master
 \end{verbatim}
+
+\part*{Appendix}
+
+\chapter*{JavaMail Properties}
+
+Table \ref{tab:javamail-properties} lists all relevant JavaMail properties.
+
+\begin{table}
+\centering
+\caption{Complete list of JavaMail properties}
+\label{tab:javamail-properties}
+\begin{tabular}{lll}
+\hline\noalign{\smallskip}
+Name & Type & Description  \\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+mail.smtp.user & String & Default user name for SMTP. \\
+mail.smtp.host & String & The SMTP server to connect to. \\
+mail.smtp.port & int & The SMTP server port to connect to.\\ & & Defaults to 25. \\
+mail.smtp.connectiontimeout & int & Socket connection timeout value in \\ & & milliseconds. Default is infinite timeout.\\
+mail.smtp.timeout & int & Socket I/O timeout value in milliseconds. \\ & & Default is infinite timeout. \\
+mail.smtp.from & String & Email address to use for SMTP MAIL \\ & & command. This sets the envelope return \\ & & address. Defaults to msg.getFrom() or \\ & & InternetAddress.getLocalAddress(). \\
+mail.smtp.ssl.enable & boolean & If set to true, use SSL to connect and use \\ & & the SSL port by default. Defaults to false \\ & & for the "smtp" protocol and true for the \\ & & "smtps" protocol. \\
+mail.smtp.starttls.enable & boolean & If true, enables the use of the STARTTLS\\ & & command (if supported by the server) to\\ & & switch the connection to a TLS-protected\\ & & connection before issuing any login\\ & & commands. Defaults to false. \\
+mail.smtp.starttls.required & boolean & If true, requires the use of the STARTTLS \\ & & command. If the server doesn't support the \\ & & STARTTLS command, or the command \\ & & fails, the connect method will fail. \\ & &Defaults to false. \\
+\noalign{\smallskip}\hline
+\end{tabular}
+\end{table}
 
 \backmatter
 
